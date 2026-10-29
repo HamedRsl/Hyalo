@@ -1,0 +1,3 @@
+/* Imports by package path, so the build fails if the exports map breaks. */
+@import '@hyalo/angular/styles/hyalo-core.css';
+@import '@hyalo/angular/styles/overlays/dialog.css';

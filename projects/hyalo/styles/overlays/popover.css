@@ -5,5 +5,5 @@
  */
 @layer hy.reset, hy.tokens, hy.base, hy.utilities;
 
-@import '../presence.css' layer(hy.base);
-@import '../popover.css' layer(hy.base);
+@import '../parts/presence.css' layer(hy.base);
+@import '../parts/popover.css' layer(hy.base);

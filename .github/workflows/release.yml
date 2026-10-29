@@ -1,0 +1,44 @@
+name: Release
+
+# Publishes @hyalo/angular when a version tag such as v0.1.0 is pushed.
+# The tag must match the version in projects/hyalo/package.json.
+#
+# Auth: set up trusted publishing for this repo and workflow on npmjs.com
+# (package settings, Trusted Publisher). Until the package exists there, add
+# an NPM_TOKEN repository secret for the first publish instead.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write # npm trusted publishing and provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: Check the tag matches the package version
+        run: |
+          version=$(node -p "require('./projects/hyalo/package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package version $version"
+            exit 1
+          fi
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm run size
+      - name: Publish
+        working-directory: dist/hyalo
+        run: npm publish --provenance --tag "$(case "$GITHUB_REF_NAME" in *-*) echo next ;; *) echo latest ;; esac)"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

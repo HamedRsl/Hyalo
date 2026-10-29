@@ -153,7 +153,19 @@
             "browser": "projects/size-check/src/main.ts",
             "tsConfig": "projects/size-check/tsconfig.json",
             "index": "projects/size-check/src/index.html",
-            "outputPath": "dist/size-check"
+            "outputPath": "dist/size-check",
+            "styles": [
+              {
+                "input": "projects/size-check/src/styles.css",
+                "bundleName": "hyalo",
+                "inject": false
+              },
+              {
+                "input": "node_modules/@hyalo/angular/styles/palettes/ocean.css",
+                "bundleName": "palette-ocean",
+                "inject": false
+              }
+            ]
           },
           "configurations": {
             "production": {

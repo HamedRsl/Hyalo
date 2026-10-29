@@ -7,7 +7,7 @@
     "build": "ng build hyalo && ng build docs",
     "build:lib": "ng build hyalo",
     "build:docs": "ng build docs",
-    "size": "ng build size-check",
+    "size": "node tools/install-packed.mjs && ng build size-check",
     "test": "ng test hyalo --watch=false",
     "lint": "ng lint && node tools/check-logical-css.mjs && node tools/check-prose.mjs",
     "format": "prettier --write .",

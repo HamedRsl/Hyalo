@@ -14,12 +14,12 @@
  */
 @layer hy.reset, hy.tokens, hy.base, hy.utilities;
 
-@import './reset.css' layer(hy.reset);
-@import './tokens.css' layer(hy.tokens);
-@import './themes.css' layer(hy.tokens);
-@import './glass.css' layer(hy.base);
-@import './motion.css' layer(hy.base);
-@import './card.css' layer(hy.base);
-@import './navbar.css' layer(hy.base);
-@import './field.css' layer(hy.base);
-@import './typography.css' layer(hy.utilities);
+@import './parts/reset.css' layer(hy.reset);
+@import './parts/tokens.css' layer(hy.tokens);
+@import './parts/themes.css' layer(hy.tokens);
+@import './parts/glass.css' layer(hy.base);
+@import './parts/motion.css' layer(hy.base);
+@import './parts/card.css' layer(hy.base);
+@import './parts/navbar.css' layer(hy.base);
+@import './parts/field.css' layer(hy.base);
+@import './parts/typography.css' layer(hy.utilities);

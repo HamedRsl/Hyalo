@@ -5,5 +5,5 @@
  */
 @layer hy.reset, hy.tokens, hy.base, hy.utilities;
 
-@import '../select.css' layer(hy.base);
-@import '../presence.css' layer(hy.base);
+@import '../parts/select.css' layer(hy.base);
+@import '../parts/presence.css' layer(hy.base);

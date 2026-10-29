@@ -17,7 +17,7 @@ npm start
 
 - `projects/hyalo/src`: the primary entry point, `@hyalo/angular`. Only the foundations every component needs: config, fidelity, motion, material and shared helpers. It never imports another entry point.
 - `projects/hyalo/<name>`: one secondary entry point per component or concern, such as `button` for `@hyalo/angular/button`, each with an `ng-package.json`, a `public-api.ts` and specs next to the code. Import other entry points by package path, never with `../`, or the build gets a second copy of them. ESLint checks this.
-- `projects/hyalo/styles`: global CSS. Tokens, themes, glass, motion, and styles for anything that renders outside a component (overlays, projected slots).
+- `projects/hyalo/styles`: global CSS. The public files are `hyalo.css`, `hyalo-core.css`, `overlays/` and `palettes/`. The rest sits in `parts/`: tokens, themes, glass, motion, and styles for anything that renders outside a component (overlays, projected slots). Parts are unlayered on their own, so they are only ever imported by the public files and are left out of the package exports.
 - `projects/docs`: the documentation site. Each page is in `src/app/pages`.
 - `tools`: small checks run by `npm run lint`.
 
@@ -26,7 +26,7 @@ npm start
 - Standalone components, `OnPush`, signal inputs and models. No `zone.js`.
 - Nothing touches `window` or `document` outside `afterNextRender`, an effect that runs in the browser, or an explicit platform check. The docs site is prerendered, so a mistake here fails the build.
 - CSS uses logical properties only. If a physical property is really needed, add `/* physical-ok */` on that line with a short reason. `npm run lint` checks this.
-- Keep component styles in the component unless the element renders elsewhere, then use the global stylesheet in `styles/` inside the `hy.base` layer. Projected slot styles go in `hyalo-core.css`. Styles for something rendered in an overlay go in that entry point's file in `styles/overlays/`, which `hyalo.css` imports.
+- Keep component styles in the component unless the element renders elsewhere, then add a file to `styles/parts/` and import it in the `hy.base` layer. Projected slot styles go in `hyalo-core.css`. Styles for something rendered in an overlay go in that entry point's file in `styles/overlays/`, which `hyalo.css` imports.
 - Every new component needs a spec with an axe check, keyboard tests for anything interactive, and a docs page.
 
 ## Writing

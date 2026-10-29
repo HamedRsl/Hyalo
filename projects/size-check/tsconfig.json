@@ -1,15 +1,13 @@
 /*
- * Builds against the packaged library in dist/hyalo, not the source, so the
- * budget measures what an app installing @hyalo/angular gets.
+ * Builds against the packed library that tools/install-packed.mjs puts in
+ * node_modules, not the source, so the budget measures what an app
+ * installing @hyalo/angular gets. Empty paths drop the root mapping to source.
  */
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [],
-    "paths": {
-      "@hyalo/angular": ["../../dist/hyalo"],
-      "@hyalo/angular/*": ["../../dist/hyalo/*"]
-    }
+    "paths": {}
   },
   "files": ["src/main.ts", "src/lazy.ts"]
 }

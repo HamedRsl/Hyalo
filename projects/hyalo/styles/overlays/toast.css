@@ -5,4 +5,4 @@
  */
 @layer hy.reset, hy.tokens, hy.base, hy.utilities;
 
-@import '../toast.css' layer(hy.base);
+@import '../parts/toast.css' layer(hy.base);

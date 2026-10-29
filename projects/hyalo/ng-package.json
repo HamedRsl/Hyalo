@@ -4,5 +4,5 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": [{ "input": "styles", "glob": "**/*.css", "output": "styles" }]
+  "assets": ["CHANGELOG.md", { "input": "styles", "glob": "**/*.css", "output": "styles" }]
 }

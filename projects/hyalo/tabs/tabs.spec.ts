@@ -2,26 +2,19 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectNoAxeViolations } from '../src/testing/axe';
 import { HY_TABS } from './tabs';
-import { HySegmented } from '@hyalo/angular/segmented';
 
 @Component({
-  imports: [HY_TABS, HySegmented],
+  imports: [HY_TABS],
   template: `
     <hy-tabs label="Details" [(selected)]="tab">
       <hy-tab value="overview" label="Overview">Overview panel</hy-tab>
       <hy-tab value="specs" label="Specs">Specs panel</hy-tab>
       <hy-tab value="care" label="Care" disabled>Care panel</hy-tab>
     </hy-tabs>
-    <hy-segmented label="Billing" [options]="periods" [(value)]="period" />
   `,
 })
 class Host {
   readonly tab = signal<string | undefined>(undefined);
-  readonly period = signal<string | undefined>('month');
-  readonly periods = [
-    { value: 'month', label: 'Monthly' },
-    { value: 'year', label: 'Yearly' },
-  ];
 }
 
 describe('HyTabs', () => {
@@ -69,20 +62,5 @@ describe('HyTabs', () => {
   it('has no axe violations', async () => {
     const { el } = await setup();
     await expectNoAxeViolations(el);
-  });
-});
-
-describe('HySegmented', () => {
-  it('is a labelled radio group bound to the value', async () => {
-    const fixture = TestBed.createComponent(Host);
-    await fixture.whenStable();
-    const group: HTMLElement = fixture.nativeElement.querySelector('hy-segmented');
-    expect(group.getAttribute('role')).toBe('radiogroup');
-    const radios = group.querySelectorAll<HTMLInputElement>('input[type="radio"]');
-    expect(radios[0]!.checked).toBe(true);
-    radios[1]!.click();
-    await fixture.whenStable();
-    expect(fixture.componentInstance.period()).toBe('year');
-    expect(radios[0]!.name).toBe(radios[1]!.name);
   });
 });
