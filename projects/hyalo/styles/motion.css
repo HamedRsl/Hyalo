@@ -1,0 +1,80 @@
+/* Styles for the interaction directives: reveal, tilt, magnetic, ripple. */
+
+[data-hy-reveal] {
+  transition:
+    opacity var(--hy-dur-scene) var(--hy-ease-out) var(--hy-reveal-delay, 0ms),
+    translate var(--hy-dur-scene) var(--hy-ease-out) var(--hy-reveal-delay, 0ms),
+    scale var(--hy-dur-scene) var(--hy-ease-out) var(--hy-reveal-delay, 0ms);
+}
+
+[data-hy-reveal='hidden'] {
+  opacity: 0;
+}
+
+[data-hy-reveal='hidden'][data-hy-reveal-from='up'] {
+  translate: 0 1.5rem;
+}
+
+[data-hy-reveal='hidden'][data-hy-reveal-from='scale'] {
+  scale: 0.96;
+}
+
+@media print {
+  [data-hy-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+    scale: none !important;
+  }
+}
+
+.hy-tilt {
+  transform: perspective(900px) rotateX(var(--hy-rx, 0deg)) rotateY(var(--hy-ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-magnetic {
+  translate: var(--hy-mx, 0px) var(--hy-my, 0px);
+  transition: translate var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+/* GSAP already smooths these values, so the CSS transition would lag. */
+.hy-tilt.hy-gsap {
+  transition: none;
+}
+
+.hy-magnetic.hy-gsap {
+  transition: none;
+}
+
+.hy-ripple-host {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hy-ripple {
+  position: absolute;
+  /* Pointer coordinates are physical, so the ripple is placed physically. */
+  top: calc(var(--hy-ripple-y) - var(--hy-ripple-size) / 2);
+  left: calc(var(--hy-ripple-x) - var(--hy-ripple-size) / 2); /* physical-ok */
+  inline-size: var(--hy-ripple-size);
+  block-size: var(--hy-ripple-size);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, currentColor, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  animation: hy-ripple var(--hy-dur-scene) var(--hy-ease-out);
+}
+
+@keyframes hy-ripple {
+  from {
+    scale: 0;
+    opacity: 0.18;
+  }
+  to {
+    scale: 1;
+    opacity: 0;
+  }
+}

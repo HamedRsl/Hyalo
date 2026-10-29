@@ -54,6 +54,7 @@ module.exports = defineConfig([
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
     },
   },
   {

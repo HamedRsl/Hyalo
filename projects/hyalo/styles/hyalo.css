@@ -11,4 +11,5 @@
 @import './tokens.css' layer(hy.tokens);
 @import './themes.css' layer(hy.tokens);
 @import './glass.css' layer(hy.base);
+@import './motion.css' layer(hy.base);
 @import './typography.css' layer(hy.utilities);
