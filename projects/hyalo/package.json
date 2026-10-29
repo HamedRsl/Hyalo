@@ -8,6 +8,10 @@
     "type": "git",
     "url": "git+https://github.com/HamedRsl/Hyalo.git"
   },
+  "homepage": "https://github.com/HamedRsl/Hyalo#readme",
+  "bugs": {
+    "url": "https://github.com/HamedRsl/Hyalo/issues"
+  },
   "keywords": [
     "angular",
     "ui",
@@ -36,5 +40,10 @@
   },
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "exports": {
+    "./styles/*": {
+      "default": "./styles/*"
+    }
+  }
 }
