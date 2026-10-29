@@ -13,4 +13,5 @@
 @import './glass.css' layer(hy.base);
 @import './motion.css' layer(hy.base);
 @import './card.css' layer(hy.base);
+@import './navbar.css' layer(hy.base);
 @import './typography.css' layer(hy.utilities);

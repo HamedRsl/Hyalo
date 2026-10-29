@@ -1,0 +1,55 @@
+/*
+ * Navbar slots. Links and brand are projected content, so their styles are
+ * global. The collapse rule uses the navbar's container query.
+ */
+.hy-navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  color: var(--hy-ink);
+  font-weight: 650;
+  font-size: var(--hy-step-1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hy-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+}
+
+.hy-navbar__links > a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding-inline: var(--hy-space-3);
+  border-radius: var(--hy-radius-pill);
+  color: var(--hy-ink-2);
+  font-weight: 520;
+  text-decoration: none;
+  transition:
+    color var(--hy-dur-quick) var(--hy-ease-out),
+    background-color var(--hy-dur-quick) var(--hy-ease-out);
+}
+
+.hy-navbar__links > a:hover,
+.hy-navbar__links > a[aria-current] {
+  color: var(--hy-ink);
+  background-color: color-mix(in srgb, var(--hy-ink) 7%, transparent);
+}
+
+.hy-navbar__links > a:focus-visible {
+  outline: none;
+  box-shadow: var(--hy-focus-ring);
+}
+
+@container hy-navbar (max-width: 48rem) {
+  .hy-navbar__actions {
+    margin-inline-start: auto;
+  }
+
+  .hy-navbar__links > a {
+    min-block-size: 2.75rem;
+  }
+}
