@@ -31,3 +31,7 @@ export * from './lib/select/select';
 export * from './lib/choice/checkbox';
 export * from './lib/choice/radio';
 export * from './lib/choice/switch';
+export * from './lib/dialog/dialog-ref';
+export * from './lib/dialog/dialog-parts';
+export { type HySurfaceConfig } from './lib/dialog/open-surface';
+export * from './lib/dialog/dialog';

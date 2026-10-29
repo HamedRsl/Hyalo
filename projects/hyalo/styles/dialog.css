@@ -1,0 +1,102 @@
+/*
+ * Dialogs and drawers. Both render in CDK overlays, so their styles live
+ * here. The panel is the .cdk-dialog-container inside the pane.
+ */
+.hy-dialog-pane,
+.hy-drawer-pane {
+  max-inline-size: 100vw;
+}
+
+.hy-dialog-pane > .cdk-dialog-container,
+.hy-drawer-pane > .cdk-dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hy-space-4);
+  inline-size: 100%;
+  max-block-size: inherit;
+  padding: var(--hy-space-7);
+  overflow: auto;
+  color: var(--hy-ink);
+  outline: none;
+}
+
+.hy-dialog-pane > .cdk-dialog-container {
+  border-radius: var(--hy-radius-l);
+  max-block-size: calc(100dvh - 2 * var(--hy-space-6));
+}
+
+.hy-dialog-pane {
+  inline-size: calc(100vw - 2 * var(--hy-space-4));
+  max-block-size: calc(100dvh - 2 * var(--hy-space-6));
+  animation: hy-dialog-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-dialog--sm {
+  max-inline-size: 26rem;
+}
+
+.hy-dialog--md {
+  max-inline-size: 36rem;
+}
+
+.hy-dialog--lg {
+  max-inline-size: 52rem;
+}
+
+.hy-dialog--full {
+  max-inline-size: 72rem;
+}
+
+.hy-dialog-pane[data-state='closing'] {
+  animation: hy-dialog-out var(--hy-dur-quick) var(--hy-ease-inout) forwards;
+}
+
+@media (max-width: 40rem) {
+  .hy-dialog--full {
+    inline-size: 100vw;
+    block-size: 100dvh;
+    max-block-size: none;
+  }
+
+  .hy-dialog--full > .cdk-dialog-container {
+    border-radius: 0;
+    max-block-size: none;
+  }
+}
+
+/* Content parts */
+.hy-dialog__title {
+  margin: 0;
+  font-size: var(--hy-step-2);
+  font-weight: 640;
+  line-height: var(--hy-leading-tight);
+}
+
+.hy-dialog__content {
+  margin: 0;
+  flex: 1;
+  color: var(--hy-ink-2);
+}
+
+.hy-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--hy-space-2);
+  margin-block-start: var(--hy-space-2);
+}
+
+@keyframes hy-dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+    scale: 0.97;
+  }
+}
+
+@keyframes hy-dialog-out {
+  to {
+    opacity: 0;
+    scale: 0.98;
+  }
+}
