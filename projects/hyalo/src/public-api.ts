@@ -15,3 +15,6 @@ export * from './lib/interaction/reveal';
 export * from './lib/interaction/tilt';
 export * from './lib/interaction/magnetic';
 export * from './lib/interaction/ripple';
+export * from './lib/icon/icons';
+export * from './lib/icon/registry';
+export * from './lib/icon/icon';
