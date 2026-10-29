@@ -12,6 +12,14 @@ import { openSurface, type HySurfaceConfig } from './open-surface';
 /** Dialog width. `full` fills the screen on small viewports. */
 export type HyDialogSize = 'sm' | 'md' | 'lg' | 'full';
 
+// Set inline because the CDK pane's own max-width sits outside our cascade layers.
+const MAX_WIDTH: Record<HyDialogSize, string> = {
+  sm: '26rem',
+  md: '36rem',
+  lg: '52rem',
+  full: '72rem',
+};
+
 /** Options for {@link HyDialog.open}. */
 export interface HyDialogConfig<D = unknown> extends HySurfaceConfig<D> {
   readonly size?: HyDialogSize;
@@ -79,8 +87,10 @@ export class HyDialog {
     content: ComponentType<unknown> | TemplateRef<unknown>,
     config: HyDialogConfig<D> = {},
   ): HyDialogRef<R> {
+    const size = config.size ?? 'md';
     return openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
-      panelClass: ['hy-dialog-pane', `hy-dialog--${config.size ?? 'md'}`],
+      panelClass: ['hy-dialog-pane', `hy-dialog--${size}`],
+      maxWidth: MAX_WIDTH[size],
     });
   }
 

@@ -46,6 +46,12 @@ describe('HyDialog', () => {
     await expectNoAxeViolations(container);
   });
 
+  it('sets the size as an inline max width', () => {
+    TestBed.inject(HyDialog).open(EditAddress, { data: { street: '' }, size: 'sm' });
+    TestBed.tick();
+    expect(document.querySelector<HTMLElement>('.hy-dialog-pane')!.style.maxWidth).toBe('26rem');
+  });
+
   it('resolves closed with the result', async () => {
     const ref = TestBed.inject(HyDialog).open<string>(EditAddress, { data: { street: '' } });
     TestBed.tick();

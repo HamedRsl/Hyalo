@@ -1,6 +1,11 @@
 /*
  * Dialogs and drawers. Both render in CDK overlays, so their styles live
  * here. The panel is the .cdk-dialog-container inside the pane.
+ *
+ * The CDK injects its structural overlay styles without a layer, and
+ * unlayered rules beat everything in ours. That is why the container's
+ * display needs !important and the dialog widths are set inline from
+ * HyDialog instead of here.
  */
 .hy-dialog-pane,
 .hy-drawer-pane {
@@ -9,7 +14,7 @@
 
 .hy-dialog-pane > .cdk-dialog-container,
 .hy-drawer-pane > .cdk-dialog-container {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   gap: var(--hy-space-4);
   inline-size: 100%;
@@ -18,6 +23,16 @@
   overflow: auto;
   color: var(--hy-ink);
   outline: none;
+}
+
+/*
+ * Content opened as a component puts its own host element in between.
+ * Let the parts inside it join the panel's flex layout.
+ */
+:is(.hy-dialog-pane, .hy-drawer-pane)
+  > .cdk-dialog-container
+  > :not(.hy-dialog__title, .hy-dialog__content, .hy-dialog__actions) {
+  display: contents;
 }
 
 .hy-dialog-pane > .cdk-dialog-container {
@@ -29,22 +44,6 @@
   inline-size: calc(100vw - 2 * var(--hy-space-4));
   max-block-size: calc(100dvh - 2 * var(--hy-space-6));
   animation: hy-dialog-in var(--hy-dur-settle) var(--hy-ease-out);
-}
-
-.hy-dialog--sm {
-  max-inline-size: 26rem;
-}
-
-.hy-dialog--md {
-  max-inline-size: 36rem;
-}
-
-.hy-dialog--lg {
-  max-inline-size: 52rem;
-}
-
-.hy-dialog--full {
-  max-inline-size: 72rem;
 }
 
 .hy-dialog-pane[data-state='closing'] {

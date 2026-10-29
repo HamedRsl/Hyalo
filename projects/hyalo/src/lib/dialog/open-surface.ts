@@ -35,6 +35,7 @@ export function openSurface<R, D>(
     panelClass: string[];
     positionStrategy?: PositionStrategy;
     width?: string;
+    maxWidth?: string;
     height?: string;
   },
 ): HyDialogRef<R> {
@@ -55,6 +56,7 @@ export function openSurface<R, D>(
     panelClass: extra.panelClass,
     positionStrategy: extra.positionStrategy,
     width: extra.width,
+    maxWidth: extra.maxWidth,
     height: extra.height,
     providers: (dialogRef) => {
       ref = new HyDialogRef<R>(dialogRef, () => motion.reduced());
