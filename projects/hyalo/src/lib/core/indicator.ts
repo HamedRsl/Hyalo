@@ -42,7 +42,14 @@ export function trackIndicator(
       if (!row || !item) return null;
       const rowRect = row.getBoundingClientRect();
       const rect = item.getBoundingClientRect();
-      return { row, x: rect.left - rowRect.left + row.scrollLeft, size: rect.width };
+      // Rects are in screen pixels, after any zoom or scale on an ancestor,
+      // but the custom properties are read in the row's own pixels.
+      const scale = row.offsetWidth ? rowRect.width / row.offsetWidth : 1;
+      return {
+        row,
+        x: (rect.left - rowRect.left) / scale + row.scrollLeft,
+        size: rect.width / scale,
+      };
     },
     write: (measured) => {
       const m = measured();

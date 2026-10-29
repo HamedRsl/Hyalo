@@ -63,6 +63,20 @@ describe('trackIndicator', () => {
     expect(row.style.getPropertyValue('--hy-ind-x')).toBe('100px');
   });
 
+  it('measures in layout pixels under a zoomed or scaled ancestor', async () => {
+    // The row is laid out 300px wide but shows at 150px, as with zoom: 0.5.
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      return this.tagName === 'DIV' ? 300 : 0;
+    });
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const row: HTMLElement = fixture.nativeElement.querySelector('div');
+    expect(row.style.getPropertyValue('--hy-ind-x')).toBe('100px');
+    expect(row.style.getPropertyValue('--hy-ind-size')).toBe('100px');
+  });
+
   it('stays unplaced while nothing is selected', async () => {
     const fixture = TestBed.createComponent(Host);
     fixture.componentInstance.selected.set(-1);
