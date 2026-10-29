@@ -26,7 +26,7 @@ npm start
 - Standalone components, `OnPush`, signal inputs and models. No `zone.js`.
 - Nothing touches `window` or `document` outside `afterNextRender`, an effect that runs in the browser, or an explicit platform check. The docs site is prerendered, so a mistake here fails the build.
 - CSS uses logical properties only. If a physical property is really needed, add `/* physical-ok */` on that line with a short reason. `npm run lint` checks this.
-- Keep component styles in the component unless the element renders elsewhere, then use the global stylesheet in `styles/` inside the `hy.base` layer.
+- Keep component styles in the component unless the element renders elsewhere, then use the global stylesheet in `styles/` inside the `hy.base` layer. Projected slot styles go in `hyalo-core.css`. Styles for something rendered in an overlay go in that entry point's file in `styles/overlays/`, which `hyalo.css` imports.
 - Every new component needs a spec with an axe check, keyboard tests for anything interactive, and a docs page.
 
 ## Writing

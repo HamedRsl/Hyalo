@@ -1,0 +1,8 @@
+/*
+ * Styles for HyToaster from @hyalo/angular/toast, which renders in a CDK
+ * overlay.
+ * Add it next to hyalo-core.css. hyalo.css already includes it.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import '../toast.css' layer(hy.base);

@@ -16,6 +16,8 @@ Add the stylesheet before your own styles in `angular.json`:
 "styles": ["node_modules/@hyalo/angular/styles/hyalo.css", "src/styles.css"]
 ```
 
+`hyalo.css` includes every overlay's styles. To leave out the ones you don't use, list `hyalo-core.css` plus the files you need from `styles/overlays/` (`select.css`, `popover.css`, `dialog.css`, `toast.css`) instead.
+
 Then import the standalone components you need. Each one has its own entry point, so a lazy route only loads what it uses:
 
 ```ts

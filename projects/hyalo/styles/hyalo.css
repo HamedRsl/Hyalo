@@ -3,21 +3,15 @@
  *
  *   "styles": ["node_modules/@hyalo/angular/styles/hyalo.css", "src/styles.css"]
  *
+ * It is hyalo-core.css plus every file in overlays/. To ship only the
+ * overlays the app uses, list those next to hyalo-core.css instead.
+ *
  * Everything sits in cascade layers, so unlayered app CSS always wins.
  */
 @layer hy.reset, hy.tokens, hy.base, hy.utilities;
 
-@import './reset.css' layer(hy.reset);
-@import './tokens.css' layer(hy.tokens);
-@import './themes.css' layer(hy.tokens);
-@import './glass.css' layer(hy.base);
-@import './motion.css' layer(hy.base);
-@import './card.css' layer(hy.base);
-@import './navbar.css' layer(hy.base);
-@import './field.css' layer(hy.base);
-@import './select.css' layer(hy.base);
-@import './dialog.css' layer(hy.base);
-@import './drawer.css' layer(hy.base);
-@import './popover.css' layer(hy.base);
-@import './toast.css' layer(hy.base);
-@import './typography.css' layer(hy.utilities);
+@import './hyalo-core.css';
+@import './overlays/select.css';
+@import './overlays/dialog.css';
+@import './overlays/popover.css';
+@import './overlays/toast.css';

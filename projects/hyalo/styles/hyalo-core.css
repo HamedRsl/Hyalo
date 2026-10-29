@@ -1,0 +1,25 @@
+/*
+ * @hyalo/angular core stylesheet: reset, tokens, themes, glass, motion,
+ * typography, and the slot styles of card, navbar and field. Use it instead
+ * of hyalo.css to leave out the overlay styles, and add the ones the app
+ * uses from overlays/:
+ *
+ *   "styles": [
+ *     "node_modules/@hyalo/angular/styles/hyalo-core.css",
+ *     "node_modules/@hyalo/angular/styles/overlays/dialog.css",
+ *     "src/styles.css"
+ *   ]
+ *
+ * Everything sits in cascade layers, so unlayered app CSS always wins.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import './reset.css' layer(hy.reset);
+@import './tokens.css' layer(hy.tokens);
+@import './themes.css' layer(hy.tokens);
+@import './glass.css' layer(hy.base);
+@import './motion.css' layer(hy.base);
+@import './card.css' layer(hy.base);
+@import './navbar.css' layer(hy.base);
+@import './field.css' layer(hy.base);
+@import './typography.css' layer(hy.utilities);

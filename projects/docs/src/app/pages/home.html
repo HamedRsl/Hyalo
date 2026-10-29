@@ -25,6 +25,12 @@
   <pre><code>npm install &#64;hyalo/angular &#64;angular/cdk &#64;angular/aria</code></pre>
   <p>Add the stylesheet to <code>angular.json</code>, before your own styles:</p>
   <pre><code>"styles": ["node_modules/&#64;hyalo/angular/styles/hyalo.css", "src/styles.css"]</code></pre>
+  <p>
+    <code>hyalo.css</code> includes the styles of every overlay. To ship only the ones you use,
+    list <code>hyalo-core.css</code> instead, plus a file from <code>styles/overlays/</code> for
+    each overlay: <code>select.css</code>, <code>popover.css</code>, <code>dialog.css</code> or
+    <code>toast.css</code>.
+  </p>
   <p>Then import what you use. Every component is standalone:</p>
   <pre><code>{{ usage }}</code></pre>
 

@@ -1,0 +1,9 @@
+/*
+ * Panel styles for hyTooltip and hyPopover from @hyalo/angular/popover,
+ * which render in CDK overlays.
+ * Add it next to hyalo-core.css. hyalo.css already includes it.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import '../presence.css' layer(hy.base);
+@import '../popover.css' layer(hy.base);

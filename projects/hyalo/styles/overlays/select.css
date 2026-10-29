@@ -1,0 +1,9 @@
+/*
+ * Panel styles for hy-select from @hyalo/angular/select, which renders
+ * in a CDK overlay.
+ * Add it next to hyalo-core.css. hyalo.css already includes it.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import '../select.css' layer(hy.base);
+@import '../presence.css' layer(hy.base);

@@ -1,0 +1,9 @@
+/*
+ * Panel styles for HyDialog and HyDrawer from @hyalo/angular/dialog,
+ * which render in CDK overlays.
+ * Add it next to hyalo-core.css. hyalo.css already includes it.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import '../dialog.css' layer(hy.base);
+@import '../drawer.css' layer(hy.base);

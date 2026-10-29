@@ -26,6 +26,16 @@ Add the stylesheet before your own styles in `angular.json`:
 
 All of it sits in cascade layers (`hy.reset`, `hy.tokens`, `hy.base`, `hy.utilities`), so any unlayered rule in your app wins without a fight.
 
+`hyalo.css` includes the styles of every overlay. To ship only the ones you use, start from `hyalo-core.css` and add a file from `styles/overlays/` for each overlay entry point: `select.css`, `popover.css` (tooltips and popovers), `dialog.css` (dialogs and drawers) and `toast.css`. An app with no overlays saves about 9 kB of CSS, more than a third of the stylesheet.
+
+```json
+"styles": [
+  "node_modules/@hyalo/angular/styles/hyalo-core.css",
+  "node_modules/@hyalo/angular/styles/overlays/dialog.css",
+  "src/styles.css"
+]
+```
+
 ## Usage
 
 Every component is standalone and has its own entry point, so a lazy route only loads the components it uses. Import what you need:
