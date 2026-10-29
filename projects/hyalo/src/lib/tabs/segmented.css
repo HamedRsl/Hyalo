@@ -1,0 +1,92 @@
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+.hy-segmented__row {
+  position: relative;
+  display: flex;
+  gap: var(--hy-space-1);
+  padding: var(--hy-space-1);
+  border-radius: var(--hy-radius-pill);
+  background: color-mix(in srgb, var(--hy-ink) 6%, transparent);
+  isolation: isolate;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hy-segmented__indicator {
+  position: absolute;
+  inset-block: var(--hy-space-1);
+  left: 0; /* physical-ok: the offset is measured from the left edge */
+  inline-size: var(--hy-ind-size, 0px);
+  translate: var(--hy-ind-x, 0px) 0;
+  border-radius: var(--hy-radius-pill);
+  background: var(--hy-glass-reflection), var(--hy-surface-1);
+  box-shadow:
+    var(--hy-glass-edge),
+    0 2px 8px -2px rgb(15 26 36 / 0.18);
+  z-index: -1;
+}
+
+:host([data-ready]) .hy-segmented__indicator {
+  transition:
+    translate var(--hy-dur-settle) var(--hy-ease-out),
+    inline-size var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-segmented__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hy-space-2);
+  flex: 1;
+  min-block-size: 2.25rem;
+  padding-inline: var(--hy-space-4);
+  border-radius: var(--hy-radius-pill);
+  color: var(--hy-ink-2);
+  font-weight: 540;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--hy-dur-quick) var(--hy-ease-out);
+}
+
+:host([data-size='sm']) .hy-segmented__item {
+  min-block-size: 1.75rem;
+  padding-inline: var(--hy-space-3);
+  font-size: var(--hy-step--1);
+}
+
+:host([data-size='lg']) .hy-segmented__item {
+  min-block-size: 2.75rem;
+  padding-inline: var(--hy-space-5);
+}
+
+.hy-segmented__item:hover,
+.hy-segmented__item[data-checked] {
+  color: var(--hy-ink);
+}
+
+.hy-segmented__item:has(:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hy-segmented__item:has(:focus-visible) {
+  box-shadow: var(--hy-focus-ring);
+}
+
+.hy-segmented__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+@media (forced-colors: active) {
+  .hy-segmented__item[data-checked] {
+    outline: 2px solid Highlight;
+  }
+}

@@ -24,6 +24,7 @@ module.exports = defineConfig([
         { allowExpressions: true, allowTypedFunctionExpressions: true },
       ],
       'no-console': 'error',
+      '@typescript-eslint/no-invalid-void-type': 'off',
       '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
     },
   },
