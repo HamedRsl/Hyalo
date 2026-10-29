@@ -1,5 +1,5 @@
 import { Directive, HostAttributeToken, computed, inject, signal } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { FORM_FIELD } from '@angular/forms/signals';
 import { injectId } from '@hyalo/angular';
 
 import { HY_FIELD, type HyFieldControl } from './field-control';
@@ -23,7 +23,8 @@ import { HY_FIELD, type HyFieldControl } from './field-control';
 })
 export class HyInput implements HyFieldControl {
   protected readonly field = inject(HY_FIELD, { optional: true });
-  private readonly formField = inject(FormField, { self: true, optional: true });
+  // The token, not the FormField class, so apps without forms do not bundle them.
+  private readonly formField = inject(FORM_FIELD, { self: true, optional: true });
 
   readonly labelable = true;
   /** The element's own static `id` attribute, or a generated one. */
