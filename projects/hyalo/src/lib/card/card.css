@@ -1,0 +1,32 @@
+:host {
+  --_pad: var(--hy-space-6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hy-space-3);
+  padding: var(--_pad);
+  border-radius: var(--hy-radius-l);
+  color: var(--hy-ink);
+  overflow: clip;
+}
+
+:host([data-padding='none']) {
+  --_pad: 0px;
+}
+
+:host([data-padding='sm']) {
+  --_pad: var(--hy-space-4);
+}
+
+:host([data-padding='lg']) {
+  --_pad: var(--hy-space-9);
+}
+
+:host(:has(.hy-card__link:focus-visible)) {
+  box-shadow: var(--hy-focus-ring);
+}
+
+.hy-card__body {
+  flex: 1;
+  color: var(--hy-ink-2);
+}
