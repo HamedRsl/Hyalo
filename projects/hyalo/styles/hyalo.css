@@ -15,4 +15,5 @@
 @import './card.css' layer(hy.base);
 @import './navbar.css' layer(hy.base);
 @import './field.css' layer(hy.base);
+@import './select.css' layer(hy.base);
 @import './typography.css' layer(hy.utilities);

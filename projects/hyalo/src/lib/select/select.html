@@ -1,0 +1,89 @@
+@if (useNative()) {
+  <select
+    class="hy-select__native"
+    [id]="id()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.aria-describedby]="field?.describedBy() ?? null"
+    [attr.aria-invalid]="showsError() || null"
+    (change)="pickNative($event)"
+    (blur)="touch.emit()"
+  >
+    @if (!selectedOption()) {
+      <option value="" disabled selected>{{ placeholder() }}</option>
+    }
+    @for (option of options(); track $index) {
+      <option [value]="$index" [selected]="option.value === value()" [disabled]="!!option.disabled">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+  <hy-icon class="hy-select__chevron" name="chevron-down" />
+} @else {
+  <button
+    #trigger
+    type="button"
+    ngCombobox
+    #combobox="ngCombobox"
+    cdkOverlayOrigin
+    #origin="cdkOverlayOrigin"
+    class="hy-select__trigger"
+    [id]="id()"
+    [disabled]="disabled()"
+    [expanded]="expanded()"
+    (expandedChange)="setExpanded($event)"
+    [attr.aria-labelledby]="field ? field.labelId + ' ' + id() : null"
+    [attr.aria-describedby]="field?.describedBy() ?? null"
+    [attr.aria-invalid]="showsError() || null"
+    [attr.aria-required]="required() || null"
+    (blur)="touch.emit()"
+  >
+    <span class="hy-select__value" [class.hy-select__placeholder]="!selectedOption()">
+      {{ selectedOption()?.label ?? placeholder() }}
+    </span>
+    <hy-icon class="hy-select__chevron" name="chevron-down" />
+  </button>
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="origin"
+      [cdkConnectedOverlayOpen]="expanded()"
+      [cdkConnectedOverlayPositions]="positions"
+      [cdkConnectedOverlayMinWidth]="panelWidth()"
+      cdkConnectedOverlayPanelClass="hy-select-overlay"
+      (overlayOutsideClick)="expanded.set(false)"
+    >
+      <!-- Focus stays on the trigger; Aria relays keys here and manages tabindex. -->
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+      <div
+        ngComboboxWidget
+        ngListbox
+        #listbox="ngListbox"
+        class="hy-select__panel hy-glass"
+        data-material="frosted"
+        focusMode="activedescendant"
+        selectionMode="explicit"
+        [activeDescendant]="listbox.activeDescendant()"
+        [value]="listValue()"
+        (valueChange)="pick($event)"
+        (click)="onPanelClick($event)"
+        (keydown.enter)="close()"
+        (keydown.space)="close()"
+      >
+        @for (option of options(); track $index) {
+          <div
+            ngOption
+            class="hy-select__option"
+            [value]="option.value"
+            [label]="option.label"
+            [disabled]="!!option.disabled"
+          >
+            <span>{{ option.label }}</span>
+            <hy-icon class="hy-select__check" name="check" />
+          </div>
+        }
+      </div>
+    </ng-template>
+  </ng-template>
+}

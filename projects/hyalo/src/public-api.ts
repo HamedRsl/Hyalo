@@ -27,3 +27,4 @@ export * from './lib/tabs/segmented';
 export * from './lib/field/field-control';
 export * from './lib/field/field';
 export * from './lib/field/input';
+export * from './lib/select/select';

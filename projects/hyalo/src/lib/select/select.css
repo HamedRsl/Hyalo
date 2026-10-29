@@ -1,0 +1,59 @@
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-inline-size: 0;
+  align-self: stretch;
+}
+
+.hy-select__trigger,
+.hy-select__native {
+  flex: 1;
+  min-inline-size: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  padding: 0;
+  padding-inline-end: 1.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--hy-ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  appearance: none;
+}
+
+.hy-select__trigger:focus-visible,
+.hy-select__native:focus-visible {
+  outline: none;
+}
+
+.hy-select__trigger:disabled,
+.hy-select__native:disabled {
+  cursor: not-allowed;
+}
+
+.hy-select__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hy-select__placeholder {
+  color: var(--hy-ink-3);
+}
+
+.hy-select__chevron {
+  position: absolute;
+  inset-inline-end: 0;
+  color: var(--hy-ink-3);
+  pointer-events: none;
+  transition: rotate var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-select__trigger[aria-expanded='true'] .hy-select__chevron {
+  rotate: 180deg;
+}
