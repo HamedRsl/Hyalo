@@ -3,6 +3,7 @@ import {
   createFlexibleConnectedPositionStrategy,
   createOverlayRef,
   createRepositionScrollStrategy,
+  type FlexibleConnectedPositionStrategy,
   type OverlayRef,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -60,6 +61,7 @@ export class HyTooltip {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly describer = inject(AriaDescriber);
   private overlayRef: OverlayRef | null = null;
+  private position: FlexibleConnectedPositionStrategy | null = null;
   private panel: HyTooltipPanel | null = null;
   private showTimer: ReturnType<typeof setTimeout> | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
@@ -115,11 +117,11 @@ export class HyTooltip {
 
   private attach(): void {
     if (!this.overlayRef) {
+      this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
+        .withFlexibleDimensions(false)
+        .withViewportMargin(8);
       this.overlayRef = createOverlayRef(this.injector, {
-        positionStrategy: createFlexibleConnectedPositionStrategy(this.injector, this.host)
-          .withPositions(hyConnectedPositions(this.tooltipPlacement()))
-          .withFlexibleDimensions(false)
-          .withViewportMargin(8),
+        positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: 'hy-tooltip-pane',
       });
@@ -130,6 +132,8 @@ export class HyTooltip {
       this.overlayRef.overlayElement.addEventListener('pointerleave', () => this.scheduleHide());
     }
     if (this.overlayRef.hasAttached()) return;
+    // Read on every show, so a changed placement applies next time.
+    this.position?.withPositions(hyConnectedPositions(this.tooltipPlacement()));
     const ref = this.overlayRef.attach(new ComponentPortal(HyTooltipPanel, null, this.injector));
     this.panel = ref.instance;
     this.panel.message.set(this.message());

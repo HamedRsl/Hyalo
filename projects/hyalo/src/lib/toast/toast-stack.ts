@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  inject,
+} from '@angular/core';
 import { HyIcon } from '../icon/icon';
 import { HyFidelity } from '../fidelity/fidelity';
 import { HyToaster, type HyToastItem } from './toaster';
@@ -14,10 +21,10 @@ const SWIPE_DISTANCE = 80;
     class: 'hy-toast-stack',
     role: 'region',
     'aria-label': 'Notifications',
-    '(pointerenter)': 'toaster.pause()',
-    '(pointerleave)': 'toaster.resume()',
-    '(focusin)': 'toaster.pause()',
-    '(focusout)': 'toaster.resume()',
+    '(pointerenter)': "toaster.pause('hover')",
+    '(pointerleave)': "toaster.resume('hover')",
+    '(focusin)': "toaster.pause('focus')",
+    '(focusout)': 'onFocusOut($event)',
   },
   template: `
     <ol class="hy-toast-list">
@@ -66,12 +73,28 @@ const SWIPE_DISTANCE = 80;
 export class HyToastStack {
   protected readonly toaster = inject(HyToaster);
   private readonly fidelity = inject(HyFidelity);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private startX = 0;
   private dragging = false;
 
   protected readonly material = computed(() =>
     this.fidelity.tier() === 'low' ? 'solid' : 'frosted',
   );
+
+  constructor() {
+    // Removing the focused toast drops focus without a reliable focusout.
+    afterRenderEffect(() => {
+      this.toaster.items();
+      if (!this.host.contains(this.host.ownerDocument.activeElement)) {
+        this.toaster.resume('focus');
+      }
+    });
+  }
+
+  protected onFocusOut(event: FocusEvent): void {
+    // Moving between buttons inside the stack keeps the timers paused.
+    if (!this.host.contains(event.relatedTarget as Node | null)) this.toaster.resume('focus');
+  }
 
   protected onDown(event: PointerEvent): void {
     if ((event.target as Element).closest('button')) return;
@@ -93,6 +116,10 @@ export class HyToastStack {
     this.dragging = false;
     const dx = event.clientX - this.startX;
     if (Math.abs(dx) >= SWIPE_DISTANCE) {
+      // Inline styles beat [data-leaving], so carry on from the drag instead.
+      const el = event.currentTarget as HTMLElement;
+      el.style.translate = `${dx + Math.sign(dx) * SWIPE_DISTANCE}px 0`;
+      el.style.opacity = '';
       this.toaster.dismiss(toast.id);
     } else {
       this.onCancel(event);

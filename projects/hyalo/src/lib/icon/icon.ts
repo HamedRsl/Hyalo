@@ -11,7 +11,7 @@ import {
   isDevMode,
 } from '@angular/core';
 import type { HyIconDef, HyIconNode } from './icons';
-import { HyIconRegistry } from './registry';
+import { HY_ICONS, HyIconRegistry } from './registry';
 
 const SAFE_ATTRS = new Set([
   'd',
@@ -44,10 +44,19 @@ export class HyIconAttrs {
   readonly hyIconAttrs = input.required<Readonly<Record<string, string | number>>>();
 
   constructor() {
+    let applied = new Set<string>();
     effect(() => {
+      const next = new Set<string>();
       for (const [name, value] of Object.entries(this.hyIconAttrs())) {
-        if (SAFE_ATTRS.has(name)) this.renderer.setAttribute(this.el, name, String(value));
+        if (!SAFE_ATTRS.has(name)) continue;
+        this.renderer.setAttribute(this.el, name, String(value));
+        next.add(name);
       }
+      // A swapped icon may not use every attribute the previous one did.
+      for (const name of applied) {
+        if (!next.has(name)) this.renderer.removeAttribute(this.el, name);
+      }
+      applied = next;
     });
   }
 }
@@ -131,6 +140,7 @@ export class HyIconAttrs {
 })
 export class HyIcon {
   private readonly registry = inject(HyIconRegistry);
+  private readonly sets = inject(HY_ICONS, { optional: true });
 
   /** Registered icon name. */
   readonly name = input<string>();
@@ -147,7 +157,7 @@ export class HyIcon {
     const icon = this.icon();
     if (icon) return Array.isArray(icon) ? { node: icon as HyIconNode } : (icon as HyIconDef);
     const name = this.name();
-    const found = name ? this.registry.get(name) : undefined;
+    const found = name ? this.registry.lookup(name, this.sets) : undefined;
     if (name && !found && isDevMode()) {
       console.warn(`[hyalo] Unknown icon "${name}". Register it with provideHyaloIcons().`); // eslint-disable-line no-console
     }

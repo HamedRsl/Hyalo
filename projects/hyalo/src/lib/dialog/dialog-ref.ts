@@ -47,6 +47,8 @@ export class HyDialogRef<R = unknown> {
       this.cdkRef.close(result);
       return;
     }
+    // Drawers animate the pane, dialogs the panel inside it.
+    const panel = this.containerElement;
     pane.dataset['state'] = 'closing';
     backdrop?.setAttribute('data-state', 'closing');
     // The timeout is a safety net in case animationend never fires.
@@ -54,9 +56,14 @@ export class HyDialogRef<R = unknown> {
     const finish = (): void => {
       if (done) return;
       done = true;
+      pane.removeEventListener('animationend', onEnd);
       this.cdkRef.close(result);
     };
-    pane.addEventListener('animationend', finish, { once: true });
+    // Ignore animations that bubble up from the content, like a button ripple.
+    const onEnd = (event: Event): void => {
+      if (event.target === pane || event.target === panel) finish();
+    };
+    pane.addEventListener('animationend', onEnd);
     setTimeout(finish, MOTION.settle.duration * 1000 + 80);
   }
 }

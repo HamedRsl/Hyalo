@@ -85,6 +85,20 @@
   -webkit-backdrop-filter: blur(4px);
 }
 
+/* Set by HyDialogRef while a dialog or drawer plays its exit animation. */
+.hy-backdrop[data-state='closing'] {
+  opacity: 0;
+}
+
 .hy-backdrop-transparent {
   background: transparent;
+}
+
+/* Entry for glass dropdowns and popovers. Runs on the glass element itself. */
+@keyframes hy-pop-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+    scale: 0.98;
+  }
 }

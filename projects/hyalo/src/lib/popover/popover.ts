@@ -3,6 +3,7 @@ import {
   createFlexibleConnectedPositionStrategy,
   createOverlayRef,
   createRepositionScrollStrategy,
+  type FlexibleConnectedPositionStrategy,
   type OverlayRef,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -56,6 +57,7 @@ export class HyPopover {
   private readonly fidelity = inject(HyFidelity);
   protected readonly panelId = injectId('popover');
   private overlayRef: OverlayRef | null = null;
+  private position: FlexibleConnectedPositionStrategy | null = null;
 
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
@@ -87,11 +89,11 @@ export class HyPopover {
 
   private attach(): void {
     if (!this.overlayRef) {
+      this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
+        .withViewportMargin(12)
+        .withPush(true);
       this.overlayRef = createOverlayRef(this.injector, {
-        positionStrategy: createFlexibleConnectedPositionStrategy(this.injector, this.host)
-          .withPositions(hyConnectedPositions(this.popoverPlacement(), 10))
-          .withViewportMargin(12)
-          .withPush(true),
+        positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: 'hy-popover-pane',
       });
@@ -106,6 +108,8 @@ export class HyPopover {
       });
     }
     if (this.overlayRef.hasAttached()) return;
+    // Read on every open, so a changed placement applies next time.
+    this.position?.withPositions(hyConnectedPositions(this.popoverPlacement(), 10));
     this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
 
     const pane = this.overlayRef.overlayElement;

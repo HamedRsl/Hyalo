@@ -59,6 +59,13 @@ describe('HyDialog', () => {
     expect(await ref.closed).toBe('saved');
   });
 
+  it('closes with undefined from a bare hyDialogClose', async () => {
+    const ref = TestBed.inject(HyDialog).open(EditAddress, { data: { street: '' } });
+    TestBed.tick();
+    document.querySelectorAll<HTMLButtonElement>('.cdk-dialog-container button')[0]!.click();
+    expect(await ref.closed).toBeUndefined();
+  });
+
   it('closes on Escape when dismissible', async () => {
     const ref = TestBed.inject(HyDialog).open(EditAddress, { data: { street: '' } });
     TestBed.tick();
@@ -94,9 +101,23 @@ describe('HyDialog', () => {
     ref.close();
     const pane = document.querySelector<HTMLElement>('.hy-dialog-pane')!;
     expect(pane.dataset['state']).toBe('closing');
-    pane.dispatchEvent(new Event('animationend'));
+    pane
+      .querySelector('.cdk-dialog-container')!
+      .dispatchEvent(new Event('animationend', { bubbles: true }));
     await ref.closed;
     expect(document.querySelector('.hy-dialog-pane')).toBeNull();
+  });
+
+  it('ignores animations that end inside the content while closing', async () => {
+    TestBed.inject(HyMotion).setReduced(false);
+    const ref = TestBed.inject(HyDialog).open(EditAddress, { data: { street: '' } });
+    TestBed.tick();
+    ref.close();
+    document
+      .querySelector('.cdk-dialog-container button')!
+      .dispatchEvent(new Event('animationend', { bubbles: true }));
+    await flush();
+    expect(document.querySelector('.hy-dialog-pane')).not.toBeNull();
   });
 });
 

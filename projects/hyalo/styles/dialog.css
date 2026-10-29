@@ -35,19 +35,24 @@
   display: contents;
 }
 
+/*
+ * The animation runs on the glass panel, not the pane. An ancestor with
+ * opacity below 1 becomes the backdrop root, so the panel's blur would see
+ * nothing behind it until the fade ended, then snap in.
+ */
 .hy-dialog-pane > .cdk-dialog-container {
   border-radius: var(--hy-radius-l);
   max-block-size: calc(100dvh - 2 * var(--hy-space-6));
+  animation: hy-dialog-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-dialog-pane[data-state='closing'] > .cdk-dialog-container {
+  animation: hy-dialog-out var(--hy-dur-quick) var(--hy-ease-inout) forwards;
 }
 
 .hy-dialog-pane {
   inline-size: calc(100vw - 2 * var(--hy-space-4));
   max-block-size: calc(100dvh - 2 * var(--hy-space-6));
-  animation: hy-dialog-in var(--hy-dur-settle) var(--hy-ease-out);
-}
-
-.hy-dialog-pane[data-state='closing'] {
-  animation: hy-dialog-out var(--hy-dur-quick) var(--hy-ease-inout) forwards;
 }
 
 @media (max-width: 40rem) {

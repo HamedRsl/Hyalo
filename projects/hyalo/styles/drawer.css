@@ -51,10 +51,6 @@
   animation-name: hy-sheet-out;
 }
 
-.hy-backdrop[data-state='closing'] {
-  opacity: 0;
-}
-
 @keyframes hy-drawer-in {
   from {
     translate: var(--_from) 0;

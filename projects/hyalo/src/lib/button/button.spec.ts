@@ -1,6 +1,8 @@
 import { expectNoAxeViolations } from '../../testing/axe';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideHyalo } from '../core/config';
+import { HyFidelity } from '../fidelity/fidelity';
 import { HyButton } from './button';
 
 @Component({
@@ -27,6 +29,18 @@ describe('HyButton', () => {
     expect(button.dataset['size']).toBe('md');
     expect(button.dataset['tone']).toBe('accent');
     expect(button.classList).toContain('hy-glass');
+    expect(button.dataset['material']).toBe('frosted');
+  });
+
+  it('follows the configured material and goes solid on the low tier', async () => {
+    TestBed.configureTestingModule({ providers: [provideHyalo({ material: 'clear' })] });
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.dataset['material']).toBe('clear');
+    TestBed.inject(HyFidelity).setTier('low');
+    await fixture.whenStable();
+    expect(button.dataset['material']).toBe('solid');
   });
 
   it('blocks clicks while loading but stays focusable', async () => {

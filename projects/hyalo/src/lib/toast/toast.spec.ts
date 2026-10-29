@@ -38,12 +38,41 @@ describe('HyToaster', () => {
   it('hides after the duration and pauses while hovered', () => {
     const toaster = TestBed.inject(HyToaster);
     toaster.show({ message: 'Hello', duration: 1000 });
-    toaster.pause();
+    toaster.pause('hover');
     vi.advanceTimersByTime(2000);
     expect(toaster.items().length).toBe(1);
-    toaster.resume();
+    toaster.resume('hover');
     vi.advanceTimersByTime(1000);
     expect(toaster.items().length).toBe(0);
+  });
+
+  it('stays paused while focus is inside after the pointer leaves', () => {
+    const toaster = TestBed.inject(HyToaster);
+    toaster.show({ message: 'Hello', duration: 1000 });
+    TestBed.tick();
+    const stack = document.querySelector('.hy-toast-stack')!;
+    document.querySelector<HTMLButtonElement>('.hy-toast__close')!.focus();
+    stack.dispatchEvent(new PointerEvent('pointerenter'));
+    stack.dispatchEvent(new PointerEvent('pointerleave'));
+    vi.advanceTimersByTime(2000);
+    expect(toaster.items().length).toBe(1);
+    (document.activeElement as HTMLElement).blur();
+    vi.advanceTimersByTime(1000);
+    expect(toaster.items().length).toBe(0);
+  });
+
+  it('resumes when the focused toast is removed', () => {
+    const toaster = TestBed.inject(HyToaster);
+    toaster.show({ message: 'Keep', duration: 1000 });
+    toaster.show({ message: 'Close me', duration: 0 });
+    TestBed.tick();
+    const close = document.querySelectorAll<HTMLButtonElement>('.hy-toast__close')[1]!;
+    close.focus();
+    expect(document.activeElement).toBe(close);
+    close.click();
+    TestBed.tick();
+    vi.advanceTimersByTime(1000);
+    expect(toaster.items().map((t) => t.message)).toEqual([]);
   });
 
   it('keeps toasts with an action until dismissed', () => {

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { HY_CONFIG } from '../core/config';
 import type { HySize, HyTone } from '../core/axes';
+import { HyFidelity } from '../fidelity/fidelity';
 import { HyIcon } from '../icon/icon';
 import { HyInteractive } from '../interaction/state';
 import { HyRipple } from '../interaction/ripple';
@@ -47,7 +48,7 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
   host: {
     class: 'hy-button',
     '[class.hy-glass]': 'variant() === "glass"',
-    '[attr.data-material]': 'variant() === "glass" ? "frosted" : null',
+    '[attr.data-material]': 'material()',
     '[attr.data-variant]': 'variant()',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',
@@ -68,6 +69,7 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
 })
 export class HyButton {
   private readonly config = inject(HY_CONFIG);
+  private readonly fidelity = inject(HyFidelity);
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   protected readonly isButton = this.el.tagName === 'BUTTON';
 
@@ -83,6 +85,12 @@ export class HyButton {
   readonly loading = input(false, { transform: booleanAttribute });
   /** Disables the button. On links this sets `aria-disabled`. */
   readonly disabled = input(false, { transform: booleanAttribute });
+
+  /** Glass follows the configured material and goes solid on the low tier. */
+  protected readonly material = computed(() => {
+    if (this.variant() !== 'glass') return null;
+    return this.fidelity.tier() === 'low' ? 'solid' : this.config.material;
+  });
 
   /** True when clicks should be ignored. */
   protected readonly blocked = computed(

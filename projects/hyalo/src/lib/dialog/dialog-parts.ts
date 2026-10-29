@@ -36,8 +36,10 @@ export class HyDialogActions {}
 })
 export class HyDialogClose {
   protected readonly ref = inject(HyDialogRef, { optional: true });
-  /** The result to close with. */
-  readonly hyDialogClose = input<unknown>(undefined);
+  /** The result to close with. A bare attribute closes with `undefined`. */
+  readonly hyDialogClose = input<unknown, unknown>(undefined, {
+    transform: (value) => (value === '' ? undefined : value),
+  });
 }
 
 /** Everything needed to lay out dialog or drawer content. */

@@ -27,6 +27,10 @@ export type HyRevealFrom = 'up' | 'fade' | 'scale';
  * enabled. Elements already on screen are left alone, so server-rendered
  * content does not flash. CSS transitions do the work, so it also runs on the
  * low tier when reduced motion is off.
+ *
+ * Put it on the glass element itself (`<hy-card hyReveal>`), not on a
+ * wrapper around glass. While a wrapper fades, its glass children cannot
+ * blur what is behind it, and the blur snaps in when the fade ends.
  */
 @Directive({
   selector: '[hyReveal]',

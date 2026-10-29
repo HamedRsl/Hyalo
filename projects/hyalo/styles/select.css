@@ -45,11 +45,3 @@
   opacity: 0.45;
   cursor: not-allowed;
 }
-
-@keyframes hy-pop-in {
-  from {
-    opacity: 0;
-    translate: 0 -4px;
-    scale: 0.98;
-  }
-}

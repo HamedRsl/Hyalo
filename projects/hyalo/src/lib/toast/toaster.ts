@@ -40,6 +40,9 @@ export interface HyToastRef {
 
 const MAX_VISIBLE = 4;
 
+/** @internal Why the timers are on hold. Hover and focus are tracked apart. */
+export type HyToastHold = 'hover' | 'focus';
+
 /**
  * Shows toasts: short messages about something that just happened.
  *
@@ -66,7 +69,7 @@ export class HyToaster {
   >();
   private overlayRef: OverlayRef | null = null;
   private nextId = 1;
-  private paused = false;
+  private readonly holds = new Set<HyToastHold>();
 
   /** @internal The current stack, newest last. */
   readonly items = signal<readonly HyToastItem[]>([]);
@@ -89,7 +92,7 @@ export class HyToaster {
     const duration = options.duration ?? (options.action ? 0 : 5000);
     if (duration > 0) {
       this.timers.set(id, { left: duration, started: Date.now() });
-      if (!this.paused) this.startTimer(id);
+      if (this.holds.size === 0) this.startTimer(id);
     }
     return ref;
   }
@@ -121,10 +124,15 @@ export class HyToaster {
     for (const t of this.items()) this.dismiss(t.id);
   }
 
-  /** @internal Pauses all timers, while the stack is hovered or focused. */
-  pause(): void {
-    if (this.paused) return;
-    this.paused = true;
+  /**
+   * @internal Pauses all timers while the stack is hovered or focused. Each
+   * reason is held separately, so the pointer leaving does not restart the
+   * timers while focus is still on a toast.
+   */
+  pause(reason: HyToastHold): void {
+    const wasPaused = this.holds.size > 0;
+    this.holds.add(reason);
+    if (wasPaused) return;
     const now = Date.now();
     for (const timer of this.timers.values()) {
       clearTimeout(timer.handle);
@@ -132,10 +140,9 @@ export class HyToaster {
     }
   }
 
-  /** @internal */
-  resume(): void {
-    if (!this.paused) return;
-    this.paused = false;
+  /** @internal Releases one hold. Timers restart once no hold is left. */
+  resume(reason: HyToastHold): void {
+    if (!this.holds.delete(reason) || this.holds.size > 0) return;
     for (const id of this.timers.keys()) this.startTimer(id);
   }
 
