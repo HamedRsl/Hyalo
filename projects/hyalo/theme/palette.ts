@@ -46,7 +46,9 @@ export class HyPalette {
   /**
    * Loads a palette and applies it, or goes back to the built-in palette for
    * null. When several calls overlap, the last one wins. Rejects when the
-   * stylesheet fails to load, and leaves the current palette in place.
+   * stylesheet fails to load, and leaves the current palette in place. The
+   * exception is a palette restored before boot whose file never loaded: the
+   * page goes back to the built-in palette instead of claiming it.
    */
   async use(name: HyPaletteName | (string & {}) | null): Promise<void> {
     if (name !== null) assertName(name);
@@ -54,6 +56,11 @@ export class HyPalette {
     try {
       if (name !== null && this.isBrowser) await this.load(name);
     } catch (error) {
+      if (this._current() === name) {
+        // The palette the page claims to show never loaded, so drop the claim.
+        this.document.documentElement.removeAttribute(ATTR);
+        this._current.set(null);
+      }
       if (this._selected() === name) this._selected.set(this._current());
       throw error;
     }
@@ -75,10 +82,14 @@ export class HyPalette {
     if (cached) return cached;
     const head = this.document.head;
     const existing = head.querySelector<HTMLLinkElement>(`link[${ATTR}="${name}"]`);
+    // A link without a sheet may have failed before anyone listened, as one
+    // added by a pre-paint script can, and would then never settle. Replace
+    // it; if it was still loading, the new one comes from the cache.
+    if (existing && !existing.sheet) existing.remove();
     const pending = existing?.sheet
       ? Promise.resolve()
       : new Promise<void>((resolve, reject) => {
-          const link = existing ?? this.document.createElement('link');
+          const link = this.document.createElement('link');
           link.addEventListener('load', () => resolve(), { once: true });
           link.addEventListener(
             'error',
@@ -89,7 +100,6 @@ export class HyPalette {
             },
             { once: true },
           );
-          if (existing) return;
           link.rel = 'stylesheet';
           link.href = (this.config.paletteHref ?? defaultPaletteHref)(name);
           link.setAttribute(ATTR, name);

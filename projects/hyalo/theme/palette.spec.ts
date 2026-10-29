@@ -52,6 +52,27 @@ describe('HyPalette', () => {
     expect(root.hasAttribute('data-hy-palette')).toBe(false);
   });
 
+  it('settles when a link added before boot has already failed', async () => {
+    // What an inline pre-paint script leaves behind when the file is missing:
+    // the attribute is set, and the link fired its error before HyPalette existed.
+    const stale = document.createElement('link');
+    stale.setAttribute('data-hy-palette', 'ocean');
+    document.head.appendChild(stale);
+    root.setAttribute('data-hy-palette', 'ocean');
+    const palette = TestBed.inject(HyPalette);
+    expect(palette.current()).toBe('ocean');
+
+    const done = palette.use('ocean');
+    expect(stale.isConnected).toBe(false);
+    linkFor('ocean')!.dispatchEvent(new Event('error'));
+
+    await expect(done).rejects.toThrow(/ocean/);
+    // The palette never showed, so the page falls back to the built-in one.
+    expect(root.hasAttribute('data-hy-palette')).toBe(false);
+    expect(palette.current()).toBeNull();
+    expect(palette.selected()).toBeNull();
+  });
+
   it('goes back to the built-in palette for null', async () => {
     root.setAttribute('data-hy-palette', 'aurora');
     const palette = TestBed.inject(HyPalette);
