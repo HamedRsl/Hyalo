@@ -19,3 +19,4 @@ export * from './lib/icon/icons';
 export * from './lib/icon/registry';
 export * from './lib/icon/icon';
 export * from './lib/overlay/positions';
+export * from './lib/button/button';
