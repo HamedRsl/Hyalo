@@ -19,4 +19,5 @@
 @import './dialog.css' layer(hy.base);
 @import './drawer.css' layer(hy.base);
 @import './popover.css' layer(hy.base);
+@import './toast.css' layer(hy.base);
 @import './typography.css' layer(hy.utilities);
