@@ -1,6 +1,6 @@
 import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import { HY_CONFIG } from '../core/config';
-import { injectIsBrowser } from '../core/platform';
+import { injectIsBrowser, matchesMedia } from '../core/platform';
 import { HyFidelity } from '../fidelity/fidelity';
 import type { HyGsap } from '../core/gsap';
 
@@ -68,7 +68,7 @@ export class HyMotion {
     const root = this.document.documentElement;
     if (reduced === null) {
       root.removeAttribute('data-hy-motion');
-      this._reduced.set(this.isBrowser && matchMedia('(prefers-reduced-motion: reduce)').matches);
+      this._reduced.set(matchesMedia('(prefers-reduced-motion: reduce)'));
       return;
     }
     root.setAttribute('data-hy-motion', reduced ? 'reduced' : 'full');
