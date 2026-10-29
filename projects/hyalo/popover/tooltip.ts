@@ -1,12 +1,5 @@
 import { AriaDescriber } from '@angular/cdk/a11y';
-import {
-  createFlexibleConnectedPositionStrategy,
-  createOverlayRef,
-  createRepositionScrollStrategy,
-  type FlexibleConnectedPositionStrategy,
-  type OverlayRef,
-} from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,6 +19,7 @@ import {
   type HyPlacement,
   ɵHyPresence as HyPresence,
 } from '@hyalo/angular/overlay';
+import { loadOverlay } from './load-overlay';
 
 @Component({
   selector: 'hy-tooltip-panel',
@@ -71,6 +65,9 @@ export class HyTooltip {
   private readonly presence = new HyPresence();
   private showTimer: ReturnType<typeof setTimeout> | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
+  /** True from show() until hide(), so a late overlay load knows to stop. */
+  private wanted = false;
+  private destroyed = false;
 
   /** The tooltip text. */
   readonly message = input('', { alias: 'hyTooltip' });
@@ -90,6 +87,7 @@ export class HyTooltip {
       if (this.panel) this.panel.message.set(message);
     });
     inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
       clearTimeout(this.showTimer);
       clearTimeout(this.hideTimer);
       if (described) this.describer.removeDescription(this.host.nativeElement, described);
@@ -106,11 +104,15 @@ export class HyTooltip {
     if (this.tooltipDisabled() || !this.message()) return;
     clearTimeout(this.hideTimer);
     clearTimeout(this.showTimer);
-    this.showTimer = setTimeout(() => this.attach(), delay);
+    this.wanted = true;
+    // Load during the hover delay, so the tooltip is ready when it ends.
+    loadOverlay().catch(() => undefined);
+    this.showTimer = setTimeout(() => void this.attach(), delay);
   }
 
   /** Starts hiding the tooltip now. It fades out quickly. */
   hide(): void {
+    this.wanted = false;
     clearTimeout(this.showTimer);
     clearTimeout(this.hideTimer);
     const ref = this.overlayRef;
@@ -123,7 +125,15 @@ export class HyTooltip {
     this.hideTimer = setTimeout(() => this.hide(), 120);
   }
 
-  private attach(): void {
+  private async attach(): Promise<void> {
+    const kit = await loadOverlay().catch(() => null);
+    if (!kit || !this.wanted || this.destroyed) return;
+    const {
+      ComponentPortal,
+      createFlexibleConnectedPositionStrategy,
+      createOverlayRef,
+      createRepositionScrollStrategy,
+    } = kit;
     if (!this.overlayRef) {
       this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withFlexibleDimensions(false)

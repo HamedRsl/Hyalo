@@ -1,12 +1,5 @@
 import { FocusTrapFactory } from '@angular/cdk/a11y';
-import {
-  createFlexibleConnectedPositionStrategy,
-  createOverlayRef,
-  createRepositionScrollStrategy,
-  type FlexibleConnectedPositionStrategy,
-  type OverlayRef,
-} from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import {
   DestroyRef,
   Directive,
@@ -26,6 +19,7 @@ import {
   type HyPlacement,
   ɵHyPresence as HyPresence,
 } from '@hyalo/angular/overlay';
+import { loadOverlay } from './load-overlay';
 
 /**
  * A non-modal glass panel anchored to a trigger, for content that does not
@@ -50,6 +44,9 @@ import {
     '[attr.aria-expanded]': 'open()',
     '[attr.aria-controls]': 'open() ? panelId : null',
     '(click)': 'toggle()',
+    // Fetch the overlay code as soon as the user heads for the trigger.
+    '(pointerenter)': 'preload()',
+    '(focusin)': 'preload()',
   },
 })
 export class HyPopover {
@@ -62,6 +59,7 @@ export class HyPopover {
   private overlayRef: OverlayRef | null = null;
   private position: FlexibleConnectedPositionStrategy | null = null;
   private readonly presence = new HyPresence();
+  private destroyed = false;
 
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
@@ -75,9 +73,12 @@ export class HyPopover {
   constructor() {
     effect(() => {
       const open = this.open();
-      untracked(() => (open ? this.attach() : this.detach()));
+      untracked(() => (open ? void this.attach() : this.detach()));
     });
-    inject(DestroyRef).onDestroy(() => this.overlayRef?.dispose());
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      this.overlayRef?.dispose();
+    });
   }
 
   toggle(): void {
@@ -91,7 +92,26 @@ export class HyPopover {
     if (restoreFocus) this.host.nativeElement.focus();
   }
 
-  private attach(): void {
+  protected preload(): void {
+    loadOverlay().catch(() => undefined);
+  }
+
+  private async attach(): Promise<void> {
+    const kit = await loadOverlay().catch(() => null);
+    if (this.destroyed) return;
+    if (!kit) {
+      // Without the overlay code there is no panel, so do not claim one.
+      this.open.set(false);
+      return;
+    }
+    // It may have been closed again while the code loaded.
+    if (!this.open()) return;
+    const {
+      TemplatePortal,
+      createFlexibleConnectedPositionStrategy,
+      createOverlayRef,
+      createRepositionScrollStrategy,
+    } = kit;
     if (!this.overlayRef) {
       this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withViewportMargin(12)

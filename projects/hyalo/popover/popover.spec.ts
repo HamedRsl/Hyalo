@@ -15,6 +15,16 @@ class Host {}
 
 const wait = (ms = 0) => new Promise((r) => setTimeout(r, ms));
 
+/** Panels open once the overlay code has loaded, so wait for them to appear. */
+async function waitFor<T>(find: () => T | null): Promise<T> {
+  for (let i = 0; i < 50; i++) {
+    const found = find();
+    if (found) return found;
+    await wait(10);
+  }
+  throw new Error('Timed out waiting for the panel');
+}
+
 describe('HyTooltip', () => {
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((el) => el.remove()));
 
@@ -34,9 +44,8 @@ describe('HyTooltip', () => {
     await fixture.whenStable();
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     button.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
-    await wait();
+    const tip = await waitFor(() => document.querySelector('.hy-tooltip'));
     await fixture.whenStable();
-    const tip = document.querySelector('.hy-tooltip')!;
     expect(tip.textContent).toBe('Copy link');
     expect(tip.getAttribute('aria-hidden')).toBe('true');
     button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
@@ -61,9 +70,9 @@ describe('HyPopover', () => {
   it('opens a labelled dialog panel and moves focus into it', async () => {
     const { fixture, trigger } = await setup();
     trigger.click();
+    const pane = await waitFor(() => document.querySelector<HTMLElement>('.hy-popover'));
     await fixture.whenStable();
     await wait();
-    const pane = document.querySelector<HTMLElement>('.hy-popover')!;
     expect(pane.getAttribute('role')).toBe('dialog');
     expect(pane.getAttribute('aria-label')).toBe('Share');
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -73,9 +82,22 @@ describe('HyPopover', () => {
     expect(pane.contains(document.activeElement)).toBe(true);
   });
 
+  it('stays closed when toggled shut before the overlay code arrives', async () => {
+    const { fixture, trigger } = await setup();
+    trigger.click();
+    TestBed.tick(); // runs the effect, which starts loading the overlay
+    trigger.click();
+    TestBed.tick();
+    await fixture.whenStable();
+    await wait(100);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.querySelector('.hy-popover')).toBeNull();
+  });
+
   it('closes on Escape and returns focus to the trigger', async () => {
     const { fixture, trigger } = await setup();
     trigger.click();
+    await waitFor(() => document.querySelector('.hy-popover'));
     await fixture.whenStable();
     await wait();
     document.activeElement!.dispatchEvent(
