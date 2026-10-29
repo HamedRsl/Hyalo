@@ -1,0 +1,80 @@
+/* Drawers and bottom sheets. Shares the panel and content styles in dialog.css. */
+.hy-drawer-pane > .cdk-dialog-container {
+  block-size: 100%;
+  border-radius: 0;
+}
+
+.hy-drawer--start > .cdk-dialog-container {
+  border-start-end-radius: var(--hy-radius-l);
+  border-end-end-radius: var(--hy-radius-l);
+}
+
+.hy-drawer--end > .cdk-dialog-container {
+  border-start-start-radius: var(--hy-radius-l);
+  border-end-start-radius: var(--hy-radius-l);
+}
+
+.hy-drawer--bottom > .cdk-dialog-container {
+  max-block-size: 85dvh;
+  border-start-start-radius: var(--hy-radius-l);
+  border-start-end-radius: var(--hy-radius-l);
+  padding-block-end: max(var(--hy-space-7), env(safe-area-inset-bottom));
+}
+
+.hy-drawer--start {
+  --_from: -100%;
+  animation: hy-drawer-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-drawer--end {
+  --_from: 100%;
+  animation: hy-drawer-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+[dir='rtl'] .hy-drawer--start {
+  --_from: 100%;
+}
+
+[dir='rtl'] .hy-drawer--end {
+  --_from: -100%;
+}
+
+.hy-drawer--bottom {
+  animation: hy-sheet-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+.hy-drawer-pane[data-state='closing'] {
+  animation: hy-drawer-out var(--hy-dur-quick) var(--hy-ease-inout) forwards;
+}
+
+.hy-drawer--bottom[data-state='closing'] {
+  animation-name: hy-sheet-out;
+}
+
+.hy-backdrop[data-state='closing'] {
+  opacity: 0;
+}
+
+@keyframes hy-drawer-in {
+  from {
+    translate: var(--_from) 0;
+  }
+}
+
+@keyframes hy-drawer-out {
+  to {
+    translate: var(--_from) 0;
+  }
+}
+
+@keyframes hy-sheet-in {
+  from {
+    translate: 0 100%;
+  }
+}
+
+@keyframes hy-sheet-out {
+  to {
+    translate: 0 100%;
+  }
+}

@@ -5,6 +5,7 @@ import { HyMotion } from '../motion/motion';
 import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
 import { HY_DIALOG_PARTS } from './dialog-parts';
 import { HyDialog } from './dialog';
+import { HyDrawer } from './drawer';
 
 @Component({
   imports: [HY_DIALOG_PARTS],
@@ -93,3 +94,15 @@ describe('HyDialog', () => {
   });
 });
 
+describe('HyDrawer', () => {
+  beforeEach(() => TestBed.inject(HyMotion).setReduced(true));
+  afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((el) => el.remove()));
+
+  it('opens from the requested side', async () => {
+    const ref = TestBed.inject(HyDrawer).open(EditAddress, { side: 'start', data: { street: '' } });
+    TestBed.tick();
+    expect(document.querySelector('.hy-drawer-pane')!.classList).toContain('hy-drawer--start');
+    ref.close();
+    await ref.closed;
+  });
+});

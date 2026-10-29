@@ -35,3 +35,4 @@ export * from './lib/dialog/dialog-ref';
 export * from './lib/dialog/dialog-parts';
 export { type HySurfaceConfig } from './lib/dialog/open-surface';
 export * from './lib/dialog/dialog';
+export * from './lib/dialog/drawer';
