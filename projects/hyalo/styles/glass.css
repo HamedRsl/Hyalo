@@ -103,6 +103,23 @@
   }
 }
 
+/*
+ * Wrap the page content in .hy-glass-scope when glass overlays (popovers,
+ * menus, dialogs) open above glass content. Chrome redraws only a rectangle
+ * around a change, grown by each blur it touches. A hover inside a glass
+ * overlay can grow it across the edge of glass below, which is then redrawn
+ * in part and shows a brighter box.
+ *
+ * Any filter gives the content its own layer, so changes in an overlay never
+ * redraw it. It is also a backdrop root, so glass inside blurs only what is
+ * in the scope; painting the page background here keeps that identical.
+ * Like any filter, it is the containing block for fixed elements inside it.
+ */
+.hy-glass-scope {
+  filter: blur(0);
+  background: var(--hy-bg);
+}
+
 /* Overlay panels and backdrops from CDK. */
 .hy-backdrop {
   background: var(--hy-scrim);
