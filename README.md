@@ -103,6 +103,29 @@ Everything visual is a CSS custom property starting with `--hy-`: colours, surfa
 
 Dark mode follows the system by default. Force it with `data-hy-theme="dark"` (or `light`) on `<html>`, or with the `hy-theme-dark` class on any element. High contrast, forced colours and reduced transparency each get their own fallback, and glass turns solid where `backdrop-filter` is missing.
 
+### Palettes
+
+Six optional palettes live in `styles/palettes/`: `aurora`, `ember`, `orchid`, `ocean`, `rose` and `graphite`. Each file covers light and dark with `light-dark()` and weighs about 450 bytes gzipped. Keep them out of the initial bundle by adding each one as a non-injected style:
+
+```json
+{
+  "input": "node_modules/@hyalo/angular/styles/palettes/ocean.css",
+  "bundleName": "palette-ocean",
+  "inject": false
+}
+```
+
+Then switch with `HyPalette`. It loads the file on first use and sets `data-hy-palette` on `<html>` only once the file is in, so nothing flashes:
+
+```ts
+const palette = inject(HyPalette);
+palette.preload('ocean'); // on hover, so the switch is instant
+palette.use('ocean');
+palette.use(null); // back to the built-in palette
+```
+
+Serve the files from somewhere else with ``provideHyalo({ paletteHref: (name) => `/themes/${name}.css` })``.
+
 ## RTL
 
 Every style uses logical properties, so `dir="rtl"` on the page is enough. Placements are `start` and `end` instead of left and right, drawers slide from the correct edge, arrow keys are mirrored in tabs and radio groups, and icons that point somewhere (like `chevron-end`) flip on their own. `lang="fa"` switches to a Persian friendly font stack and line height.

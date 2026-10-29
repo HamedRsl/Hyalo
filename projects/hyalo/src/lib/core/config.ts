@@ -24,6 +24,12 @@ export interface HyConfig {
    * ```
    */
   readonly gsap?: HyGsapLoader;
+  /**
+   * Maps a palette name to its stylesheet URL for HyPalette. Defaults to
+   * `palette-<name>.css`, which is what a non-injected `bundleName` entry
+   * in angular.json produces.
+   */
+  readonly paletteHref?: (name: string) => string;
 }
 
 const DEFAULTS: HyConfig = {

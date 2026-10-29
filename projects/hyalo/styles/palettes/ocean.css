@@ -1,0 +1,45 @@
+/*
+ * Ocean palette: deep sky blue on misty slate.
+ *
+ * Loaded on demand, never part of hyalo.css. Set data-hy-palette="ocean" on
+ * <html> after this file has loaded, and remove the attribute to go back to
+ * the built-in palette. HyPalette does both for you.
+ *
+ * Each colour is written once with light-dark(), which resolves against the
+ * color-scheme that themes.css sets. Forced themes, the OS setting and
+ * .hy-theme-dark islands all keep working without repeating the values.
+ *
+ * The html in the selector outranks the dark theme rules in themes.css, so
+ * the palette wins in whatever order the two stylesheets load.
+ */
+@layer hy.tokens {
+  html:root[data-hy-palette='ocean'],
+  [data-hy-palette='ocean'] .hy-theme-dark {
+    --hy-bg: light-dark(#edf3f8, #07101a);
+    --hy-surface-1: light-dark(#ffffff, #0e1824);
+    --hy-surface-2: light-dark(#f5f9fc, #14202e);
+    --hy-surface-3: light-dark(#e3ecf3, #1b2938);
+    --hy-surface-4: light-dark(#d4e0ea, #253446);
+    --hy-ink: light-dark(#0b1926, #e9f2fa);
+    --hy-ink-2: light-dark(#344757, #b3c4d4);
+    --hy-ink-3: light-dark(#4e6274, #889bad);
+    --hy-ink-2-glass: light-dark(#273a4a, #c7d6e3);
+    --hy-ink-3-glass: light-dark(#3e5164, #a1b3c4);
+    --hy-line: light-dark(rgb(11 25 38 / 0.12), rgb(233 242 250 / 0.12));
+    --hy-line-strong: light-dark(rgb(11 25 38 / 0.24), rgb(233 242 250 / 0.26));
+    --hy-accent: light-dark(#0369a1, #38bdf8);
+    --hy-accent-hover: light-dark(#025a8a, #7dd3fc);
+    --hy-accent-ink: light-dark(#ffffff, #041826);
+    --hy-accent-wash: light-dark(rgb(3 105 161 / 0.12), rgb(56 189 248 / 0.16));
+    --hy-glass-border: light-dark(rgb(11 25 38 / 0.08), rgb(255 255 255 / 0.08));
+  }
+
+  /* Same as the high contrast rule in themes.css, which this file outranks. */
+  @media (prefers-contrast: more) {
+    html:root[data-hy-palette='ocean'],
+    [data-hy-palette='ocean'] .hy-theme-dark {
+      --hy-line: var(--hy-line-strong);
+      --hy-ink-3: var(--hy-ink-2);
+    }
+  }
+}

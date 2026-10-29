@@ -1,0 +1,45 @@
+/*
+ * Ember palette: burnt orange on warm stone.
+ *
+ * Loaded on demand, never part of hyalo.css. Set data-hy-palette="ember" on
+ * <html> after this file has loaded, and remove the attribute to go back to
+ * the built-in palette. HyPalette does both for you.
+ *
+ * Each colour is written once with light-dark(), which resolves against the
+ * color-scheme that themes.css sets. Forced themes, the OS setting and
+ * .hy-theme-dark islands all keep working without repeating the values.
+ *
+ * The html in the selector outranks the dark theme rules in themes.css, so
+ * the palette wins in whatever order the two stylesheets load.
+ */
+@layer hy.tokens {
+  html:root[data-hy-palette='ember'],
+  [data-hy-palette='ember'] .hy-theme-dark {
+    --hy-bg: light-dark(#f6f1ec, #120c08);
+    --hy-surface-1: light-dark(#fffdfb, #1b1410);
+    --hy-surface-2: light-dark(#faf6f2, #231a15);
+    --hy-surface-3: light-dark(#efe7df, #2c221b);
+    --hy-surface-4: light-dark(#e4d9ce, #382c24);
+    --hy-ink: light-dark(#1f1610, #f6eee8);
+    --hy-ink-2: light-dark(#4d3f35, #cdbfb4);
+    --hy-ink-3: light-dark(#67584c, #a3948a);
+    --hy-ink-2-glass: light-dark(#3f3229, #dccfc5);
+    --hy-ink-3-glass: light-dark(#554739, #b6a79c);
+    --hy-line: light-dark(rgb(31 22 16 / 0.12), rgb(246 238 232 / 0.12));
+    --hy-line-strong: light-dark(rgb(31 22 16 / 0.24), rgb(246 238 232 / 0.26));
+    --hy-accent: light-dark(#b33b0a, #fb923c);
+    --hy-accent-hover: light-dark(#983209, #fdba74);
+    --hy-accent-ink: light-dark(#ffffff, #1f0f04);
+    --hy-accent-wash: light-dark(rgb(179 59 10 / 0.12), rgb(251 146 60 / 0.16));
+    --hy-glass-border: light-dark(rgb(31 22 16 / 0.08), rgb(255 255 255 / 0.08));
+  }
+
+  /* Same as the high contrast rule in themes.css, which this file outranks. */
+  @media (prefers-contrast: more) {
+    html:root[data-hy-palette='ember'],
+    [data-hy-palette='ember'] .hy-theme-dark {
+      --hy-line: var(--hy-line-strong);
+      --hy-ink-3: var(--hy-ink-2);
+    }
+  }
+}

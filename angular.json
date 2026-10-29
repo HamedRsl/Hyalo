@@ -25,7 +25,40 @@
                 "input": "projects/docs/public"
               }
             ],
-            "styles": ["projects/hyalo/styles/hyalo.css", "projects/docs/src/styles.css"],
+            "styles": [
+              "projects/hyalo/styles/hyalo.css",
+              "projects/docs/src/styles.css",
+              {
+                "input": "projects/hyalo/styles/palettes/aurora.css",
+                "bundleName": "palette-aurora",
+                "inject": false
+              },
+              {
+                "input": "projects/hyalo/styles/palettes/ember.css",
+                "bundleName": "palette-ember",
+                "inject": false
+              },
+              {
+                "input": "projects/hyalo/styles/palettes/orchid.css",
+                "bundleName": "palette-orchid",
+                "inject": false
+              },
+              {
+                "input": "projects/hyalo/styles/palettes/ocean.css",
+                "bundleName": "palette-ocean",
+                "inject": false
+              },
+              {
+                "input": "projects/hyalo/styles/palettes/rose.css",
+                "bundleName": "palette-rose",
+                "inject": false
+              },
+              {
+                "input": "projects/hyalo/styles/palettes/graphite.css",
+                "bundleName": "palette-graphite",
+                "inject": false
+              }
+            ],
             "server": "projects/docs/src/main.server.ts",
             "outputMode": "static"
           },

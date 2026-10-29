@@ -25,6 +25,74 @@
   gap: var(--hy-space-3);
 }
 
+.palette-picker[aria-busy] {
+  cursor: progress;
+}
+
+.palette-heading {
+  margin: 0 0 var(--hy-space-1);
+  padding-inline: var(--hy-space-2);
+  color: var(--hy-ink-3);
+  font-size: var(--hy-step--1);
+  font-weight: 600;
+}
+
+.palette-name {
+  margin-inline-start: var(--hy-space-1);
+  color: var(--hy-ink);
+  font-weight: 500;
+}
+
+.palette-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* The label is the 44px hit area; the swatch inside is smaller. */
+.palette {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  cursor: pointer;
+}
+
+.palette-input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.palette-swatch {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--swatch-light) 50%, var(--swatch-dark) 50%);
+  box-shadow: inset 0 0 0 1px var(--hy-line);
+  transition:
+    scale var(--hy-dur-quick) var(--hy-ease-out),
+    box-shadow var(--hy-dur-quick) var(--hy-ease-out);
+}
+
+.palette:hover .palette-swatch {
+  scale: 1.08;
+}
+
+.palette-input:checked + .palette-swatch {
+  box-shadow:
+    inset 0 0 0 1px var(--hy-line),
+    0 0 0 2px var(--hy-surface-1),
+    0 0 0 4px var(--hy-ink);
+}
+
+.palette-input:focus-visible + .palette-swatch {
+  outline: 2px solid var(--hy-accent);
+  outline-offset: 5px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);

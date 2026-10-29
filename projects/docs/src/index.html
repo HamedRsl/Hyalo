@@ -8,6 +8,23 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <script>
+      // Restores the saved palette before the first paint, so there is no flash
+      // of the default one. HyPalette adopts this link once the app boots.
+      (function () {
+        try {
+          var name = localStorage.getItem('hy-palette');
+          if (!/^(aurora|ember|orchid|ocean|rose|graphite)$/.test(name || '')) return;
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'palette-' + name + '.css';
+          link.setAttribute('data-hy-palette', name);
+          link.setAttribute('blocking', 'render');
+          document.head.appendChild(link);
+          document.documentElement.setAttribute('data-hy-palette', name);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <docs-root></docs-root>

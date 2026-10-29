@@ -34,6 +34,20 @@ import { DocsPage } from '../shared/page';
         <code>prefers-contrast: more</code> lines get stronger and glass turns opaque.
       </p>
 
+      <h3>Palettes</h3>
+      <p>
+        Six optional palettes ship next to the main stylesheet: Aurora, Ember, Orchid, Ocean, Rose
+        and Graphite. Each is a separate file of about 450 bytes gzipped that covers both light and
+        dark, so none of them adds to the initial CSS. Try them from the settings button in the
+        navbar.
+      </p>
+      <p>
+        <code>HyPalette</code> loads a palette the first time it is used, then sets
+        <code>data-hy-palette</code> on <code>&lt;html&gt;</code> once the file is in, so the page
+        never shows half a palette. Call <code>preload()</code> on hover to make the switch instant.
+      </p>
+      <pre><code>{{ paletteCode }}</code></pre>
+
       <h2>Glass material</h2>
       <p>
         The <code>hyMaterial</code> directive turns any element into glass. Components that have a
@@ -119,6 +133,15 @@ export default class FoundationsPage {
   protected readonly materialCode = `<div hyMaterial="clear">...</div>
 <div hyMaterial>...</div>           <!-- the configured default -->
 <hy-card material="tinted">...</hy-card>`;
+  protected readonly paletteCode = `// angular.json, once per palette: built and minified, but not injected
+{ "input": "node_modules/@hyalo/angular/styles/palettes/ocean.css",
+  "bundleName": "palette-ocean", "inject": false }
+
+// anywhere in the app
+const palette = inject(HyPalette);
+palette.preload('ocean');   // fetch on hover or focus
+palette.use('ocean');       // apply once loaded
+palette.use(null);          // back to the built-in palette`;
   protected readonly providerCode = `@Component({
   selector: 'app-checkout',
   providers: [provideHyalo({ material: 'solid', size: 'lg' })],

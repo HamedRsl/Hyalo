@@ -44,6 +44,41 @@
 <ng-template #settingsPanel>
   <div class="settings">
     <hy-segmented label="Theme" size="sm" [options]="themes" [(value)]="settings.theme" />
+    <div
+      class="palette-picker"
+      role="radiogroup"
+      aria-labelledby="palette-heading"
+      [attr.aria-busy]="settings.paletteLoading() || null"
+    >
+      <p id="palette-heading" class="palette-heading">
+        Palette <span class="palette-name">{{ paletteLabel() }}</span>
+      </p>
+      <div class="palette-list">
+        @for (p of palettes; track p.label) {
+          <label
+            class="palette"
+            [title]="p.label"
+            (pointerenter)="settings.preloadPalette(p.value)"
+          >
+            <input
+              type="radio"
+              name="docs-palette"
+              class="palette-input"
+              [attr.aria-label]="p.label"
+              [checked]="settings.palette() === p.value"
+              (change)="settings.setPalette(p.value)"
+              (focus)="settings.preloadPalette(p.value)"
+            />
+            <span
+              class="palette-swatch"
+              aria-hidden="true"
+              [style.--swatch-light]="p.light"
+              [style.--swatch-dark]="p.dark"
+            ></span>
+          </label>
+        }
+      </div>
+    </div>
     <hy-segmented
       label="Direction"
       size="sm"

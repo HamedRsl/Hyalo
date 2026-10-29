@@ -1,0 +1,45 @@
+/*
+ * Rose palette: raspberry on blush.
+ *
+ * Loaded on demand, never part of hyalo.css. Set data-hy-palette="rose" on
+ * <html> after this file has loaded, and remove the attribute to go back to
+ * the built-in palette. HyPalette does both for you.
+ *
+ * Each colour is written once with light-dark(), which resolves against the
+ * color-scheme that themes.css sets. Forced themes, the OS setting and
+ * .hy-theme-dark islands all keep working without repeating the values.
+ *
+ * The html in the selector outranks the dark theme rules in themes.css, so
+ * the palette wins in whatever order the two stylesheets load.
+ */
+@layer hy.tokens {
+  html:root[data-hy-palette='rose'],
+  [data-hy-palette='rose'] .hy-theme-dark {
+    --hy-bg: light-dark(#f8f0f2, #130a0e);
+    --hy-surface-1: light-dark(#ffffff, #1c1217);
+    --hy-surface-2: light-dark(#fcf6f7, #24181e);
+    --hy-surface-3: light-dark(#f1e5e8, #2e1f26);
+    --hy-surface-4: light-dark(#e7d6db, #3a2931);
+    --hy-ink: light-dark(#22121a, #f9edf1);
+    --hy-ink-2: light-dark(#523b45, #d3bcc5);
+    --hy-ink-3: light-dark(#6c535e, #a8919b);
+    --hy-ink-2-glass: light-dark(#432f38, #e0ccd4);
+    --hy-ink-3-glass: light-dark(#5a434d, #bba3ad);
+    --hy-line: light-dark(rgb(34 18 26 / 0.12), rgb(249 237 241 / 0.12));
+    --hy-line-strong: light-dark(rgb(34 18 26 / 0.24), rgb(249 237 241 / 0.26));
+    --hy-accent: light-dark(#b8175a, #f472b6);
+    --hy-accent-hover: light-dark(#9e134d, #f9a8d4);
+    --hy-accent-ink: light-dark(#ffffff, #2a0718);
+    --hy-accent-wash: light-dark(rgb(184 23 90 / 0.12), rgb(244 114 182 / 0.16));
+    --hy-glass-border: light-dark(rgb(34 18 26 / 0.08), rgb(255 255 255 / 0.08));
+  }
+
+  /* Same as the high contrast rule in themes.css, which this file outranks. */
+  @media (prefers-contrast: more) {
+    html:root[data-hy-palette='rose'],
+    [data-hy-palette='rose'] .hy-theme-dark {
+      --hy-line: var(--hy-line-strong);
+      --hy-ink-3: var(--hy-ink-2);
+    }
+  }
+}

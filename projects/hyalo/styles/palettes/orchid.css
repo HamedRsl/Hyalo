@@ -1,0 +1,45 @@
+/*
+ * Orchid palette: violet on lilac-grey.
+ *
+ * Loaded on demand, never part of hyalo.css. Set data-hy-palette="orchid" on
+ * <html> after this file has loaded, and remove the attribute to go back to
+ * the built-in palette. HyPalette does both for you.
+ *
+ * Each colour is written once with light-dark(), which resolves against the
+ * color-scheme that themes.css sets. Forced themes, the OS setting and
+ * .hy-theme-dark islands all keep working without repeating the values.
+ *
+ * The html in the selector outranks the dark theme rules in themes.css, so
+ * the palette wins in whatever order the two stylesheets load.
+ */
+@layer hy.tokens {
+  html:root[data-hy-palette='orchid'],
+  [data-hy-palette='orchid'] .hy-theme-dark {
+    --hy-bg: light-dark(#f3f0f8, #0e0b14);
+    --hy-surface-1: light-dark(#ffffff, #17131f);
+    --hy-surface-2: light-dark(#f8f6fb, #1e1928);
+    --hy-surface-3: light-dark(#ebe6f3, #272132);
+    --hy-surface-4: light-dark(#ded7ea, #322a3f);
+    --hy-ink: light-dark(#1a1426, #f2eefa);
+    --hy-ink-2: light-dark(#463d55, #c4bbd4);
+    --hy-ink-3: light-dark(#605670, #9a90ac);
+    --hy-ink-2-glass: light-dark(#372e45, #d3cbe1);
+    --hy-ink-3-glass: light-dark(#4e445d, #afa5c1);
+    --hy-line: light-dark(rgb(26 20 38 / 0.12), rgb(242 238 250 / 0.12));
+    --hy-line-strong: light-dark(rgb(26 20 38 / 0.24), rgb(242 238 250 / 0.26));
+    --hy-accent: light-dark(#7634cc, #c39bff);
+    --hy-accent-hover: light-dark(#632bb0, #d5b8ff);
+    --hy-accent-ink: light-dark(#ffffff, #160a2a);
+    --hy-accent-wash: light-dark(rgb(118 52 204 / 0.12), rgb(195 155 255 / 0.16));
+    --hy-glass-border: light-dark(rgb(26 20 38 / 0.08), rgb(255 255 255 / 0.08));
+  }
+
+  /* Same as the high contrast rule in themes.css, which this file outranks. */
+  @media (prefers-contrast: more) {
+    html:root[data-hy-palette='orchid'],
+    [data-hy-palette='orchid'] .hy-theme-dark {
+      --hy-line: var(--hy-line-strong);
+      --hy-ink-3: var(--hy-ink-2);
+    }
+  }
+}
