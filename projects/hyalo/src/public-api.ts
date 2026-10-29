@@ -28,3 +28,6 @@ export * from './lib/field/field-control';
 export * from './lib/field/field';
 export * from './lib/field/input';
 export * from './lib/select/select';
+export * from './lib/choice/checkbox';
+export * from './lib/choice/radio';
+export * from './lib/choice/switch';

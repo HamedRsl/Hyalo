@@ -1,0 +1,190 @@
+:host {
+  display: block;
+}
+
+.hy-choice__row {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--hy-space-3);
+  min-block-size: 1.5rem;
+  color: var(--hy-ink);
+  cursor: pointer;
+}
+
+:host([data-disabled]) .hy-choice__row {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hy-choice__control {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  margin-block-start: 0.1em;
+  transition:
+    background-color var(--hy-dur-quick) var(--hy-ease-out),
+    border-color var(--hy-dur-quick) var(--hy-ease-out),
+    box-shadow var(--hy-dur-quick) var(--hy-ease-out);
+}
+
+/* The real input covers the visual control, so it receives clicks and taps. */
+.hy-choice__input {
+  position: absolute;
+  inset: -0.25rem;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.hy-choice__control:has(:focus-visible) {
+  box-shadow: var(--hy-focus-ring);
+}
+
+.hy-choice__label {
+  line-height: 1.5;
+}
+
+.hy-choice__description {
+  margin: var(--hy-space-1) 0 0;
+  padding-inline-start: calc(1.25rem + var(--hy-space-3));
+  color: var(--hy-ink-3);
+  font-size: var(--hy-step--1);
+}
+
+/* Checkbox */
+.hy-checkbox__box {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1.5px solid var(--hy-line-strong);
+  border-radius: 6px;
+  background: var(--hy-surface-1);
+  color: var(--hy-accent-ink);
+}
+
+.hy-checkbox__mark {
+  --hy-icon-size: 0.875rem;
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity var(--hy-dur-quick) var(--hy-ease-out),
+    scale var(--hy-dur-settle) var(--hy-ease-spring);
+}
+
+:host([data-checked]) .hy-checkbox__box,
+:host([data-indeterminate]) .hy-checkbox__box {
+  border-color: var(--hy-accent);
+  background: var(--hy-accent);
+}
+
+:host([data-checked]) .hy-checkbox__mark,
+:host([data-indeterminate]) .hy-checkbox__mark {
+  opacity: 1;
+  scale: 1;
+}
+
+:host([data-invalid]) .hy-checkbox__box {
+  border-color: var(--hy-danger);
+}
+
+/* Radio */
+.hy-radio__circle {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1.5px solid var(--hy-line-strong);
+  border-radius: 50%;
+  background: var(--hy-surface-1);
+}
+
+.hy-radio__dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--hy-accent-ink);
+  scale: 0;
+  transition: scale var(--hy-dur-settle) var(--hy-ease-spring);
+}
+
+:host([data-checked]) .hy-radio__circle {
+  border-color: var(--hy-accent);
+  background: var(--hy-accent);
+}
+
+:host([data-checked]) .hy-radio__dot {
+  scale: 1;
+}
+
+/* Radio group */
+:host(.hy-radio-group) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hy-space-3);
+}
+
+.hy-radio-group__label {
+  font-size: var(--hy-step--1);
+  font-weight: 560;
+}
+
+.hy-radio-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hy-space-3);
+}
+
+:host([data-orientation='horizontal']) .hy-radio-group__items {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--hy-space-5);
+}
+
+.hy-choice__error {
+  margin: 0;
+  color: var(--hy-danger);
+  font-size: var(--hy-step--1);
+}
+
+/* Switch */
+.hy-switch__track {
+  inline-size: 2.5rem;
+  block-size: 1.5rem;
+  margin-block-start: 0;
+  padding: 2px;
+  place-items: center start;
+  border-radius: var(--hy-radius-pill);
+  background: color-mix(in srgb, var(--hy-ink) 22%, transparent);
+  box-shadow: inset 0 1px 2px rgb(15 26 36 / 0.15);
+}
+
+.hy-switch__thumb {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: 50%;
+  background: var(--hy-glass-reflection), #fff;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.25),
+    inset 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  transition: translate var(--hy-dur-settle) var(--hy-ease-spring);
+}
+
+:host([data-checked]) .hy-switch__track {
+  background: var(--hy-accent);
+}
+
+:host([data-checked]) .hy-switch__thumb {
+  translate: 1rem 0;
+}
+
+:host([data-checked]) .hy-switch__thumb:dir(rtl) {
+  translate: -1rem 0;
+}
+
+@media (forced-colors: active) {
+  .hy-choice__control {
+    border: 1px solid CanvasText;
+  }
+
+  :host([data-checked]) .hy-choice__control {
+    background: Highlight;
+  }
+}
