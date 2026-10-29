@@ -39,7 +39,7 @@ import { DocsPage } from '../shared/page';
         </li>
         <li>
           For more than about 15 options, or when people need to search, use a combobox instead. It
-          is planned for phase 2.
+          is planned for phase 4.
         </li>
       </ul>
 
