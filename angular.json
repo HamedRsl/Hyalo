@@ -3,9 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -27,10 +25,7 @@
                 "input": "projects/docs/public"
               }
             ],
-            "styles": [
-              "projects/hyalo/styles/hyalo.css",
-              "projects/docs/src/styles.css"
-            ],
+            "styles": ["projects/hyalo/styles/hyalo.css", "projects/docs/src/styles.css"],
             "server": "projects/docs/src/main.server.ts",
             "outputMode": "static"
           },
@@ -76,10 +71,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/docs/**/*.ts",
-              "projects/docs/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/docs/**/*.ts", "projects/docs/**/*.html"]
           }
         }
       }
@@ -111,10 +103,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/hyalo/**/*.ts",
-              "projects/hyalo/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/hyalo/**/*.ts", "projects/hyalo/**/*.html"]
           }
         }
       }
