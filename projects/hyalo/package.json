@@ -1,0 +1,27 @@
+{
+  "name": "@hyalo/angular",
+  "version": "0.1.0",
+  "description": "Liquid glass components for Angular. Signals, zoneless, SSR-safe, accessible, RTL-ready.",
+  "license": "MIT",
+  "author": "HamedRsl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HamedRsl/Hyalo.git"
+  },
+  "keywords": ["angular", "ui", "components", "glass", "glassmorphism", "liquid-glass", "rtl", "signals"],
+  "peerDependencies": {
+    "@angular/aria": "^22.2.0",
+    "@angular/cdk": "^22.2.0",
+    "@angular/common": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "gsap": "^3.12.0"
+  },
+  "peerDependenciesMeta": {
+    "gsap": { "optional": true }
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": ["*.css"]
+}
