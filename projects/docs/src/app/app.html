@@ -1,1 +1,101 @@
-<router-outlet />
+<a class="skip-link" href="#main">Skip to content</a>
+
+<hy-navbar label="Site" appearance="full">
+  <a hyNavbarBrand routerLink="/">
+    <span class="brand-mark" aria-hidden="true"></span>
+    Hyalo
+  </a>
+  <a
+    routerLink="/"
+    routerLinkActive="active"
+    ariaCurrentWhenActive="page"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Introduction
+  </a>
+  <a routerLink="/components/button" routerLinkActive="active" ariaCurrentWhenActive="page"
+    >Components</a
+  >
+  <a href="https://github.com/HamedRsl/Hyalo">GitHub</a>
+  <div hyNavbarActions>
+    <button
+      hyButton
+      variant="ghost"
+      tone="neutral"
+      size="sm"
+      class="pages-button"
+      (click)="openPages()"
+    >
+      Pages
+    </button>
+    <button
+      hyButton
+      variant="glass"
+      size="sm"
+      iconOnly
+      aria-label="Display settings"
+      [hyPopover]="settingsPanel"
+      popoverLabel="Display settings"
+      popoverPlacement="bottom"
+    >
+      <hy-icon name="settings" />
+    </button>
+  </div>
+</hy-navbar>
+
+<ng-template #settingsPanel>
+  <div class="settings">
+    <hy-segmented label="Theme" size="sm" [options]="themes" [(value)]="settings.theme" />
+    <hy-segmented
+      label="Direction"
+      size="sm"
+      [options]="directions"
+      [(value)]="settings.direction"
+    />
+    <hy-segmented label="Motion" size="sm" [options]="motions" [(value)]="settings.motionChoice" />
+    <hy-segmented
+      label="Fidelity"
+      size="sm"
+      [options]="tiers"
+      [value]="settings.tier()"
+      (valueChange)="$event && settings.setTier($event)"
+    />
+  </div>
+</ng-template>
+
+<ng-template #navList>
+  @for (group of nav; track group.title) {
+    <p class="nav-title">{{ group.title }}</p>
+    <ul class="nav-list">
+      @for (item of group.items; track item.path) {
+        <li>
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closePages()"
+          >
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</ng-template>
+
+<ng-template #pages>
+  <h2 hyDialogTitle class="hy-visually-hidden">Pages</h2>
+  <nav aria-label="Pages" class="drawer-nav">
+    <ng-container [ngTemplateOutlet]="navList" />
+  </nav>
+</ng-template>
+
+<div class="layout">
+  <nav class="sidebar" aria-label="Pages">
+    <ng-container [ngTemplateOutlet]="navList" />
+  </nav>
+  <main id="main" class="content">
+    <router-outlet />
+  </main>
+</div>

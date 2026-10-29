@@ -1,1 +1,92 @@
-/* You can add global styles to this file, and also import other style files */
+/* Docs site styles. Everything visual comes from Hyalo tokens. */
+html {
+  scroll-padding-block-start: 6rem;
+}
+
+body {
+  min-block-size: 100dvh;
+}
+
+.docs-prose h2 {
+  margin: var(--hy-space-10) 0 var(--hy-space-3);
+  font-size: var(--hy-step-3);
+  letter-spacing: -0.015em;
+}
+
+.docs-prose h3 {
+  margin: var(--hy-space-8) 0 var(--hy-space-2);
+  font-size: var(--hy-step-1);
+}
+
+/* Card content keeps the card's own spacing. */
+.docs-prose .hy-card :is(h3, p) {
+  margin: 0;
+}
+
+.docs-prose p,
+.docs-prose li {
+  color: var(--hy-ink-2);
+  max-inline-size: 68ch;
+}
+
+.docs-prose a:not([hyButton]) {
+  color: var(--hy-accent);
+}
+
+.docs-prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--hy-ink) 7%, transparent);
+  font-family: var(--hy-font-mono);
+  font-size: 0.875em;
+}
+
+.docs-prose pre {
+  margin: var(--hy-space-4) 0;
+  padding: var(--hy-space-4) var(--hy-space-5);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left; /* physical-ok: code always reads left to right */
+  font-family: var(--hy-font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.docs-prose kbd {
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--hy-line-strong);
+  border-block-end-width: 2px;
+  border-radius: 5px;
+  font-family: var(--hy-font-mono);
+  font-size: 0.8125em;
+}
+
+.docs-prose table.keys {
+  border-collapse: collapse;
+  font-size: var(--hy-step--1);
+}
+
+.docs-prose table.keys td,
+.docs-prose table.keys th {
+  padding-block: var(--hy-space-2);
+  padding-inline: 0 var(--hy-space-4);
+  border-block-end: 1px solid var(--hy-line);
+  text-align: start;
+}
+
+.docs-stack {
+  display: grid;
+  gap: var(--hy-space-4);
+  inline-size: 100%;
+  max-inline-size: 26rem;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--hy-space-4);
+  inline-size: 100%;
+}
