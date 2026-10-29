@@ -1,0 +1,8 @@
+.rename {
+  padding: var(--hy-space-2) var(--hy-space-3);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  background: var(--hy-surface-1);
+  color: inherit;
+  font: inherit;
+}

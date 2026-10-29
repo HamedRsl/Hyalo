@@ -20,35 +20,8 @@ let firstPage = true;
   selector: 'docs-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'docs-prose' },
-  template: `
-    <header class="page-head">
-      <p class="eyebrow">{{ eyebrow() }}</p>
-      <h1 tabindex="-1">{{ heading() }}</h1>
-      <p class="hy-lead">{{ lead() }}</p>
-    </header>
-    <ng-content />
-  `,
-  styles: `
-    :host {
-      display: block;
-      max-inline-size: 52rem;
-    }
-    .page-head {
-      margin-block-end: var(--hy-space-8);
-    }
-    .eyebrow {
-      margin: 0 0 var(--hy-space-2);
-      color: var(--hy-accent);
-      font-size: var(--hy-step--1);
-      font-weight: 600;
-    }
-    h1 {
-      margin: 0 0 var(--hy-space-3);
-      font-size: var(--hy-step-5);
-      letter-spacing: -0.025em;
-      outline: none;
-    }
-  `,
+  templateUrl: './page.html',
+  styleUrl: './page.css',
 })
 export class DocsPage implements OnInit {
   private readonly title = inject(Title);

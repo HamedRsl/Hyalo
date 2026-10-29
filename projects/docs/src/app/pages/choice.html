@@ -1,0 +1,66 @@
+<docs-page heading="Checkbox, radio and switch" lead="Native inputs underneath, glass on top.">
+  <h2>Checkbox</h2>
+  <docs-example [code]="checkboxCode" column>
+    <hy-checkbox
+      [checked]="allChecked()"
+      [indeterminate]="someChecked()"
+      (checkedChange)="toggleAll($event)"
+    >
+      All extras
+    </hy-checkbox>
+    <div class="nested docs-stack">
+      @for (extra of extras; track extra.id) {
+        <hy-checkbox
+          [checked]="picked().has(extra.id)"
+          (checkedChange)="toggle(extra.id, $event)"
+        >
+          {{ extra.label }}
+        </hy-checkbox>
+      }
+    </div>
+    <hy-checkbox description="You can read them first." [formField]="f.terms"
+      >I accept the terms</hy-checkbox
+    >
+  </docs-example>
+
+  <h2>Radio group</h2>
+  <docs-example [code]="radioCode" column>
+    <hy-radio-group label="Delivery" [formField]="f.delivery">
+      <hy-radio value="standard" description="3 to 5 days, free">Standard</hy-radio>
+      <hy-radio value="express" description="Next day, 12 EUR">Express</hy-radio>
+      <hy-radio value="pickup" disabled description="Not available in your area"
+        >Pick up</hy-radio
+      >
+    </hy-radio-group>
+  </docs-example>
+
+  <h2>Switch</h2>
+  <docs-example [code]="switchCode" column>
+    <hy-switch [(checked)]="notify" description="One email a week, never more."
+      >Product news</hy-switch
+    >
+    <hy-switch disabled>Beta features</hy-switch>
+  </docs-example>
+  <p>
+    A switch takes effect right away, like a setting. A checkbox is a choice that is submitted
+    later, like a form field. If there is a Save button, use a checkbox.
+  </p>
+
+  <h2>Accessibility</h2>
+  <ul>
+    <li>Each control is a real input, so labels, form submit and browser autofill all work.</li>
+    <li>The whole row, including the description, is the click target.</li>
+    <li>Radios inside a group move with the arrow keys and share one tab stop.</li>
+    <li>
+      Mixed checkboxes announce themselves as mixed through the native indeterminate state.
+    </li>
+  </ul>
+
+  <h2>API</h2>
+  <p><code>hy-checkbox</code></p>
+  <docs-api-table [rows]="checkboxRows" />
+  <p><code>hy-radio-group</code> and <code>hy-radio</code></p>
+  <docs-api-table [rows]="radioRows" />
+  <p><code>hy-switch</code></p>
+  <docs-api-table [rows]="switchRows" />
+</docs-page>

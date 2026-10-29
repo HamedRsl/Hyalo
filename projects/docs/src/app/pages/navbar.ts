@@ -8,60 +8,7 @@ import { DocsPage } from '../shared/page';
   selector: 'docs-navbar-page',
   imports: [DocsPage, DocsExample, DocsApiTable, HY_NAVBAR, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <docs-page
-      heading="Navbar"
-      lead="A glass app bar that compacts on scroll and collapses its links on narrow screens."
-    >
-      <p>
-        The site header above is a <code>hy-navbar</code> with <code>appearance="full"</code>. Below
-        is the floating style, in a frame narrow enough to show the collapsed menu.
-      </p>
-      <docs-example [code]="code" [column]="true">
-        <hy-navbar label="Demo" position="static" [(menuOpen)]="open">
-          <a hyNavbarBrand href="#api">Atelier</a>
-          <a href="#api" aria-current="page">Watches</a>
-          <a href="#api">Journal</a>
-          <a href="#api">Boutiques</a>
-          <div hyNavbarActions><button hyButton size="sm">Book a visit</button></div>
-        </hy-navbar>
-        <div class="narrow">
-          <hy-navbar label="Demo, narrow" position="static">
-            <a hyNavbarBrand href="#api">Atelier</a>
-            <a href="#api">Watches</a>
-            <a href="#api">Journal</a>
-          </hy-navbar>
-        </div>
-      </docs-example>
-
-      <h2>Behaviour</h2>
-      <ul>
-        <li>
-          Links are wrapped in a <code>&lt;nav&gt;</code> named by <code>label</code>. Mark the
-          current page with <code>aria-current="page"</code>, for example through
-          <code>ariaCurrentWhenActive</code>.
-        </li>
-        <li>
-          The collapse point is a container query on the navbar's own width (48rem), so it works
-          inside any layout.
-        </li>
-        <li>
-          Escape closes the menu and returns focus to the menu button. Choosing a link closes it
-          too.
-        </li>
-        <li>
-          With <code>hideOnScroll</code> the bar slides away while scrolling down. It never hides
-          while the menu is open or focus is inside.
-        </li>
-        <li>
-          To open your own drawer instead of the built-in panel, bind <code>[(menuOpen)]</code>.
-        </li>
-      </ul>
-
-      <h2 id="api">API</h2>
-      <docs-api-table [rows]="rows" />
-    </docs-page>
-  `,
+  templateUrl: './navbar.html',
   styles: `
     .narrow {
       max-inline-size: 22rem;

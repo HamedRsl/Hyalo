@@ -18,6 +18,9 @@ module.exports = defineConfig([
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@angular-eslint/prefer-signals': 'error',
       '@angular-eslint/no-host-metadata-property': 'off',
+      // Inline templates and styles are fine for tiny components only;
+      // anything of 6 lines or more belongs in its own .html / .css file.
+      '@angular-eslint/component-max-inline-declarations': ['error', { template: 5, styles: 5 }],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-function-return-type': [
         'error',
@@ -56,6 +59,8 @@ module.exports = defineConfig([
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+      // Test hosts keep their fixture markup next to the assertions.
+      '@angular-eslint/component-max-inline-declarations': 'off',
     },
   },
   {

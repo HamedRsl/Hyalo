@@ -38,42 +38,7 @@ const PRESSED_THUMB = 1.5;
     '[attr.data-checked]': 'checked() || null',
     '[attr.data-disabled]': 'disabled() || null',
   },
-  template: `
-    <label class="hy-choice__row">
-      <span
-        class="hy-choice__control hy-switch__track"
-        (pointerdown)="onDown($event)"
-        (pointermove)="onMove($event)"
-        (pointerup)="onUp()"
-        (pointercancel)="onUp(true)"
-      >
-        <input
-          type="checkbox"
-          role="switch"
-          class="hy-choice__input"
-          [name]="name()"
-          [checked]="checked()"
-          [disabled]="disabled()"
-          [required]="required()"
-          [attr.aria-checked]="checked()"
-          [attr.aria-describedby]="description() ? descriptionId : null"
-          (click)="onClick($event)"
-          (change)="onChange($event)"
-          (blur)="touch.emit()"
-        />
-        <span
-          class="hy-switch__thumb"
-          aria-hidden="true"
-          [attr.data-dragging]="drag() === null ? null : ''"
-          [style.--_drag.px]="drag()"
-        ></span>
-      </span>
-      <span class="hy-choice__label"><ng-content /></span>
-    </label>
-    @if (description()) {
-      <p class="hy-choice__description" [id]="descriptionId">{{ description() }}</p>
-    }
-  `,
+  templateUrl: './switch.html',
   styleUrl: './choice.css',
 })
 export class HySwitch implements FormCheckboxControl {

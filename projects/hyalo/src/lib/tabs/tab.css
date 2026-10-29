@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+:host([inert]) {
+  display: none;
+}
+:host(:focus-visible) {
+  outline: none;
+  border-radius: var(--hy-radius-s);
+  box-shadow: var(--hy-focus-ring);
+}

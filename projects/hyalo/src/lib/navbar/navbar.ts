@@ -67,26 +67,7 @@ export type HyNavbarAppearance = 'floating' | 'full';
     '(focusin)': 'hidden.set(false)',
     '(click)': 'onClick($event)',
   },
-  template: `
-    <div class="hy-navbar__bar" [hyMaterial]="material()">
-      <ng-content select="[hyNavbarBrand]" />
-      <nav class="hy-navbar__links" [id]="linksId" [attr.aria-label]="label()">
-        <ng-content />
-      </nav>
-      <ng-content select="[hyNavbarActions]" />
-      <button
-        #toggle
-        type="button"
-        class="hy-navbar__toggle"
-        [attr.aria-expanded]="menuOpen()"
-        [attr.aria-controls]="linksId"
-        [attr.aria-label]="menuLabel()"
-        (click)="menuOpen.set(!menuOpen())"
-      >
-        <hy-icon [name]="menuOpen() ? 'x' : 'menu'" />
-      </button>
-    </div>
-  `,
+  templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class HyNavbar {

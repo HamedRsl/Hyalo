@@ -1,0 +1,73 @@
+<docs-page
+  heading="Tooltip and popover"
+  lead="A tooltip labels a control. A popover holds content people interact with."
+>
+  <h2>Tooltip</h2>
+  <docs-example [code]="tooltipCode">
+    <button hyButton variant="glass" iconOnly aria-label="Close" hyTooltip="Close">
+      <hy-icon name="x" />
+    </button>
+    <button
+      hyButton
+      variant="glass"
+      hyTooltip="Saves a copy to your drafts"
+      tooltipPlacement="bottom"
+    >
+      Save copy
+    </button>
+    <button hyButton variant="ghost" hyTooltip="Shown on the end side" tooltipPlacement="end">
+      End
+    </button>
+  </docs-example>
+
+  <h2>Popover</h2>
+  <docs-example [code]="popoverCode">
+    <button
+      hyButton
+      variant="glass"
+      [hyPopover]="share"
+      popoverLabel="Share"
+      [(popoverOpen)]="open"
+    >
+      Share
+    </button>
+    <ng-template #share>
+      <div class="docs-stack share">
+        <strong>Share this collection</strong>
+        <hy-switch [(checked)]="isPublic">Anyone with the link</hy-switch>
+        <button hyButton size="sm" (click)="open.set(false)">Done</button>
+      </div>
+    </ng-template>
+    <span class="hy-muted">Open: {{ open() }}</span>
+  </docs-example>
+
+  <h2>Which one</h2>
+  <p>
+    Tooltips are for a few words that name or explain a control. They never hold links or
+    buttons, and they do not show on touch. If the content is interactive, or longer than a
+    sentence, use a popover.
+  </p>
+
+  <h2>Accessibility</h2>
+  <ul>
+    <li>
+      Tooltip text is added to the trigger with <code>aria-describedby</code>, so screen readers
+      hear it right away.
+    </li>
+    <li>
+      Tooltips show on hover after a short delay and on keyboard focus at once. Escape hides
+      them.
+    </li>
+    <li>
+      A popover is a non-modal dialog. Focus moves to its first control and returns to the
+      trigger on close.
+    </li>
+    <li>Escape, a click outside, or tabbing out closes the popover.</li>
+  </ul>
+
+  <h2>API</h2>
+  <p><code>[hyTooltip]</code></p>
+  <docs-api-table [rows]="tooltipRows" />
+  <p><code>[hyPopover]</code>, exported as <code>hyPopover</code></p>
+  <docs-api-table [rows]="popoverRows" />
+</docs-page>

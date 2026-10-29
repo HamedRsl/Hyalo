@@ -1,0 +1,129 @@
+<docs-page
+  heading="Components"
+  lead="Every component in the kit, each with a small preview. Pick one for its demos, accessibility notes and API."
+>
+  <ul class="gallery">
+    @for (item of items; track item.path) {
+      <li>
+        <hy-card class="tile" material="solid" padding="none">
+          <!-- The preview is a picture of the component; the card's link is the way in. -->
+          <div class="tile__stage hy-mesh" inert aria-hidden="true">
+            @switch (item.path) {
+              @case ('/components/accordion') {
+                <hy-accordion class="preview-accordion">
+                  <hy-accordion-item heading="Delivery" [expanded]="true">
+                    Three to five working days.
+                  </hy-accordion-item>
+                  <hy-accordion-item heading="Returns">Within 30 days.</hy-accordion-item>
+                </hy-accordion>
+              }
+              @case ('/components/button') {
+                <div class="row">
+                  <button hyButton size="sm">Solid</button>
+                  <button hyButton size="sm" variant="glass">Glass</button>
+                  <button hyButton size="sm" variant="soft">Soft</button>
+                </div>
+              }
+              @case ('/components/card') {
+                <hy-card class="preview-card" padding="sm">
+                  <p class="preview-card__title">Calibre 7</p>
+                  <p class="preview-card__body">Hand-wound, 42 mm.</p>
+                </hy-card>
+              }
+              @case ('/components/checkbox-radio-switch') {
+                <div class="stack">
+                  <hy-checkbox [checked]="true">Gift wrap</hy-checkbox>
+                  <hy-switch [checked]="true">Notifications</hy-switch>
+                </div>
+              }
+              @case ('/components/dialog') {
+                <div class="scrim">
+                  <div
+                    class="mock-dialog hy-glass"
+                    data-material="frosted"
+                    data-thickness="thick"
+                  >
+                    <p class="hy-dialog__title">Delete draft?</p>
+                    <div class="hy-dialog__actions">
+                      <button hyButton size="sm" variant="ghost" tone="neutral">Cancel</button>
+                      <button hyButton size="sm" tone="danger">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              }
+              @case ('/components/drawer') {
+                <div class="scrim scrim--edge">
+                  <div
+                    class="mock-sheet hy-glass"
+                    data-material="frosted"
+                    data-thickness="thick"
+                  >
+                    <span class="mock-sheet__grabber"></span>
+                    <span class="line"></span>
+                    <span class="line line--short"></span>
+                  </div>
+                </div>
+              }
+              @case ('/components/navbar') {
+                <hy-navbar class="preview-navbar" label="Preview" position="static">
+                  <a hyNavbarBrand href="/">Atelier</a>
+                  <a href="/">Watches</a>
+                </hy-navbar>
+              }
+              @case ('/components/select') {
+                <div class="stack stack--tight">
+                  <hy-select [options]="straps" [value]="'leather'" />
+                  <div class="mock-panel hy-select__panel hy-glass" data-material="frosted">
+                    <div class="hy-select__option" aria-selected="true">
+                      <span>Leather</span><hy-icon class="hy-select__check" name="check" />
+                    </div>
+                    <div class="hy-select__option"><span>Steel</span></div>
+                  </div>
+                </div>
+              }
+              @case ('/components/tabs') {
+                <hy-tabs class="preview-tabs" label="Preview">
+                  <hy-tab value="overview" label="Overview">Slim and hand-wound.</hy-tab>
+                  <hy-tab value="specs" label="Specs">42 mm steel.</hy-tab>
+                </hy-tabs>
+              }
+              @case ('/components/text-field') {
+                <hy-field class="preview-field" label="Email">
+                  <input hyInput type="email" value="ada@example.com" />
+                </hy-field>
+              }
+              @case ('/components/toast') {
+                <div
+                  class="mock-toast hy-toast hy-glass"
+                  data-material="frosted"
+                  data-tone="success"
+                >
+                  <hy-icon class="hy-toast__icon" name="success" />
+                  <div class="hy-toast__text">
+                    <p class="hy-toast__title">Saved</p>
+                    <p class="hy-toast__message">Address updated</p>
+                  </div>
+                  <span class="hy-toast__close"><hy-icon name="x" /></span>
+                </div>
+              }
+              @case ('/components/tooltip-popover') {
+                <div class="anchor">
+                  <span class="mock-tooltip hy-tooltip">Copy link</span>
+                  <button hyButton size="sm" variant="glass" iconOnly>
+                    <hy-icon name="settings" />
+                  </button>
+                </div>
+              }
+            }
+          </div>
+          <div class="tile__text">
+            <h2 hyCardHeader class="tile__title">
+              <a hyCardLink [routerLink]="item.path">{{ item.label }}</a>
+            </h2>
+            <p class="tile__summary">{{ item.summary }}</p>
+          </div>
+        </hy-card>
+      </li>
+    }
+  </ul>
+</docs-page>

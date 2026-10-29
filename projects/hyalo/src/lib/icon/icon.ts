@@ -84,59 +84,8 @@ export class HyIconAttrs {
     '[attr.data-mirror-rtl]': 'def()?.mirrorRtl || null',
     '[style.--hy-icon-size]': 'size()',
   },
-  template: `
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      [attr.stroke-width]="strokeWidth()"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      focusable="false"
-    >
-      @for (child of def()?.node; track $index) {
-        @switch (child[0]) {
-          @case ('path') {
-            <svg:path [hyIconAttrs]="child[1]" />
-          }
-          @case ('circle') {
-            <svg:circle [hyIconAttrs]="child[1]" />
-          }
-          @case ('line') {
-            <svg:line [hyIconAttrs]="child[1]" />
-          }
-          @case ('rect') {
-            <svg:rect [hyIconAttrs]="child[1]" />
-          }
-          @case ('polyline') {
-            <svg:polyline [hyIconAttrs]="child[1]" />
-          }
-          @case ('polygon') {
-            <svg:polygon [hyIconAttrs]="child[1]" />
-          }
-          @case ('ellipse') {
-            <svg:ellipse [hyIconAttrs]="child[1]" />
-          }
-        }
-      }
-    </svg>
-  `,
-  styles: `
-    :host {
-      display: inline-flex;
-      flex: none;
-      inline-size: var(--hy-icon-size, 1.25em);
-      block-size: var(--hy-icon-size, 1.25em);
-      vertical-align: middle;
-    }
-    svg {
-      inline-size: 100%;
-      block-size: 100%;
-    }
-    :host-context([dir='rtl'])[data-mirror-rtl] svg {
-      transform: scaleX(-1);
-    }
-  `,
+  templateUrl: './icon.html',
+  styleUrl: './icon.css',
 })
 export class HyIcon {
   private readonly registry = inject(HyIconRegistry);

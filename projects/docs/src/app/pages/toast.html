@@ -1,0 +1,35 @@
+<docs-page heading="Toast" lead="Short, temporary messages that stack in a corner.">
+  <docs-example [code]="code">
+    <button hyButton variant="glass" (click)="saved()">Success</button>
+    <button hyButton variant="glass" (click)="failed()">Error</button>
+    <button hyButton variant="glass" (click)="archived()">With undo</button>
+    <button hyButton variant="ghost" tone="neutral" (click)="toaster.dismissAll()">
+      Dismiss all
+    </button>
+  </docs-example>
+
+  <h2>Behaviour</h2>
+  <ul>
+    <li>Up to four are visible. A fifth one pushes the oldest out.</li>
+    <li>Timers pause while the pointer is over the stack or focus is inside it.</li>
+    <li>
+      A toast with an action stays until dismissed, so nobody has to race a timer to press Undo.
+    </li>
+    <li>Swipe a toast sideways to dismiss it on touch screens.</li>
+  </ul>
+
+  <h2>Accessibility</h2>
+  <ul>
+    <li>
+      Messages go through a live region. Danger toasts are assertive, the rest are polite.
+    </li>
+    <li>The stack is a labelled region, so screen reader users can find it later.</li>
+    <li>Never put the only copy of important information in a toast. It goes away.</li>
+  </ul>
+
+  <h2>API</h2>
+  <p><code>HyToaster</code></p>
+  <docs-api-table [rows]="methodRows" />
+  <p><code>HyToastOptions</code></p>
+  <docs-api-table [rows]="optionRows" />
+</docs-page>

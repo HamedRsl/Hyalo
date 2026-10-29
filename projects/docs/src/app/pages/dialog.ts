@@ -9,30 +9,8 @@ import { DocsPage } from '../shared/page';
   selector: 'docs-rename-dialog',
   imports: [HY_DIALOG_PARTS, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <h2 hyDialogTitle>Rename collection</h2>
-    <div hyDialogContent>
-      <p>Current name: {{ data.name }}</p>
-      <label class="docs-stack">
-        New name
-        <input class="rename" #name [value]="data.name" />
-      </label>
-    </div>
-    <div hyDialogActions>
-      <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="undefined">Cancel</button>
-      <button hyButton (click)="ref.close(name.value)">Rename</button>
-    </div>
-  `,
-  styles: `
-    .rename {
-      padding: var(--hy-space-2) var(--hy-space-3);
-      border: 1px solid var(--hy-line);
-      border-radius: var(--hy-radius-s);
-      background: var(--hy-surface-1);
-      color: inherit;
-      font: inherit;
-    }
-  `,
+  templateUrl: './rename-dialog.html',
+  styleUrl: './rename-dialog.css',
 })
 class RenameDialog {
   protected readonly data = inject<{ name: string }>(HY_DIALOG_DATA);
@@ -43,44 +21,7 @@ class RenameDialog {
   selector: 'docs-dialog-page',
   imports: [DocsPage, DocsExample, DocsApiTable, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <docs-page heading="Dialog" lead="Modal glass panels for focused tasks and confirmations.">
-      <h2>Confirm</h2>
-      <docs-example [code]="confirmCode">
-        <button hyButton tone="danger" variant="soft" (click)="remove()">Delete draft</button>
-        <span class="hy-muted" aria-live="polite">{{ confirmResult() }}</span>
-      </docs-example>
-
-      <h2>Custom content</h2>
-      <docs-example [code]="openCode">
-        <button hyButton variant="glass" (click)="rename()">Rename collection</button>
-        <span class="hy-muted" aria-live="polite">Name: {{ collection() }}</span>
-      </docs-example>
-      <p>
-        Content is any component or template. Lay it out with <code>hyDialogTitle</code>,
-        <code>hyDialogContent</code> and <code>hyDialogActions</code>, and close it with
-        <code>[hyDialogClose]</code> or <code>HyDialogRef.close()</code>.
-      </p>
-
-      <h2>Accessibility</h2>
-      <ul>
-        <li>Focus moves into the dialog, stays there, and returns to the trigger on close.</li>
-        <li>
-          <code>hyDialogTitle</code> names the dialog. Without a title, pass <code>label</code>.
-        </li>
-        <li>Escape and a backdrop click close it, unless <code>dismissible</code> is false.</li>
-        <li>Confirm uses <code>role="alertdialog"</code> and starts on the safe button.</li>
-      </ul>
-
-      <h2>API</h2>
-      <p><code>HyDialog.open(content, config)</code> returns a <code>HyDialogRef</code>.</p>
-      <docs-api-table [rows]="configRows" />
-      <p><code>HyDialog.confirm(options)</code> resolves to true or false.</p>
-      <docs-api-table [rows]="confirmRows" />
-      <p><code>HyDialogRef</code></p>
-      <docs-api-table [rows]="refRows" />
-    </docs-page>
-  `,
+  templateUrl: './dialog.html',
 })
 export default class DialogPage {
   private readonly dialog = inject(HyDialog);

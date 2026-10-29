@@ -1,0 +1,12 @@
+<h2 hyDialogTitle>Rename collection</h2>
+<div hyDialogContent>
+  <p>Current name: {{ data.name }}</p>
+  <label class="docs-stack">
+    New name
+    <input class="rename" #name [value]="data.name" />
+  </label>
+</div>
+<div hyDialogActions>
+  <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="undefined">Cancel</button>
+  <button hyButton (click)="ref.close(name.value)">Rename</button>
+</div>

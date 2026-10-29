@@ -45,25 +45,7 @@ export class HySuffix {}
     '[attr.data-invalid]': 'errorShown() || null',
     '[attr.data-disabled]': 'control()?.disabled() || null',
   },
-  template: `
-    @if (label()) {
-      <label class="hy-field__label" [id]="labelId" [attr.for]="labelFor()">
-        {{ label() }}
-        @if (control()?.required()) {
-          <span class="hy-field__required" aria-hidden="true">*</span>
-        }
-      </label>
-    }
-    <div class="hy-field__box">
-      <ng-content select="[hyPrefix]" />
-      <ng-content />
-      <ng-content select="[hySuffix]" />
-    </div>
-    @if (hint() && !errorText()) {
-      <p class="hy-field__hint" [id]="hintId">{{ hint() }}</p>
-    }
-    <p class="hy-field__error" [id]="errorId" aria-live="polite">{{ errorText() }}</p>
-  `,
+  templateUrl: './field.html',
   styleUrl: './field.css',
 })
 export class HyField implements HyFieldContext {

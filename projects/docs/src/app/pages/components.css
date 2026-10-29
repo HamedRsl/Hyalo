@@ -1,0 +1,166 @@
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--hy-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gallery > li {
+  display: flex;
+  /* Wide previews must not stretch a card past its column. */
+  min-inline-size: 0;
+}
+.tile {
+  flex: 1;
+  min-inline-size: 0;
+  gap: 0;
+  transition:
+    translate var(--hy-dur-settle) var(--hy-ease-out),
+    box-shadow var(--hy-dur-settle) var(--hy-ease-out);
+}
+@media (hover: hover) {
+  .tile:hover {
+    translate: 0 -2px;
+    box-shadow: var(--hy-glass-edge), var(--hy-glass-shadow-thick);
+  }
+}
+.tile:active {
+  scale: 0.99;
+}
+.tile__stage {
+  display: grid;
+  place-items: center;
+  block-size: 10rem;
+  padding: var(--hy-space-4);
+  overflow: hidden;
+  border-block-end: 1px solid var(--hy-line);
+}
+/* A picture, not controls: clicks fall through to the card's link. */
+.tile__stage,
+.tile__stage * {
+  pointer-events: none !important;
+}
+.tile__text {
+  display: grid;
+  gap: var(--hy-space-1);
+  padding: var(--hy-space-4) var(--hy-space-5) var(--hy-space-5);
+}
+.tile__title {
+  margin: 0;
+  font-size: var(--hy-step-1);
+  letter-spacing: -0.01em;
+}
+.tile__title a {
+  color: var(--hy-ink);
+  text-decoration: none;
+}
+.tile__summary {
+  margin: 0;
+  color: var(--hy-ink-2);
+  font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--hy-space-2);
+}
+.stack {
+  display: grid;
+  gap: var(--hy-space-3);
+  inline-size: 100%;
+  max-inline-size: 13rem;
+}
+.stack--tight {
+  gap: var(--hy-space-1);
+}
+.line {
+  display: block;
+  block-size: 0.5rem;
+  border-radius: var(--hy-radius-pill);
+  background: color-mix(in srgb, var(--hy-ink) 14%, transparent);
+}
+.line--short {
+  inline-size: 60%;
+}
+
+/* Full-size components, drawn smaller so they fit the stage. */
+.preview-accordion,
+.preview-tabs,
+.preview-field {
+  inline-size: 100%;
+  max-inline-size: 17rem;
+  zoom: 0.78;
+}
+.preview-navbar {
+  inline-size: 100%;
+  --_inset: 0px;
+}
+.preview-card {
+  inline-size: 100%;
+  max-inline-size: 11rem;
+}
+.preview-card__title {
+  margin: 0;
+  font-weight: 620;
+}
+.preview-card__body {
+  margin: 0;
+  font-size: var(--hy-step--1);
+}
+
+.scrim {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: calc(100% + 2 * var(--hy-space-4));
+  block-size: calc(100% + 2 * var(--hy-space-4));
+  margin: calc(-1 * var(--hy-space-4));
+  background: var(--hy-scrim);
+}
+.scrim--edge {
+  place-items: end stretch;
+}
+.mock-dialog {
+  display: grid;
+  gap: var(--hy-space-3);
+  padding: var(--hy-space-4);
+  border-radius: var(--hy-radius-m);
+}
+.mock-dialog .hy-dialog__title {
+  font-size: var(--hy-step-0);
+}
+.mock-dialog .hy-dialog__actions {
+  margin: 0;
+}
+.mock-sheet {
+  display: grid;
+  gap: var(--hy-space-2);
+  padding: var(--hy-space-5) var(--hy-space-5) var(--hy-space-6);
+  border-radius: var(--hy-radius-l) var(--hy-radius-l) 0 0;
+  border-block-end: 0;
+}
+.mock-sheet__grabber {
+  justify-self: center;
+  inline-size: 2.25rem;
+  block-size: 0.3125rem;
+  margin-block-end: var(--hy-space-2);
+  border-radius: var(--hy-radius-pill);
+  background: color-mix(in srgb, var(--hy-ink) 28%, transparent);
+}
+.mock-panel {
+  flex: none;
+}
+.mock-toast {
+  inline-size: 100%;
+  max-inline-size: 17rem;
+  animation: none;
+}
+.anchor {
+  display: grid;
+  justify-items: center;
+  gap: var(--hy-space-2);
+}

@@ -1,0 +1,36 @@
+<docs-page heading="Dialog" lead="Modal glass panels for focused tasks and confirmations.">
+  <h2>Confirm</h2>
+  <docs-example [code]="confirmCode">
+    <button hyButton tone="danger" variant="soft" (click)="remove()">Delete draft</button>
+    <span class="hy-muted" aria-live="polite">{{ confirmResult() }}</span>
+  </docs-example>
+
+  <h2>Custom content</h2>
+  <docs-example [code]="openCode">
+    <button hyButton variant="glass" (click)="rename()">Rename collection</button>
+    <span class="hy-muted" aria-live="polite">Name: {{ collection() }}</span>
+  </docs-example>
+  <p>
+    Content is any component or template. Lay it out with <code>hyDialogTitle</code>,
+    <code>hyDialogContent</code> and <code>hyDialogActions</code>, and close it with
+    <code>[hyDialogClose]</code> or <code>HyDialogRef.close()</code>.
+  </p>
+
+  <h2>Accessibility</h2>
+  <ul>
+    <li>Focus moves into the dialog, stays there, and returns to the trigger on close.</li>
+    <li>
+      <code>hyDialogTitle</code> names the dialog. Without a title, pass <code>label</code>.
+    </li>
+    <li>Escape and a backdrop click close it, unless <code>dismissible</code> is false.</li>
+    <li>Confirm uses <code>role="alertdialog"</code> and starts on the safe button.</li>
+  </ul>
+
+  <h2>API</h2>
+  <p><code>HyDialog.open(content, config)</code> returns a <code>HyDialogRef</code>.</p>
+  <docs-api-table [rows]="configRows" />
+  <p><code>HyDialog.confirm(options)</code> resolves to true or false.</p>
+  <docs-api-table [rows]="confirmRows" />
+  <p><code>HyDialogRef</code></p>
+  <docs-api-table [rows]="refRows" />
+</docs-page>

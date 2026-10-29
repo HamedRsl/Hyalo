@@ -1,0 +1,7 @@
+@if (label()) {
+  <span class="hy-radio-group__label" [id]="labelId">{{ label() }}</span>
+}
+<div class="hy-radio-group__items"><ng-content /></div>
+@if (showsError()) {
+  <p class="hy-choice__error">{{ errorMessage() }}</p>
+}

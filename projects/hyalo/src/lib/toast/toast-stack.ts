@@ -41,50 +41,7 @@ interface Swipe {
     '(focusin)': "toaster.pause('focus')",
     '(focusout)': 'onFocusOut($event)',
   },
-  template: `
-    <ol class="hy-toast-list">
-      @for (toast of toaster.items(); track toast.id) {
-        <li
-          class="hy-toast hy-glass"
-          [attr.data-id]="toast.id"
-          [attr.data-material]="material()"
-          [attr.data-tone]="toast.tone"
-          [attr.data-leaving]="toast.leaving || null"
-          (pointerdown)="onDown($event)"
-          (pointermove)="onMove($event)"
-          (pointerup)="onUp($event, toast)"
-          (pointercancel)="onUp($event, null)"
-        >
-          @if (toast.tone !== 'neutral') {
-            <hy-icon class="hy-toast__icon" [name]="toast.tone" />
-          }
-          <div class="hy-toast__text">
-            @if (toast.title) {
-              <p class="hy-toast__title">{{ toast.title }}</p>
-            }
-            <p class="hy-toast__message">{{ toast.message }}</p>
-          </div>
-          @if (toast.action; as action) {
-            <button
-              type="button"
-              class="hy-toast__action"
-              (click)="action.run(); toaster.dismiss(toast.id)"
-            >
-              {{ action.label }}
-            </button>
-          }
-          <button
-            type="button"
-            class="hy-toast__close"
-            aria-label="Dismiss"
-            (click)="toaster.dismiss(toast.id)"
-          >
-            <hy-icon name="x" />
-          </button>
-        </li>
-      }
-    </ol>
-  `,
+  templateUrl: './toast-stack.html',
 })
 export class HyToastStack {
   protected readonly toaster = inject(HyToaster);

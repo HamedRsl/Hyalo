@@ -1,0 +1,11 @@
+<figure class="example">
+  <div class="example__stage hy-mesh" [class.example__stage--column]="column()">
+    <ng-content />
+  </div>
+  @if (code()) {
+    <details class="example__code">
+      <summary>Code</summary>
+      <pre><code>{{ code() }}</code></pre>
+    </details>
+  }
+</figure>

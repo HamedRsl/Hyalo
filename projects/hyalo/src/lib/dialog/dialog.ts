@@ -39,20 +39,7 @@ export interface HyConfirmOptions {
   selector: 'hy-confirm-dialog',
   imports: [HY_DIALOG_PARTS, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <h2 hyDialogTitle>{{ data.title }}</h2>
-    @if (data.message) {
-      <p hyDialogContent>{{ data.message }}</p>
-    }
-    <div hyDialogActions>
-      <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="false">
-        {{ data.cancelLabel ?? 'Cancel' }}
-      </button>
-      <button hyButton [tone]="data.tone ?? 'accent'" [hyDialogClose]="true">
-        {{ data.confirmLabel ?? 'Confirm' }}
-      </button>
-    </div>
-  `,
+  templateUrl: './dialog.html',
 })
 class HyConfirmDialog {
   protected readonly data = inject(HY_DIALOG_DATA) as HyConfirmOptions;

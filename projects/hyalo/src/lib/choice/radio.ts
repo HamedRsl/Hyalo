@@ -36,15 +36,7 @@ import { injectId } from '../core/ids';
     '[attr.aria-required]': 'required() || null',
     '[attr.data-orientation]': 'orientation()',
   },
-  template: `
-    @if (label()) {
-      <span class="hy-radio-group__label" [id]="labelId">{{ label() }}</span>
-    }
-    <div class="hy-radio-group__items"><ng-content /></div>
-    @if (showsError()) {
-      <p class="hy-choice__error">{{ errorMessage() }}</p>
-    }
-  `,
+  templateUrl: './radio-group.html',
   styleUrl: './choice.css',
 })
 export class HyRadioGroup<T> implements FormValueControl<T | undefined> {
@@ -83,27 +75,7 @@ export class HyRadioGroup<T> implements FormValueControl<T | undefined> {
     '[attr.data-checked]': 'checked() || null',
     '[attr.data-disabled]': 'isDisabled() || null',
   },
-  template: `
-    <label class="hy-choice__row">
-      <span class="hy-choice__control hy-radio__circle">
-        <input
-          type="radio"
-          class="hy-choice__input"
-          [name]="group.groupName()"
-          [checked]="checked()"
-          [disabled]="isDisabled()"
-          [attr.aria-describedby]="description() ? descriptionId : null"
-          (change)="group.value.set(value())"
-          (blur)="group.touch.emit()"
-        />
-        <span class="hy-radio__dot" aria-hidden="true"></span>
-      </span>
-      <span class="hy-choice__label"><ng-content /></span>
-    </label>
-    @if (description()) {
-      <p class="hy-choice__description" [id]="descriptionId">{{ description() }}</p>
-    }
-  `,
+  templateUrl: './radio.html',
   styleUrl: './choice.css',
 })
 export class HyRadio<T> {

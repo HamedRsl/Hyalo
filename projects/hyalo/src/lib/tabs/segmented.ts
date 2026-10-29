@@ -48,32 +48,7 @@ export interface HySegmentedOption<T> {
     '[attr.data-size]': 'size()',
     '[attr.data-ready]': 'ready() || null',
   },
-  template: `
-    <div #row class="hy-segmented__row">
-      <span class="hy-segmented__indicator" aria-hidden="true"></span>
-      @for (option of options(); track option.value) {
-        <label
-          #item
-          class="hy-segmented__item"
-          [attr.data-checked]="option.value === value() || null"
-        >
-          <input
-            type="radio"
-            class="hy-segmented__input"
-            [name]="name() || groupName"
-            [checked]="option.value === value()"
-            [disabled]="disabled() || !!option.disabled"
-            (change)="value.set(option.value)"
-            (blur)="touch.emit()"
-          />
-          @if (option.icon; as icon) {
-            <hy-icon [name]="icon" />
-          }
-          <span>{{ option.label }}</span>
-        </label>
-      }
-    </div>
-  `,
+  templateUrl: './segmented.html',
   styleUrl: './segmented.css',
 })
 export class HySegmented<T> implements FormValueControl<T | undefined> {

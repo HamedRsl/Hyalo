@@ -1,0 +1,14 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--hy-icon-size, 1.25em);
+  block-size: var(--hy-icon-size, 1.25em);
+  vertical-align: middle;
+}
+svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+:host-context([dir='rtl'])[data-mirror-rtl] svg {
+  transform: scaleX(-1);
+}

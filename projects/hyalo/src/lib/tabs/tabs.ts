@@ -25,19 +25,7 @@ import { trackIndicator } from './indicator';
   hostDirectives: [{ directive: TabPanel, inputs: ['value'] }],
   host: { class: 'hy-tab-panel' },
   template: `<ng-content />`,
-  styles: `
-    :host {
-      display: block;
-    }
-    :host([inert]) {
-      display: none;
-    }
-    :host(:focus-visible) {
-      outline: none;
-      border-radius: var(--hy-radius-s);
-      box-shadow: var(--hy-focus-ring);
-    }
-  `,
+  styleUrl: './tab.css',
 })
 export class HyTab {
   readonly panel = inject(TabPanel);
@@ -70,37 +58,7 @@ export class HyTab {
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [Tabs],
   host: { class: 'hy-tabs', '[attr.data-stretch]': 'stretch() || null' },
-  template: `
-    <div
-      #list
-      ngTabList
-      class="hy-tabs__list"
-      [attr.data-ready]="ready() || null"
-      [attr.aria-label]="label() || null"
-      [selectedTab]="current()"
-      (selectedTabChange)="selected.set($event)"
-      [selectionMode]="selectionMode()"
-      [focusMode]="'roving'"
-    >
-      <span class="hy-tabs__indicator" aria-hidden="true"></span>
-      @for (tab of tabs(); track tab.panel.value()) {
-        <button
-          #tabEl
-          type="button"
-          ngTab
-          class="hy-tabs__tab"
-          [value]="tab.panel.value()"
-          [disabled]="tab.disabled()"
-        >
-          @if (tab.icon(); as icon) {
-            <hy-icon [name]="icon" />
-          }
-          {{ tab.label() }}
-        </button>
-      }
-    </div>
-    <div class="hy-tabs__panels"><ng-content /></div>
-  `,
+  templateUrl: './tabs.html',
   styleUrl: './tabs.css',
 })
 export class HyTabs {

@@ -22,29 +22,7 @@ import { HyMaterialDirective } from '../material/material';
     class: 'hy-accordion-item',
     '[attr.data-open]': 'expanded() || null',
   },
-  template: `
-    <div class="hy-accordion__heading" role="heading" [attr.aria-level]="headingLevel()">
-      <button
-        type="button"
-        class="hy-accordion__trigger"
-        ngAccordionTrigger
-        [panel]="panel"
-        [(expanded)]="expanded"
-        [disabled]="disabled()"
-      >
-        <span class="hy-accordion__label">
-          {{ heading() }}
-          <ng-content select="[hyAccordionHeading]" />
-        </span>
-        <hy-icon class="hy-accordion__chevron" name="chevron-down" />
-      </button>
-    </div>
-    <div ngAccordionPanel #panel="ngAccordionPanel" class="hy-accordion__panel">
-      <div class="hy-accordion__body">
-        <div class="hy-accordion__content"><ng-content /></div>
-      </div>
-    </div>
-  `,
+  templateUrl: './accordion-item.html',
   styleUrl: './accordion.css',
 })
 export class HyAccordionItem {

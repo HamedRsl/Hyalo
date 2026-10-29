@@ -1,0 +1,26 @@
+<label class="hy-choice__row">
+  <span class="hy-choice__control hy-checkbox__box">
+    <input
+      type="checkbox"
+      class="hy-choice__input"
+      [name]="name()"
+      [checked]="checked()"
+      [indeterminate]="indeterminate()"
+      [disabled]="disabled()"
+      [required]="required()"
+      [attr.aria-invalid]="(invalid() && touched()) || null"
+      [attr.aria-describedby]="description() ? descriptionId : null"
+      (change)="onChange($event)"
+      (blur)="touch.emit()"
+    />
+    <hy-icon
+      class="hy-checkbox__mark"
+      [name]="indeterminate() ? 'minus' : 'check'"
+      [strokeWidth]="2.5"
+    />
+  </span>
+  <span class="hy-choice__label"><ng-content /></span>
+</label>
+@if (description()) {
+  <p class="hy-choice__description" [id]="descriptionId">{{ description() }}</p>
+}

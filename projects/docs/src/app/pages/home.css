@@ -1,0 +1,9 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-3);
+}
+.features {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  margin-block-start: var(--hy-space-10);
+}

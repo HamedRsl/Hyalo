@@ -8,55 +8,7 @@ import { DocsPage } from '../shared/page';
   selector: 'docs-drawer-page',
   imports: [DocsPage, DocsExample, DocsApiTable, HyButton, HyCheckbox, HY_DIALOG_PARTS],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <docs-page
-      heading="Drawer"
-      lead="A modal panel that slides in from an edge. Filters, carts, navigation on phones."
-    >
-      <docs-example [code]="code">
-        <button hyButton variant="glass" (click)="open('start')">From start</button>
-        <button hyButton variant="glass" (click)="open('end')">From end</button>
-        <button hyButton variant="glass" (click)="open('bottom')">Bottom sheet</button>
-      </docs-example>
-      <p>
-        <code>start</code> and <code>end</code> follow the text direction. Switch the page to RTL in
-        the settings and the drawers swap sides.
-      </p>
-
-      <ng-template #filters>
-        <h2 hyDialogTitle>Filters</h2>
-        <div hyDialogContent>
-          <div class="docs-stack">
-            <hy-checkbox>In stock</hy-checkbox>
-            <hy-checkbox>On sale</hy-checkbox>
-            <hy-checkbox>Ships this week</hy-checkbox>
-          </div>
-        </div>
-        <div hyDialogActions>
-          <button hyButton variant="ghost" tone="neutral" hyDialogClose>Close</button>
-          <button hyButton [hyDialogClose]="true">Show 24 results</button>
-        </div>
-      </ng-template>
-
-      <h2>Accessibility</h2>
-      <ul>
-        <li>Same behaviour as a dialog: focus trap, Escape, backdrop click and focus restore.</li>
-        <li>Give it a title with <code>hyDialogTitle</code> or a <code>label</code>.</li>
-        <li>
-          Drag it toward its edge or flick it to close it, and grab it again while it moves. A
-          bottom sheet shows a grabber.
-        </li>
-        <li>With reduced motion it cross-fades in place instead of sliding, and is not dragged.</li>
-      </ul>
-
-      <h2>API</h2>
-      <p>
-        <code>HyDrawer.open(content, config)</code> returns a <code>HyDialogRef</code>. It takes
-        every dialog option except <code>size</code>, plus these.
-      </p>
-      <docs-api-table [rows]="rows" />
-    </docs-page>
-  `,
+  templateUrl: './drawer.html',
 })
 export default class DrawerPage {
   private readonly drawer = inject(HyDrawer);

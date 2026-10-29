@@ -1,0 +1,25 @@
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--hy-space-3);
+  margin-block: var(--hy-space-5);
+}
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  font-size: var(--hy-step--1);
+}
+.swatch span {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border-radius: var(--hy-radius-s);
+  border: 1px solid var(--hy-line);
+}
+.tile {
+  display: grid;
+  place-items: center;
+  min-block-size: 7rem;
+  border-radius: var(--hy-radius-l);
+  font-weight: 600;
+}
