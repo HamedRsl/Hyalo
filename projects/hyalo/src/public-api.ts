@@ -39,3 +39,4 @@ export * from './lib/dialog/drawer';
 export * from './lib/popover/tooltip';
 export * from './lib/popover/popover';
 export * from './lib/toast/toaster';
+export * from './lib/accordion/accordion';
