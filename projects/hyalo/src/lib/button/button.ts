@@ -38,6 +38,8 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
  * tab order, since links have no native disabled state.
  */
 @Component({
+  // Attribute selector so the host stays a native <button> or <a>.
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[hyButton], a[hyButton]',
   imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
