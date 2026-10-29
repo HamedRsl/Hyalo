@@ -77,3 +77,14 @@
     background: Canvas;
   }
 }
+
+/* Overlay panels and backdrops from CDK. */
+.hy-backdrop {
+  background: var(--hy-scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.hy-backdrop-transparent {
+  background: transparent;
+}
