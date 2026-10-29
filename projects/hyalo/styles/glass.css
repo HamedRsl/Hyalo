@@ -1,0 +1,79 @@
+/*
+ * The glass material. Any element with .hy-glass and data-material gets it,
+ * usually through the hyMaterial directive.
+ *
+ * Layers, from top to bottom: a pointer glow (driven by --hy-px / --hy-py
+ * from the tilt directive), a reflection gradient, and the fill itself.
+ */
+.hy-glass {
+  --_fill-top: var(--hy-glass-fill-top);
+  --_fill-bottom: var(--hy-glass-fill-bottom);
+  --_tint: var(--hy-glass-tint);
+  --_blur: var(--hy-glass-blur);
+  background:
+    radial-gradient(
+      circle at var(--hy-px, 50%) var(--hy-py, -30%),
+      rgb(var(--hy-glass-glow) / var(--hy-glow, 0)),
+      transparent 55%
+    ),
+    var(--hy-glass-reflection),
+    linear-gradient(
+      160deg,
+      rgb(var(--_tint) / var(--_fill-top)),
+      rgb(var(--_tint) / var(--_fill-bottom))
+    );
+  backdrop-filter: blur(var(--_blur)) saturate(var(--hy-glass-saturate));
+  -webkit-backdrop-filter: blur(var(--_blur)) saturate(var(--hy-glass-saturate));
+  border: 1px solid var(--hy-glass-border);
+  box-shadow: var(--hy-glass-edge), var(--hy-glass-shadow);
+}
+
+.hy-glass[data-material='clear'] {
+  --_fill-top: calc(var(--hy-glass-fill-top) * 0.4);
+  --_fill-bottom: calc(var(--hy-glass-fill-bottom) * 0.3);
+  --_blur: 10px;
+}
+
+.hy-glass[data-material='tinted'] {
+  background:
+    radial-gradient(
+      circle at var(--hy-px, 50%) var(--hy-py, -30%),
+      rgb(var(--hy-glass-glow) / var(--hy-glow, 0)),
+      transparent 55%
+    ),
+    var(--hy-glass-reflection),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--hy-accent) 22%, transparent),
+      color-mix(in srgb, var(--hy-accent) 8%, transparent)
+    );
+}
+
+.hy-glass[data-material='solid'] {
+  background: var(--hy-glass-reflection), var(--hy-surface-1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* No blur support, or the user asked for less transparency: go solid. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hy-glass {
+    background: var(--hy-surface-1);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .hy-glass {
+    background: var(--hy-surface-1);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: var(--hy-line-strong);
+  }
+}
+
+@media (forced-colors: active) {
+  .hy-glass {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+}

@@ -9,3 +9,4 @@ export * from './lib/core/gsap';
 export { injectId } from './lib/core/ids';
 export * from './lib/fidelity/fidelity';
 export * from './lib/motion/motion';
+export * from './lib/material/material';
