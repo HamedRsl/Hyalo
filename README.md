@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".github/assets/hyalo-logo.jpg" alt="Hyalo, Angular UI kit" width="320" />
+</p>
+
 # Hyalo
 
 Liquid glass components for Angular.

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/HamedRsl/Hyalo/main/.github/assets/hyalo-logo.jpg" alt="Hyalo, Angular UI kit" width="240" />
+</p>
+
 # @hyalo/angular
 
 Liquid glass components for Angular, built on Angular Aria and the CDK. Signal based, zoneless, server-render safe, accessible, and ready for RTL.
