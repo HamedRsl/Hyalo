@@ -1,0 +1,7 @@
+<span class="hy-button__label"><ng-content /></span>
+@if (loading()) {
+  <!-- Inline, so a button does not pull in the icon registry. -->
+  <span class="hy-button__spinner" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+  </span>
+}

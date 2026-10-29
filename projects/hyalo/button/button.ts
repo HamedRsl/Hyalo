@@ -8,7 +8,6 @@ import {
   input,
 } from '@angular/core';
 import { HY_CONFIG, HyFidelity, HyInteractive, type HySize, type HyTone } from '@hyalo/angular';
-import { HyIcon } from '@hyalo/angular/icon';
 
 /**
  * - `solid`: filled with the tone colour. The main action on a view.
@@ -40,7 +39,6 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
   // Attribute selector so the host stays a native <button> or <a>.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[hyButton], a[hyButton]',
-  imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [HyInteractive],
   host: {
@@ -59,12 +57,7 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
     '[attr.disabled]': 'isButton && disabled() ? "" : null',
     '[attr.tabindex]': '!isButton && disabled() ? -1 : null',
   },
-  template: `
-    <span class="hy-button__label"><ng-content /></span>
-    @if (loading()) {
-      <span class="hy-button__spinner"><hy-icon name="spinner" /></span>
-    }
-  `,
+  templateUrl: './button.html',
   styleUrl: './button.css',
 })
 export class HyButton {
