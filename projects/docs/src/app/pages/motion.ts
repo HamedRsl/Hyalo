@@ -1,13 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  HY_CARD,
-  HyButton,
-  HyFidelity,
-  HyMagnetic,
-  HyMotion,
-  HyReveal,
-  HyTilt,
-} from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
+import { HyMagnetic, HyReveal, HyTilt } from '@hyalo/angular/interaction';
+import { HyFidelity, HyMotion } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

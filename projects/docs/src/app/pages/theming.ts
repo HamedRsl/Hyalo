@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HyPalette } from '@hyalo/angular';
+import { HyPalette } from '@hyalo/angular/theme';
 import { DocsSettings } from '../settings';
 import { DocsPage } from '../shared/page';
 import { DocsTokenEditor } from '../shared/token-editor';

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, email, form, required } from '@angular/forms/signals';
-import { HY_TEXT_FIELD, HyButton } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_TEXT_FIELD } from '@hyalo/angular/field';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

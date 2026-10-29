@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import {
-  HY_CARD,
-  HY_TEXT_FIELD,
-  HyButton,
-  HyCheckbox,
-  HySegmented,
-  HySwitch,
-} from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
+import { HyCheckbox, HySwitch } from '@hyalo/angular/choice';
+import { HY_TEXT_FIELD } from '@hyalo/angular/field';
+import { HySegmented } from '@hyalo/angular/segmented';
 
 type Density = 'compact' | 'regular' | 'comfortable';
 type ButtonShape = 'pill' | 'rounded' | 'square';

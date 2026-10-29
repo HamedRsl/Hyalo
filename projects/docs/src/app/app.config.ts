@@ -6,7 +6,8 @@ import {
   withInMemoryScrolling,
   withViewTransitions,
 } from '@angular/router';
-import { provideHyalo, provideHyaloIcons } from '@hyalo/angular';
+import { provideHyalo } from '@hyalo/angular';
+import { provideHyaloIcons } from '@hyalo/angular/icon';
 import { routes } from './app.routes';
 import { DOCS_ICONS } from './icons';
 

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HY_TABS, HySegmented } from '@hyalo/angular';
+import { HySegmented } from '@hyalo/angular/segmented';
+import { HY_TABS } from '@hyalo/angular/tabs';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

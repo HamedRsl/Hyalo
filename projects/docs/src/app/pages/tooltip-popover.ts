@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HyButton, HyIcon, HyPopover, HySwitch, HyTooltip } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HySwitch } from '@hyalo/angular/choice';
+import { HyIcon } from '@hyalo/angular/icon';
+import { HyPopover, HyTooltip } from '@hyalo/angular/popover';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

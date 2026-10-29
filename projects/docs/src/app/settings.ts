@@ -1,12 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
-import {
-  HyFidelity,
-  HyMotion,
-  HyPalette,
-  type HyFidelityTier,
-  type HyPaletteName,
-} from '@hyalo/angular';
+import { HyFidelity, HyMotion, type HyFidelityTier } from '@hyalo/angular';
+import { HyPalette, type HyPaletteName } from '@hyalo/angular/theme';
 
 export type ThemeChoice = 'system' | 'light' | 'dark';
 export type DirChoice = 'ltr' | 'rtl';

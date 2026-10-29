@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { HyButton, HyToaster } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HyToaster } from '@hyalo/angular/toast';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

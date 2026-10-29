@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
-import { HY_DIALOG_PARTS, HyButton, HyCheckbox, HyDrawer, type HyDrawerSide } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HyCheckbox } from '@hyalo/angular/choice';
+import { HY_DIALOG_PARTS, HyDrawer, type HyDrawerSide } from '@hyalo/angular/dialog';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

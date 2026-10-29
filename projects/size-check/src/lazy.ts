@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { HY_TABS, HY_TEXT_FIELD, HyDialog, HySelect, HyToaster, HyTooltip } from '@hyalo/angular';
+import { HyDialog } from '@hyalo/angular/dialog';
+import { HY_TEXT_FIELD } from '@hyalo/angular/field';
+import { HyTooltip } from '@hyalo/angular/popover';
+import { HySelect } from '@hyalo/angular/select';
+import { HY_TABS } from '@hyalo/angular/tabs';
+import { HyToaster } from '@hyalo/angular/toast';
 
 /** Uses the heavier parts of the kit: overlays, Angular Aria and forms. */
 @Component({

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HyButton } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
 import { DocsPage } from '../shared/page';
 
 @Component({

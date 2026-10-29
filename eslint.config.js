@@ -45,6 +45,43 @@ module.exports = defineConfig([
     },
   },
   {
+    // Each folder next to src/ is its own entry point. A relative import into
+    // another one would compile a second copy of it, with its own tokens and
+    // services, so dependency injection would quietly stop matching.
+    files: ['projects/hyalo/*/*.ts'],
+    ignores: ['projects/hyalo/src/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*', '!../src', '!../src/testing/*'],
+              message: 'Import other entry points by package path, like @hyalo/angular/icon.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // The primary entry point is the base layer and never imports the others.
+    files: ['projects/hyalo/src/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@hyalo/angular', '@hyalo/angular/*'],
+              message: 'The primary entry point must not depend on another entry point.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['projects/docs/**/*.ts'],
     rules: {
       '@angular-eslint/component-selector': [

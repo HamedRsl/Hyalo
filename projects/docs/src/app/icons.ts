@@ -1,4 +1,4 @@
-import type { HyIconDef, HyIconNode } from '@hyalo/angular';
+import type { HyIconDef, HyIconNode } from '@hyalo/angular/icon';
 
 // Lucide icons (ISC license), copied as data so the docs need no icon package.
 const sliders: HyIconNode = [

@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HY_CARD, HyButton, HyIcon, HyReveal, HyTilt } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
+import { HyIcon } from '@hyalo/angular/icon';
+import { HyReveal, HyTilt } from '@hyalo/angular/interaction';
 import { DocsPage } from '../shared/page';
 
 @Component({
@@ -30,7 +33,8 @@ export default class HomePage {
     },
   ];
 
-  protected readonly usage = `import { HyButton, HY_CARD } from '@hyalo/angular';
+  protected readonly usage = `import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
 
 @Component({
   imports: [HyButton, HY_CARD],

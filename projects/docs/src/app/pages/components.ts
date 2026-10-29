@@ -1,17 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  HY_ACCORDION,
-  HY_CARD,
-  HY_NAVBAR,
-  HY_TABS,
-  HY_TEXT_FIELD,
-  HyButton,
-  HyCheckbox,
-  HyIcon,
-  HySelect,
-  HySwitch,
-} from '@hyalo/angular';
+import { HY_ACCORDION } from '@hyalo/angular/accordion';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
+import { HyCheckbox, HySwitch } from '@hyalo/angular/choice';
+import { HY_TEXT_FIELD } from '@hyalo/angular/field';
+import { HyIcon } from '@hyalo/angular/icon';
+import { HY_NAVBAR } from '@hyalo/angular/navbar';
+import { HySelect } from '@hyalo/angular/select';
+import { HY_TABS } from '@hyalo/angular/tabs';
 import { NAV } from '../nav';
 import { DocsPage } from '../shared/page';
 

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { HY_DIALOG_DATA, HY_DIALOG_PARTS, HyButton, HyDialog, HyDialogRef } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_DIALOG_DATA, HY_DIALOG_PARTS, HyDialog, HyDialogRef } from '@hyalo/angular/dialog';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

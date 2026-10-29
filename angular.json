@@ -112,7 +112,7 @@
     "hyalo": {
       "projectType": "library",
       "root": "projects/hyalo",
-      "sourceRoot": "projects/hyalo/src",
+      "sourceRoot": "projects/hyalo",
       "prefix": "hy",
       "architect": {
         "build": {
@@ -160,8 +160,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "460kB",
-                  "maximumError": "480kB"
+                  "maximumWarning": "310kB",
+                  "maximumError": "330kB"
                 }
               ]
             }

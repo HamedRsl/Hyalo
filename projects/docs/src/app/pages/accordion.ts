@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HY_ACCORDION, HySwitch } from '@hyalo/angular';
+import { HY_ACCORDION } from '@hyalo/angular/accordion';
+import { HySwitch } from '@hyalo/angular/choice';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
-import { HyCheckbox, HyRadio, HyRadioGroup, HySwitch } from '@hyalo/angular';
+import { HyCheckbox, HyRadio, HyRadioGroup, HySwitch } from '@hyalo/angular/choice';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { HY_CARD, HY_NAVBAR, HyButton } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
+import { HY_NAVBAR } from '@hyalo/angular/navbar';
 
 /**
  * A typical shell: a navbar, a card and a button up front, everything else

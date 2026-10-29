@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HyButton, HyIcon } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HyIcon } from '@hyalo/angular/icon';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

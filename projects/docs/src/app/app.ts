@@ -8,18 +8,14 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import {
-  HY_DIALOG_PARTS,
-  HY_NAVBAR,
-  HyButton,
-  HyDialogRef,
-  HyDrawer,
-  HyIcon,
-  HyPopover,
-  HySegmented,
-  type HyFidelityTier,
-  type HyPaletteName,
-} from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_DIALOG_PARTS, HyDialogRef, HyDrawer } from '@hyalo/angular/dialog';
+import { HyIcon } from '@hyalo/angular/icon';
+import { HY_NAVBAR } from '@hyalo/angular/navbar';
+import { HyPopover } from '@hyalo/angular/popover';
+import { HySegmented } from '@hyalo/angular/segmented';
+import type { HyFidelityTier } from '@hyalo/angular';
+import type { HyPaletteName } from '@hyalo/angular/theme';
 import { NAV } from './nav';
 import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } from './settings';
 
