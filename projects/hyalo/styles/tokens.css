@@ -1,0 +1,123 @@
+/*
+ * Design tokens. Every Hyalo component reads these, and a theme is only a
+ * different set of values for the same names. All names start with --hy-.
+ */
+:root {
+  /* Colour (light theme is the default) */
+  --hy-bg: #eef1f4;
+  --hy-surface-1: #ffffff;
+  --hy-surface-2: #f6f8fa;
+  --hy-surface-3: #e9edf1;
+  --hy-surface-4: #dce2e8;
+  --hy-ink: #0f1a24;
+  --hy-ink-2: #3b4856;
+  --hy-ink-3: #596775;
+  --hy-line: rgb(15 26 36 / 0.12);
+  --hy-line-strong: rgb(15 26 36 / 0.24);
+  --hy-accent: #3a4cd0;
+  --hy-accent-hover: #3141b8;
+  --hy-accent-ink: #ffffff;
+  --hy-accent-wash: rgb(58 76 208 / 0.12);
+  --hy-success: #12735a;
+  --hy-success-wash: rgb(18 115 90 / 0.12);
+  --hy-warning: #8f5400;
+  --hy-warning-wash: rgb(143 84 0 / 0.12);
+  --hy-danger: #b93029;
+  --hy-danger-ink: #ffffff;
+  --hy-danger-wash: rgb(185 48 41 / 0.12);
+  --hy-scrim: rgb(9 14 20 / 0.38);
+
+  /* Glass */
+  --hy-glass-tint: 255 255 255;
+  --hy-glass-fill-top: 0.64;
+  --hy-glass-fill-bottom: 0.36;
+  --hy-glass-blur: 25px;
+  --hy-glass-saturate: 180%;
+  --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.4);
+  --hy-glass-border: rgb(15 26 36 / 0.08);
+  --hy-glass-shadow: 0 1px 2px rgb(15 26 36 / 0.06), 0 12px 32px -12px rgb(15 26 36 / 0.22);
+  --hy-glass-reflection: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.5),
+    rgb(255 255 255 / 0) 42%
+  );
+  --hy-glass-glow: 255 255 255;
+
+  /* Type */
+  --hy-font-display: 'Inter Display', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --hy-font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hy-font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --hy-font-fa: 'Vazirmatn', 'Estedad', Tahoma, sans-serif;
+  --hy-step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --hy-step-0: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
+  --hy-step-1: clamp(1.0625rem, 1.02rem + 0.25vw, 1.1875rem);
+  --hy-step-2: clamp(1.25rem, 1.17rem + 0.4vw, 1.5rem);
+  --hy-step-3: clamp(1.5rem, 1.36rem + 0.7vw, 2rem);
+  --hy-step-4: clamp(1.875rem, 1.6rem + 1.3vw, 2.75rem);
+  --hy-step-5: clamp(2.25rem, 1.8rem + 2.2vw, 3.75rem);
+  --hy-step-6: clamp(2.75rem, 2rem + 3.6vw, 5.25rem);
+  --hy-leading-tight: 1.15;
+  --hy-leading: 1.55;
+
+  /* Shape and space (4px base) */
+  --hy-radius-s: 8px;
+  --hy-radius-m: 14px;
+  --hy-radius-l: 22px;
+  --hy-radius-pill: 999px;
+  --hy-space-1: 0.25rem;
+  --hy-space-2: 0.5rem;
+  --hy-space-3: 0.75rem;
+  --hy-space-4: 1rem;
+  --hy-space-5: 1.25rem;
+  --hy-space-6: 1.5rem;
+  --hy-space-7: 1.75rem;
+  --hy-space-8: 2rem;
+  --hy-space-9: 2.5rem;
+  --hy-space-10: 3rem;
+  --hy-space-11: 4rem;
+  --hy-space-12: 5rem;
+  --hy-container: 72rem;
+  --hy-gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
+
+  /* Controls */
+  --hy-control-sm: 2rem;
+  --hy-control-md: 2.5rem;
+  --hy-control-lg: 3rem;
+  --hy-focus-ring: 0 0 0 2px var(--hy-bg), 0 0 0 4px var(--hy-accent);
+
+  /* Motion. Matches the MOTION constants in TypeScript. */
+  --hy-dur-quick: 0.22s;
+  --hy-dur-settle: 0.44s;
+  --hy-dur-scene: 0.9s;
+  --hy-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --hy-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --hy-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layers */
+  --hy-z-sticky: 100;
+  --hy-z-overlay: 1000;
+  --hy-z-toast: 1100;
+  --hy-z-tooltip: 1200;
+}
+
+/* Persian and Arabic text gets its own family. Sizes stay the same or larger. */
+:lang(fa),
+:lang(ar) {
+  --hy-font-body: var(--hy-font-fa);
+  --hy-font-display: var(--hy-font-fa);
+  --hy-leading: 1.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-hy-motion='full']) {
+    --hy-dur-quick: 1ms;
+    --hy-dur-settle: 1ms;
+    --hy-dur-scene: 1ms;
+  }
+}
+
+:root[data-hy-motion='reduced'] {
+  --hy-dur-quick: 1ms;
+  --hy-dur-settle: 1ms;
+  --hy-dur-scene: 1ms;
+}

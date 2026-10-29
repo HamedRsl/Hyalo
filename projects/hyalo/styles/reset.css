@@ -1,0 +1,42 @@
+/* A small reset. It sits in the lowest layer so any app style wins over it. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--hy-bg);
+  color: var(--hy-ink);
+  font-family: var(--hy-font-body);
+  font-size: var(--hy-step-0);
+  line-height: var(--hy-leading);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--hy-font-display);
+  line-height: var(--hy-leading-tight);
+  text-wrap: balance;
+}
+
+:where(p) {
+  text-wrap: pretty;
+}
+
+:where(img, svg, video, canvas) {
+  display: block;
+  max-inline-size: 100%;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+:where(:focus-visible) {
+  outline: 2px solid var(--hy-accent);
+  outline-offset: 2px;
+}

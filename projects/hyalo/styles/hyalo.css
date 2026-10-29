@@ -1,1 +1,13 @@
-/* Hyalo stylesheet. Filled in by the tokens commit. */
+/*
+ * @hyalo/angular stylesheet. Add it once to the app's global styles:
+ *
+ *   "styles": ["node_modules/@hyalo/angular/styles/hyalo.css", "src/styles.css"]
+ *
+ * Everything sits in cascade layers, so unlayered app CSS always wins.
+ */
+@layer hy.reset, hy.tokens, hy.base, hy.utilities;
+
+@import './reset.css' layer(hy.reset);
+@import './tokens.css' layer(hy.tokens);
+@import './themes.css' layer(hy.tokens);
+@import './typography.css' layer(hy.utilities);

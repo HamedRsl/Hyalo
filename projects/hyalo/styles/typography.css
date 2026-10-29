@@ -1,0 +1,64 @@
+/* Typography helpers. */
+.hy-display {
+  font-family: var(--hy-font-display);
+  font-size: var(--hy-step-6);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.hy-h1 {
+  font-size: var(--hy-step-5);
+  letter-spacing: -0.025em;
+}
+
+.hy-h2 {
+  font-size: var(--hy-step-4);
+  letter-spacing: -0.02em;
+}
+
+.hy-h3 {
+  font-size: var(--hy-step-3);
+  letter-spacing: -0.015em;
+}
+
+.hy-lead {
+  font-size: var(--hy-step-1);
+  color: var(--hy-ink-2);
+}
+
+.hy-muted {
+  color: var(--hy-ink-3);
+}
+
+/* Letter spacing hurts connected scripts, so it is removed for them. */
+:lang(fa) :is(.hy-display, .hy-h1, .hy-h2, .hy-h3),
+:lang(ar) :is(.hy-display, .hy-h1, .hy-h2, .hy-h3) {
+  letter-spacing: 0;
+}
+
+.hy-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--hy-lines, 2);
+  line-clamp: var(--hy-lines, 2);
+  overflow: hidden;
+}
+
+.hy-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hy-mesh {
+  background:
+    radial-gradient(60% 50% at 15% 10%, rgb(34 197 140 / 0.28), transparent 70%),
+    radial-gradient(55% 55% at 90% 20%, rgb(88 101 242 / 0.3), transparent 70%),
+    radial-gradient(50% 60% at 60% 100%, rgb(56 189 248 / 0.22), transparent 70%), var(--hy-bg);
+}

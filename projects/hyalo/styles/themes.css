@@ -1,0 +1,93 @@
+/*
+ * Dark theme ("obsidian"). Set data-hy-theme="dark" on <html> to force it,
+ * data-hy-theme="light" to opt out, or leave it unset to follow the OS.
+ * The same values are repeated for both selectors because CSS has no mixins.
+ */
+:root {
+  color-scheme: light;
+}
+
+:root[data-hy-theme='dark'],
+.hy-theme-dark {
+  color-scheme: dark;
+  --hy-bg: #0a0c11;
+  --hy-surface-1: #13161d;
+  --hy-surface-2: #1a1e26;
+  --hy-surface-3: #222731;
+  --hy-surface-4: #2c323e;
+  --hy-ink: #eef1f6;
+  --hy-ink-2: #b9c2ce;
+  --hy-ink-3: #8f99a8;
+  --hy-line: rgb(238 241 246 / 0.12);
+  --hy-line-strong: rgb(238 241 246 / 0.26);
+  --hy-accent: #8e9cff;
+  --hy-accent-hover: #a5b0ff;
+  --hy-accent-ink: #0a0c11;
+  --hy-accent-wash: rgb(142 156 255 / 0.16);
+  --hy-success: #4fd1a5;
+  --hy-success-wash: rgb(79 209 165 / 0.14);
+  --hy-warning: #f2b45a;
+  --hy-warning-wash: rgb(242 180 90 / 0.14);
+  --hy-danger: #ff7a70;
+  --hy-danger-ink: #0a0c11;
+  --hy-danger-wash: rgb(255 122 112 / 0.15);
+  --hy-scrim: rgb(0 0 0 / 0.55);
+  --hy-glass-tint: 255 255 255;
+  --hy-glass-fill-top: 0.12;
+  --hy-glass-fill-bottom: 0.04;
+  --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  --hy-glass-border: rgb(255 255 255 / 0.08);
+  --hy-glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+  --hy-glass-reflection: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.08),
+    rgb(255 255 255 / 0) 40%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-hy-theme='light']) {
+    color-scheme: dark;
+    --hy-bg: #0a0c11;
+    --hy-surface-1: #13161d;
+    --hy-surface-2: #1a1e26;
+    --hy-surface-3: #222731;
+    --hy-surface-4: #2c323e;
+    --hy-ink: #eef1f6;
+    --hy-ink-2: #b9c2ce;
+    --hy-ink-3: #8f99a8;
+    --hy-line: rgb(238 241 246 / 0.12);
+    --hy-line-strong: rgb(238 241 246 / 0.26);
+    --hy-accent: #8e9cff;
+    --hy-accent-hover: #a5b0ff;
+    --hy-accent-ink: #0a0c11;
+    --hy-accent-wash: rgb(142 156 255 / 0.16);
+    --hy-success: #4fd1a5;
+    --hy-success-wash: rgb(79 209 165 / 0.14);
+    --hy-warning: #f2b45a;
+    --hy-warning-wash: rgb(242 180 90 / 0.14);
+    --hy-danger: #ff7a70;
+    --hy-danger-ink: #0a0c11;
+    --hy-danger-wash: rgb(255 122 112 / 0.15);
+    --hy-scrim: rgb(0 0 0 / 0.55);
+    --hy-glass-tint: 255 255 255;
+    --hy-glass-fill-top: 0.12;
+    --hy-glass-fill-bottom: 0.04;
+    --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 0 0 1px rgb(255 255 255 / 0.07);
+    --hy-glass-border: rgb(255 255 255 / 0.08);
+    --hy-glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+    --hy-glass-reflection: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.08),
+      rgb(255 255 255 / 0) 40%
+    );
+  }
+}
+
+/* Higher contrast: stronger lines, no see-through surfaces. */
+@media (prefers-contrast: more) {
+  :root {
+    --hy-line: var(--hy-line-strong);
+    --hy-ink-3: var(--hy-ink-2);
+  }
+}
