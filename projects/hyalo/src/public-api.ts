@@ -1,4 +1,9 @@
 /*
  * Public API of @hyalo/angular.
  */
-export const HYALO_VERSION = '0.1.0';
+
+// Foundations
+export * from './lib/core/axes';
+export * from './lib/core/config';
+export * from './lib/core/gsap';
+export { injectId } from './lib/core/ids';
