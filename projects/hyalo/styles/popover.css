@@ -1,0 +1,33 @@
+/* Tooltip and popover panels render in CDK overlays. */
+.hy-tooltip {
+  display: block;
+  max-inline-size: 18rem;
+  padding: var(--hy-space-1) var(--hy-space-3);
+  border-radius: var(--hy-radius-s);
+  background: color-mix(in srgb, var(--hy-ink) 92%, transparent);
+  color: var(--hy-bg);
+  font-size: var(--hy-step--1);
+  line-height: 1.4;
+  box-shadow: 0 6px 20px -8px rgb(0 0 0 / 0.4);
+  animation: hy-fade-in var(--hy-dur-quick) var(--hy-ease-out);
+}
+
+.hy-tooltip-pane {
+  z-index: var(--hy-z-tooltip);
+}
+
+.hy-popover {
+  min-inline-size: 12rem;
+  max-inline-size: min(22rem, 100vw - 1.5rem);
+  padding: var(--hy-space-4);
+  border-radius: var(--hy-radius-m);
+  color: var(--hy-ink);
+  outline: none;
+  animation: hy-pop-in var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+@keyframes hy-fade-in {
+  from {
+    opacity: 0;
+  }
+}

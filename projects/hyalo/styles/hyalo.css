@@ -18,4 +18,5 @@
 @import './select.css' layer(hy.base);
 @import './dialog.css' layer(hy.base);
 @import './drawer.css' layer(hy.base);
+@import './popover.css' layer(hy.base);
 @import './typography.css' layer(hy.utilities);

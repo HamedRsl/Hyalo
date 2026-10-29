@@ -36,3 +36,5 @@ export * from './lib/dialog/dialog-parts';
 export { type HySurfaceConfig } from './lib/dialog/open-surface';
 export * from './lib/dialog/dialog';
 export * from './lib/dialog/drawer';
+export * from './lib/popover/tooltip';
+export * from './lib/popover/popover';

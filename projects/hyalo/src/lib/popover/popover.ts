@@ -1,0 +1,146 @@
+import { FocusTrapFactory } from '@angular/cdk/a11y';
+import {
+  createFlexibleConnectedPositionStrategy,
+  createOverlayRef,
+  createRepositionScrollStrategy,
+  type OverlayRef,
+} from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+  DestroyRef,
+  Directive,
+  ElementRef,
+  Injector,
+  TemplateRef,
+  ViewContainerRef,
+  inject,
+  input,
+  model,
+  effect,
+  untracked,
+} from '@angular/core';
+import { injectId } from '../core/ids';
+import { HyFidelity } from '../fidelity/fidelity';
+import { hyConnectedPositions, type HyPlacement } from '../overlay/positions';
+
+/**
+ * A non-modal glass panel anchored to a trigger, for content that does not
+ * fit in a tooltip: a short form, a menu of links, details.
+ *
+ * ```html
+ * <button hyButton variant="glass" [hyPopover]="share" popoverLabel="Share">Share</button>
+ * <ng-template #share>
+ *   <a href="...">Copy link</a>
+ * </ng-template>
+ * ```
+ *
+ * Click or Enter toggles it. On open, focus moves to the first focusable
+ * element inside. Escape closes it and returns focus to the trigger, and so
+ * does clicking outside or tabbing out of it.
+ */
+@Directive({
+  selector: '[hyPopover]',
+  exportAs: 'hyPopover',
+  host: {
+    'aria-haspopup': 'dialog',
+    '[attr.aria-expanded]': 'open()',
+    '[attr.aria-controls]': 'open() ? panelId : null',
+    '(click)': 'toggle()',
+  },
+})
+export class HyPopover {
+  private readonly injector = inject(Injector);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly viewContainer = inject(ViewContainerRef);
+  private readonly focusTraps = inject(FocusTrapFactory);
+  private readonly fidelity = inject(HyFidelity);
+  protected readonly panelId = injectId('popover');
+  private overlayRef: OverlayRef | null = null;
+
+  /** The content. */
+  readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
+  /** Accessible name of the panel. */
+  readonly popoverLabel = input<string>();
+  /** Preferred side. Flips when there is no room. */
+  readonly popoverPlacement = input<HyPlacement>('bottom');
+  /** Whether the panel is open. Two-way bindable as `[(popoverOpen)]`. */
+  readonly open = model(false, { alias: 'popoverOpen' });
+
+  constructor() {
+    effect(() => {
+      const open = this.open();
+      untracked(() => (open ? this.attach() : this.detach()));
+    });
+    inject(DestroyRef).onDestroy(() => this.overlayRef?.dispose());
+  }
+
+  toggle(): void {
+    this.open.update((v) => !v);
+  }
+
+  /** Closes the panel, optionally moving focus back to the trigger. */
+  close(restoreFocus = true): void {
+    if (!this.open()) return;
+    this.open.set(false);
+    if (restoreFocus) this.host.nativeElement.focus();
+  }
+
+  private attach(): void {
+    if (!this.overlayRef) {
+      this.overlayRef = createOverlayRef(this.injector, {
+        positionStrategy: createFlexibleConnectedPositionStrategy(this.injector, this.host)
+          .withPositions(hyConnectedPositions(this.popoverPlacement(), 10))
+          .withViewportMargin(12)
+          .withPush(true),
+        scrollStrategy: createRepositionScrollStrategy(this.injector),
+        panelClass: 'hy-popover-pane',
+      });
+      this.overlayRef.keydownEvents().subscribe((event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          this.close();
+        }
+      });
+      this.overlayRef.outsidePointerEvents().subscribe((event) => {
+        if (!this.host.nativeElement.contains(event.target as Node)) this.close(false);
+      });
+    }
+    if (this.overlayRef.hasAttached()) return;
+    this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
+
+    const pane = this.overlayRef.overlayElement;
+    pane.id = this.panelId;
+    pane.setAttribute('role', 'dialog');
+    const label = this.popoverLabel();
+    if (label) pane.setAttribute('aria-label', label);
+    else pane.removeAttribute('aria-label');
+    pane.classList.add('hy-glass', 'hy-popover');
+    pane.dataset['material'] = this.fidelity.tier() === 'low' ? 'solid' : 'frosted';
+    pane.addEventListener('focusout', this.onFocusOut);
+
+    const trap = this.focusTraps.create(pane);
+    void trap.focusFirstTabbableElementWhenReady().then((found) => {
+      if (!found) {
+        pane.tabIndex = -1;
+        pane.focus();
+      }
+      trap.destroy();
+    });
+  }
+
+  private detach(): void {
+    this.overlayRef?.overlayElement.removeEventListener('focusout', this.onFocusOut);
+    this.overlayRef?.detach();
+  }
+
+  private readonly onFocusOut = (event: FocusEvent): void => {
+    const next = event.relatedTarget as Node | null;
+    if (
+      next &&
+      !this.overlayRef?.overlayElement.contains(next) &&
+      next !== this.host.nativeElement
+    ) {
+      this.close(false);
+    }
+  };
+}
