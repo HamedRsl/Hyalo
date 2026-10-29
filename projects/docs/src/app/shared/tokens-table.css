@@ -1,0 +1,31 @@
+.wrap {
+  overflow-x: auto;
+  margin-block: var(--hy-space-4);
+}
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--hy-step--1);
+}
+th,
+td {
+  padding: var(--hy-space-2) var(--hy-space-3);
+  border-block-end: 1px solid var(--hy-line);
+  text-align: start;
+  vertical-align: top;
+}
+th {
+  color: var(--hy-ink-3);
+  font-weight: 560;
+}
+td:first-child code {
+  white-space: nowrap;
+}
+code {
+  font-family: var(--hy-font-mono);
+  font-size: 0.8125rem;
+}
+.fallback {
+  color: var(--hy-ink-2);
+  overflow-wrap: anywhere;
+}

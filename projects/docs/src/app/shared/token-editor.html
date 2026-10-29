@@ -1,0 +1,92 @@
+<div class="editor">
+  <div class="controls">
+    <label class="control">
+      <span class="control__label">Accent</span>
+      <span class="control__row">
+        <input
+          type="color"
+          class="color"
+          [value]="accent()"
+          (input)="accent.set(value($event))"
+        />
+        <code>{{ accent() }}</code>
+      </span>
+      <span class="control__hint">
+        Contrast {{ ratios().light }}:1 light, {{ ratios().dark }}:1 dark.
+        {{ ratios().ok ? 'Passes AA for text.' : 'Below 4.5:1, links will be hard to read.' }}
+      </span>
+    </label>
+    <label class="control">
+      <span class="control__label">Corner radius</span>
+      <input
+        type="range"
+        min="0"
+        max="2"
+        step="0.25"
+        [value]="radius()"
+        (input)="radius.set(+value($event))"
+      />
+      <span class="control__hint">{{ radius() }}x the default radii</span>
+    </label>
+    <label class="control">
+      <span class="control__label">Glass blur</span>
+      <input
+        type="range"
+        min="0"
+        max="40"
+        step="1"
+        [value]="blur()"
+        (input)="blur.set(+value($event))"
+      />
+      <span class="control__hint">{{ blur() }}px</span>
+    </label>
+    <div class="control">
+      <span class="control__label" aria-hidden="true">Density</span>
+      <hy-segmented
+        label="Density"
+        size="sm"
+        [options]="densities"
+        [value]="density()"
+        (valueChange)="$event && density.set($event)"
+      />
+    </div>
+    <div class="control">
+      <span class="control__label" aria-hidden="true">Button shape</span>
+      <hy-segmented
+        label="Button shape"
+        size="sm"
+        [options]="shapes"
+        [value]="shape()"
+        (valueChange)="$event && shape.set($event)"
+      />
+    </div>
+    <button hyButton variant="ghost" tone="neutral" size="sm" (click)="reset()">Reset</button>
+  </div>
+
+  <div class="preview hy-mesh" [style]="previewStyle()">
+    <hy-card class="preview__card">
+      <h3 hyCardHeader>Delivery</h3>
+      <div class="preview__form">
+        <hy-field label="Email">
+          <input hyInput type="email" value="ada@example.com" />
+        </hy-field>
+        <div class="preview__choices">
+          <hy-checkbox [checked]="true">Gift wrap</hy-checkbox>
+          <hy-switch [checked]="true">Text me updates</hy-switch>
+        </div>
+      </div>
+      <div class="preview__actions" hyCardFooter>
+        <button hyButton>Place order</button>
+        <button hyButton variant="glass">Later</button>
+        <button hyButton variant="soft" size="sm">Edit</button>
+      </div>
+    </hy-card>
+  </div>
+</div>
+<div class="css">
+  <pre><code>{{ css() }}</code></pre>
+  <button hyButton variant="glass" size="sm" class="css__copy" (click)="copy()">
+    {{ copied() ? 'Copied' : 'Copy CSS' }}
+  </button>
+  <span class="hy-visually-hidden" aria-live="polite">{{ copied() ? 'CSS copied' : '' }}</span>
+</div>

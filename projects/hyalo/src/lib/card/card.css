@@ -1,11 +1,11 @@
 :host {
-  --_pad: var(--hy-space-6);
+  --_pad: var(--hy-card-padding, var(--hy-space-6));
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--hy-space-3);
   padding: var(--_pad);
-  border-radius: var(--hy-radius-l);
+  border-radius: var(--hy-card-radius, var(--hy-radius-l));
   color: var(--hy-ink);
   overflow: clip;
 }

@@ -101,6 +101,17 @@ Everything visual is a CSS custom property starting with `--hy-`: colours, surfa
 }
 ```
 
+Each component also reads its own tokens, such as `--hy-button-radius`, `--hy-field-bg` or `--hy-toast-width`. They are unset by default and fall back to the system tokens, so you can restyle one component, or one section of a page, without touching the rest:
+
+```css
+.admin {
+  --hy-button-radius: var(--hy-radius-s);
+  --hy-control-md: 2.25rem;
+}
+```
+
+Every component page in the docs lists its tokens, and the Theming page has a live editor that writes the CSS for you.
+
 Dark mode follows the system by default. Force it with `data-hy-theme="dark"` (or `light`) on `<html>`, or with the `hy-theme-dark` class on any element. High contrast, forced colours and reduced transparency each get their own fallback, and glass turns solid where `backdrop-filter` is missing.
 
 ### Palettes

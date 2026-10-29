@@ -7,8 +7,8 @@
   display: flex;
   gap: var(--hy-space-1);
   padding: var(--hy-space-1);
-  border-radius: var(--hy-radius-pill);
-  background: color-mix(in srgb, var(--hy-ink) 6%, transparent);
+  border-radius: var(--hy-tabs-radius, var(--hy-radius-pill));
+  background: var(--hy-tabs-track, color-mix(in srgb, var(--hy-ink) 6%, transparent));
   overflow-x: auto;
   scrollbar-width: none;
   isolation: isolate;
@@ -28,8 +28,8 @@
   left: 0; /* physical-ok: the offset is measured from the left edge */
   inline-size: var(--hy-ind-size, 0px);
   translate: var(--hy-ind-x, 0px) 0;
-  border-radius: var(--hy-radius-pill);
-  background: var(--hy-glass-reflection), var(--hy-surface-1);
+  border-radius: var(--hy-tabs-radius, var(--hy-radius-pill));
+  background: var(--hy-glass-reflection), var(--hy-tabs-indicator, var(--hy-surface-1));
   box-shadow:
     var(--hy-glass-edge),
     0 2px 8px -2px rgb(15 26 36 / 0.18);
@@ -50,7 +50,7 @@
   min-block-size: 2.25rem;
   padding-inline: var(--hy-space-4);
   border: 0;
-  border-radius: var(--hy-radius-pill);
+  border-radius: var(--hy-tabs-radius, var(--hy-radius-pill));
   background: transparent;
   color: var(--hy-ink-2);
   font-weight: 540;

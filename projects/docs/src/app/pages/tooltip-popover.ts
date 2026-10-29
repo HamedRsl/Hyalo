@@ -3,10 +3,21 @@ import { HyButton, HyIcon, HyPopover, HySwitch, HyTooltip } from '@hyalo/angular
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-tooltip-popover-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyButton, HyIcon, HyPopover, HySwitch, HyTooltip],
+  imports: [
+    DocsPage,
+    DocsTokens,
+    DocsExample,
+    DocsApiTable,
+    HyButton,
+    HyIcon,
+    HyPopover,
+    HySwitch,
+    HyTooltip,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tooltip-popover.html',
   styles: `

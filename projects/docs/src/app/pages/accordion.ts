@@ -3,10 +3,11 @@ import { HY_ACCORDION, HySwitch } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-accordion-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_ACCORDION, HySwitch],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_ACCORDION, HySwitch],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './accordion.html',
 })

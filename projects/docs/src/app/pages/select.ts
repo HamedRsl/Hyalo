@@ -4,10 +4,11 @@ import { HY_TEXT_FIELD, HySelect } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-select-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_TEXT_FIELD, HySelect, FormField],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_TEXT_FIELD, HySelect, FormField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './select.html',
 })

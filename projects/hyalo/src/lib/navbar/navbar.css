@@ -32,10 +32,10 @@
   gap: var(--hy-space-4);
   max-inline-size: var(--hy-container);
   margin-inline: auto;
-  min-block-size: 3.5rem;
+  min-block-size: var(--hy-navbar-height, 3.5rem);
   padding-block: var(--hy-space-2);
   padding-inline: var(--hy-space-5) var(--hy-space-2);
-  border-radius: var(--hy-radius-pill);
+  border-radius: var(--hy-navbar-radius, var(--hy-radius-pill));
   transition:
     min-block-size var(--hy-dur-settle) var(--hy-ease-out),
     box-shadow var(--hy-dur-settle) var(--hy-ease-out);
@@ -80,7 +80,7 @@
 }
 
 :host([data-scrolled]) .hy-navbar__bar {
-  min-block-size: 3rem;
+  min-block-size: calc(var(--hy-navbar-height, 3.5rem) - 0.5rem);
 }
 
 .hy-navbar__links {

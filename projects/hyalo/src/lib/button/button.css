@@ -12,10 +12,10 @@
   min-inline-size: var(--_h);
   padding-inline: var(--_px);
   border: 1px solid transparent;
-  border-radius: var(--hy-radius-pill);
+  border-radius: var(--hy-button-radius, var(--hy-radius-pill));
   font: inherit;
   font-size: var(--hy-step-0);
-  font-weight: 560;
+  font-weight: var(--hy-button-font-weight, 560);
   line-height: 1;
   white-space: nowrap;
   text-decoration: none;

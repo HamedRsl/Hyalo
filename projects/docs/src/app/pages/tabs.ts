@@ -3,10 +3,11 @@ import { HY_TABS, HySegmented } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-tabs-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_TABS, HySegmented],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_TABS, HySegmented],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './tabs.html',
 })

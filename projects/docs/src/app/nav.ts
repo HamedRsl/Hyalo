@@ -16,6 +16,7 @@ export const NAV: readonly NavGroup[] = [
     items: [
       { path: '/', label: 'Introduction' },
       { path: '/foundations', label: 'Foundations' },
+      { path: '/theming', label: 'Theming' },
       { path: '/motion', label: 'Motion and fidelity' },
     ],
   },

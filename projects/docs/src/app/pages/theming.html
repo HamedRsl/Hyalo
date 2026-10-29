@@ -1,0 +1,105 @@
+<docs-page
+  eyebrow="Start"
+  heading="Theming"
+  lead="Change any token, for the whole app or one corner of it, without touching component code."
+>
+  <h2>Three layers</h2>
+  <ul>
+    <li>
+      <strong>System tokens</strong> such as <code>--hy-accent</code> and
+      <code>--hy-radius-m</code> set the look of everything at once.
+    </li>
+    <li>
+      <strong>Component tokens</strong> such as <code>--hy-button-radius</code> change one
+      component. They are unset by default and fall back to a system token.
+    </li>
+    <li>
+      <strong>Palettes</strong> are ready-made sets of colour tokens, loaded on demand. See
+      <a routerLink="/foundations">Foundations</a>.
+    </li>
+  </ul>
+  <p>
+    Hyalo puts all of its CSS in cascade layers, so a plain rule in your own stylesheet always
+    wins. No <code>!important</code>, no specificity tricks.
+  </p>
+
+  <h2>Try it</h2>
+  <p>
+    These controls change tokens on the preview only. Copy the CSS when you like the result.
+  </p>
+  <docs-token-editor />
+
+  <h2>Overriding tokens</h2>
+  <p>
+    Set a token on <code>:root</code> for the whole app, or on any element for everything inside
+    it. Use <code>light-dark()</code> when a colour needs a different value in dark mode.
+  </p>
+  <pre><code>{{ overrideCode }}</code></pre>
+  <p>
+    A few tokens are built from others on <code>:root</code>, like <code>--hy-focus-ring</code>.
+    When you change <code>--hy-accent</code> on a single element, set
+    <code>--hy-accent-hover</code>, <code>--hy-accent-wash</code> and
+    <code>--hy-focus-ring</code> there too.
+  </p>
+
+  <h2>System tokens</h2>
+  <p>Values are read live, so they follow the theme and palette picked in the settings.</p>
+  @for (group of systemTokens; track group.title) {
+    <h3>{{ group.title }}</h3>
+    <p>{{ group.description }}</p>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Token</th>
+            <th scope="col">Current value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (name of group.tokens; track name) {
+            <tr>
+              <td>
+                @if (group.swatch) {
+                  <span class="swatch" [style.background]="'var(' + name + ')'"></span>
+                }
+                <code class="name">{{ name }}</code>
+              </td>
+              <td>
+                <code class="value">{{ values()[name] }}</code>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <h2>Component tokens</h2>
+  <p>
+    Every component page ends with its own tokens and their fallbacks. This is the full list.
+  </p>
+  <div class="wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Component</th>
+          <th scope="col">Tokens</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (group of componentGroups; track group) {
+          <tr>
+            <td>
+              <a [routerLink]="pages[group].path" fragment="tokens">{{ pages[group].title }}</a>
+            </td>
+            <td>
+              @for (row of componentTokens[group]; track row.name) {
+                <code class="name">{{ row.name }}</code>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</docs-page>

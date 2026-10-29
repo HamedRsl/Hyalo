@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  margin-block: var(--hy-space-5) var(--hy-space-4);
+  container: token-editor / inline-size;
+}
+.editor {
+  display: grid;
+  grid-template-columns: 18rem minmax(0, 1fr);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l) var(--hy-radius-l) 0 0;
+  overflow: hidden;
+  background: var(--hy-surface-1);
+}
+.controls {
+  display: grid;
+  align-content: start;
+  gap: var(--hy-space-5);
+  padding: var(--hy-space-5);
+  border-inline-end: 1px solid var(--hy-line);
+}
+.control {
+  display: grid;
+  gap: var(--hy-space-2);
+}
+.control__label {
+  font-size: var(--hy-step--1);
+  font-weight: 600;
+}
+.control__row {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-3);
+}
+.control__hint {
+  color: var(--hy-ink-3);
+  font-size: var(--hy-step--1);
+}
+.color {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-s);
+  background: none;
+  cursor: pointer;
+}
+input[type='range'] {
+  inline-size: 100%;
+  block-size: 1.5rem;
+  accent-color: var(--hy-accent);
+  cursor: pointer;
+}
+.preview {
+  display: grid;
+  place-items: center;
+  padding: var(--hy-space-8) var(--hy-space-5);
+}
+.preview__card {
+  inline-size: min(100%, 22rem);
+}
+.preview__card h3 {
+  margin: 0;
+}
+/* 16px between groups, 12px inside a group, 24px before the actions. */
+.preview__form {
+  display: grid;
+  gap: var(--hy-space-4);
+}
+.preview__choices {
+  display: grid;
+  gap: var(--hy-space-3);
+}
+.preview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hy-space-3);
+  margin-block-start: var(--hy-space-3);
+}
+.css {
+  position: relative;
+}
+.css pre {
+  margin: 0;
+  min-block-size: 6rem;
+  border-block-start: 0;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+.css__copy {
+  position: absolute;
+  inset-block-start: var(--hy-space-3);
+  inset-inline-end: var(--hy-space-3);
+}
+@container token-editor (max-width: 40rem) {
+  .editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .controls {
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--hy-line);
+  }
+}

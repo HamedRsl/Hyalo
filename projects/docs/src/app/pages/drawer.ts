@@ -3,10 +3,11 @@ import { HY_DIALOG_PARTS, HyButton, HyCheckbox, HyDrawer, type HyDrawerSide } fr
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-drawer-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyButton, HyCheckbox, HY_DIALOG_PARTS],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton, HyCheckbox, HY_DIALOG_PARTS],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './drawer.html',
 })

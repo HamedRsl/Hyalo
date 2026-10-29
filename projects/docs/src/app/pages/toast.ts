@@ -3,10 +3,11 @@ import { HyButton, HyToaster } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-toast-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyButton],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './toast.html',
 })

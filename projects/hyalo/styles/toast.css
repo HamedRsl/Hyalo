@@ -20,10 +20,10 @@
   display: flex;
   align-items: flex-start;
   gap: var(--hy-space-3);
-  inline-size: min(24rem, calc(100vw - 2 * var(--hy-space-4)));
+  inline-size: min(var(--hy-toast-width, 24rem), calc(100vw - 2 * var(--hy-space-4)));
   padding-block: var(--hy-space-3);
   padding-inline: var(--hy-space-4) var(--hy-space-3);
-  border-radius: var(--hy-radius-m);
+  border-radius: var(--hy-toast-radius, var(--hy-radius-m));
   color: var(--hy-ink);
   pointer-events: auto;
   touch-action: pan-y;

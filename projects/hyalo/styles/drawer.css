@@ -8,6 +8,7 @@
  */
 .hy-drawer-pane > .cdk-dialog-container {
   block-size: 100%;
+  padding: var(--hy-drawer-padding, var(--hy-space-7));
   border-radius: 0;
   /* Side drawers are dragged sideways; vertical touches still scroll. */
   touch-action: pan-y;
@@ -24,21 +25,21 @@
 }
 
 .hy-drawer--start > .cdk-dialog-container {
-  border-start-end-radius: var(--hy-radius-l);
-  border-end-end-radius: var(--hy-radius-l);
+  border-start-end-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  border-end-end-radius: var(--hy-drawer-radius, var(--hy-radius-l));
 }
 
 .hy-drawer--end > .cdk-dialog-container {
-  border-start-start-radius: var(--hy-radius-l);
-  border-end-start-radius: var(--hy-radius-l);
+  border-start-start-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  border-end-start-radius: var(--hy-drawer-radius, var(--hy-radius-l));
 }
 
 .hy-drawer--bottom > .cdk-dialog-container {
   position: relative;
   max-block-size: 85dvh;
-  border-start-start-radius: var(--hy-radius-l);
-  border-start-end-radius: var(--hy-radius-l);
-  padding-block-end: max(var(--hy-space-7), env(safe-area-inset-bottom));
+  border-start-start-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  border-start-end-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  padding-block-end: max(var(--hy-drawer-padding, var(--hy-space-7)), env(safe-area-inset-bottom));
   touch-action: pan-x pan-y;
   animation-name: hy-sheet-in;
 }

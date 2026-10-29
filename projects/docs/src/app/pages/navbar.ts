@@ -3,10 +3,11 @@ import { HY_NAVBAR, HyButton } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-navbar-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_NAVBAR, HyButton],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_NAVBAR, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.html',
   styles: `

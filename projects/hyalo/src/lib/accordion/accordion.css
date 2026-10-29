@@ -3,7 +3,7 @@
 }
 
 :host + :host {
-  border-block-start: 1px solid var(--hy-line);
+  border-block-start: 1px solid var(--hy-accordion-divider, var(--hy-line));
 }
 
 .hy-accordion__heading {
@@ -16,7 +16,7 @@
   justify-content: space-between;
   gap: var(--hy-space-4);
   inline-size: 100%;
-  min-block-size: 3.5rem;
+  min-block-size: var(--hy-accordion-trigger-height, 3.5rem);
   padding: var(--hy-space-3) 0;
   border: 0;
   background: transparent;

@@ -3,6 +3,7 @@ import { HY_DIALOG_DATA, HY_DIALOG_PARTS, HyButton, HyDialog, HyDialogRef } from
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 /** Example content component that receives data and returns a result. */
 @Component({
@@ -19,7 +20,7 @@ class RenameDialog {
 
 @Component({
   selector: 'docs-dialog-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyButton],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog.html',
 })

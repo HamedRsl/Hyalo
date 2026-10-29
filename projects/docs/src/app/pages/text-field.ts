@@ -4,10 +4,11 @@ import { HY_TEXT_FIELD, HyButton } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-text-field-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_TEXT_FIELD, HyButton, FormField],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_TEXT_FIELD, HyButton, FormField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './text-field.html',
 })

@@ -3,10 +3,11 @@ import { HyButton, HyIcon } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-button-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyButton, HyIcon],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton, HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button.html',
 })

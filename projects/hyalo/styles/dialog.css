@@ -19,7 +19,7 @@
   gap: var(--hy-space-4);
   inline-size: 100%;
   max-block-size: inherit;
-  padding: var(--hy-space-7);
+  padding: var(--hy-dialog-padding, var(--hy-space-7));
   overflow: auto;
   color: var(--hy-ink);
   outline: none;
@@ -41,7 +41,7 @@
  * nothing behind it until the fade ended, then snap in.
  */
 .hy-dialog-pane > .cdk-dialog-container {
-  border-radius: var(--hy-radius-l);
+  border-radius: var(--hy-dialog-radius, var(--hy-radius-l));
   max-block-size: calc(100dvh - 2 * var(--hy-space-6));
   animation: hy-dialog-in var(--hy-dur-enter) var(--hy-ease-out);
 }

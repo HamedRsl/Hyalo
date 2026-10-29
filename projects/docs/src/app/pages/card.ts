@@ -3,10 +3,11 @@ import { HY_CARD, HyButton, HyTilt } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
+import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-card-page',
-  imports: [DocsPage, DocsExample, DocsApiTable, HY_CARD, HyButton, HyTilt],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_CARD, HyButton, HyTilt],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './card.html',
   styles: `

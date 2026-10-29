@@ -5,7 +5,7 @@
   max-block-size: min(20rem, 60vh);
   overflow-y: auto;
   padding: var(--hy-space-1);
-  border-radius: var(--hy-radius-m);
+  border-radius: var(--hy-select-panel-radius, var(--hy-radius-m));
   outline: none;
 }
 
@@ -16,7 +16,7 @@
   gap: var(--hy-space-3);
   min-block-size: 2.5rem;
   padding-inline: var(--hy-space-3);
-  border-radius: var(--hy-radius-s);
+  border-radius: var(--hy-select-option-radius, var(--hy-radius-s));
   color: var(--hy-ink);
   cursor: pointer;
 }

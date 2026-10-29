@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { HyMaterialDirective, type HyMaterial } from '@hyalo/angular';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
@@ -6,7 +7,7 @@ import { DocsPage } from '../shared/page';
 
 @Component({
   selector: 'docs-foundations',
-  imports: [DocsPage, DocsExample, DocsApiTable, HyMaterialDirective],
+  imports: [DocsPage, DocsExample, DocsApiTable, HyMaterialDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './foundations.html',
   styleUrl: './foundations.css',

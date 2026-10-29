@@ -1,0 +1,44 @@
+.wrap {
+  overflow-x: auto;
+  margin-block: var(--hy-space-3) var(--hy-space-6);
+}
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--hy-step--1);
+}
+th,
+td {
+  padding: var(--hy-space-2) var(--hy-space-3);
+  border-block-end: 1px solid var(--hy-line);
+  text-align: start;
+  vertical-align: top;
+}
+th {
+  color: var(--hy-ink-3);
+  font-weight: 560;
+}
+td:first-child {
+  white-space: nowrap;
+}
+code {
+  font-family: var(--hy-font-mono);
+  font-size: 0.8125rem;
+}
+.name {
+  display: inline-block;
+  margin-inline-end: var(--hy-space-2);
+}
+.value {
+  color: var(--hy-ink-2);
+  overflow-wrap: anywhere;
+}
+.swatch {
+  display: inline-block;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-inline-end: var(--hy-space-2);
+  border: 1px solid var(--hy-line);
+  border-radius: 4px;
+  vertical-align: -0.2em;
+}

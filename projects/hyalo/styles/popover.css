@@ -58,9 +58,9 @@
   display: block;
   max-inline-size: 18rem;
   padding: var(--hy-space-1) var(--hy-space-3);
-  border-radius: var(--hy-radius-s);
-  background: color-mix(in srgb, var(--hy-ink) 92%, transparent);
-  color: var(--hy-bg);
+  border-radius: var(--hy-tooltip-radius, var(--hy-radius-s));
+  background: var(--hy-tooltip-bg, color-mix(in srgb, var(--hy-ink) 92%, transparent));
+  color: var(--hy-tooltip-ink, var(--hy-bg));
   font-size: var(--hy-step--1);
   letter-spacing: var(--hy-tracking-small);
   line-height: 1.4;
@@ -74,8 +74,8 @@
 .hy-popover {
   min-inline-size: 12rem;
   max-inline-size: min(22rem, 100vw - 1.5rem);
-  padding: var(--hy-space-4);
-  border-radius: var(--hy-radius-m);
+  padding: var(--hy-popover-padding, var(--hy-space-4));
+  border-radius: var(--hy-popover-radius, var(--hy-radius-m));
   color: var(--hy-ink);
   outline: none;
 }
