@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 4200
+    },
+    {
+      "name": "docs-4310",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ng", "serve", "docs", "--port", "4310"],
+      "port": 4310
+    }
+  ]
+}
