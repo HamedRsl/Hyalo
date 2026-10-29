@@ -14,7 +14,7 @@ import { DocsPage } from '../shared/page';
       lead="A small set of calm, glassy components built on Angular Aria and the CDK. Signals all the way down, zoneless, server-render safe, and usable with a keyboard or a screen reader in both reading directions."
     >
       <div class="actions">
-        <a hyButton size="lg" routerLink="/components/button"
+        <a hyButton size="lg" routerLink="/components"
           >Browse components <hy-icon name="arrow-end"
         /></a>
         <a hyButton size="lg" variant="glass" href="https://github.com/HamedRsl/Hyalo"

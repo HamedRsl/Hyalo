@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: 'components',
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'button' },
+      { path: '', pathMatch: 'full', loadComponent: () => import('./pages/components') },
       { path: 'accordion', loadComponent: () => import('./pages/accordion') },
       { path: 'button', loadComponent: () => import('./pages/button') },
       { path: 'card', loadComponent: () => import('./pages/card') },

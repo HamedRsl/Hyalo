@@ -22,6 +22,7 @@ export const NAV: readonly NavGroup[] = [
   {
     title: 'Components',
     items: [
+      { path: '/components', label: 'All components' },
       { path: '/components/accordion', label: 'Accordion' },
       { path: '/components/button', label: 'Button' },
       { path: '/components/card', label: 'Card' },
