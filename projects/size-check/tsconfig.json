@@ -1,0 +1,15 @@
+/*
+ * Builds against the packaged library in dist/hyalo, not the source, so the
+ * budget measures what an app installing @hyalo/angular gets.
+ */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "paths": {
+      "@hyalo/angular": ["../../dist/hyalo"],
+      "@hyalo/angular/*": ["../../dist/hyalo/*"]
+    }
+  },
+  "files": ["src/main.ts", "src/lazy.ts"]
+}

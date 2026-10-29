@@ -1,0 +1,12 @@
+<hy-tabs label="Details">
+  <hy-tab value="form" label="Order">
+    <hy-field label="Name"><input hyInput [(value)]="name" /></hy-field>
+    <hy-select label="Size" [options]="sizes" [(value)]="size" />
+  </hy-tab>
+  <hy-tab value="help" label="Help">
+    <button type="button" hyTooltip="Opens a dialog" (click)="dialog.confirm({ title: 'Order?' })">
+      Confirm
+    </button>
+    <button type="button" (click)="toaster.show({ message: 'Saved' })">Save</button>
+  </hy-tab>
+</hy-tabs>

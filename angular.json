@@ -140,6 +140,35 @@
           }
         }
       }
+    },
+    "size-check": {
+      "projectType": "application",
+      "root": "projects/size-check",
+      "sourceRoot": "projects/size-check/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/size-check/src/main.ts",
+            "tsConfig": "projects/size-check/tsconfig.json",
+            "index": "projects/size-check/src/index.html",
+            "outputPath": "dist/size-check"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "460kB",
+                  "maximumError": "480kB"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
     }
   }
 }
