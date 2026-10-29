@@ -1,0 +1,36 @@
+/* Controls projected into hy-field. */
+.hy-input {
+  flex: 1;
+  min-inline-size: 0;
+  align-self: stretch;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--hy-ink);
+  font: inherit;
+}
+
+.hy-input::placeholder {
+  color: var(--hy-ink-3);
+  opacity: 1;
+}
+
+textarea.hy-input {
+  padding-block: var(--hy-space-2);
+  min-block-size: 5rem;
+  resize: vertical;
+  line-height: var(--hy-leading);
+}
+
+.hy-input:disabled {
+  cursor: not-allowed;
+}
+
+.hy-field__prefix,
+.hy-field__suffix {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--hy-ink-3);
+}
