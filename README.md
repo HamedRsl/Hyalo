@@ -28,10 +28,11 @@ All of it sits in cascade layers (`hy.reset`, `hy.tokens`, `hy.base`, `hy.utilit
 
 ## Usage
 
-Every component is standalone. Import what you need:
+Every component is standalone and has its own entry point, so a lazy route only loads the components it uses. Import what you need:
 
 ```ts
-import { HY_CARD, HyButton } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
 
 @Component({
   imports: [HY_CARD, HyButton],
@@ -56,15 +57,26 @@ Form controls work with Signal Forms through `[formField]`, and with plain `[(va
 
 ## Components
 
-| Group      | What you get                                                                         |
-| ---------- | ------------------------------------------------------------------------------------ |
-| Actions    | `hyButton` on `button` and `a`                                                       |
-| Surfaces   | `hy-card`, `hy-navbar`, `hy-accordion`                                               |
-| Navigation | `hy-tabs`, `hy-segmented`                                                            |
-| Forms      | `hy-field` with `hyInput`, `hy-select`, `hy-checkbox`, `hy-radio-group`, `hy-switch` |
-| Overlays   | `HyDialog`, `HyDrawer`, `hyTooltip`, `hyPopover`, `HyToaster`                        |
-| Directives | `hyMaterial`, `hyReveal`, `hyTilt`, `hyMagnetic`, `hyRipple`, `hyInteractive`        |
-| Icons      | `hy-icon`, with a few built in and any Lucide icon you register                      |
+| What you get                                                   | Import from                  |
+| -------------------------------------------------------------- | ---------------------------- |
+| `provideHyalo`, `HyFidelity`, `HyMotion`, springs              | `@hyalo/angular`             |
+| `hyMaterial`, `hyInteractive`                                  | `@hyalo/angular`             |
+| `hyButton` on `button` and `a`                                 | `@hyalo/angular/button`      |
+| `hy-card`                                                      | `@hyalo/angular/card`        |
+| `hy-navbar`                                                    | `@hyalo/angular/navbar`      |
+| `hy-accordion`                                                 | `@hyalo/angular/accordion`   |
+| `hy-tabs`                                                      | `@hyalo/angular/tabs`        |
+| `hy-segmented`                                                 | `@hyalo/angular/segmented`   |
+| `hy-field` with `hyInput`, `hyPrefix`, `hySuffix`              | `@hyalo/angular/field`       |
+| `hy-select`                                                    | `@hyalo/angular/select`      |
+| `hy-checkbox`, `hy-radio-group`, `hy-radio`, `hy-switch`       | `@hyalo/angular/choice`      |
+| `HyDialog`, `HyDrawer`, `hyDialogTitle` and the other parts    | `@hyalo/angular/dialog`      |
+| `hyTooltip`, `hyPopover`                                       | `@hyalo/angular/popover`     |
+| `HyToaster`                                                    | `@hyalo/angular/toast`       |
+| `hyReveal`, `hyTilt`, `hyMagnetic`, `hyRipple`                 | `@hyalo/angular/interaction` |
+| `hy-icon` and `provideHyaloIcons`, for any Lucide icon         | `@hyalo/angular/icon`        |
+| `HyPalette`                                                    | `@hyalo/angular/theme`       |
+| `hyConnectedPositions`, `hyDropdownPositions` for CDK overlays | `@hyalo/angular/overlay`     |
 
 Run the docs site locally for live examples and the full API of each one (see [Development](#development)).
 
@@ -85,6 +97,7 @@ providers: [
 Register extra icons by name. Only what you import ends up in the bundle:
 
 ```ts
+import { provideHyaloIcons } from '@hyalo/angular/icon';
 import { Search, ArrowRight } from 'lucide';
 
 provideHyaloIcons({ search: Search, 'arrow-end': { node: ArrowRight, mirrorRtl: true } });
@@ -128,7 +141,7 @@ Six optional palettes live in `styles/palettes/`: `aurora`, `ember`, `orchid`, `
 }
 ```
 
-Then switch with `HyPalette`. It loads the file on first use and sets `data-hy-palette` on `<html>` only once the file is in, so nothing flashes:
+Then switch with `HyPalette` from `@hyalo/angular/theme`. It loads the file on first use and sets `data-hy-palette` on `<html>` only once the file is in, so nothing flashes:
 
 ```ts
 const palette = inject(HyPalette);
@@ -171,9 +184,10 @@ npm start          # docs site at http://localhost:4200
 npm test           # unit tests (Vitest)
 npm run lint       # ESLint, logical CSS check and prose check
 npm run build      # library to dist/hyalo, then the docs site
+npm run size       # bundle budget for an app built on dist/hyalo
 ```
 
-The repo has two projects: `projects/hyalo` is the published library and `projects/docs` is the documentation site, which uses the library straight from source.
+The repo has three projects: `projects/hyalo` is the published library, `projects/docs` is the documentation site, which uses the library straight from source, and `projects/size-check` is a small app built against the packaged library to keep its initial bundle in check.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how changes are made.
 

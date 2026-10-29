@@ -16,11 +16,14 @@ Add the stylesheet before your own styles in `angular.json`:
 "styles": ["node_modules/@hyalo/angular/styles/hyalo.css", "src/styles.css"]
 ```
 
-Then import the standalone components you need:
+Then import the standalone components you need. Each one has its own entry point, so a lazy route only loads what it uses:
 
 ```ts
-import { HY_CARD, HyButton } from '@hyalo/angular';
+import { HyButton } from '@hyalo/angular/button';
+import { HY_CARD } from '@hyalo/angular/card';
 ```
+
+`@hyalo/angular` itself holds the shared foundations, such as `provideHyalo()`, `HyFidelity` and `HyMotion`.
 
 Configuration, theming, RTL, motion and the full component list are in the [repository README](https://github.com/HamedRsl/Hyalo#readme).
 

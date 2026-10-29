@@ -15,7 +15,8 @@ npm start
 
 ## Where things live
 
-- `projects/hyalo/src/lib`: one folder per component or concern, each with its spec next to it.
+- `projects/hyalo/src`: the primary entry point, `@hyalo/angular`. Only the foundations every component needs: config, fidelity, motion, material and shared helpers. It never imports another entry point.
+- `projects/hyalo/<name>`: one secondary entry point per component or concern, such as `button` for `@hyalo/angular/button`, each with an `ng-package.json`, a `public-api.ts` and specs next to the code. Import other entry points by package path, never with `../`, or the build gets a second copy of them. ESLint checks this.
 - `projects/hyalo/styles`: global CSS. Tokens, themes, glass, motion, and styles for anything that renders outside a component (overlays, projected slots).
 - `projects/docs`: the documentation site. Each page is in `src/app/pages`.
 - `tools`: small checks run by `npm run lint`.
