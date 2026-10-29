@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   TemplateRef,
   computed,
   inject,
@@ -9,7 +10,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { HyButton } from '@hyalo/angular/button';
-import { HY_DIALOG_PARTS, HyDialogRef, HyDrawer } from '@hyalo/angular/dialog';
+import { HY_DIALOG_PARTS, type HyDialogRef } from '@hyalo/angular/dialog';
 import { HyIcon } from '@hyalo/angular/icon';
 import { HY_NAVBAR } from '@hyalo/angular/navbar';
 import { HyPopover } from '@hyalo/angular/popover';
@@ -39,7 +40,7 @@ import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } fro
 })
 export class App {
   protected readonly settings = inject(DocsSettings);
-  private readonly drawer = inject(HyDrawer);
+  private readonly injector = inject(Injector);
   private readonly pagesTemplate = viewChild.required<TemplateRef<unknown>>('pages');
   private pagesRef: HyDialogRef | null = null;
 
@@ -85,8 +86,10 @@ export class App {
     { value: 'low' as HyFidelityTier, label: 'Low' },
   ];
 
-  protected openPages(): void {
-    this.pagesRef = this.drawer.open(this.pagesTemplate(), { side: 'start', label: 'Pages' });
+  /** The drawer is only used on narrow screens, so its code loads on the first tap. */
+  protected async openPages(): Promise<void> {
+    const { openPagesDrawer } = await import('./pages-drawer');
+    this.pagesRef = openPagesDrawer(this.injector, this.pagesTemplate());
   }
 
   protected closePages(): void {
