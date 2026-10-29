@@ -106,11 +106,5 @@ export default class ButtonPage {
       default: 'false',
       description: 'Native disabled on buttons, aria-disabled on links.',
     },
-    {
-      name: 'rippleDisabled',
-      type: 'boolean',
-      default: 'false',
-      description: 'Turns off the press ripple.',
-    },
   ];
 }

@@ -23,6 +23,7 @@ import {
 import { injectId } from '../core/ids';
 import { HyFidelity } from '../fidelity/fidelity';
 import { hyConnectedPositions, type HyPlacement } from '../overlay/positions';
+import { HyPresence } from '../overlay/presence';
 
 /**
  * A non-modal glass panel anchored to a trigger, for content that does not
@@ -58,6 +59,7 @@ export class HyPopover {
   protected readonly panelId = injectId('popover');
   private overlayRef: OverlayRef | null = null;
   private position: FlexibleConnectedPositionStrategy | null = null;
+  private readonly presence = new HyPresence();
 
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
@@ -91,7 +93,9 @@ export class HyPopover {
     if (!this.overlayRef) {
       this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withViewportMargin(12)
-        .withPush(true);
+        .withPush(true)
+        // The panel grows out of its trigger, not out of its own centre.
+        .withTransformOriginOn('.hy-popover');
       this.overlayRef = createOverlayRef(this.injector, {
         positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
@@ -107,7 +111,11 @@ export class HyPopover {
         if (!this.host.nativeElement.contains(event.target as Node)) this.close(false);
       });
     }
-    if (this.overlayRef.hasAttached()) return;
+    if (this.overlayRef.hasAttached()) {
+      // Reopened while fading out: turn the exit around.
+      if (this.presence.leaving) this.presence.enter(this.overlayRef.overlayElement);
+      return;
+    }
     // Read on every open, so a changed placement applies next time.
     this.position?.withPositions(hyConnectedPositions(this.popoverPlacement(), 10));
     this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
@@ -121,6 +129,7 @@ export class HyPopover {
     pane.classList.add('hy-glass', 'hy-popover');
     pane.dataset['material'] = this.fidelity.tier() === 'low' ? 'solid' : 'frosted';
     pane.addEventListener('focusout', this.onFocusOut);
+    this.presence.enter(pane);
 
     const trap = this.focusTraps.create(pane);
     void trap.focusFirstTabbableElementWhenReady().then((found) => {
@@ -133,8 +142,10 @@ export class HyPopover {
   }
 
   private detach(): void {
-    this.overlayRef?.overlayElement.removeEventListener('focusout', this.onFocusOut);
-    this.overlayRef?.detach();
+    const ref = this.overlayRef;
+    if (!ref?.hasAttached()) return;
+    ref.overlayElement.removeEventListener('focusout', this.onFocusOut);
+    this.presence.leave(ref.overlayElement, () => ref.detach());
   }
 
   private readonly onFocusOut = (event: FocusEvent): void => {

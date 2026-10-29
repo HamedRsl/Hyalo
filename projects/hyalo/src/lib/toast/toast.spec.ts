@@ -42,7 +42,8 @@ describe('HyToaster', () => {
     vi.advanceTimersByTime(2000);
     expect(toaster.items().length).toBe(1);
     toaster.resume('hover');
-    vi.advanceTimersByTime(1000);
+    // The timer starts the fade; the toast is gone once it ends.
+    vi.advanceTimersByTime(1300);
     expect(toaster.items().length).toBe(0);
   });
 
@@ -57,7 +58,7 @@ describe('HyToaster', () => {
     vi.advanceTimersByTime(2000);
     expect(toaster.items().length).toBe(1);
     (document.activeElement as HTMLElement).blur();
-    vi.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1300);
     expect(toaster.items().length).toBe(0);
   });
 
@@ -71,7 +72,10 @@ describe('HyToaster', () => {
     expect(document.activeElement).toBe(close);
     close.click();
     TestBed.tick();
-    vi.advanceTimersByTime(1000);
+    // Focus stays on the fading toast until it is removed and rendered away.
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+    vi.advanceTimersByTime(1300);
     expect(toaster.items().map((t) => t.message)).toEqual([]);
   });
 
@@ -84,12 +88,17 @@ describe('HyToaster', () => {
     expect(toaster.items().length).toBe(1);
     document.querySelector<HTMLButtonElement>('.hy-toast__action')!.click();
     expect(run).toHaveBeenCalled();
+    expect(toaster.items()[0]!.leaving).toBe(true);
+    vi.advanceTimersByTime(300);
     expect(toaster.items().length).toBe(0);
   });
 
   it('keeps at most four visible', () => {
     const toaster = TestBed.inject(HyToaster);
     for (let i = 0; i < 6; i++) toaster.show({ message: `n${i}` });
-    expect(toaster.items().map((t) => t.message)).toEqual(['n2', 'n3', 'n4', 'n5']);
+    const visible = toaster.items().filter((t) => !t.leaving);
+    expect(visible.map((t) => t.message)).toEqual(['n2', 'n3', 'n4', 'n5']);
+    vi.advanceTimersByTime(300);
+    expect(toaster.items().length).toBe(4);
   });
 });

@@ -1,7 +1,26 @@
-/* Drawers and bottom sheets. Shares the panel and content styles in dialog.css. */
+/*
+ * Drawers and bottom sheets. Shares the panel and content styles in dialog.css.
+ *
+ * With motion on, the panel runs on a spring from TypeScript (see sheet.ts)
+ * and gets .hy-sheet-driven, which turns the keyframes off. The keyframes
+ * here are the reduced-motion path: a cross-fade, since --hy-move is 0.
+ * Like dialogs, the panel animates and not the pane, so its blur works.
+ */
 .hy-drawer-pane > .cdk-dialog-container {
   block-size: 100%;
   border-radius: 0;
+  /* Side drawers are dragged sideways; vertical touches still scroll. */
+  touch-action: pan-y;
+  animation: hy-drawer-in var(--hy-dur-enter) var(--hy-ease-out);
+}
+
+.hy-drawer-pane > .cdk-dialog-container.hy-sheet-driven {
+  animation: none;
+}
+
+.hy-drawer-pane > .cdk-dialog-container[data-dragging] {
+  user-select: none;
+  cursor: grabbing;
 }
 
 .hy-drawer--start > .cdk-dialog-container {
@@ -15,20 +34,47 @@
 }
 
 .hy-drawer--bottom > .cdk-dialog-container {
+  position: relative;
   max-block-size: 85dvh;
   border-start-start-radius: var(--hy-radius-l);
   border-start-end-radius: var(--hy-radius-l);
   padding-block-end: max(var(--hy-space-7), env(safe-area-inset-bottom));
+  touch-action: pan-x pan-y;
+  animation-name: hy-sheet-in;
+}
+
+/* The handle that says "this can be pulled down". */
+.hy-drawer__grabber {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: var(--hy-space-6);
+  touch-action: none;
+  cursor: grab;
+}
+
+.hy-drawer__grabber::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--hy-space-2);
+  inset-inline-start: 50%;
+  inline-size: 2.25rem;
+  block-size: 0.3125rem;
+  translate: -50% 0;
+  border-radius: var(--hy-radius-pill);
+  background: color-mix(in srgb, var(--hy-ink) 28%, transparent);
+}
+
+.hy-drawer__grabber:dir(rtl)::before {
+  translate: 50% 0;
 }
 
 .hy-drawer--start {
   --_from: -100%;
-  animation: hy-drawer-in var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 .hy-drawer--end {
   --_from: 100%;
-  animation: hy-drawer-in var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 [dir='rtl'] .hy-drawer--start {
@@ -39,38 +85,39 @@
   --_from: -100%;
 }
 
-.hy-drawer--bottom {
-  animation: hy-sheet-in var(--hy-dur-settle) var(--hy-ease-out);
+.hy-drawer-pane[data-state='closing'] > .cdk-dialog-container {
+  animation: hy-drawer-out var(--hy-dur-exit) var(--hy-ease-inout) forwards;
 }
 
-.hy-drawer-pane[data-state='closing'] {
-  animation: hy-drawer-out var(--hy-dur-quick) var(--hy-ease-inout) forwards;
-}
-
-.hy-drawer--bottom[data-state='closing'] {
+.hy-drawer--bottom[data-state='closing'] > .cdk-dialog-container {
   animation-name: hy-sheet-out;
 }
 
+/* Without movement (--hy-move: 0) these fade instead of slide. */
 @keyframes hy-drawer-in {
   from {
-    translate: var(--_from) 0;
+    opacity: var(--hy-move);
+    translate: calc(var(--_from) * var(--hy-move)) 0;
   }
 }
 
 @keyframes hy-drawer-out {
   to {
-    translate: var(--_from) 0;
+    opacity: var(--hy-move);
+    translate: calc(var(--_from) * var(--hy-move)) 0;
   }
 }
 
 @keyframes hy-sheet-in {
   from {
-    translate: 0 100%;
+    opacity: var(--hy-move);
+    translate: 0 calc(100% * var(--hy-move));
   }
 }
 
 @keyframes hy-sheet-out {
   to {
-    translate: 0 100%;
+    opacity: var(--hy-move);
+    translate: 0 calc(100% * var(--hy-move));
   }
 }

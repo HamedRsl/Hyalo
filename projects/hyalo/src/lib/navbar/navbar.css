@@ -44,8 +44,39 @@
 :host([data-appearance='full']) .hy-navbar__bar {
   max-inline-size: none;
   border-radius: 0;
-  border-width: 0 0 1px;
+  border-width: 0;
   padding-inline: var(--hy-gutter);
+}
+
+/*
+ * A scroll edge instead of a divider: a short fade under the bar, shown only
+ * while content actually scrolls beneath it.
+ */
+:host([data-appearance='full']) .hy-navbar__bar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  block-size: var(--hy-space-4);
+  background: linear-gradient(to bottom, var(--hy-line), transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--hy-dur-settle) var(--hy-ease-out);
+}
+
+:host([data-appearance='full'][data-scrolled]) .hy-navbar__bar::after {
+  opacity: 1;
+}
+
+/* With more contrast asked for, a clear line is easier to see than a fade. */
+@media (prefers-contrast: more), (forced-colors: active) {
+  :host([data-appearance='full']) .hy-navbar__bar {
+    border-width: 0 0 1px;
+  }
+
+  :host([data-appearance='full']) .hy-navbar__bar::after {
+    display: none;
+  }
 }
 
 :host([data-scrolled]) .hy-navbar__bar {

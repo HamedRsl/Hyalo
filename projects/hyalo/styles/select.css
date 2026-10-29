@@ -7,7 +7,6 @@
   padding: var(--hy-space-1);
   border-radius: var(--hy-radius-m);
   outline: none;
-  animation: hy-pop-in var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 .hy-select__option {

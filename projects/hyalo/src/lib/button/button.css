@@ -27,13 +27,15 @@
     color var(--hy-dur-quick) var(--hy-ease-out),
     box-shadow var(--hy-dur-quick) var(--hy-ease-out),
     scale var(--hy-dur-quick) var(--hy-ease-out),
-    translate var(--hy-dur-settle) var(--hy-ease-out);
+    translate var(--hy-dur-settle) var(--hy-ease-out),
+    --hy-glow var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 :host([data-size='sm']) {
   --_h: var(--hy-control-sm);
   --_px: var(--hy-space-3);
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
 }
 
 :host([data-size='lg']) {
@@ -106,8 +108,29 @@
   background-color: color-mix(in srgb, var(--_c) 10%, transparent);
 }
 
+/*
+ * Press feedback lands on pointer-down: the button shrinks a touch and its
+ * fill deepens, the way a highlight does, rather than a ripple spreading.
+ */
 :host([data-press]) {
   scale: 0.97;
+  transition-duration: min(0.1s, var(--hy-dur-quick));
+}
+
+:host([data-variant='solid'][data-press]) {
+  background-color: color-mix(in srgb, var(--_c) 78%, var(--hy-ink));
+}
+
+:host([data-variant='soft'][data-press]) {
+  background-color: color-mix(in srgb, var(--_c) 26%, transparent);
+}
+
+:host([data-variant='ghost'][data-press]) {
+  background-color: color-mix(in srgb, var(--_c) 16%, transparent);
+}
+
+:host([data-variant='glass'][data-press]) {
+  --hy-glow: 0.45;
 }
 
 :host(:focus-visible) {

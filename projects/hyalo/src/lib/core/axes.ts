@@ -9,6 +9,16 @@
  */
 export type HyMaterial = 'clear' | 'frosted' | 'tinted' | 'solid';
 
+/**
+ * How heavy a glass surface reads. Bigger surfaces should be thicker: more
+ * blur and a deeper shadow.
+ *
+ * - `thin`: chips and buttons.
+ * - `regular`: the default, for cards, bars, popovers and toasts.
+ * - `thick`: dialogs, drawers and sheets.
+ */
+export type HyThickness = 'thin' | 'regular' | 'thick';
+
 /** Control size. All sizes keep a touch target of at least 32px. */
 export type HySize = 'sm' | 'md' | 'lg';
 

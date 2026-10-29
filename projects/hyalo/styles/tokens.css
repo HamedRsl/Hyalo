@@ -12,6 +12,9 @@
   --hy-ink: #0f1a24;
   --hy-ink-2: #3b4856;
   --hy-ink-3: #596775;
+  /* Secondary text on glass. Darker, because the backdrop keeps changing. */
+  --hy-ink-2-glass: #2c3845;
+  --hy-ink-3-glass: #45525f;
   --hy-line: rgb(15 26 36 / 0.12);
   --hy-line-strong: rgb(15 26 36 / 0.24);
   --hy-accent: #3a4cd0;
@@ -36,6 +39,9 @@
   --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.85), inset 0 0 0 1px rgb(255 255 255 / 0.4);
   --hy-glass-border: rgb(15 26 36 / 0.08);
   --hy-glass-shadow: 0 1px 2px rgb(15 26 36 / 0.06), 0 12px 32px -12px rgb(15 26 36 / 0.22);
+  /* Small chips read as thin glass, sheets and dialogs as thick. */
+  --hy-glass-shadow-thin: 0 1px 2px rgb(15 26 36 / 0.06), 0 4px 12px -6px rgb(15 26 36 / 0.16);
+  --hy-glass-shadow-thick: 0 2px 4px rgb(15 26 36 / 0.06), 0 24px 64px -20px rgb(15 26 36 / 0.32);
   --hy-glass-reflection: linear-gradient(
     to bottom,
     rgb(255 255 255 / 0.5),
@@ -58,6 +64,8 @@
   --hy-step-6: clamp(2.75rem, 2rem + 3.6vw, 5.25rem);
   --hy-leading-tight: 1.15;
   --hy-leading: 1.55;
+  /* Small text opens up a little to stay legible. Headings tighten instead. */
+  --hy-tracking-small: 0.01em;
 
   /* Shape and space (4px base) */
   --hy-radius-s: 8px;
@@ -92,6 +100,14 @@
   --hy-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
   --hy-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --hy-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /*
+   * Overlays enter and leave with these. With reduced motion they turn into
+   * short cross-fades instead of disappearing: --hy-move scales every slide
+   * and scale in the overlay keyframes down to nothing.
+   */
+  --hy-dur-enter: 0.44s;
+  --hy-dur-exit: 0.22s;
+  --hy-move: 1;
 
   /* Layers */
   --hy-z-sticky: 100;
@@ -106,6 +122,7 @@
   --hy-font-body: var(--hy-font-fa);
   --hy-font-display: var(--hy-font-fa);
   --hy-leading: 1.75;
+  --hy-tracking-small: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -113,6 +130,9 @@
     --hy-dur-quick: 1ms;
     --hy-dur-settle: 1ms;
     --hy-dur-scene: 1ms;
+    --hy-dur-enter: 0.2s;
+    --hy-dur-exit: 0.15s;
+    --hy-move: 0;
   }
 }
 
@@ -120,4 +140,7 @@
   --hy-dur-quick: 1ms;
   --hy-dur-settle: 1ms;
   --hy-dur-scene: 1ms;
+  --hy-dur-enter: 0.2s;
+  --hy-dur-exit: 0.15s;
+  --hy-move: 0;
 }

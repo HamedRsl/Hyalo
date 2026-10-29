@@ -40,6 +40,9 @@ describe('HyTooltip', () => {
     expect(tip.textContent).toBe('Copy link');
     expect(tip.getAttribute('aria-hidden')).toBe('true');
     button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(tip.getAttribute('data-state')).toBe('closing');
+    // jsdom never fires transitionend, so the exit ends on its timeout.
+    await wait(400);
     expect(document.querySelector('.hy-tooltip')).toBeNull();
   });
 });

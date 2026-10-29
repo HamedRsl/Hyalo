@@ -4,53 +4,78 @@
  *
  * Layers, from top to bottom: a pointer glow (driven by --hy-px / --hy-py
  * from the tilt directive), a reflection gradient, and the fill itself.
+ *
+ * Materials and thicknesses only change custom properties, never the
+ * `background` itself. That keeps the fallbacks at the bottom, which do set
+ * it, in charge for every material.
  */
+
+/* Registered so hover and tilt can fade the glow instead of switching it. */
+@property --hy-glow {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 .hy-glass {
   --_fill-top: var(--hy-glass-fill-top);
   --_fill-bottom: var(--hy-glass-fill-bottom);
   --_tint: var(--hy-glass-tint);
-  --_blur: var(--hy-glass-blur);
+  --_fill: linear-gradient(
+    160deg,
+    rgb(var(--_tint) / var(--_fill-top)),
+    rgb(var(--_tint) / var(--_fill-bottom))
+  );
+  /* Thicker glass blurs more; clear glass blurs less. */
+  --_depth: 1;
+  --_clarity: 1;
+  --_blur: calc(var(--hy-glass-blur) * var(--_depth) * var(--_clarity));
+  --_shadow: var(--hy-glass-shadow);
+  /* The backdrop keeps changing, so secondary text gets more contrast. */
+  --hy-ink-2: var(--hy-ink-2-glass);
+  --hy-ink-3: var(--hy-ink-3-glass);
   background:
     radial-gradient(
       circle at var(--hy-px, 50%) var(--hy-py, -30%),
       rgb(var(--hy-glass-glow) / var(--hy-glow, 0)),
       transparent 55%
     ),
-    var(--hy-glass-reflection),
-    linear-gradient(
-      160deg,
-      rgb(var(--_tint) / var(--_fill-top)),
-      rgb(var(--_tint) / var(--_fill-bottom))
-    );
+    var(--hy-glass-reflection), var(--_fill);
   backdrop-filter: blur(var(--_blur)) saturate(var(--hy-glass-saturate));
   -webkit-backdrop-filter: blur(var(--_blur)) saturate(var(--hy-glass-saturate));
   border: 1px solid var(--hy-glass-border);
-  box-shadow: var(--hy-glass-edge), var(--hy-glass-shadow);
+  box-shadow: var(--hy-glass-edge), var(--_shadow);
+}
+
+/* Thickness: bigger surfaces read as heavier material. */
+.hy-glass[data-thickness='thin'] {
+  --_depth: 0.5;
+  --_shadow: var(--hy-glass-shadow-thin);
+}
+
+.hy-glass[data-thickness='thick'] {
+  --_depth: 1.6;
+  --_shadow: var(--hy-glass-shadow-thick);
 }
 
 .hy-glass[data-material='clear'] {
   --_fill-top: calc(var(--hy-glass-fill-top) * 0.4);
   --_fill-bottom: calc(var(--hy-glass-fill-bottom) * 0.3);
-  --_blur: 10px;
+  --_clarity: 0.4;
 }
 
 .hy-glass[data-material='tinted'] {
-  background:
-    radial-gradient(
-      circle at var(--hy-px, 50%) var(--hy-py, -30%),
-      rgb(var(--hy-glass-glow) / var(--hy-glow, 0)),
-      transparent 55%
-    ),
-    var(--hy-glass-reflection),
-    linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--hy-accent) 22%, transparent),
-      color-mix(in srgb, var(--hy-accent) 8%, transparent)
-    );
+  --_fill: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--hy-accent) 22%, transparent),
+    color-mix(in srgb, var(--hy-accent) 8%, transparent)
+  );
 }
 
 .hy-glass[data-material='solid'] {
-  background: var(--hy-glass-reflection), var(--hy-surface-1);
+  --_fill: linear-gradient(var(--hy-surface-1), var(--hy-surface-1));
+  --hy-ink-2: inherit;
+  --hy-ink-3: inherit;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -92,13 +117,4 @@
 
 .hy-backdrop-transparent {
   background: transparent;
-}
-
-/* Entry for glass dropdowns and popovers. Runs on the glass element itself. */
-@keyframes hy-pop-in {
-  from {
-    opacity: 0;
-    translate: 0 -4px;
-    scale: 0.98;
-  }
 }

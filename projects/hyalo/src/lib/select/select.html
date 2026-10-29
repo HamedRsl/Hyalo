@@ -48,10 +48,12 @@
     <ng-template
       cdkConnectedOverlay
       [cdkConnectedOverlayOrigin]="origin"
-      [cdkConnectedOverlayOpen]="expanded()"
+      [cdkConnectedOverlayOpen]="rendered()"
       [cdkConnectedOverlayPositions]="positions"
       [cdkConnectedOverlayMinWidth]="panelWidth()"
       cdkConnectedOverlayPanelClass="hy-select-overlay"
+      cdkConnectedOverlayTransformOriginOn=".hy-select__panel"
+      (attach)="onAttach()"
       (overlayOutsideClick)="expanded.set(false)"
     >
       <!-- Focus stays on the trigger; Aria relays keys here and manages tabindex. -->

@@ -34,9 +34,10 @@ import { DocsPage } from '../shared/page';
       <h2>Fidelity tiers</h2>
       <p>
         <code>HyFidelity</code> picks <code>high</code>, <code>medium</code> or
-        <code>low</code> from device memory, CPU cores, pointer type, data saver and reduced motion.
-        The server and the first client render always use medium, so hydration sees identical
-        markup, and the real tier is set right after. This page is on
+        <code>low</code> from device memory, CPU cores, pointer type and data saver. Reduced motion
+        does not lower the tier: it turns off decorative motion and makes overlays cross-fade, but
+        the glass stays. The server and the first client render always use medium, so hydration sees
+        identical markup, and the real tier is set right after. This page is on
         <strong>{{ fidelity.tier() }}</strong> right now, and motion is
         <strong>{{ motion.reduced() ? 'reduced' : 'full' }}</strong
         >.
@@ -127,7 +128,7 @@ export default class MotionPage {
     {
       name: 'hyRipple',
       type: 'directive',
-      description: 'A light ripple from the press point. Built into hyButton.',
+      description: 'An optional light ripple from the press point. Input: rippleDisabled.',
     },
     {
       name: 'hyInteractive',

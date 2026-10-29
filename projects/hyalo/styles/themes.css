@@ -18,6 +18,8 @@
   --hy-ink: #eef1f6;
   --hy-ink-2: #b9c2ce;
   --hy-ink-3: #8f99a8;
+  --hy-ink-2-glass: #cdd4de;
+  --hy-ink-3-glass: #a7b1be;
   --hy-line: rgb(238 241 246 / 0.12);
   --hy-line-strong: rgb(238 241 246 / 0.26);
   --hy-accent: #8e9cff;
@@ -34,10 +36,12 @@
   --hy-scrim: rgb(0 0 0 / 0.55);
   --hy-glass-tint: 255 255 255;
   --hy-glass-fill-top: 0.12;
-  --hy-glass-fill-bottom: 0.04;
+  --hy-glass-fill-bottom: 0.06;
   --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 0 0 1px rgb(255 255 255 / 0.07);
   --hy-glass-border: rgb(255 255 255 / 0.08);
   --hy-glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+  --hy-glass-shadow-thin: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 16px -8px rgb(0 0 0 / 0.5);
+  --hy-glass-shadow-thick: 0 2px 4px rgb(0 0 0 / 0.3), 0 28px 72px -20px rgb(0 0 0 / 0.7);
   --hy-glass-reflection: linear-gradient(
     to bottom,
     rgb(255 255 255 / 0.08),
@@ -56,6 +60,8 @@
     --hy-ink: #eef1f6;
     --hy-ink-2: #b9c2ce;
     --hy-ink-3: #8f99a8;
+    --hy-ink-2-glass: #cdd4de;
+    --hy-ink-3-glass: #a7b1be;
     --hy-line: rgb(238 241 246 / 0.12);
     --hy-line-strong: rgb(238 241 246 / 0.26);
     --hy-accent: #8e9cff;
@@ -72,10 +78,12 @@
     --hy-scrim: rgb(0 0 0 / 0.55);
     --hy-glass-tint: 255 255 255;
     --hy-glass-fill-top: 0.12;
-    --hy-glass-fill-bottom: 0.04;
+    --hy-glass-fill-bottom: 0.06;
     --hy-glass-edge: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 0 0 1px rgb(255 255 255 / 0.07);
     --hy-glass-border: rgb(255 255 255 / 0.08);
     --hy-glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+    --hy-glass-shadow-thin: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 16px -8px rgb(0 0 0 / 0.5);
+    --hy-glass-shadow-thick: 0 2px 4px rgb(0 0 0 / 0.3), 0 28px 72px -20px rgb(0 0 0 / 0.7);
     --hy-glass-reflection: linear-gradient(
       to bottom,
       rgb(255 255 255 / 0.08),
@@ -84,9 +92,13 @@
   }
 }
 
-/* Higher contrast: stronger lines, no see-through surfaces. */
+/*
+ * Higher contrast: stronger lines, no see-through surfaces. The selector has
+ * the same weight as the dark theme selectors above, so it wins in both themes.
+ */
 @media (prefers-contrast: more) {
-  :root {
+  :root:is([data-hy-theme], :not([data-hy-theme])),
+  .hy-theme-dark {
     --hy-line: var(--hy-line-strong);
     --hy-ink-3: var(--hy-ink-2);
   }

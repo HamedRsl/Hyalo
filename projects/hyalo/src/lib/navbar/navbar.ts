@@ -27,7 +27,8 @@ export class HyNavbarActions {}
 
 /**
  * - `floating`: a detached glass pill with space around it.
- * - `full`: a full-width bar with a bottom hairline.
+ * - `full`: a full-width bar. Once content scrolls under it, a soft fade
+ *   at its lower edge separates the two instead of a hard line.
  */
 export type HyNavbarAppearance = 'floating' | 'full';
 

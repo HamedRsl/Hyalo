@@ -22,6 +22,7 @@ import {
   signal,
 } from '@angular/core';
 import { hyConnectedPositions, type HyPlacement } from '../overlay/positions';
+import { HyPresence } from '../overlay/presence';
 
 @Component({
   selector: 'hy-tooltip-panel',
@@ -63,6 +64,8 @@ export class HyTooltip {
   private overlayRef: OverlayRef | null = null;
   private position: FlexibleConnectedPositionStrategy | null = null;
   private panel: HyTooltipPanel | null = null;
+  private panelEl: HTMLElement | null = null;
+  private readonly presence = new HyPresence();
   private showTimer: ReturnType<typeof setTimeout> | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -103,11 +106,13 @@ export class HyTooltip {
     this.showTimer = setTimeout(() => this.attach(), delay);
   }
 
-  /** Hides the tooltip now. */
+  /** Starts hiding the tooltip now. It fades out quickly. */
   hide(): void {
     clearTimeout(this.showTimer);
     clearTimeout(this.hideTimer);
-    this.overlayRef?.detach();
+    const ref = this.overlayRef;
+    if (!ref?.hasAttached() || !this.panelEl) return;
+    this.presence.leave(this.panelEl, () => ref.detach());
   }
 
   protected scheduleHide(): void {
@@ -119,7 +124,8 @@ export class HyTooltip {
     if (!this.overlayRef) {
       this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withFlexibleDimensions(false)
-        .withViewportMargin(8);
+        .withViewportMargin(8)
+        .withTransformOriginOn('.hy-tooltip');
       this.overlayRef = createOverlayRef(this.injector, {
         positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
@@ -131,12 +137,21 @@ export class HyTooltip {
       );
       this.overlayRef.overlayElement.addEventListener('pointerleave', () => this.scheduleHide());
     }
-    if (this.overlayRef.hasAttached()) return;
+    if (this.overlayRef.hasAttached()) {
+      if (this.presence.leaving && this.panelEl) this.presence.enter(this.panelEl);
+      return;
+    }
     // Read on every show, so a changed placement applies next time.
     this.position?.withPositions(hyConnectedPositions(this.tooltipPlacement()));
     const ref = this.overlayRef.attach(new ComponentPortal(HyTooltipPanel, null, this.injector));
     this.panel = ref.instance;
     this.panel.message.set(this.message());
-    ref.onDestroy(() => (this.panel = null));
+    const el = ref.location.nativeElement as HTMLElement;
+    this.panelEl = el;
+    this.presence.enter(el);
+    ref.onDestroy(() => {
+      this.panel = null;
+      this.panelEl = null;
+    });
   }
 }

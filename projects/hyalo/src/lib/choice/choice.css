@@ -50,6 +50,7 @@
   padding-inline-start: calc(1.25rem + var(--hy-space-3));
   color: var(--hy-ink-3);
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
 }
 
 /* Checkbox */
@@ -123,6 +124,7 @@
 
 .hy-radio-group__label {
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
   font-weight: 560;
 }
 
@@ -142,6 +144,7 @@
   margin: 0;
   color: var(--hy-danger);
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
 }
 
 /* Switch */
@@ -164,7 +167,9 @@
   box-shadow:
     0 1px 3px rgb(0 0 0 / 0.25),
     inset 0 0 0 0.5px rgb(0 0 0 / 0.06);
-  transition: translate var(--hy-dur-settle) var(--hy-ease-spring);
+  transition:
+    translate var(--hy-dur-settle) var(--hy-ease-spring),
+    inline-size var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 :host([data-checked]) .hy-switch__track {
@@ -177,6 +182,30 @@
 
 :host([data-checked]) .hy-switch__thumb:dir(rtl) {
   translate: -1rem 0;
+}
+
+/*
+ * Pressed, the thumb stretches toward the side it will travel to, so the
+ * press already hints at the outcome. Widths match PRESSED_THUMB in switch.ts.
+ */
+:host(:not([data-disabled])) .hy-choice__row:active .hy-switch__thumb,
+.hy-switch__thumb[data-dragging] {
+  inline-size: 1.5rem;
+}
+
+:host([data-checked]:not([data-disabled])) .hy-choice__row:active .hy-switch__thumb {
+  translate: 0.75rem 0;
+}
+
+:host([data-checked]:not([data-disabled])) .hy-choice__row:active .hy-switch__thumb:dir(rtl) {
+  translate: -0.75rem 0;
+}
+
+/* While dragged, the thumb follows the pointer with no easing in between. */
+.hy-switch__thumb[data-dragging],
+.hy-switch__thumb[data-dragging]:dir(rtl) {
+  translate: var(--_drag) 0;
+  transition: inline-size var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 @media (forced-colors: active) {

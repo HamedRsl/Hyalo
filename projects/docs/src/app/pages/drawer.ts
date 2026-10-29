@@ -42,7 +42,11 @@ import { DocsPage } from '../shared/page';
       <ul>
         <li>Same behaviour as a dialog: focus trap, Escape, backdrop click and focus restore.</li>
         <li>Give it a title with <code>hyDialogTitle</code> or a <code>label</code>.</li>
-        <li>With reduced motion it appears in place, without the slide.</li>
+        <li>
+          Drag it toward its edge or flick it to close it, and grab it again while it moves. A
+          bottom sheet shows a grabber.
+        </li>
+        <li>With reduced motion it cross-fades in place instead of sliding, and is not dragged.</li>
       </ul>
 
       <h2>API</h2>

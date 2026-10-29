@@ -7,6 +7,8 @@ import type { HyMaterial } from '../core/axes';
 import type { HyMotion } from '../motion/motion';
 import type { HyFidelity } from '../fidelity/fidelity';
 import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
+import type { HyDrawerSide } from './drawer';
+import { driveSheet } from './sheet';
 
 /** Options shared by dialogs and drawers. */
 export interface HySurfaceConfig<D> {
@@ -37,6 +39,8 @@ export function openSurface<R, D>(
     width?: string;
     maxWidth?: string;
     height?: string;
+    /** Drawers and sheets run on a spring and can be dragged closed. */
+    sheet?: HyDrawerSide;
   },
 ): HyDialogRef<R> {
   let ref: HyDialogRef<R> | undefined;
@@ -59,7 +63,7 @@ export function openSurface<R, D>(
     maxWidth: extra.maxWidth,
     height: extra.height,
     providers: (dialogRef) => {
-      ref = new HyDialogRef<R>(dialogRef, () => motion.reduced());
+      ref = new HyDialogRef<R>(dialogRef);
       return [
         { provide: HyDialogRef, useValue: ref },
         { provide: HY_DIALOG_DATA, useValue: config.data },
@@ -67,12 +71,22 @@ export function openSurface<R, D>(
     },
   });
 
-  const hyRef = ref ?? new HyDialogRef<R>(cdkRef, () => motion.reduced());
+  const hyRef = ref ?? new HyDialogRef<R>(cdkRef);
   const container = hyRef.containerElement;
   if (container) {
     container.classList.add('hy-glass');
     container.dataset['material'] =
       fidelity.tier() === 'low' ? 'solid' : (config.material ?? 'frosted');
+    // Dialogs and sheets are the largest glass on the page, so the thickest.
+    container.dataset['thickness'] = 'thick';
+    // With reduced motion the CSS cross-fade runs instead of the spring.
+    if (extra.sheet && !motion.reduced()) {
+      hyRef.exit = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
+        dismissible,
+        close: () => hyRef.close(),
+        cancelClose: () => hyRef.cancelClose(),
+      });
+    }
   }
   if (dismissible) {
     cdkRef.backdropClick.subscribe(() => hyRef.close());

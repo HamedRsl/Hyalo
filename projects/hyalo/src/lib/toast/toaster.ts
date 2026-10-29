@@ -7,7 +7,7 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable, Injector, inject, signal } from '@angular/core';
 import { injectIsBrowser } from '../core/platform';
-import { HyMotion, MOTION } from '../motion/motion';
+import { MOTION } from '../motion/motion';
 import { HyToastStack } from './toast-stack';
 
 /** Colour and icon of a toast. */
@@ -61,7 +61,6 @@ export type HyToastHold = 'hover' | 'focus';
 export class HyToaster {
   private readonly injector = inject(Injector);
   private readonly announcer = inject(LiveAnnouncer);
-  private readonly motion = inject(HyMotion);
   private readonly isBrowser = injectIsBrowser();
   private readonly timers = new Map<
     number,
@@ -83,8 +82,10 @@ export class HyToaster {
 
     const item: HyToastItem = { tone: 'neutral', ...options, id, leaving: false };
     this.items.update((list) => [...list, item]);
-    const overflow = this.items().filter((t) => !t.leaving).length - MAX_VISIBLE;
-    for (const old of this.items().slice(0, Math.max(0, overflow))) this.dismiss(old.id);
+    // Toasts already on their way out do not count, and are not picked again.
+    const staying = this.items().filter((t) => !t.leaving);
+    const overflow = staying.length - MAX_VISIBLE;
+    for (const old of staying.slice(0, Math.max(0, overflow))) this.dismiss(old.id);
 
     const text = options.title ? `${options.title}. ${options.message}` : options.message;
     void this.announcer.announce(text, item.tone === 'danger' ? 'assertive' : 'polite');
@@ -105,18 +106,23 @@ export class HyToaster {
     return this.show({ message, title, tone: 'danger' });
   }
 
-  /** Hides one toast with its exit animation. */
+  /** Hides one toast with its exit animation, a fade with reduced motion. */
   dismiss(id: number): void {
-    const timer = this.timers.get(id);
-    clearTimeout(timer?.handle);
-    this.timers.delete(id);
+    this.clearTimer(id);
     if (!this.items().some((t) => t.id === id && !t.leaving)) return;
-    if (this.motion.reduced()) {
-      this.remove(id);
-      return;
-    }
     this.items.update((list) => list.map((t) => (t.id === id ? { ...t, leaving: true } : t)));
     setTimeout(() => this.remove(id), MOTION.quick.duration * 1000 + 40);
+  }
+
+  /** @internal Removes a toast that already left the screen, as after a swipe. */
+  discard(id: number): void {
+    this.clearTimer(id);
+    this.remove(id);
+  }
+
+  private clearTimer(id: number): void {
+    clearTimeout(this.timers.get(id)?.handle);
+    this.timers.delete(id);
   }
 
   /** Hides every toast. */

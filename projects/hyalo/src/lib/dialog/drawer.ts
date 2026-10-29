@@ -26,6 +26,10 @@ export interface HyDrawerConfig<D = unknown> extends HySurfaceConfig<D> {
  * like a dialog (focus trap, Escape, backdrop, focus restore) and uses the
  * same content parts and `HyDialogRef`.
  *
+ * It runs on a spring and follows the pointer: drag it toward its edge, or
+ * flick it, to close it, and grab it again while it moves. A bottom sheet
+ * shows a grabber. With reduced motion it cross-fades instead.
+ *
  * ```ts
  * this.drawer.open(CartPanel, { side: 'end', label: 'Cart' });
  * ```
@@ -53,6 +57,7 @@ export class HyDrawer {
       positionStrategy: position,
       width: side === 'bottom' ? '100%' : (config.size ?? 'min(24rem, 100vw - 2.5rem)'),
       height: side === 'bottom' ? (config.size ?? 'auto') : '100%',
+      sheet: side,
     });
   }
 }

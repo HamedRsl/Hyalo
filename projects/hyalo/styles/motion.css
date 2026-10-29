@@ -30,7 +30,9 @@
 .hy-tilt {
   transform: perspective(900px) rotateX(var(--hy-rx, 0deg)) rotateY(var(--hy-ry, 0deg));
   transform-style: preserve-3d;
-  transition: transform var(--hy-dur-settle) var(--hy-ease-out);
+  transition:
+    transform var(--hy-dur-settle) var(--hy-ease-out),
+    --hy-glow var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 .hy-magnetic {
@@ -40,7 +42,7 @@
 
 /* GSAP already smooths these values, so the CSS transition would lag. */
 .hy-tilt.hy-gsap {
-  transition: none;
+  transition: --hy-glow var(--hy-dur-settle) var(--hy-ease-out);
 }
 
 .hy-magnetic.hy-gsap {

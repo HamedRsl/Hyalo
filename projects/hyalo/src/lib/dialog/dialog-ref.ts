@@ -16,11 +16,14 @@ export class HyDialogRef<R = unknown> {
   /** Resolves with the result once the surface has closed. */
   readonly closed: Promise<R | undefined>;
 
+  /**
+   * @internal Set by surfaces that drive their own exit, like a sheet on a
+   * spring. Calls `finish` once the surface is out of view.
+   */
+  exit: ((finish: () => void) => void) | null = null;
+
   /** @internal */
-  constructor(
-    private readonly cdkRef: DialogRef<R>,
-    private readonly reducedMotion: () => boolean,
-  ) {
+  constructor(private readonly cdkRef: DialogRef<R>) {
     this.closed = firstValueFrom(cdkRef.closed, { defaultValue: undefined });
   }
 
@@ -35,19 +38,19 @@ export class HyDialogRef<R = unknown> {
   }
 
   /**
-   * Plays the exit animation, then closes. Calling it again while the
-   * animation runs does nothing.
+   * Plays the exit animation, then closes. With reduced motion the exit is
+   * a short fade. Calling it again while the animation runs does nothing.
    */
   close(result?: R): void {
     if (this.closing) return;
     this.closing = true;
-    const pane = this.cdkRef.overlayRef.overlayElement;
-    const backdrop = this.cdkRef.overlayRef.backdropElement;
-    if (this.reducedMotion()) {
-      this.cdkRef.close(result);
+    if (this.exit) {
+      this.exit(() => this.cdkRef.close(result));
       return;
     }
-    // Drawers animate the pane, dialogs the panel inside it.
+    const pane = this.cdkRef.overlayRef.overlayElement;
+    const backdrop = this.cdkRef.overlayRef.backdropElement;
+    // The animation runs on the panel inside the pane.
     const panel = this.containerElement;
     pane.dataset['state'] = 'closing';
     backdrop?.setAttribute('data-state', 'closing');
@@ -65,5 +68,13 @@ export class HyDialogRef<R = unknown> {
     };
     pane.addEventListener('animationend', onEnd);
     setTimeout(finish, MOTION.settle.duration * 1000 + 80);
+  }
+
+  /**
+   * @internal A sheet grabbed while it was closing stays open, and a later
+   * `close()` works again.
+   */
+  cancelClose(): void {
+    this.closing = false;
   }
 }

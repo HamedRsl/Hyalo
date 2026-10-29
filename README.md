@@ -121,7 +121,7 @@ provideHyalo({ gsap: () => import('gsap').then((m) => m.gsap) });
 
 ## Fidelity tiers
 
-`HyFidelity` picks `high`, `medium` or `low` from the device (memory, CPU cores, data saver and reduced motion). Low turns glass solid, switches `hy-select` to a native select and stops pointer effects. The server and the first client render always use `medium`, so hydration matches, and the real tier applies right after. Force a tier with `provideHyalo({ fidelity: 'low' })` or `HyFidelity.setTier()`.
+`HyFidelity` picks `high`, `medium` or `low` from the device (memory, CPU cores and data saver). Reduced motion leaves the tier alone: it turns off decorative motion and makes overlays cross-fade instead. Low turns glass solid, switches `hy-select` to a native select and stops pointer effects. The server and the first client render always use `medium`, so hydration matches, and the real tier applies right after. Force a tier with `provideHyalo({ fidelity: 'low' })` or `HyFidelity.setTier()`.
 
 ## Accessibility
 

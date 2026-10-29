@@ -1,4 +1,59 @@
-/* Tooltip and popover panels render in CDK overlays. */
+/*
+ * Tooltip, popover and select panels render in CDK overlays. They enter and
+ * leave through data-state (see HyPresence): `closed` and `closing` are the
+ * hidden pose, `open` the shown one. CDK sets transform-origin on each panel
+ * to the side that faces its trigger, so the scale grows out of the trigger.
+ *
+ * Transitions rather than keyframes, so a panel reopened mid-exit turns
+ * around from where it is. With reduced motion only the fade is left.
+ */
+:is(.hy-tooltip, .hy-popover, .hy-select__panel) {
+  transition:
+    opacity var(--hy-dur-enter) var(--hy-ease-out),
+    scale var(--hy-dur-enter) var(--hy-ease-out);
+}
+
+:is(.hy-tooltip, .hy-popover, .hy-select__panel):is([data-state='closed'], [data-state='closing']) {
+  opacity: 0;
+  scale: calc(1 - 0.06 * var(--hy-move));
+}
+
+:is(.hy-popover, .hy-select__panel) {
+  transition:
+    opacity var(--hy-dur-enter) var(--hy-ease-out),
+    scale var(--hy-dur-enter) var(--hy-ease-out),
+    backdrop-filter var(--hy-dur-enter) var(--hy-ease-out),
+    -webkit-backdrop-filter var(--hy-dur-enter) var(--hy-ease-out);
+}
+
+/* The glass materialises: the blur grows in with the panel. */
+:is(.hy-popover, .hy-select__panel):is([data-state='closed'], [data-state='closing']) {
+  backdrop-filter: blur(0) saturate(100%);
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+}
+
+/*
+ * CDK can attach a panel before its overlay is rendered, so the closed pose
+ * set first is never seen. The starting style gives the open state a pose
+ * to transition from on its first frame.
+ */
+@starting-style {
+  :is(.hy-tooltip, .hy-popover, .hy-select__panel)[data-state='open'] {
+    opacity: 0;
+    scale: calc(1 - 0.06 * var(--hy-move));
+  }
+
+  :is(.hy-popover, .hy-select__panel)[data-state='open'] {
+    backdrop-filter: blur(0) saturate(100%);
+    -webkit-backdrop-filter: blur(0) saturate(100%);
+  }
+}
+
+:is(.hy-tooltip, .hy-popover, .hy-select__panel)[data-state='closing'] {
+  transition-duration: var(--hy-dur-exit);
+  transition-timing-function: var(--hy-ease-inout);
+}
+
 .hy-tooltip {
   display: block;
   max-inline-size: 18rem;
@@ -7,9 +62,9 @@
   background: color-mix(in srgb, var(--hy-ink) 92%, transparent);
   color: var(--hy-bg);
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
   line-height: 1.4;
   box-shadow: 0 6px 20px -8px rgb(0 0 0 / 0.4);
-  animation: hy-fade-in var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 .hy-tooltip-pane {
@@ -23,11 +78,4 @@
   border-radius: var(--hy-radius-m);
   color: var(--hy-ink);
   outline: none;
-  animation: hy-pop-in var(--hy-dur-settle) var(--hy-ease-out);
-}
-
-@keyframes hy-fade-in {
-  from {
-    opacity: 0;
-  }
 }

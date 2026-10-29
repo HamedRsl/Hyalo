@@ -12,7 +12,6 @@ import type { HySize, HyTone } from '../core/axes';
 import { HyFidelity } from '../fidelity/fidelity';
 import { HyIcon } from '../icon/icon';
 import { HyInteractive } from '../interaction/state';
-import { HyRipple } from '../interaction/ripple';
 
 /**
  * - `solid`: filled with the tone colour. The main action on a view.
@@ -32,7 +31,9 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
  * ```
  *
  * It stays a native `<button>` or `<a>`, so forms, routing and keyboard
- * behaviour work as usual. Add `hyMagnetic` for the magnetic hover effect.
+ * behaviour work as usual. A press dims and shrinks it the moment the
+ * pointer goes down. Add `hyMagnetic` for the magnetic hover effect, or
+ * `hyRipple` for a press ripple.
  *
  * While `loading`, the button keeps its focus and width, sets `aria-busy`
  * and ignores clicks. A disabled link gets `aria-disabled` and leaves the
@@ -44,11 +45,13 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
   selector: 'button[hyButton], a[hyButton]',
   imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  hostDirectives: [HyInteractive, { directive: HyRipple, inputs: ['rippleDisabled'] }],
+  hostDirectives: [HyInteractive],
   host: {
     class: 'hy-button',
     '[class.hy-glass]': 'variant() === "glass"',
     '[attr.data-material]': 'material()',
+    // Buttons are small chips of glass, so they get the thinnest material.
+    '[attr.data-thickness]': 'variant() === "glass" ? "thin" : null',
     '[attr.data-variant]': 'variant()',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',

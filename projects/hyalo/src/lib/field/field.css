@@ -17,6 +17,7 @@
 .hy-field__label {
   color: var(--hy-ink);
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
   font-weight: 560;
 }
 
@@ -69,6 +70,7 @@
 .hy-field__error {
   margin: 0;
   font-size: var(--hy-step--1);
+  letter-spacing: var(--hy-tracking-small);
 }
 
 .hy-field__hint {

@@ -4,11 +4,13 @@ import {
   ElementRef,
   booleanAttribute,
   computed,
+  effect,
   inject,
   input,
   model,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
@@ -20,6 +22,7 @@ import { HyFidelity } from '../fidelity/fidelity';
 import { HyIcon } from '../icon/icon';
 import { HY_FIELD, type HyFieldControl } from '../field/field-control';
 import { hyDropdownPositions } from '../overlay/positions';
+import { HyPresence } from '../overlay/presence';
 
 /** One choice in a select. */
 export interface HySelectOption<T> {
@@ -69,6 +72,8 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   private readonly fidelity = inject(HyFidelity);
   protected readonly field = inject(HY_FIELD, { optional: true });
   private readonly trigger = viewChild<ElementRef<HTMLElement>>('trigger');
+  private readonly overlay = viewChild(CdkConnectedOverlay);
+  private readonly presence = new HyPresence();
 
   /** The choices. */
   readonly options = input.required<readonly HySelectOption<T>[]>();
@@ -99,6 +104,8 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   });
 
   protected readonly expanded = signal(false);
+  /** Stays true while the panel fades out after `expanded` turns false. */
+  protected readonly rendered = signal(false);
   protected readonly positions = hyDropdownPositions();
   protected readonly panelWidth = signal(0);
   protected readonly useNative = computed(() => this.native() || this.fidelity.tier() === 'low');
@@ -114,6 +121,21 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   );
 
   constructor() {
+    effect(() => {
+      const open = this.expanded();
+      untracked(() => {
+        const panel = this.panelElement();
+        if (open) {
+          // Reopened while fading out: turn the exit around.
+          if (panel && this.presence.leaving) this.presence.enter(panel);
+          this.rendered.set(true);
+        } else if (panel) {
+          this.presence.leave(panel, () => this.rendered.set(false));
+        } else {
+          this.rendered.set(false);
+        }
+      });
+    });
     this.field?.register({
       id: this.id,
       invalid: computed(() => this.invalid() && this.touched()),
@@ -127,6 +149,19 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   protected setExpanded(open: boolean): void {
     if (open) this.panelWidth.set(this.trigger()?.nativeElement.offsetWidth ?? 0);
     this.expanded.set(open);
+  }
+
+  /** Runs when the overlay attaches a fresh panel. */
+  protected onAttach(): void {
+    const panel = this.panelElement();
+    if (panel) this.presence.enter(panel);
+  }
+
+  private panelElement(): HTMLElement | null {
+    return (
+      this.overlay()?.overlayRef?.overlayElement.querySelector<HTMLElement>('.hy-select__panel') ??
+      null
+    );
   }
 
   protected pick(values: readonly T[]): void {

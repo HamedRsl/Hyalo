@@ -14,9 +14,13 @@ interface NavigatorHints {
 /**
  * Picks a tier from what the browser reports. Exported for tests and for
  * apps that want to run the same check themselves.
+ *
+ * Reduced motion is not a reason to drop a tier: it asks for less movement,
+ * not for less glass. HyMotion already turns off decorative motion for it,
+ * and reduced transparency is handled in CSS.
  */
-export function detectFidelity(nav: NavigatorHints, reducedMotion: boolean): HyFidelityTier {
-  if (reducedMotion || nav.connection?.saveData) return 'low';
+export function detectFidelity(nav: NavigatorHints): HyFidelityTier {
+  if (nav.connection?.saveData) return 'low';
   const memory = nav.deviceMemory ?? 8;
   const cores = nav.hardwareConcurrency ?? 8;
   if (memory <= 2 || cores <= 2) return 'low';
@@ -46,12 +50,7 @@ export class HyFidelity {
     if (!injectIsBrowser()) return;
     afterNextRender(() => {
       if (!this.overridden) {
-        this._tier.set(
-          detectFidelity(
-            navigator as NavigatorHints,
-            matchesMedia('(prefers-reduced-motion: reduce)'),
-          ),
-        );
+        this._tier.set(detectFidelity(navigator as NavigatorHints));
       }
     });
     effect(() => this.document.documentElement.setAttribute('data-hy-fidelity', this._tier()));
