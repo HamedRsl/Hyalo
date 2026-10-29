@@ -6,7 +6,7 @@
   <h2>Three layers</h2>
   <ul>
     <li>
-      <strong>System tokens</strong> such as <code>--hy-accent</code> and
+      <strong>System tokens</strong> such as <code>--hy-primary</code> and
       <code>--hy-radius-m</code> set the look of everything at once.
     </li>
     <li>
@@ -19,26 +19,29 @@
     </li>
   </ul>
   <p>
-    Hyalo puts all of its CSS in cascade layers, so a plain rule in your own stylesheet always
-    wins. No <code>!important</code>, no specificity tricks.
+    <code>--hy-primary</code> is the brand colour. <code>--hy-secondary</code> is optional: set it
+    to give a theme a second colour for <code>tone="secondary"</code>. Left unset, secondary
+    controls use the primary colour, so a theme with one colour needs nothing extra.
+  </p>
+  <p>
+    Hyalo puts all of its CSS in cascade layers, so a plain rule in your own stylesheet always wins.
+    No <code>!important</code>, no specificity tricks.
   </p>
 
   <h2>Try it</h2>
-  <p>
-    These controls change tokens on the preview only. Copy the CSS when you like the result.
-  </p>
+  <p>These controls change tokens on the preview only. Copy the CSS when you like the result.</p>
   <docs-token-editor />
 
   <h2>Overriding tokens</h2>
   <p>
-    Set a token on <code>:root</code> for the whole app, or on any element for everything inside
-    it. Use <code>light-dark()</code> when a colour needs a different value in dark mode.
+    Set a token on <code>:root</code> for the whole app, or on any element for everything inside it.
+    Use <code>light-dark()</code> when a colour needs a different value in dark mode.
   </p>
   <pre><code>{{ overrideCode }}</code></pre>
   <p>
     A few tokens are built from others on <code>:root</code>, like <code>--hy-focus-ring</code>.
-    When you change <code>--hy-accent</code> on a single element, set
-    <code>--hy-accent-hover</code>, <code>--hy-accent-wash</code> and
+    When you change <code>--hy-primary</code> on a single element, set
+    <code>--hy-primary-hover</code>, <code>--hy-primary-wash</code> and
     <code>--hy-focus-ring</code> there too.
   </p>
 
@@ -65,7 +68,7 @@
                 <code class="name">{{ name }}</code>
               </td>
               <td>
-                <code class="value">{{ values()[name] }}</code>
+                <code class="value">{{ values()[name] || 'unset' }}</code>
               </td>
             </tr>
           }
@@ -75,9 +78,7 @@
   }
 
   <h2>Component tokens</h2>
-  <p>
-    Every component page ends with its own tokens and their fallbacks. This is the full list.
-  </p>
+  <p>Every component page ends with its own tokens and their fallbacks. This is the full list.</p>
   <div class="wrap">
     <table>
       <thead>

@@ -31,7 +31,7 @@
 }
 
 .hy-toast[data-tone='info'] {
-  --_c: var(--hy-accent);
+  --_c: var(--hy-primary);
 }
 
 .hy-toast[data-tone='success'] {
@@ -105,7 +105,7 @@
 }
 
 .hy-toast__action {
-  color: var(--hy-accent);
+  color: var(--hy-primary);
 }
 
 .hy-toast__action:hover,

@@ -23,7 +23,7 @@
 
 .hy-select__option[data-active='true'] {
   background: color-mix(in srgb, var(--hy-ink) 8%, transparent);
-  outline: 2px solid var(--hy-accent);
+  outline: 2px solid var(--hy-primary);
   outline-offset: -2px;
 }
 
@@ -33,7 +33,7 @@
 
 .hy-select__check {
   visibility: hidden;
-  color: var(--hy-accent);
+  color: var(--hy-primary);
 }
 
 .hy-select__option[aria-selected='true'] .hy-select__check {

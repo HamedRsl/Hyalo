@@ -1,5 +1,5 @@
 /*
- * Graphite palette: monochrome, ink as the accent.
+ * Graphite palette: monochrome, ink as the primary.
  *
  * Loaded on demand, never part of hyalo.css. Set data-hy-palette="graphite" on
  * <html> after this file has loaded, and remove the attribute to go back to
@@ -27,10 +27,12 @@
     --hy-ink-3-glass: light-dark(#48484f, #aaaab1);
     --hy-line: light-dark(rgb(17 17 19 / 0.12), rgb(241 241 243 / 0.12));
     --hy-line-strong: light-dark(rgb(17 17 19 / 0.24), rgb(241 241 243 / 0.26));
-    --hy-accent: light-dark(#1f1f23, #ececef);
-    --hy-accent-hover: light-dark(#38383e, #ffffff);
-    --hy-accent-ink: light-dark(#ffffff, #111113);
-    --hy-accent-wash: light-dark(rgb(31 31 35 / 0.1), rgb(236 236 239 / 0.14));
+    --hy-primary: light-dark(#1f1f23, #ececef);
+    --hy-primary-hover: light-dark(#38383e, #ffffff);
+    --hy-primary-ink: light-dark(#ffffff, #111113);
+    --hy-primary-wash: light-dark(rgb(31 31 35 / 0.1), rgb(236 236 239 / 0.14));
+    --hy-secondary: light-dark(#1f5fd1, #82aaff);
+    --hy-secondary-ink: light-dark(#ffffff, #0a1530);
     --hy-glass-border: light-dark(rgb(17 17 19 / 0.08), rgb(255 255 255 / 0.08));
   }
 

@@ -17,10 +17,15 @@
   --hy-ink-3-glass: #45525f;
   --hy-line: rgb(15 26 36 / 0.12);
   --hy-line-strong: rgb(15 26 36 / 0.24);
-  --hy-accent: #3a4cd0;
-  --hy-accent-hover: #3141b8;
-  --hy-accent-ink: #ffffff;
-  --hy-accent-wash: rgb(58 76 208 / 0.12);
+  --hy-primary: #3a4cd0;
+  --hy-primary-hover: #3141b8;
+  --hy-primary-ink: #ffffff;
+  --hy-primary-wash: rgb(58 76 208 / 0.12);
+  /*
+   * Secondary is optional, so it is not set here. Set --hy-secondary and
+   * --hy-secondary-ink to give a theme a second brand colour; until then,
+   * everything that reads them falls back to the primary pair.
+   */
   --hy-success: #12735a;
   --hy-success-wash: rgb(18 115 90 / 0.12);
   --hy-warning: #8f5400;
@@ -91,7 +96,7 @@
   --hy-control-sm: 2rem;
   --hy-control-md: 2.5rem;
   --hy-control-lg: 3rem;
-  --hy-focus-ring: 0 0 0 2px var(--hy-bg), 0 0 0 4px var(--hy-accent);
+  --hy-focus-ring: 0 0 0 2px var(--hy-bg), 0 0 0 4px var(--hy-primary);
 
   /* Motion. Matches the MOTION constants in TypeScript. */
   --hy-dur-quick: 0.22s;

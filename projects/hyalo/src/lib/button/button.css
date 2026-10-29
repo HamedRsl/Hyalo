@@ -1,6 +1,6 @@
 :host {
-  --_c: var(--hy-accent);
-  --_on: var(--hy-accent-ink);
+  --_c: var(--hy-primary);
+  --_on: var(--hy-primary-ink);
   --_h: var(--hy-control-md);
   --_px: var(--hy-space-4);
   position: relative;
@@ -47,6 +47,11 @@
 :host([data-icon-only]) {
   padding-inline: 0;
   inline-size: var(--_h);
+}
+
+:host([data-tone='secondary']) {
+  --_c: var(--hy-secondary, var(--hy-primary));
+  --_on: var(--hy-secondary-ink, var(--hy-primary-ink));
 }
 
 :host([data-tone='neutral']) {

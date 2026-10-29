@@ -103,7 +103,7 @@ export const COMPONENT_TOKENS = {
   choice: [
     {
       name: '--hy-choice-checked',
-      default: 'var(--hy-accent)',
+      default: 'var(--hy-primary)',
       description: 'Fill of a checked checkbox, radio or switch.',
     },
     { name: '--hy-checkbox-radius', default: '6px', description: 'Corner radius of the box.' },
@@ -217,14 +217,17 @@ export const SYSTEM_TOKENS: readonly SystemTokenGroup[] = [
     ],
   },
   {
-    title: 'Accent and status',
-    description: 'Each colour role has an ink to put on top of it and a wash for tinted fills.',
+    title: 'Primary, secondary and status',
+    description:
+      'Each colour role has an ink to put on top of it. Secondary is optional: unset, it uses the primary colour.',
     swatch: true,
     tokens: [
-      '--hy-accent',
-      '--hy-accent-hover',
-      '--hy-accent-ink',
-      '--hy-accent-wash',
+      '--hy-primary',
+      '--hy-primary-hover',
+      '--hy-primary-ink',
+      '--hy-primary-wash',
+      '--hy-secondary',
+      '--hy-secondary-ink',
       '--hy-success',
       '--hy-success-wash',
       '--hy-warning',

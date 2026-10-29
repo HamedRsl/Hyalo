@@ -12,7 +12,7 @@ describe('provideHyalo', () => {
     expect(TestBed.inject(HY_CONFIG)).toMatchObject({
       material: 'frosted',
       size: 'md',
-      tone: 'accent',
+      tone: 'primary',
     });
   });
 

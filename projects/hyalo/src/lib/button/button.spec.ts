@@ -27,9 +27,17 @@ describe('HyButton', () => {
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     expect(button.dataset['variant']).toBe('glass');
     expect(button.dataset['size']).toBe('md');
-    expect(button.dataset['tone']).toBe('accent');
+    expect(button.dataset['tone']).toBe('primary');
     expect(button.classList).toContain('hy-glass');
     expect(button.dataset['material']).toBe('frosted');
+  });
+
+  it('takes the secondary tone from config', async () => {
+    TestBed.configureTestingModule({ providers: [provideHyalo({ tone: 'secondary' })] });
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    expect(button.dataset['tone']).toBe('secondary');
   });
 
   it('follows the configured material and goes solid on the low tier', async () => {

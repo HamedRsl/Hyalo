@@ -30,7 +30,7 @@ body {
 }
 
 .docs-prose a:not([hyButton]) {
-  color: var(--hy-accent);
+  color: var(--hy-primary);
 }
 
 .docs-prose :not(pre) > code {

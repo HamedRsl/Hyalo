@@ -60,7 +60,7 @@
   border: 1.5px solid var(--hy-line-strong);
   border-radius: var(--hy-checkbox-radius, 6px);
   background: var(--hy-surface-1);
-  color: var(--hy-accent-ink);
+  color: var(--hy-primary-ink);
 }
 
 .hy-checkbox__mark {
@@ -74,8 +74,8 @@
 
 :host([data-checked]) .hy-checkbox__box,
 :host([data-indeterminate]) .hy-checkbox__box {
-  border-color: var(--hy-choice-checked, var(--hy-accent));
-  background: var(--hy-choice-checked, var(--hy-accent));
+  border-color: var(--hy-choice-checked, var(--hy-primary));
+  background: var(--hy-choice-checked, var(--hy-primary));
 }
 
 :host([data-checked]) .hy-checkbox__mark,
@@ -101,14 +101,14 @@
   inline-size: 0.5rem;
   block-size: 0.5rem;
   border-radius: 50%;
-  background: var(--hy-accent-ink);
+  background: var(--hy-primary-ink);
   scale: 0;
   transition: scale var(--hy-dur-settle) var(--hy-ease-spring);
 }
 
 :host([data-checked]) .hy-radio__circle {
-  border-color: var(--hy-choice-checked, var(--hy-accent));
-  background: var(--hy-choice-checked, var(--hy-accent));
+  border-color: var(--hy-choice-checked, var(--hy-primary));
+  background: var(--hy-choice-checked, var(--hy-primary));
 }
 
 :host([data-checked]) .hy-radio__dot {
@@ -173,7 +173,7 @@
 }
 
 :host([data-checked]) .hy-switch__track {
-  background: var(--hy-choice-checked, var(--hy-accent));
+  background: var(--hy-choice-checked, var(--hy-primary));
 }
 
 :host([data-checked]) .hy-switch__thumb {

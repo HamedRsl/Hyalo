@@ -77,7 +77,7 @@ providers: [
   provideHyalo({
     material: 'frosted', // clear | frosted | tinted | solid
     size: 'md', // sm | md | lg
-    tone: 'accent',
+    tone: 'primary',
   }),
 ];
 ```
@@ -96,10 +96,12 @@ Everything visual is a CSS custom property starting with `--hy-`: colours, surfa
 
 ```css
 :root {
-  --hy-accent: #0b7a75;
+  --hy-primary: #0b7a75;
   --hy-radius-l: 1.25rem;
 }
 ```
+
+`--hy-primary` is the brand colour. A second one is optional: set `--hy-secondary` and `--hy-secondary-ink` and controls with `tone="secondary"` use them. Leave them unset and those controls use the primary colour, so a one-colour theme needs nothing extra. Every bundled palette sets both.
 
 Each component also reads its own tokens, such as `--hy-button-radius`, `--hy-field-bg` or `--hy-toast-width`. They are unset by default and fall back to the system tokens, so you can restyle one component, or one section of a page, without touching the rest:
 

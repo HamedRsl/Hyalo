@@ -1,21 +1,44 @@
 <div class="editor">
   <div class="controls">
     <label class="control">
-      <span class="control__label">Accent</span>
+      <span class="control__label">Primary</span>
       <span class="control__row">
         <input
           type="color"
           class="color"
-          [value]="accent()"
-          (input)="accent.set(value($event))"
+          [value]="primary()"
+          (input)="primary.set(value($event))"
         />
-        <code>{{ accent() }}</code>
+        <code>{{ primary() }}</code>
       </span>
       <span class="control__hint">
-        Contrast {{ ratios().light }}:1 light, {{ ratios().dark }}:1 dark.
-        {{ ratios().ok ? 'Passes AA for text.' : 'Below 4.5:1, links will be hard to read.' }}
+        Contrast {{ primaryRatios().light }}:1 light, {{ primaryRatios().dark }}:1 dark.
+        {{
+          primaryRatios().ok ? 'Passes AA for text.' : 'Below 4.5:1, links will be hard to read.'
+        }}
       </span>
     </label>
+    <div class="control">
+      <hy-switch [(checked)]="useSecondary" description="Off means secondary uses the primary.">
+        Secondary colour
+      </hy-switch>
+      @if (useSecondary()) {
+        <label class="control__row">
+          <input
+            type="color"
+            class="color"
+            aria-label="Secondary colour"
+            [value]="secondary()"
+            (input)="secondary.set(value($event))"
+          />
+          <code>{{ secondary() }}</code>
+        </label>
+        <span class="control__hint">
+          Contrast {{ secondaryRatios().light }}:1 light, {{ secondaryRatios().dark }}:1 dark.
+          {{ secondaryRatios().ok ? 'Passes AA for text.' : 'Below 4.5:1, hard to read as text.' }}
+        </span>
+      }
+    </div>
     <label class="control">
       <span class="control__label">Corner radius</span>
       <input
@@ -78,7 +101,7 @@
       <div class="preview__actions" hyCardFooter>
         <button hyButton>Place order</button>
         <button hyButton variant="glass">Later</button>
-        <button hyButton variant="soft" size="sm">Edit</button>
+        <button hyButton tone="secondary" variant="soft" size="sm">Edit</button>
       </div>
     </hy-card>
   </div>

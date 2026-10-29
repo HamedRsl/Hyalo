@@ -6,7 +6,7 @@
   <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="false">
     {{ data.cancelLabel ?? 'Cancel' }}
   </button>
-  <button hyButton [tone]="data.tone ?? 'accent'" [hyDialogClose]="true">
+  <button hyButton [tone]="data.tone ?? 'primary'" [hyDialogClose]="true">
     {{ data.confirmLabel ?? 'Confirm' }}
   </button>
 </div>

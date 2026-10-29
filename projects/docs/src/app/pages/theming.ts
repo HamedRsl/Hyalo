@@ -39,7 +39,7 @@ export default class ThemingPage {
 
   protected readonly overrideCode = `/* The whole app */
 :root {
-  --hy-accent: light-dark(#0b7a75, #4fd1c5);
+  --hy-primary: light-dark(#0b7a75, #4fd1c5);
   --hy-radius-l: 1.25rem;
 }
 

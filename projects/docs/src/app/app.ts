@@ -63,7 +63,7 @@ export class App {
     { value: 'reduced' as MotionChoice, label: 'Reduced' },
   ];
   /**
-   * Swatches show the light and dark accent of each palette. They are
+   * Swatches show the light and dark primary of each palette. They are
    * written out here because a palette's CSS is not loaded until it is picked.
    */
   protected readonly palettes: readonly {

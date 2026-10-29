@@ -27,10 +27,12 @@
     --hy-ink-3-glass: light-dark(#554739, #b6a79c);
     --hy-line: light-dark(rgb(31 22 16 / 0.12), rgb(246 238 232 / 0.12));
     --hy-line-strong: light-dark(rgb(31 22 16 / 0.24), rgb(246 238 232 / 0.26));
-    --hy-accent: light-dark(#b33b0a, #fb923c);
-    --hy-accent-hover: light-dark(#983209, #fdba74);
-    --hy-accent-ink: light-dark(#ffffff, #1f0f04);
-    --hy-accent-wash: light-dark(rgb(179 59 10 / 0.12), rgb(251 146 60 / 0.16));
+    --hy-primary: light-dark(#b33b0a, #fb923c);
+    --hy-primary-hover: light-dark(#983209, #fdba74);
+    --hy-primary-ink: light-dark(#ffffff, #1f0f04);
+    --hy-primary-wash: light-dark(rgb(179 59 10 / 0.12), rgb(251 146 60 / 0.16));
+    --hy-secondary: light-dark(#365a85, #9dbbe0);
+    --hy-secondary-ink: light-dark(#ffffff, #0b1626);
     --hy-glass-border: light-dark(rgb(31 22 16 / 0.08), rgb(255 255 255 / 0.08));
   }
 

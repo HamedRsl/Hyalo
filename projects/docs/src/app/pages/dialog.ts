@@ -109,7 +109,7 @@ ref = inject(HyDialogRef);`;
     {
       name: 'tone',
       type: 'HyTone',
-      default: "'accent'",
+      default: "'primary'",
       description: 'Use danger for destructive actions.',
     },
   ];

@@ -7,7 +7,7 @@
 }
 .eyebrow {
   margin: 0 0 var(--hy-space-2);
-  color: var(--hy-accent);
+  color: var(--hy-primary);
   font-size: var(--hy-step--1);
   font-weight: 600;
 }

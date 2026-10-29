@@ -3,7 +3,7 @@
  *
  * - `clear`: a light veil, most of the background shows through.
  * - `frosted`: the default glass, blurred and saturated.
- * - `tinted`: frosted glass coloured by the accent.
+ * - `tinted`: frosted glass coloured by the primary colour.
  * - `solid`: opaque. Used automatically when the browser cannot blur, when
  *   the user asks for reduced transparency, and on the low fidelity tier.
  */
@@ -22,8 +22,11 @@ export type HyThickness = 'thin' | 'regular' | 'thick';
 /** Control size. All sizes keep a touch target of at least 32px. */
 export type HySize = 'sm' | 'md' | 'lg';
 
-/** Colour role of a control. */
-export type HyTone = 'accent' | 'neutral' | 'success' | 'warning' | 'danger';
+/**
+ * Colour role of a control. `secondary` uses --hy-secondary when the theme sets
+ * it and falls back to the primary colour when it does not.
+ */
+export type HyTone = 'primary' | 'secondary' | 'neutral' | 'success' | 'warning' | 'danger';
 
 /**
  * How much visual effort the device can afford.

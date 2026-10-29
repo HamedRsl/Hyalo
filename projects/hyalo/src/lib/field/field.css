@@ -47,9 +47,9 @@
 }
 
 .hy-field__box:focus-within {
-  border-color: var(--hy-accent);
+  border-color: var(--hy-primary);
   background: var(--hy-surface-1);
-  box-shadow: 0 0 0 3px var(--hy-accent-wash);
+  box-shadow: 0 0 0 3px var(--hy-primary-wash);
 }
 
 :host([data-invalid]) .hy-field__box {

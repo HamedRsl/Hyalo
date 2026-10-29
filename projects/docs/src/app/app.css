@@ -5,8 +5,8 @@
   z-index: 1000;
   padding: var(--hy-space-2) var(--hy-space-4);
   border-radius: var(--hy-radius-pill);
-  background: var(--hy-accent);
-  color: var(--hy-accent-ink);
+  background: var(--hy-primary);
+  color: var(--hy-primary-ink);
 }
 
 .skip-link:focus {
@@ -89,7 +89,7 @@
 }
 
 .palette-input:focus-visible + .palette-swatch {
-  outline: 2px solid var(--hy-accent);
+  outline: 2px solid var(--hy-primary);
   outline-offset: 5px;
 }
 
@@ -143,8 +143,8 @@
 }
 
 .nav-list a.active {
-  background: var(--hy-accent-wash);
-  color: var(--hy-accent);
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
   font-weight: 560;
 }
 

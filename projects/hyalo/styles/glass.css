@@ -67,8 +67,8 @@
 .hy-glass[data-material='tinted'] {
   --_fill: linear-gradient(
     160deg,
-    color-mix(in srgb, var(--hy-accent) 22%, transparent),
-    color-mix(in srgb, var(--hy-accent) 8%, transparent)
+    color-mix(in srgb, var(--hy-primary) 22%, transparent),
+    color-mix(in srgb, var(--hy-primary) 8%, transparent)
   );
 }
 

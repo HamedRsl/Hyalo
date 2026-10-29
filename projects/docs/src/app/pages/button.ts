@@ -23,7 +23,8 @@ export default class ButtonPage {
 <button hyButton variant="glass">Glass</button>
 <button hyButton variant="soft">Soft</button>
 <button hyButton variant="ghost">Ghost</button>`;
-  protected readonly tonesCode = `<button hyButton size="sm" tone="neutral">Neutral</button>
+  protected readonly tonesCode = `<button hyButton tone="secondary">Secondary</button>
+<button hyButton size="sm" tone="neutral">Neutral</button>
 <button hyButton tone="success">Success</button>
 <button hyButton size="lg" tone="danger" variant="soft">Delete</button>`;
   protected readonly stateCode = `<button hyButton variant="glass" iconOnly aria-label="Close"><hy-icon name="x" /></button>

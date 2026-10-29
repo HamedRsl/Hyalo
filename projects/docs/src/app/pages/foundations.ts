@@ -20,8 +20,8 @@ export default class FoundationsPage {
     '--hy-ink',
     '--hy-ink-2',
     '--hy-ink-3',
-    '--hy-accent',
-    '--hy-accent-wash',
+    '--hy-primary',
+    '--hy-primary-wash',
     '--hy-success',
     '--hy-warning',
     '--hy-danger',
@@ -60,7 +60,7 @@ palette.use(null);          // back to the built-in palette`;
     {
       name: 'tone',
       type: 'HyTone',
-      default: "'accent'",
+      default: "'primary'",
       description: 'Default colour role for buttons.',
     },
     {

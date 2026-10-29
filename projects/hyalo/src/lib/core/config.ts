@@ -35,7 +35,7 @@ export interface HyConfig {
 const DEFAULTS: HyConfig = {
   material: 'frosted',
   size: 'md',
-  tone: 'accent',
+  tone: 'primary',
 };
 
 /** Resolved Hyalo configuration. Use {@link provideHyalo} to change it. */

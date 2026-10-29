@@ -47,7 +47,7 @@
 input[type='range'] {
   inline-size: 100%;
   block-size: 1.5rem;
-  accent-color: var(--hy-accent);
+  accent-color: var(--hy-primary);
   cursor: pointer;
 }
 .preview {

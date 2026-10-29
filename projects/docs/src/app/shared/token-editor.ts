@@ -12,7 +12,8 @@ type Density = 'compact' | 'regular' | 'comfortable';
 type ButtonShape = 'pill' | 'rounded' | 'square';
 
 const DEFAULTS = {
-  accent: '#3a4cd0',
+  primary: '#3a4cd0',
+  secondary: '#6d3fc4',
   radius: 1,
   blur: 25,
   density: 'regular' as Density,
@@ -59,6 +60,22 @@ function contrast(a: string, b: string): number {
   return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
 }
 
+/** The picked colour for light mode, and a lighter one for dark. */
+function tones(light: string): { light: string; dark: string } {
+  return { light, dark: mix(light, '#ffffff', 0.35) };
+}
+
+/** Text contrast of each tone against its page background. */
+function ratios({ light, dark }: { light: string; dark: string }): {
+  light: string;
+  dark: string;
+  ok: boolean;
+} {
+  const l = contrast(light, LIGHT_BG);
+  const d = contrast(dark, DARK_BG);
+  return { light: l.toFixed(1), dark: d.toFixed(1), ok: l >= 4.5 && d >= 4.5 };
+}
+
 /** White or near-black, whichever reads better on the given fill. */
 function inkFor(fill: string): string {
   return contrast(fill, '#ffffff') >= contrast(fill, DARK_BG) ? '#ffffff' : DARK_BG;
@@ -76,7 +93,10 @@ function inkFor(fill: string): string {
   styleUrl: './token-editor.css',
 })
 export class DocsTokenEditor {
-  protected readonly accent = signal(DEFAULTS.accent);
+  protected readonly primary = signal(DEFAULTS.primary);
+  /** Secondary is optional, like in the tokens: off means it follows primary. */
+  protected readonly useSecondary = signal(false);
+  protected readonly secondary = signal(DEFAULTS.secondary);
   protected readonly radius = signal(DEFAULTS.radius);
   protected readonly blur = signal(DEFAULTS.blur);
   protected readonly density = signal<Density>(DEFAULTS.density);
@@ -94,34 +114,33 @@ export class DocsTokenEditor {
     { value: 'square' as ButtonShape, label: 'Square' },
   ];
 
-  /** The accent for each mode: the picked colour, and a lighter one for dark. */
-  private readonly accents = computed(() => {
-    const light = this.accent();
-    return { light, dark: mix(light, '#ffffff', 0.35) };
-  });
-
-  protected readonly ratios = computed(() => {
-    const { light, dark } = this.accents();
-    const l = contrast(light, LIGHT_BG);
-    const d = contrast(dark, DARK_BG);
-    return { light: l.toFixed(1), dark: d.toFixed(1), ok: l >= 4.5 && d >= 4.5 };
-  });
+  private readonly primaryTones = computed(() => tones(this.primary()));
+  private readonly secondaryTones = computed(() => tones(this.secondary()));
+  protected readonly primaryRatios = computed(() => ratios(this.primaryTones()));
+  protected readonly secondaryRatios = computed(() => ratios(this.secondaryTones()));
 
   /** Only the tokens that differ from the defaults. */
   private readonly overrides = computed(() => {
     const out: [string, string][] = [];
-    if (this.accent().toLowerCase() !== DEFAULTS.accent) {
-      const { light: l, dark: d } = this.accents();
+    if (this.primaryChanged()) {
+      const { light: l, dark: d } = this.primaryTones();
       const [lr, lg, lb] = rgb(l);
       const [dr, dg, db] = rgb(d);
       out.push(
-        ['--hy-accent', `light-dark(${l}, ${d})`],
-        ['--hy-accent-hover', `light-dark(${mix(l, '#000000', 0.14)}, ${mix(d, '#ffffff', 0.2)})`],
-        ['--hy-accent-ink', `light-dark(${inkFor(l)}, ${inkFor(d)})`],
+        ['--hy-primary', `light-dark(${l}, ${d})`],
+        ['--hy-primary-hover', `light-dark(${mix(l, '#000000', 0.14)}, ${mix(d, '#ffffff', 0.2)})`],
+        ['--hy-primary-ink', `light-dark(${inkFor(l)}, ${inkFor(d)})`],
         [
-          '--hy-accent-wash',
+          '--hy-primary-wash',
           `light-dark(rgb(${lr} ${lg} ${lb} / 0.12), rgb(${dr} ${dg} ${db} / 0.16))`,
         ],
+      );
+    }
+    if (this.useSecondary()) {
+      const { light: l, dark: d } = this.secondaryTones();
+      out.push(
+        ['--hy-secondary', `light-dark(${l}, ${d})`],
+        ['--hy-secondary-ink', `light-dark(${inkFor(l)}, ${inkFor(d)})`],
       );
     }
     const r = this.radius();
@@ -156,24 +175,30 @@ export class DocsTokenEditor {
 
   /**
    * The preview also needs the focus ring, which tokens.css builds from the
-   * accent on :root and so would keep the old colour inside the preview.
+   * primary colour on :root and so would keep the old one inside the preview.
    */
   protected readonly previewStyle = computed(() => {
     const lines = this.overrides().map(([k, v]) => `${k}: ${v};`);
-    if (this.accent().toLowerCase() !== DEFAULTS.accent) {
-      lines.push('--hy-focus-ring: 0 0 0 2px var(--hy-bg), 0 0 0 4px var(--hy-accent);');
+    if (this.primaryChanged()) {
+      lines.push('--hy-focus-ring: 0 0 0 2px var(--hy-bg), 0 0 0 4px var(--hy-primary);');
     }
     return lines.join(' ');
   });
 
   private copyTimer?: ReturnType<typeof setTimeout>;
 
+  private primaryChanged(): boolean {
+    return this.primary().toLowerCase() !== DEFAULTS.primary;
+  }
+
   protected value(event: Event): string {
     return (event.target as HTMLInputElement).value;
   }
 
   protected reset(): void {
-    this.accent.set(DEFAULTS.accent);
+    this.primary.set(DEFAULTS.primary);
+    this.useSecondary.set(false);
+    this.secondary.set(DEFAULTS.secondary);
     this.radius.set(DEFAULTS.radius);
     this.blur.set(DEFAULTS.blur);
     this.density.set(DEFAULTS.density);
