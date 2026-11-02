@@ -71,7 +71,7 @@ export class HySpring {
     if (options.velocity !== undefined) this.velocity = options.velocity;
     this.onRest = options.onRest ?? null;
     if (this.frame) return;
-    this.last = performance.now();
+    this.last = -1;
     this.frame = requestAnimationFrame(this.tick);
   }
 
@@ -91,10 +91,12 @@ export class HySpring {
   }
 
   private readonly tick = (now: number): void => {
-    // A long frame (a background tab, a busy main thread) is capped, so the
-    // spring slows down instead of jumping. The first frame's timestamp can
-    // be older than the call to to(), which would make dt negative.
-    const dt = Math.max(0, Math.min((now - this.last) / 1000, 1 / 15));
+    // Time comes only from frame timestamps. Their clock can differ from
+    // performance.now() (jsdom, some browsers), so mixing the two can stall
+    // the spring. The first frame counts as one 60 Hz frame. A long frame
+    // (a background tab, a busy main thread) is capped, so the spring slows
+    // down instead of jumping.
+    const dt = this.last < 0 ? 1 / 60 : Math.max(0, Math.min((now - this.last) / 1000, 1 / 15));
     this.last = Math.max(now, this.last);
     const stiffness = ((2 * Math.PI) / this.config.response) ** 2;
     const friction = (4 * Math.PI * this.config.damping) / this.config.response;

@@ -36,24 +36,58 @@ describe('HyVelocityTracker', () => {
   });
 });
 
+/** Drives requestAnimationFrame by hand, with a clock of the test's choosing. */
+function manualFrames() {
+  const queue: FrameRequestCallback[] = [];
+  vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => queue.push(cb));
+  vi.stubGlobal('cancelAnimationFrame', () => queue.splice(0));
+  return {
+    pending: () => queue.length,
+    /** Runs frames 1000/60 ms apart until none are left or `max` is reached. */
+    run(start: number, max = 600): number {
+      let n = 0;
+      for (let t = start; queue.length && n < max; t += 1000 / 60, n++) {
+        queue.splice(0).forEach((cb) => cb(t));
+      }
+      return n;
+    },
+  };
+}
+
 describe('HySpring', () => {
-  it('settles on the target and reports rest', async () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('settles on the target and reports rest', () => {
+    const frames = manualFrames();
     const values: number[] = [];
+    const onRest = vi.fn();
     const spring = new HySpring(0, (v) => values.push(v));
-    await new Promise<void>((resolve) =>
-      spring.to(100, { response: 0.05, onRest: () => resolve() }),
-    );
+    spring.to(100, { response: 0.05, onRest });
+    frames.run(performance.now());
+    expect(onRest).toHaveBeenCalledOnce();
     expect(spring.value).toBe(100);
     expect(spring.running).toBe(false);
     expect(Math.max(...values)).toBeLessThanOrEqual(100.1);
   });
 
+  it('still moves when frame timestamps lag behind performance.now()', () => {
+    const frames = manualFrames();
+    const onRest = vi.fn();
+    const spring = new HySpring(0, () => undefined);
+    spring.to(100, { response: 0.05, onRest });
+    const used = frames.run(performance.now() - 10_000);
+    expect(onRest).toHaveBeenCalledOnce();
+    expect(used).toBeLessThan(60);
+  });
+
   it('stops where it is and drops the pending callback', () => {
+    const frames = manualFrames();
     const onRest = vi.fn();
     const spring = new HySpring(0, () => undefined);
     spring.to(100, { onRest });
     spring.stop();
     expect(spring.running).toBe(false);
+    expect(frames.pending()).toBe(0);
     expect(onRest).not.toHaveBeenCalled();
   });
 });
