@@ -27,6 +27,16 @@ import { HY_CARD } from '@hyalo/angular/card';
 
 `@hyalo/angular` itself holds the shared foundations, such as `provideHyalo()`, `HyFidelity` and `HyMotion`.
 
+Version 0.2 adds carousel, gallery and lightbox, image comparison, marquee, split text,
+refraction, scene hotspots, mesh backgrounds, timeline, stepper, badges, avatars and
+skeletons. Each has its own package entry point, such as `@hyalo/angular/carousel`.
+Button groups, links, dividers, aspect-ratio frames, chapter navigation and scroll-to-top
+controls are included too. The existing segmented control provides toggle groups.
+
+Refraction uses a supplied same-origin or CORS-enabled image and one shared WebGL
+context on high fidelity. CSS glass remains available on other tiers or when WebGL
+cannot run. The gallery uses the existing dialog overlay styles.
+
 Configuration, theming, RTL, motion and the full component list are in the [repository README](https://github.com/HamedRsl/Hyalo#readme).
 
 MIT licensed.

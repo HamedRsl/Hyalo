@@ -8,7 +8,7 @@ Liquid glass components for Angular.
 
 Hyalo is a small, open source UI kit built on Angular Aria and the Angular CDK. It is signal based, zoneless, safe to render on the server, and works with a keyboard and a screen reader in both reading directions. The glass is a material you choose per surface, and it steps down by itself on devices or settings where blur would hurt.
 
-Status: 0.1, phase 1 of the roadmap. The API can still change before 1.0.
+Status: 0.2, phase 2 of the roadmap. The API can still change before 1.0.
 
 ## Install
 
@@ -89,6 +89,32 @@ Form controls work with Signal Forms through `[formField]`, and with plain `[(va
 | `hyConnectedPositions`, `hyDropdownPositions` for CDK overlays | `@hyalo/angular/overlay`     |
 
 Run the docs site locally for live examples and the full API of each one (see [Development](#development)).
+
+Phase 2 adds the showcase and marketing collection:
+
+| What you get                                   | Import from                    |
+| ---------------------------------------------- | ------------------------------ |
+| `HY_CAROUSEL` (`HyCarousel`, `HySlide`)        | `@hyalo/angular/carousel`      |
+| `HyGallery`, `HyLightbox` service              | `@hyalo/angular/lightbox`      |
+| `HyImageCompare`                               | `@hyalo/angular/image-compare` |
+| `HY_MARQUEE` (`HyMarquee`, `HyMarqueeItem`)    | `@hyalo/angular/marquee`       |
+| `HySplitText`                                  | `@hyalo/angular/split-text`    |
+| `HyRefraction`                                 | `@hyalo/angular/refraction`    |
+| `HyHotspot`                                    | `@hyalo/angular/hotspot`       |
+| `HyMesh`                                       | `@hyalo/angular/mesh`          |
+| `HY_TIMELINE` (`HyTimeline`, `HyTimelineItem`) | `@hyalo/angular/timeline`      |
+| `HY_STEPPER` (`HyStepper`, `HyStep`)           | `@hyalo/angular/stepper`       |
+| `HyBadge`, selectable `HyChip`                 | `@hyalo/angular/badge`         |
+| `HY_AVATAR` (`HyAvatar`, `HyAvatarGroup`)      | `@hyalo/angular/avatar`        |
+| `HySkeleton`                                   | `@hyalo/angular/skeleton`      |
+| `HyButtonGroup`                                | `@hyalo/angular/button-group`  |
+| `HyLink` (`a[hyLink]`)                         | `@hyalo/angular/link`          |
+| `HyDivider`                                    | `@hyalo/angular/divider`       |
+| `HyAspectRatio`                                | `@hyalo/angular/aspect-ratio`  |
+| `HyChapterNav`                                 | `@hyalo/angular/chapter-nav`   |
+| `HyScrollToTop`                                | `@hyalo/angular/scroll-to-top` |
+
+Each addition has a lazy docs page under `/components/<entry-point>`. See [Phase 2 implementation notes](docs/phase-2.md) for behavior and integration details.
 
 ## Configuration
 

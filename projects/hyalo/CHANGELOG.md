@@ -2,7 +2,39 @@
 
 All notable changes to `@hyalo/angular` are listed here. The format follows [Keep a Changelog](https://keepachangelog.com), and versions follow [Semantic Versioning](https://semver.org). Until 1.0, a minor version can include breaking changes.
 
-## 0.1.0 (unreleased)
+## 0.2.0 (unreleased)
+
+### Showcase and marketing
+
+- Hotspots can open anchored, solid detail panels with Escape dismissal and focus
+  return, and support labelled or compact pin modes.
+- Carousel hides its native scrollbar by default, offers dot/counter pagination,
+  slide/fade modes and optional loop navigation. Scroll position updates use cached
+  dimensions and one animation-frame callback instead of scanning every slide.
+- Skeletons offer shimmer, pulse and static modes.
+- Docs code panels have HTML, TypeScript and conditional CSS tabs, keyboard navigation,
+  copy feedback without highlighting the preview card. Their sources are generated
+  from live demos; import snippets have their own copy buttons.
+- Added selectable `HyChip` controls, custom carousel navigation templates, icon and
+  hidden button modes, three navigation positions, and passive catalog previews.
+- Fixed loop-mode scroll feedback, first-frame popover placement, accordion padding
+  jumps and mesh animation visibility. Mesh pause/resume retains its animation position.
+- Fixed chapter links resolving against the app base URL instead of the current route;
+  selection now follows clicks and fragment history without leaving the page.
+
+- Added independently importable carousel, lightbox/gallery, image compare, marquee,
+  split-text reveal, refraction, scene hotspot, mesh background, timeline, stepper,
+  badge/chip, avatar/group and skeleton components.
+- Added button group, link, divider, aspect-ratio frame, chapter navigation and
+  scroll-to-top helpers. Toggle groups use the existing segmented control.
+- Carousel supports native touch inertia, mouse drag velocity, keyboard navigation
+  and RTL. Lightbox reuses CDK dialog focus trapping, dismissal and focus restore.
+- Stepper gates incomplete steps, retains form DOM and focuses the selected header.
+- Refraction shares one WebGL context across image-backed surfaces on high fidelity,
+  with CSS glass fallbacks. Decorative motion follows fidelity and reduced motion.
+- Added 19 lazy docs pages with live demos, API tables and accessibility notes.
+
+## 0.1.0
 
 The first release.
 
