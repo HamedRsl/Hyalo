@@ -42,7 +42,7 @@
 .hy-accordion__chevron {
   flex: none;
   color: var(--hy-ink-3);
-  transition: rotate var(--hy-dur-settle) var(--hy-ease-out);
+  transition: rotate var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 :host([data-open]) .hy-accordion__chevron {
@@ -52,7 +52,7 @@
 .hy-accordion__body {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--hy-dur-settle) var(--hy-ease-out);
+  transition: grid-template-rows var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 :host([data-open]) .hy-accordion__body {
@@ -65,14 +65,15 @@
   color: var(--hy-ink-2);
 }
 
-:host([data-open]) .hy-accordion__content {
+.hy-accordion__inner {
+  display: flow-root;
   padding-block-end: var(--hy-space-5);
 }
 
 /* Closed panels stay in the DOM for search engines, but out of the way. */
 .hy-accordion__panel[inert] .hy-accordion__content {
   visibility: hidden;
-  transition: visibility 0s linear var(--hy-dur-settle);
+  transition: visibility 0s linear var(--hy-dur-quick);
 }
 
 @media print {
