@@ -1,0 +1,20 @@
+<div class="window" role="group" [attr.aria-label]="label()">
+  <div class="track">
+    <div class="group">
+      @for (item of items(); track item) {
+        <ng-container [ngTemplateOutlet]="item.template" />
+      }
+    </div>
+    <div class="group copy" aria-hidden="true" inert>
+      @for (item of items(); track item) {
+        <ng-container [ngTemplateOutlet]="item.template" />
+      }
+    </div>
+  </div>
+</div>
+@if (motionEnabled()) {
+  <button type="button" (click)="paused.set(!paused())" [attr.aria-pressed]="paused()">
+    {{ paused() ? playLabel() : pauseLabel() }}
+  </button>
+}
+<ng-content />

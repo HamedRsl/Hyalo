@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-bg);
+}
+:host::before,
+:host::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -30%;
+  pointer-events: none;
+}
+:host::before {
+  background:
+    radial-gradient(
+      ellipse at 20% 30%,
+      var(--hy-mesh-a, color-mix(in srgb, var(--hy-primary) 36%, transparent)),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 80% 70%,
+      var(--hy-mesh-b, color-mix(in srgb, var(--hy-success) 30%, transparent)),
+      transparent 55%
+    );
+  animation: hy-ambient 10s linear infinite alternate;
+  animation-play-state: paused;
+}
+:host::after {
+  background: radial-gradient(
+    ellipse at 70% 20%,
+    var(--hy-mesh-c, color-mix(in srgb, var(--hy-warning) 26%, transparent)),
+    transparent 50%
+  );
+  animation: hy-ambient-counter 12s linear infinite alternate;
+  animation-play-state: paused;
+}
+:host([data-animate='true'])::before,
+:host([data-animate='true'])::after {
+  animation-play-state: running;
+}
+:host([data-enabled='false'])::before,
+:host([data-enabled='false'])::after {
+  animation: none;
+}
+.content {
+  position: relative;
+  padding: var(--hy-mesh-padding, var(--hy-space-9));
+}
+button {
+  margin: var(--hy-space-3);
+  min-block-size: 2rem;
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  font: inherit;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+@keyframes hy-ambient {
+  to {
+    transform: translate(18%, 12%) rotate(14deg);
+  }
+}
+@keyframes hy-ambient-counter {
+  to {
+    transform: translate(-16%, 14%) rotate(-12deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host::before,
+  :host::after {
+    animation: none !important;
+  }
+}

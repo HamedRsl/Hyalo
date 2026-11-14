@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  flex: 0 0 100%;
+  min-inline-size: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+:host([data-mode='fade']) {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--hy-carousel-duration) var(--hy-ease-out);
+}
+:host([data-mode='fade'][data-active='true']) {
+  opacity: 1;
+  pointer-events: auto;
+}

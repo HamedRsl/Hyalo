@@ -1,0 +1,21 @@
+<div class="frame" [style.aspect-ratio]="ratio()">
+  <img [src]="after()" [alt]="afterAlt()" draggable="false" />
+  <img
+    class="before"
+    [src]="before()"
+    [alt]="beforeAlt()"
+    [style.clip-path]="clip()"
+    draggable="false"
+  />
+  <span class="handle" aria-hidden="true" [style.left.%]="position()">‖</span>
+</div>
+<label [for]="id">{{ label() }}: {{ position() }}%</label>
+<input
+  [id]="id"
+  type="range"
+  min="0"
+  max="100"
+  step="1"
+  [value]="position()"
+  (input)="change($event)"
+/>

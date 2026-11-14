@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  container-type: inline-size;
+}
+.frame {
+  position: relative;
+}
+.previous-icon {
+  rotate: 180deg;
+}
+.controls--custom {
+  flex-wrap: wrap;
+}
+.controls--custom .dots {
+  flex-basis: 100%;
+  order: 2;
+}
+.controls--no-buttons {
+  justify-content: center;
+}
+:host([data-navigation-position='inside-bottom']) .dots,
+:host([data-navigation-position='sides']) .dots {
+  background: var(--hy-surface-1);
+  border-radius: var(--hy-radius-pill);
+  padding-inline: var(--hy-space-2);
+}
+:host([data-navigation-position='inside-bottom']) .controls {
+  position: absolute;
+  inset-inline: var(--hy-space-4);
+  inset-block-end: var(--hy-space-4);
+  margin: 0;
+}
+:host([data-navigation-position='sides']) .controls {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+}
+:host([data-navigation-position='sides']) .controls > button {
+  position: absolute;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+:host([data-navigation-position='sides']) .controls > .nav-prev {
+  inset-inline-start: var(--hy-space-4);
+}
+:host([data-navigation-position='sides']) .controls > .nav-next {
+  inset-inline-end: var(--hy-space-4);
+}
+:host([data-navigation-position='sides']) .dots,
+:host([data-navigation-position='sides']) .controls > span:not(.sr-only) {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: var(--hy-space-3);
+  justify-content: center;
+  text-align: center;
+  pointer-events: auto;
+}
+.viewport {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  border-radius: var(--hy-radius-l);
+  touch-action: pan-x pan-y;
+}
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+:host([data-scrollbar='true']) .viewport {
+  scrollbar-width: thin;
+}
+:host([data-scrollbar='true']) .viewport::-webkit-scrollbar {
+  display: initial;
+}
+:host([data-mode='fade']) .viewport {
+  display: grid;
+  overflow: clip;
+  scroll-snap-type: none;
+  touch-action: pan-y;
+}
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dots button {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: var(--hy-radius-pill);
+  cursor: pointer;
+}
+.dots span {
+  inline-size: 0.4rem;
+  block-size: 0.4rem;
+  border-radius: var(--hy-radius-pill);
+  background: var(--hy-ink-3);
+  transition:
+    transform var(--hy-carousel-duration) var(--hy-ease-out),
+    background-color var(--hy-carousel-duration) ease;
+}
+.dots button[aria-current] span {
+  background: var(--hy-primary);
+  transform: scaleX(2.5);
+}
+.dots button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -2px;
+}
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.viewport:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 4px;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hy-space-3);
+  margin-block-start: var(--hy-space-3);
+  color: var(--hy-ink-2);
+}
+@container (max-width:25rem) {
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .dots,
+  .controls > span:not(.sr-only) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+  .controls > button:first-child {
+    justify-self: start;
+  }
+  .controls > button:last-child {
+    justify-self: end;
+  }
+}

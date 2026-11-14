@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  border-radius: var(--hy-radius-l);
+}
+canvas,
+.fallback {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+.fallback {
+  object-fit: cover;
+  opacity: var(--hy-refraction-opacity, 0.16);
+}
+canvas {
+  opacity: var(--hy-refraction-opacity, 0.16);
+}
+:host(:has(canvas[data-rendered])) .fallback {
+  opacity: 0;
+}
+.content {
+  padding: var(--hy-refraction-padding, var(--hy-space-9));
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  canvas,
+  .fallback {
+    display: none;
+  }
+}

@@ -1,0 +1,5 @@
+@if (src()) {
+  <img class="fallback" [src]="src()" alt="" aria-hidden="true" />
+}
+<canvas #canvas aria-hidden="true"></canvas>
+<div class="content"><ng-content /></div>

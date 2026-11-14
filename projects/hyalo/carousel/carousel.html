@@ -1,0 +1,86 @@
+<div class="frame">
+  <div
+    #viewport
+    class="viewport"
+    tabindex="0"
+    role="group"
+    [attr.aria-label]="label()"
+    (scroll)="onScroll()"
+    (scrollend)="onScrollEnd()"
+    (keydown)="onKey($event)"
+    (pointerdown)="pointerDown($event)"
+    (pointermove)="pointerMove($event)"
+    (pointerup)="pointerUp($event)"
+    (pointercancel)="pointerCancel()"
+    (dragstart)="preventNativeDrag($event)"
+  >
+    <ng-content select="hy-slide" />
+  </div>
+  <div
+    class="controls"
+    [class.controls--custom]="!!customNavigation()"
+    [class.controls--no-buttons]="navigation() === 'none'"
+  >
+    @if (navigation() !== 'none') {
+      @if (customNavigation(); as custom) {
+        <ng-container
+          [ngTemplateOutlet]="custom.template"
+          [ngTemplateOutletContext]="navigationContext"
+        />
+      } @else {
+        <button
+          class="nav-prev"
+          hyButton
+          type="button"
+          [variant]="navPosition() === 'below' ? 'glass' : 'solid'"
+          [iconOnly]="navigation() === 'icons'"
+          [attr.aria-label]="previousLabel()"
+          [disabled]="!slides().length || (!loop() && current() === 0)"
+          (click)="goTo(current() - 1)"
+        >
+          @if (navigation() === 'icons') {
+            <hy-icon class="previous-icon" name="chevron-end" />
+          } @else {
+            {{ previousLabel() }}
+          }
+        </button>
+      }
+    }
+    @if (pagination() === 'dots') {
+      <div class="dots" role="group" [attr.aria-label]="paginationLabel()">
+        @for (slide of slides(); track slide; let i = $index) {
+          <button
+            type="button"
+            [attr.aria-label]="slide.label()"
+            [attr.aria-current]="current() === i ? 'true' : null"
+            (click)="goTo(i)"
+          >
+            <span></span>
+          </button>
+        }
+      </div>
+    }
+    <span [class.sr-only]="pagination() !== 'counter'" aria-live="polite" aria-atomic="true"
+      >{{ slides().length ? current() + 1 : 0 }} / {{ slides().length }}</span
+    >
+    @if (navigation() !== 'none' && !customNavigation()) {
+      <button
+        class="nav-next"
+        hyButton
+        type="button"
+        [variant]="navPosition() === 'below' ? 'glass' : 'solid'"
+        [iconOnly]="navigation() === 'icons'"
+        [attr.aria-label]="nextLabel()"
+        [disabled]="!slides().length || (!loop() && current() >= slides().length - 1)"
+        (click)="goTo(current() + 1)"
+      >
+        @if (navigation() === 'icons') {
+          <hy-icon name="chevron-end" />
+        } @else {
+          {{ nextLabel() }}
+        }
+      </button>
+    }
+  </div>
+  <ng-content select="ng-template[hyCarouselNavigation]" />
+</div>

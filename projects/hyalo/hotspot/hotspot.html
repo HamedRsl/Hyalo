@@ -1,0 +1,32 @@
+@if (description()) {
+  <button
+    #popover="hyPopover"
+    type="button"
+    [disabled]="disabled()"
+    [attr.aria-label]="label()"
+    [hyPopover]="details"
+    [popoverLabel]="label()"
+    popoverMaterial="solid"
+    [popoverPlacement]="placement()"
+    [(popoverOpen)]="open"
+    (click)="activated.emit()"
+  >
+    <span class="dot" aria-hidden="true"></span><span class="label">{{ label() }}</span>
+  </button>
+  <ng-template #details>
+    <div class="details">
+      <strong>{{ label() }}</strong>
+      <p>{{ description() }}</p>
+      <button class="close" type="button" (click)="popover.close()">{{ closeLabel() }}</button>
+    </div>
+  </ng-template>
+} @else {
+  <button
+    type="button"
+    [disabled]="disabled()"
+    [attr.aria-label]="label()"
+    (click)="activated.emit()"
+  >
+    <span class="dot" aria-hidden="true"></span><span class="label">{{ label() }}</span>
+  </button>
+}

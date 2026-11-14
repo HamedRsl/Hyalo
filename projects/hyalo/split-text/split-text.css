@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  position: relative;
+}
+.accessible {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.measure {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: pre-wrap;
+}
+.line {
+  display: block;
+  overflow: clip;
+}
+.line > span {
+  display: block;
+  transition:
+    transform var(--hy-dur-scene) var(--hy-ease-out),
+    opacity var(--hy-dur-scene) var(--hy-ease-out);
+}
+:host([data-shown='false']) .line > span {
+  transform: translateY(100%);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .line > span {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none;
+  }
+}
