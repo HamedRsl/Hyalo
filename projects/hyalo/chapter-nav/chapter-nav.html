@@ -1,4 +1,5 @@
 <nav [attr.aria-label]="label()">
+  <span class="heading" aria-hidden="true">{{ label() }}</span>
   <span
     class="thread"
     aria-hidden="true"
@@ -9,8 +10,8 @@
       <li>
         <a
           [href]="chapter.href"
-          (click)="select($event, chapter.id)"
-          [attr.aria-current]="current() === chapter.id ? 'location' : null"
+          [attr.aria-current]="active() === chapter.id ? 'location' : null"
+          (click)="onLinkClick($event, chapter.id)"
           ><span aria-hidden="true">●</span>{{ chapter.label }}</a
         >
       </li>

@@ -1,14 +1,30 @@
 :host {
   display: block;
+  align-self: start;
+  min-inline-size: 0;
+}
+:host([data-sticky='true']) {
+  position: sticky;
+  inset-block-start: var(--hy-chapter-sticky-top, 6rem);
+  z-index: 1;
 }
 nav {
   position: relative;
-  border-inline-start: 1px solid var(--hy-line);
+  padding: var(--hy-space-3);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+}
+.heading {
+  display: block;
+  padding: var(--hy-space-2) var(--hy-space-3);
+  font-size: var(--hy-step--1);
+  color: var(--hy-ink-3);
 }
 .thread {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: -1px;
+  inset-block: var(--hy-space-4);
+  inset-inline-start: 0;
   inline-size: 2px;
   background: var(--hy-primary);
   transform-origin: top;
@@ -17,20 +33,44 @@ ol {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  gap: var(--hy-space-1);
 }
 a {
   display: flex;
-  gap: var(--hy-space-3);
   align-items: center;
-  padding: var(--hy-space-3);
+  gap: var(--hy-space-3);
+  min-block-size: 2.75rem;
+  padding: var(--hy-space-2) var(--hy-space-3);
+  border-radius: var(--hy-radius-s);
   color: var(--hy-ink-2);
   text-decoration: none;
+  font-size: var(--hy-step--1);
+  font-weight: 600;
+  transition:
+    background-color var(--hy-dur-quick) ease,
+    color var(--hy-dur-quick) ease;
+}
+a > span {
+  font-size: 0.5rem;
+  opacity: 0.4;
 }
 a[aria-current] {
+  background: var(--hy-primary-wash);
   color: var(--hy-primary);
-  font-weight: 600;
+}
+a[aria-current] > span {
+  opacity: 1;
 }
 a:focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    background: var(--hy-surface-3);
+  }
+  a[aria-current]:hover {
+    background: var(--hy-primary-wash);
+  }
 }
