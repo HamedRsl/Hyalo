@@ -2,7 +2,7 @@
   margin: var(--hy-space-6) 0;
   border: 1px solid var(--hy-line);
   border-radius: var(--hy-radius-l);
-  overflow: hidden;
+  overflow: clip;
   background: var(--hy-surface-1);
   transition: border-color var(--hy-dur-quick) ease;
 }

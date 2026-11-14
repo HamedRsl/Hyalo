@@ -71,8 +71,10 @@ own secondary entry point and has a corresponding lazy documentation route.
 - Button groups collect native actions. Mutually exclusive toggle groups use the
   existing `HySegmented` entry point.
 - Links, dividers and aspect-ratio frames retain native link/separator semantics.
-- Chapter navigation uses native fragment links, current-section state and a thread
-  indicating chapter position. Target IDs must be unique.
+- Chapter navigation explicitly scrolls and focuses targets, preserves route and history,
+  and keeps selection stable during smooth scrolling. Pass `scrollRoot` for a reading
+  pane, `offset` for header clearance, and `sticky` with `stickyTop` to pin the links.
+  `scrollBehavior` defaults to smooth and respects reduced motion. Target IDs must be unique.
 - Scroll-to-top returns focus to a heading or configured target and follows reduced
   motion when scrolling.
 

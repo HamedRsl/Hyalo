@@ -6,6 +6,9 @@ All notable changes to `@hyalo/angular` are listed here. The format follows [Kee
 
 ### Showcase and marketing
 
+- Rebuilt chapter navigation with explicit smooth scrolling, nested reading panes,
+  stable selection, history and focus handling, and optional sticky links.
+
 - Hotspots can open anchored, solid detail panels with Escape dismissal and focus
   return, and support labelled or compact pin modes.
 - Carousel hides its native scrollbar by default, offers dot/counter pagination,

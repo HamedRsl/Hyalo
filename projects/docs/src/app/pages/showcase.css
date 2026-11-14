@@ -126,3 +126,54 @@ textarea:focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 2px;
 }
+
+.chapter-layout {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(0, 3fr);
+  gap: var(--hy-space-4);
+}
+.chapter-viewport {
+  block-size: 22rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  padding: var(--hy-space-4);
+}
+.chapter-viewport section {
+  min-block-size: 22rem;
+  margin-block: 0 var(--hy-space-4);
+  scroll-margin-block-start: 1rem;
+}
+.chapter-viewport:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+
+.chapter-viewport section {
+  align-content: start;
+  gap: var(--hy-space-4);
+  background: var(--hy-surface-1);
+}
+.chapter-viewport h3 {
+  margin: 0;
+  font-size: var(--hy-step-3);
+}
+.chapter-viewport p {
+  margin: 0;
+  line-height: var(--hy-leading);
+  color: var(--hy-ink-2);
+}
+.chapter-kicker {
+  font-size: var(--hy-step--1);
+  color: var(--hy-primary);
+  letter-spacing: 0.04em;
+}
+@media (max-width: 40rem) {
+  .chapter-layout {
+    grid-template-columns: 1fr;
+  }
+  .chapter-viewport {
+    block-size: 20rem;
+  }
+}
