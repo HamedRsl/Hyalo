@@ -1,0 +1,39 @@
+<docs-page heading="3D hotspot" lead="A real button anchored to a projected point in a scene.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-toolbar">
+      <span>Hotspot style</span
+      ><hy-segmented label="Hotspot style" [options]="modes" [(value)]="mode" size="sm" />
+    </div>
+    <div class="scene">
+      <img class="showcase" src="showcase-steel.svg" alt="Steel watch with a blue dial" />
+      <hy-hotspot
+        label="Sapphire crystal"
+        [position]="{ x: 50, y: 42 }"
+        [mode]="mode() ?? 'label'"
+        description="Scratch-resistant sapphire protects the hand-finished blue dial. Each crystal is shaped and polished to meet the steel case."
+        [(open)]="hotspotOpen"
+      />
+    </div>
+    <p class="demo-hint">
+      Select the crystal to inspect it. Press Escape or click outside to close.
+    </p>
+  </docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyHotspot &#125; from '@hyalo/angular/hotspot';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Use a positioned scene wrapper. Project world-space coordinates in your renderer and supply
+    screen percentages; mirror x in an RTL scene when your renderer uses physical left coordinates.
+    Set visible to false for occluded points so they leave the tab order. Enter and Space activate
+    the native button. Details use the existing lazy popover overlay and stay visible beside the
+    trigger. When using the core stylesheet, include <code>styles/overlays/popover.css</code> for
+    the detail panel.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

@@ -1,0 +1,33 @@
+<docs-page heading="Chapter navigation" lead="Native section links with a current-section thread.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-chapter-nav [chapters]="chapters" />
+    <section id="chapter-material" class="demo-panel">
+      <h3>Material</h3>
+      <p>Steel, sapphire and carefully finished details.</p>
+    </section>
+    <section id="chapter-craft" class="demo-panel">
+      <h3>Craft</h3>
+      <p>Every edge considered.</p>
+    </section>
+    <section id="chapter-care" class="demo-panel">
+      <h3>Care</h3>
+      <p>Designed to be serviced for years.</p>
+    </section></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyChapterNav &#125; from '@hyalo/angular/chapter-nav';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Fragment links preserve the current route and query string, including in applications with a
+    root base URL. The most recent section above the reading threshold is marked
+    aria-current="location". The thread reflects chapter position. Give target sections appropriate
+    headings and scroll-margin-block-start for sticky headers.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

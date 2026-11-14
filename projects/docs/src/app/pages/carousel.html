@@ -1,0 +1,111 @@
+<docs-page
+  heading="Carousel"
+  lead="Swipe with native touch inertia, drag with a mouse, or use the keyboard."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-toolbar">
+      <hy-segmented
+        label="Carousel transition"
+        [options]="modes"
+        [(value)]="mode"
+        size="sm"
+      /><hy-switch [(checked)]="loop">Loop navigation</hy-switch>
+    </div>
+    <div class="demo-toolbar">
+      <span>Buttons</span
+      ><hy-segmented
+        label="Navigation buttons"
+        [options]="navigations"
+        [(value)]="navigation"
+        size="sm"
+      />
+    </div>
+    <div class="demo-toolbar">
+      <span>Position</span
+      ><hy-segmented
+        label="Navigation position"
+        [options]="positions"
+        [(value)]="navPosition"
+        size="sm"
+      />
+    </div>
+    <div class="demo-toolbar">
+      <span>Pagination</span
+      ><hy-segmented label="Pagination" [options]="paginations" [(value)]="pagination" size="sm" />
+    </div>
+    <hy-carousel
+      label="Atelier collection"
+      [(index)]="index"
+      [mode]="mode() ?? 'slide'"
+      [loop]="loop()"
+      [navigation]="navigation() ?? 'icons'"
+      [navPosition]="navPosition() ?? 'below'"
+      [pagination]="pagination() ?? 'dots'"
+    >
+      <hy-slide label="1 of 3: Steel"
+        ><img
+          class="showcase"
+          src="showcase-steel.svg"
+          alt="Steel watch with a blue dial"
+          draggable="false"
+      /></hy-slide>
+      <hy-slide label="2 of 3: Gold"
+        ><img
+          class="showcase"
+          src="showcase-gold.svg"
+          alt="Gold watch with an ivory dial"
+          draggable="false"
+      /></hy-slide>
+      <hy-slide label="3 of 3: Details"
+        ><div class="demo-panel">
+          <h3>A study in restraint</h3>
+          <p>Hand-wound. Made to last.</p>
+          <button hyButton type="button">Explore the collection</button>
+        </div></hy-slide
+      >
+    </hy-carousel></docs-example
+  >
+  <h2>Custom buttons</h2>
+  <docs-example
+    [code]="example.variants[0].html"
+    [tsCode]="example.variants[0].ts"
+    [cssCode]="example.variants[0].css"
+    column
+  >
+    <hy-carousel
+      label="Custom navigation"
+      pagination="none"
+      navigation="icons"
+      navPosition="inside-bottom"
+    >
+      <hy-slide label="Steel edition"
+        ><img class="showcase" src="showcase-steel.svg" alt="Steel watch with a blue dial"
+      /></hy-slide>
+      <hy-slide label="Gold edition"
+        ><img class="showcase" src="showcase-gold.svg" alt="Gold watch with an ivory dial"
+      /></hy-slide>
+      <ng-template hyCarouselNavigation>
+        <button hyCarouselPrevious class="custom-nav">← Previous edition</button>
+        <button hyCarouselNext class="custom-nav">Next edition →</button>
+      </ng-template>
+    </hy-carousel>
+  </docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_CAROUSEL &#125; from '@hyalo/angular/carousel';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The viewport supports Arrow keys, Home and End. The buttons keep their native focus behavior.
+    Touch uses browser scroll inertia. Mouse gestures project release velocity to a slide;
+    interactive slide children keep their own pointer behavior. Slides may contain links and form
+    controls. There is no autoplay. The scrollbar is hidden by default; dot navigation provides a
+    visible alternative. Fade uses only opacity and keeps inactive slides inert. Low fidelity and
+    reduced motion disable transitions.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

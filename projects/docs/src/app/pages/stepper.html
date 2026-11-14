@@ -1,0 +1,57 @@
+<docs-page
+  heading="Stepper"
+  lead="A guided flow with completion gates and native navigation buttons."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-stepper #intake label="Consultation intake" [(selected)]="step">
+      <hy-step label="Your details" [completed]="detailsDone()">
+        <h3>Tell us about yourself</h3>
+        <label for="intake-name">Full name</label>
+        <input
+          id="intake-name"
+          #clientName
+          autocomplete="name"
+          required
+          (input)="detailsDone.set(clientName.value.trim().length > 0)"
+        />
+        <button hyButton type="button" [disabled]="!detailsDone()" (click)="intake.next()">
+          Save and continue
+        </button>
+      </hy-step>
+      <hy-step label="Your matter" [completed]="matterDone()">
+        <h3>How can we help?</h3>
+        <label for="intake-matter">Describe your matter</label>
+        <textarea
+          id="intake-matter"
+          #matter
+          required
+          (input)="matterDone.set(matter.value.trim().length > 0)"
+        ></textarea>
+        <button hyButton type="button" variant="ghost" (click)="intake.previous()">Back</button>
+        <button hyButton type="button" [disabled]="!matterDone()" (click)="intake.next()">
+          Continue to review
+        </button>
+      </hy-step>
+      <hy-step label="Review"
+        ><h3>Ready to talk</h3>
+        <p>Review the details before submitting your request.</p>
+        <button hyButton type="button" (click)="intake.previous()">Back</button></hy-step
+      >
+    </hy-stepper></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_STEPPER &#125; from '@hyalo/angular/stepper';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Current navigation uses aria-current="step". Arrow keys, Home and End move focus among available
+    buttons; Enter or Space selects. Hidden panels are inert. Applications own form validation and
+    completion state.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

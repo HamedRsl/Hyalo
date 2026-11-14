@@ -1,0 +1,23 @@
+<docs-page
+  heading="Scroll to top"
+  lead="A return control that restores keyboard focus near the start of the page."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><p>Scroll this page past 100 pixels to show the floating control.</p>
+    <hy-scroll-to-top [threshold]="100"
+  /></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyScrollToTop &#125; from '@hyalo/angular/scroll-to-top';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The button uses logical positioning and a native focus target. Reduced motion scrolls instantly.
+    The target receives a temporary tabindex that is restored when it loses focus.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+.import {
+  position: relative;
+  display: flex;
+  align-items: start;
+  gap: var(--hy-space-3);
+  padding: var(--hy-space-4);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+}
+pre {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  direction: ltr;
+  font-family: var(--hy-font-mono);
+  font-size: 0.8125rem;
+  color: var(--hy-ink-2);
+}
+button {
+  flex-shrink: 0;
+  min-block-size: 2rem;
+  padding-inline: var(--hy-space-3);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-s);
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--hy-step--1);
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+span {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

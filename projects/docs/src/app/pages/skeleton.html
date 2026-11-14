@@ -1,0 +1,54 @@
+<docs-page
+  heading="Skeleton"
+  lead="A placeholder that follows the kit motion and fidelity settings."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-toolbar">
+      <hy-segmented
+        label="Skeleton animation"
+        [options]="animations"
+        [(value)]="animation"
+        size="sm"
+      /><button hyButton type="button" variant="glass" size="sm" (click)="loading.set(!loading())">
+        {{ loading() ? 'Show content' : 'Replay loading' }}
+      </button>
+    </div>
+    <div class="demo-panel profile" [attr.aria-busy]="loading()" aria-label="Studio profile">
+      @if (loading()) {
+        <hy-skeleton
+          shape="circle"
+          width="3rem"
+          height="3rem"
+          [animation]="animation() ?? 'shimmer'"
+        />
+        <hy-skeleton width="60%" [animation]="animation() ?? 'shimmer'" /><hy-skeleton
+          width="85%"
+          [animation]="animation() ?? 'shimmer'"
+        />
+        <hy-skeleton shape="rect" height="7rem" [animation]="animation() ?? 'shimmer'" />
+      } @else {
+        <span class="profile-avatar" aria-hidden="true">A</span>
+        <strong>Atelier studio</strong>
+        <p class="profile-description">Objects with presence. Interfaces with purpose.</p>
+        <div class="profile-media">
+          <img class="showcase" src="showcase-steel.svg" alt="Atelier steel watch" />
+        </div>
+      }
+    </div>
+  </docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HySkeleton &#125; from '@hyalo/angular/skeleton';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Place aria-busy on the region being loaded and provide a useful loading label. Individual
+    skeletons are decorative and hidden from assistive technology. Low fidelity and reduced motion
+    disable the shimmer.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

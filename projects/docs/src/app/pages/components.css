@@ -6,6 +6,163 @@
   padding: 0;
   list-style: none;
 }
+.preview-media,
+.preview-refraction,
+.preview-scene,
+.preview-compare {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 16rem;
+  border-radius: var(--hy-radius-m);
+  overflow: clip;
+}
+.preview-media img,
+.preview-refraction img,
+.preview-scene img,
+.preview-compare img,
+.preview-gallery img,
+.preview-ratio img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.preview-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  padding-block: 0.5rem;
+}
+.preview-media img {
+  block-size: 6.5rem;
+}
+.preview-dots i {
+  inline-size: 0.3rem;
+  block-size: 0.3rem;
+  border-radius: 50%;
+  background: var(--hy-ink-3);
+}
+.preview-dots .active {
+  inline-size: 0.8rem;
+  border-radius: var(--hy-radius-pill);
+  background: var(--hy-primary);
+}
+.preview-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.preview-gallery img {
+  border-radius: var(--hy-radius-s);
+}
+.preview-compare img:last-of-type {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 50%);
+}
+.preview-compare span {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: 2px;
+  background: var(--hy-primary);
+}
+.preview-marquee {
+  display: flex;
+  gap: 1.5rem;
+  max-inline-size: 100%;
+  overflow: clip;
+  font-size: var(--hy-step-1);
+  color: var(--hy-ink-2);
+}
+.preview-headline {
+  font-size: var(--hy-step-2);
+  line-height: 1.4;
+}
+.preview-headline span {
+  color: var(--hy-ink-3);
+}
+.preview-refraction > div {
+  position: absolute;
+  inset-inline: 8%;
+  inset-block: 30%;
+  padding: var(--hy-space-3);
+  border-radius: var(--hy-radius-s);
+  color: var(--hy-ink);
+  background: var(--hy-surface-1);
+  text-align: center;
+}
+.preview-scene {
+  overflow: visible;
+}
+.preview-scene hy-hotspot {
+  zoom: 0.65;
+}
+.preview-mesh {
+  inline-size: 100%;
+  --hy-mesh-padding: var(--hy-space-5);
+}
+.preview-mesh p {
+  font-size: var(--hy-step--1);
+  color: var(--hy-ink-2);
+}
+.preview-timeline {
+  zoom: 0.66;
+  inline-size: 100%;
+}
+.preview-steps {
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem 1fr 2rem;
+  align-items: center;
+  gap: 0.4rem;
+  inline-size: 100%;
+}
+.preview-steps > span {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: 50%;
+}
+.preview-steps i {
+  block-size: 1px;
+  background: var(--hy-line-strong);
+}
+.preview-steps small {
+  grid-row: 2;
+  color: var(--hy-ink-2);
+  text-align: center;
+}
+.preview-steps small:nth-last-child(2) {
+  grid-column: 3;
+}
+.preview-steps small:last-child {
+  grid-column: 5;
+}
+.preview-steps .current {
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
+  border-color: currentColor;
+}
+.preview-steps .done {
+  background: var(--hy-success-wash);
+  color: var(--hy-success);
+}
+.preview-ratio {
+  inline-size: 100%;
+  max-inline-size: 13rem;
+}
+.preview-chapters {
+  display: grid;
+  gap: var(--hy-space-3);
+  padding-inline-start: var(--hy-space-4);
+  border-inline-start: 2px solid var(--hy-primary);
+  color: var(--hy-ink-3);
+}
+.preview-chapters strong {
+  color: var(--hy-primary);
+}
 .gallery > li {
   display: flex;
   /* Wide previews must not stretch a card past its column. */

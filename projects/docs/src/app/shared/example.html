@@ -1,11 +1,49 @@
-<figure class="example">
+<figure class="example" [class.example--copied]="copyState() === 'copied'">
   <div class="example__stage hy-mesh" [class.example__stage--column]="column()">
     <ng-content />
   </div>
-  @if (code()) {
+  @if (active(); as active) {
     <details class="example__code">
       <summary>Code</summary>
-      <pre><code>{{ code() }}</code></pre>
+      <div class="code-toolbar">
+        <div role="tablist" aria-label="Example source">
+          @for (snippet of snippets(); track snippet.language; let i = $index) {
+            <button
+              type="button"
+              role="tab"
+              [id]="id + '-' + snippet.language"
+              [attr.aria-controls]="id + '-source'"
+              [attr.aria-selected]="snippet.language === active.language"
+              [tabIndex]="snippet.language === active.language ? 0 : -1"
+              (click)="select(snippet.language)"
+              (keydown)="keydown($event, i)"
+            >
+              {{ snippet.label }}
+            </button>
+          }
+        </div>
+        <button
+          type="button"
+          class="copy"
+          [attr.aria-label]="'Copy ' + active.label + ' code'"
+          (click)="copy()"
+        >
+          {{ copyState() === 'copied' ? 'Copied' : 'Copy' }}
+        </button>
+      </div>
+      <pre
+        role="tabpanel"
+        tabindex="0"
+        [id]="id + '-source'"
+        [attr.aria-labelledby]="id + '-' + active.language"
+      ><code>{{ active.source }}</code></pre>
+      <span class="copy-status" role="status">{{
+        copyState() === 'copied'
+          ? 'Code copied to clipboard.'
+          : copyState() === 'error'
+            ? 'Copy failed. Select and copy the code manually.'
+            : ''
+      }}</span>
     </details>
   }
 </figure>

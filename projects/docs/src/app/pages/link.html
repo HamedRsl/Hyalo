@@ -1,0 +1,20 @@
+<docs-page heading="Link" lead="A native link with an animated underline.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><a hyLink href="#link-details">Explore the details</a>
+    <p id="link-details">Links keep browser navigation and router support.</p></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyLink &#125; from '@hyalo/angular/link';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Use meaningful link text and a real href or RouterLink. Focus has a visible outline. The
+    underline uses the shared quick duration, which follows reduced-motion tokens.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

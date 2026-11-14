@@ -1,0 +1,13 @@
+<div class="import">
+  <pre><code>{{ code() }}</code></pre>
+  <button type="button" aria-label="Copy import code" (click)="copy()">
+    {{ result() === 'copied' ? 'Copied' : 'Copy' }}
+  </button>
+  <span role="status">{{
+    result() === 'copied'
+      ? 'Import copied.'
+      : result() === 'error'
+        ? 'Copy failed. Select the import and copy it manually.'
+        : ''
+  }}</span>
+</div>

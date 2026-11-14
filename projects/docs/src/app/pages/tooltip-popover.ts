@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/tooltip-popover';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HySwitch } from '@hyalo/angular/choice';
@@ -30,22 +31,11 @@ import { DocsTokens } from '../shared/tokens-table';
   `,
 })
 export default class TooltipPopoverPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly open = signal(false);
   protected readonly isPublic = signal(false);
 
-  protected readonly tooltipCode = `<button hyButton iconOnly aria-label="Close" hyTooltip="Close">
-  <hy-icon name="x" />
-</button>
-<button hyButton hyTooltip="Saves a copy to your drafts" tooltipPlacement="bottom">
-  Save copy
-</button>`;
-  protected readonly popoverCode = `<button hyButton [hyPopover]="share" popoverLabel="Share" [(popoverOpen)]="open">
-  Share
-</button>
-<ng-template #share>
-  <hy-switch [(checked)]="isPublic">Anyone with the link</hy-switch>
-  <button hyButton size="sm" (click)="open.set(false)">Done</button>
-</ng-template>`;
   protected readonly tooltipRows: ApiRow[] = [
     { name: 'hyTooltip', type: 'string', description: 'The text. Empty means no tooltip.' },
     {
@@ -63,6 +53,12 @@ export default class TooltipPopoverPage {
     { name: 'tooltipDisabled', type: 'boolean', default: 'false', description: 'Turns it off.' },
   ];
   protected readonly popoverRows: ApiRow[] = [
+    {
+      name: 'popoverMaterial',
+      type: 'HyMaterial',
+      default: 'frosted',
+      description: 'Use solid for a readable panel above high-contrast images.',
+    },
     { name: 'hyPopover', type: 'TemplateRef', description: 'Required. The content.' },
     { name: 'popoverLabel', type: 'string', description: 'Accessible name of the panel.' },
     {

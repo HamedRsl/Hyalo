@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/accordion';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HY_ACCORDION } from '@hyalo/angular/accordion';
 import { HySwitch } from '@hyalo/angular/choice';
@@ -13,6 +14,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './accordion.html',
 })
 export default class AccordionPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly multiple = signal(false);
   protected readonly first = signal(true);
 

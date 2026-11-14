@@ -1,12 +1,12 @@
 <docs-page heading="Dialog" lead="Modal glass panels for focused tasks and confirmations.">
   <h2>Confirm</h2>
-  <docs-example [code]="confirmCode">
+  <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton tone="danger" variant="soft" (click)="remove()">Delete draft</button>
     <span class="hy-muted" aria-live="polite">{{ confirmResult() }}</span>
   </docs-example>
 
   <h2>Custom content</h2>
-  <docs-example [code]="openCode">
+  <docs-example [code]="examples[1].html" [tsCode]="examples[1].ts" [cssCode]="examples[1].css">
     <button hyButton variant="glass" (click)="rename()">Rename collection</button>
     <span class="hy-muted" aria-live="polite">Name: {{ collection() }}</span>
   </docs-example>
@@ -19,9 +19,7 @@
   <h2>Accessibility</h2>
   <ul>
     <li>Focus moves into the dialog, stays there, and returns to the trigger on close.</li>
-    <li>
-      <code>hyDialogTitle</code> names the dialog. Without a title, pass <code>label</code>.
-    </li>
+    <li><code>hyDialogTitle</code> names the dialog. Without a title, pass <code>label</code>.</li>
     <li>Escape and a backdrop click close it, unless <code>dismissible</code> is false.</li>
     <li>Confirm uses <code>role="alertdialog"</code> and starts on the safe button.</li>
   </ul>

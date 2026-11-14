@@ -1,0 +1,24 @@
+<docs-page
+  heading="Avatar and avatar group"
+  lead="People and teams, with initials when an image is unavailable."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-avatar-group label="Atelier team"
+      ><hy-avatar name="Ada Lovelace" size="lg" /><hy-avatar name="Hamed Rasouli" /><hy-avatar
+        name="سارا احمدی" /></hy-avatar-group
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_AVATAR &#125; from '@hyalo/angular/avatar';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The avatar exposes one accessible image name. The inner image has an empty alt to avoid
+    repetition. Initials use Unicode code points and preserve Persian text.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

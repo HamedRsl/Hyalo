@@ -1,0 +1,23 @@
+<docs-page
+  heading="Lightbox and gallery"
+  lead="A thumbnail grid and a modal image viewer with captions and keyboard navigation."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-gallery [images]="images" label="Atelier collection"
+  /></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyGallery &#125; from '@hyalo/angular/lightbox';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Escape and a backdrop click close the viewer. Arrow keys follow reading direction. The CDK traps
+    focus and restores it to the thumbnail. Include styles/overlays/dialog.css if using the core
+    stylesheet.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

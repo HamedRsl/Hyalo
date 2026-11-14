@@ -11,9 +11,41 @@ import { HySelect } from '@hyalo/angular/select';
 import { HY_TABS } from '@hyalo/angular/tabs';
 import { NAV } from '../nav';
 import { DocsPage } from '../shared/page';
+import { HyBadge, HyChip } from '@hyalo/angular/badge';
+import { HY_AVATAR } from '@hyalo/angular/avatar';
+import { HySkeleton } from '@hyalo/angular/skeleton';
+import { HyMesh } from '@hyalo/angular/mesh';
+import { HyHotspot } from '@hyalo/angular/hotspot';
+import { HY_TIMELINE } from '@hyalo/angular/timeline';
+import { HyDivider } from '@hyalo/angular/divider';
+import { HyAspectRatio } from '@hyalo/angular/aspect-ratio';
+import { HyButtonGroup } from '@hyalo/angular/button-group';
+import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/carousel':
+    'Swipe with native touch inertia, drag with a mouse, or use the keyboard.',
+  '/components/lightbox':
+    'A thumbnail grid and a modal image viewer with captions and keyboard navigation.',
+  '/components/image-compare': 'A before-and-after frame with an accessible native range control.',
+  '/components/marquee': 'An uninterrupted logo strip with explicit pause controls.',
+  '/components/split-text': 'A headline reveal that measures actual wrapped lines after hydration.',
+  '/components/refraction': 'An image-backed glass surface with a shared WebGL rendering context.',
+  '/components/hotspot': 'A real button anchored to a projected point in a scene.',
+  '/components/mesh': 'An ambient backdrop that keeps content stationary.',
+  '/components/timeline': 'A chronological story with dates, headings and a hairline thread.',
+  '/components/stepper': 'A guided flow with completion gates and native navigation buttons.',
+  '/components/badge': 'A small status label, with optional removal for filter chips.',
+  '/components/avatar': 'People and teams, with initials when an image is unavailable.',
+  '/components/skeleton': 'A placeholder that follows the kit motion and fidelity settings.',
+  '/components/button-group': 'A named group of related native actions.',
+  '/components/link': 'A native link with an animated underline.',
+  '/components/divider': 'A quiet hairline between related content.',
+  '/components/aspect-ratio': 'A responsive frame for images and other media.',
+  '/components/chapter-nav': 'Native section links with a current-section thread.',
+  '/components/scroll-to-top':
+    'A return control that restores keyboard focus near the start of the page.',
   '/components/accordion': 'Sections that open in place, one or several at a time.',
   '/components/button': 'Solid, glass, soft and ghost buttons and link buttons.',
   '/components/card': 'Glass surfaces with media, header, footer and a whole-card link.',
@@ -31,6 +63,17 @@ const SUMMARIES: Record<string, string> = {
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyBadge,
+    HyChip,
+    HY_AVATAR,
+    HySkeleton,
+    HyMesh,
+    HyHotspot,
+    HY_TIMELINE,
+    HyDivider,
+    HyAspectRatio,
+    HyButtonGroup,
+    HyLink,
     DocsPage,
     RouterLink,
     HY_ACCORDION,

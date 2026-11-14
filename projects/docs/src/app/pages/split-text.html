@@ -1,0 +1,25 @@
+<docs-page
+  heading="Split-text reveal"
+  lead="A headline reveal that measures actual wrapped lines after hydration."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><h2 class="display">
+      <hy-split-text text="Objects with presence. Interfaces with purpose." /></h2
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HySplitText &#125; from '@hyalo/angular/split-text';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The accessible text is exposed once; visual line fragments are hidden from screen readers.
+    Resizing and font loading remeasure the lines. Content is present during server rendering and
+    when observers are unavailable. Motion follows HyMotion and uses the shared scene duration with
+    a 60 ms line stagger.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

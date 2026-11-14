@@ -1,5 +1,5 @@
 <docs-page heading="Toast" lead="Short, temporary messages that stack in a corner.">
-  <docs-example [code]="code">
+  <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton variant="glass" (click)="saved()">Success</button>
     <button hyButton variant="glass" (click)="failed()">Error</button>
     <button hyButton variant="glass" (click)="archived()">With undo</button>
@@ -20,9 +20,7 @@
 
   <h2>Accessibility</h2>
   <ul>
-    <li>
-      Messages go through a live region. Danger toasts are assertive, the rest are polite.
-    </li>
+    <li>Messages go through a live region. Danger toasts are assertive, the rest are polite.</li>
     <li>The stack is a labelled region, so screen reader users can find it later.</li>
     <li>Never put the only copy of important information in a toast. It goes away.</li>
   </ul>

@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/tabs';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HySegmented } from '@hyalo/angular/segmented';
 import { HY_TABS } from '@hyalo/angular/tabs';
@@ -13,6 +14,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './tabs.html',
 })
 export default class TabsPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly tab = signal<string | undefined>(undefined);
   protected readonly period = signal<string | undefined>('month');
   protected readonly view = signal<string | undefined>('grid');
@@ -26,17 +29,6 @@ export default class TabsPage {
     { value: 'map', label: 'Map' },
   ];
 
-  protected readonly tabsCode = `<hy-tabs label="Watch details" [(selected)]="tab">
-  <hy-tab value="overview" label="Overview">...</hy-tab>
-  <hy-tab value="specs" label="Specifications">...</hy-tab>
-  <hy-tab value="reviews" label="Reviews" disabled>...</hy-tab>
-</hy-tabs>`;
-  protected readonly segmentedCode = `periods = [
-  { value: 'month', label: 'Monthly' },
-  { value: 'year', label: 'Yearly' },
-];
-
-<hy-segmented label="Billing period" [options]="periods" [(value)]="period" />`;
   protected readonly tabsRows: ApiRow[] = [
     { name: 'label', type: 'string', description: 'Accessible name of the tab list.' },
     {

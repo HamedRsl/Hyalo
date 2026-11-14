@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/button';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HyIcon } from '@hyalo/angular/icon';
@@ -13,6 +14,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './button.html',
 })
 export default class ButtonPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly saving = signal(false);
 
   protected save(): void {
@@ -20,17 +23,6 @@ export default class ButtonPage {
     setTimeout(() => this.saving.set(false), 1600);
   }
 
-  protected readonly variantsCode = `<button hyButton>Solid</button>
-<button hyButton variant="glass">Glass</button>
-<button hyButton variant="soft">Soft</button>
-<button hyButton variant="ghost">Ghost</button>`;
-  protected readonly tonesCode = `<button hyButton tone="secondary">Secondary</button>
-<button hyButton size="sm" tone="neutral">Neutral</button>
-<button hyButton tone="success">Success</button>
-<button hyButton size="lg" tone="danger" variant="soft">Delete</button>`;
-  protected readonly stateCode = `<button hyButton variant="glass" iconOnly aria-label="Close"><hy-icon name="x" /></button>
-<button hyButton [loading]="saving()" (click)="save()">Save changes</button>
-<a hyButton variant="ghost" routerLink="/docs">Read the API</a>`;
   protected readonly rows: ApiRow[] = [
     {
       name: 'variant',

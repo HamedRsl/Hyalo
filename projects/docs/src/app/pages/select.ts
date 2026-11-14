@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/select';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import { HY_TEXT_FIELD } from '@hyalo/angular/field';
@@ -14,6 +15,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './select.html',
 })
 export default class SelectPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly model = signal({ strap: '' });
   protected readonly f = form(this.model, (p) => required(p.strap, { message: 'Pick a strap' }));
   protected readonly size = signal<string | undefined>('40');

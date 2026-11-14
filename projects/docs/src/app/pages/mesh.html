@@ -1,0 +1,22 @@
+<docs-page heading="Mesh background" lead="An ambient backdrop that keeps content stationary.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-mesh animated
+      ><h3 class="display">Space to make an impression.</h3>
+      <p>Built from your theme colors. Readable in light and dark.</p></hy-mesh
+    ></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyMesh &#125; from '@hyalo/angular/mesh';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Animation is opt-in. Low fidelity and reduced motion keep the background stationary. The pause
+    control stops ambient motion without changing the content.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

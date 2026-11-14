@@ -1,0 +1,23 @@
+<docs-page heading="Button group" lead="A named group of related native actions.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-button-group label="Document actions"
+      ><button hyButton type="button">Save</button
+      ><button hyButton type="button" variant="glass">Preview</button
+      ><button hyButton type="button" variant="ghost">Export</button></hy-button-group
+    ></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyButtonGroup &#125; from '@hyalo/angular/button-group';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Each action remains in the normal tab order. For mutually exclusive choices use the existing
+    HySegmented component from @hyalo/angular/segmented.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>
