@@ -1,0 +1,32 @@
+:host {
+  padding: 0;
+  border-color: var(--hy-line-strong);
+}
+button {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  padding: var(--hy-space-1) var(--hy-space-3);
+  min-block-size: 2.25rem;
+  margin: 0;
+  border-radius: inherit;
+  transition: background-color var(--hy-dur-quick) ease;
+}
+:host([data-selected='true']) {
+  outline: 1px solid var(--_tone, var(--hy-primary));
+  outline-offset: -1px;
+}
+:host([data-selected='true']) button {
+  background: color-mix(in srgb, var(--_tone, var(--hy-primary)) 12%, transparent);
+}
+.check {
+  opacity: 0;
+  inline-size: 0.8em;
+}
+:host([data-selected='true']) .check {
+  opacity: 1;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

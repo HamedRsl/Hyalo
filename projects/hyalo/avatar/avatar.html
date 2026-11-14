@@ -1,0 +1,5 @@
+@if (src() && failedSrc() !== src()) {
+  <img [src]="src()" alt="" (error)="failedSrc.set(src())" />
+} @else {
+  <span aria-hidden="true">{{ initials() }}</span>
+}

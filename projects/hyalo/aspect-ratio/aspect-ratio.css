@@ -1,0 +1,5 @@
+:host {
+  display: grid;
+  overflow: clip;
+  border-radius: var(--hy-radius-m);
+}
