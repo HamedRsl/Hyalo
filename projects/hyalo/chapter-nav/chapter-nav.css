@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+nav {
+  position: relative;
+  border-inline-start: 1px solid var(--hy-line);
+}
+.thread {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -1px;
+  inline-size: 2px;
+  background: var(--hy-primary);
+  transform-origin: top;
+}
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+a {
+  display: flex;
+  gap: var(--hy-space-3);
+  align-items: center;
+  padding: var(--hy-space-3);
+  color: var(--hy-ink-2);
+  text-decoration: none;
+}
+a[aria-current] {
+  color: var(--hy-primary);
+  font-weight: 600;
+}
+a:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}

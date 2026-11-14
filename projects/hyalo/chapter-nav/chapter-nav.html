@@ -1,0 +1,19 @@
+<nav [attr.aria-label]="label()">
+  <span
+    class="thread"
+    aria-hidden="true"
+    [style.transform]="'scaleY(' + progress() / 100 + ')'"
+  ></span>
+  <ol>
+    @for (chapter of links(); track chapter.id) {
+      <li>
+        <a
+          [href]="chapter.href"
+          (click)="select($event, chapter.id)"
+          [attr.aria-current]="current() === chapter.id ? 'location' : null"
+          ><span aria-hidden="true">●</span>{{ chapter.label }}</a
+        >
+      </li>
+    }
+  </ol>
+</nav>

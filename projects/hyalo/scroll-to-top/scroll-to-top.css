@@ -1,0 +1,21 @@
+:host {
+  position: fixed;
+  inset-inline-end: var(--hy-space-6);
+  inset-block-end: var(--hy-space-6);
+  z-index: var(--hy-z-sticky);
+}
+button {
+  min-block-size: 2.75rem;
+  padding-inline: var(--hy-space-4);
+  color: var(--hy-ink);
+  background: var(--hy-surface-1);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-pill);
+  box-shadow: var(--hy-glass-shadow);
+  font: inherit;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 4px;
+}
