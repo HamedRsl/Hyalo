@@ -70,7 +70,9 @@ export function cssVarSetter(
   void motion.gsap().then((gsap) => {
     if (!gsap) return;
     el.classList.add('hy-gsap');
-    quick = gsap.quickTo(el, name, { ...vars, unit });
+    // quickTo preserves a CSS property's initial unit instead of appending one.
+    if (!el.style.getPropertyValue(name)) el.style.setProperty(name, `0${unit}`);
+    quick = gsap.quickTo(el, name, vars);
   });
   return (value) => {
     if (quick) quick(value);
