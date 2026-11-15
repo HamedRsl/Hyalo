@@ -1,0 +1,45 @@
+<nav [attr.aria-label]="label()">
+  <ul>
+    @for (item of items(); track item.id) {
+      <li>
+        @if (item.sections?.length) {
+          <button
+            type="button"
+            [id]="id + '-' + item.id + '-trigger'"
+            [attr.aria-expanded]="open() === item.id"
+            [attr.aria-controls]="id + '-' + item.id"
+            (click)="toggle(item.id, $event)"
+          >
+            {{ item.label }}<span aria-hidden="true">⌄</span>
+          </button>
+          <div
+            class="panel"
+            [id]="id + '-' + item.id"
+            [hidden]="open() !== item.id"
+            [attr.aria-labelledby]="id + '-' + item.id + '-trigger'"
+          >
+            @for (section of item.sections; track $index) {
+              <section>
+                <h3>{{ section.label }}</h3>
+                <ul>
+                  @for (link of section.links; track $index) {
+                    <li>
+                      <a [href]="link.href" (click)="open.set(null)"
+                        ><strong>{{ link.label }}</strong>
+                        @if (link.description) {
+                          <span>{{ link.description }}</span>
+                        }
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        } @else {
+          <a [href]="item.href">{{ item.label }}</a>
+        }
+      </li>
+    }
+  </ul>
+</nav>

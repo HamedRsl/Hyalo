@@ -1,0 +1,58 @@
+<div class="search">
+  <input
+    role="combobox"
+    type="search"
+    autocomplete="off"
+    spellcheck="false"
+    aria-autocomplete="list"
+    aria-expanded="true"
+    [attr.aria-label]="data.label ?? 'Command search'"
+    [attr.aria-controls]="id + '-results'"
+    [attr.aria-activedescendant]="activeId()"
+    [placeholder]="data.placeholder ?? 'Search pages and actions…'"
+    [value]="query()"
+    (input)="search($event)"
+    (keydown)="keydown($event)"
+  /><button type="button" aria-label="Close command palette" (click)="close()">Esc</button>
+</div>
+<ul #resultList [id]="id + '-results'" role="listbox" [attr.aria-label]="data.label ?? 'Commands'">
+  @for (item of results(); track item.id; let index = $index) {
+    <li
+      role="option"
+      tabindex="-1"
+      (keydown.enter)="choose(item)"
+      (keydown.space)="$event.preventDefault(); choose(item)"
+      [id]="id + '-' + index"
+      [attr.data-index]="index"
+      [attr.aria-selected]="active() === index"
+      [attr.aria-disabled]="item.disabled ?? false"
+      (pointermove)="!item.disabled && active.set(index)"
+      (pointerdown)="$event.preventDefault()"
+      (click)="choose(item)"
+    >
+      <span>
+        @if (item.group) {
+          <small>{{ item.group }}</small>
+        }
+        <strong>{{ item.label }}</strong>
+        @if (item.description) {
+          <span class="description">{{ item.description }}</span>
+        }
+      </span>
+      @if (item.shortcut) {
+        <kbd>{{ item.shortcut }}</kbd>
+      }
+    </li>
+  }
+</ul>
+<div class="status" role="status">
+  @if (!results().length) {
+    {{ data.emptyLabel ?? 'No matching commands' }}
+  } @else {
+    {{ matches().length }} results
+    @if (matches().length > 50) {
+      · showing the first 50
+    }
+    · Arrow keys to navigate · Enter to select
+  }
+</div>

@@ -23,6 +23,33 @@ export interface HyIconDef {
  * Copyright (c) Lucide Icons and Contributors), https://lucide.dev.
  */
 export const HY_BUILTIN_ICONS: Readonly<Record<string, HyIconDef>> = {
+  home: { node: [['path', { d: 'm3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z' }]] },
+  grid: {
+    node: [
+      ['rect', { x: 3, y: 3, width: 7, height: 7, rx: 1 }],
+      ['rect', { x: 14, y: 3, width: 7, height: 7, rx: 1 }],
+      ['rect', { x: 3, y: 14, width: 7, height: 7, rx: 1 }],
+      ['rect', { x: 14, y: 14, width: 7, height: 7, rx: 1 }],
+    ],
+  },
+  user: {
+    node: [
+      ['circle', { cx: 12, cy: 8, r: 4 }],
+      ['path', { d: 'M4 21v-2a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7v2' }],
+    ],
+  },
+  search: {
+    node: [
+      ['circle', { cx: 11, cy: 11, r: 8 }],
+      ['path', { d: 'm21 21-4.35-4.35' }],
+    ],
+  },
+  settings: {
+    node: [
+      ['path', { d: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z' }],
+      ['path', { d: 'M9 3h6l1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1Z' }],
+    ],
+  },
   x: {
     node: [
       ['path', { d: 'M18 6 6 18' }],

@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  inline-size: 16rem;
+  max-inline-size: 100%;
+  padding: 1rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+  box-sizing: border-box;
+}
+:host([data-collapsed='true']) {
+  inline-size: 5.5rem;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.brand {
+  display: var(--hy-sidebar-label-display, block);
+  min-inline-size: 0;
+}
+button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 44px;
+  block-size: 44px;
+  background: transparent;
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  cursor: pointer;
+}
+nav {
+  display: grid;
+  gap: 0.25rem;
+}
+footer {
+  margin-block-start: auto;
+  display: var(--hy-sidebar-label-display, block);
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
