@@ -79,11 +79,13 @@ export function openSurface<R, D>(
     container.dataset['thickness'] = 'thick';
     // With reduced motion the CSS cross-fade runs instead of the spring.
     if (extra.sheet && !motion.reduced()) {
-      hyRef.exit = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
+      const driver = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
         dismissible,
         close: () => hyRef.close(),
         cancelClose: () => hyRef.cancelClose(),
       });
+      hyRef.exit = driver.exit;
+      cdkRef.closed.subscribe(() => driver.destroy());
     }
   }
   if (dismissible) {

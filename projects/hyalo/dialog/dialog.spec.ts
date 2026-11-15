@@ -1,3 +1,4 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectNoAxeViolations } from '../src/testing/axe';
@@ -132,5 +133,56 @@ describe('HyDrawer', () => {
     expect(document.querySelector('.hy-drawer-pane')!.classList).toContain('hy-drawer--start');
     ref.close();
     await ref.closed;
+  });
+
+  it.each(['normal', 'external'])('disposes bottom-sheet resources on %s closure', async (mode) => {
+    TestBed.inject(HyMotion).setReduced(false);
+    const frames = new Map<number, FrameRequestCallback>();
+    let id = 0;
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      frames.set(++id, callback);
+      return id;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (handle: number) => frames.delete(handle));
+    const observers: { observe: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> }[] =
+      [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        readonly observe = vi.fn();
+        readonly disconnect = vi.fn();
+        constructor() {
+          observers.push(this);
+        }
+      },
+    );
+    try {
+      for (let cycle = 0; cycle < 5; cycle++) {
+        const ref = TestBed.inject(HyDrawer).open(EditAddress, {
+          side: 'bottom',
+          data: { street: '' },
+        });
+        TestBed.tick();
+        const panel = ref.containerElement!;
+        const observer = observers.find((item) =>
+          item.observe.mock.calls.some(([target]) => target === panel),
+        )!;
+        expect(observer).toBeDefined();
+        if (mode === 'external') TestBed.inject(Dialog).closeAll();
+        else ref.close();
+        for (let frame = 0; frames.size && frame < 600; frame++) {
+          const callbacks = [...frames.values()];
+          frames.clear();
+          callbacks.forEach((callback) => callback((frame * 1000) / 60));
+        }
+        await ref.closed;
+        expect(observer.disconnect).toHaveBeenCalledOnce();
+        expect(frames.size).toBe(0);
+        expect(panel.isConnected).toBe(false);
+      }
+    } finally {
+      vi.unstubAllGlobals();
+      TestBed.inject(HyMotion).setReduced(null);
+    }
   });
 });
