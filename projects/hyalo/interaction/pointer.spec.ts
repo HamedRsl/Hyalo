@@ -1,7 +1,10 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HyMotion, provideHyalo } from '@hyalo/angular';
+import { HyFidelity, HyMotion, provideHyalo } from '@hyalo/angular';
 import { gsap } from 'gsap';
 import { cssVarSetter } from './pointer';
+import { HyTilt } from './tilt';
+import { HyMagnetic } from './magnetic';
 
 describe('pointer CSS setters with GSAP', () => {
   const elements: HTMLElement[] = [];
@@ -49,4 +52,78 @@ describe('pointer CSS setters with GSAP', () => {
     gsap.getTweensOf(element).forEach((tween) => tween.progress(1));
     expect(element.style.getPropertyValue('--hy-ry')).toBe('8deg');
   });
+});
+
+@Component({
+  imports: [HyTilt, HyMagnetic],
+  template: '<div hyTilt>Tilt</div><button hyMagnetic>Magnetic</button>',
+})
+class PointerHost {}
+
+describe('live pointer motion preferences', () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      'matchMedia',
+      (query: string) =>
+        ({
+          matches: query.includes('hover: hover'),
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        }) as unknown as MediaQueryList,
+    );
+    TestBed.configureTestingModule({ providers: [provideHyalo({ fidelity: 'high' })] });
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it.each(['reduced', 'low'])(
+    'resets active effects when %s is selected and can resume',
+    async (preference) => {
+      const fixture = TestBed.createComponent(PointerHost);
+      await fixture.whenStable();
+      const tilt: HTMLElement = fixture.nativeElement.querySelector('[hyTilt]');
+      const magnetic: HTMLElement = fixture.nativeElement.querySelector('[hyMagnetic]');
+      const move = (element: HTMLElement): void => {
+        element.dispatchEvent(
+          new PointerEvent('pointermove', { pointerType: 'mouse', clientX: 80, clientY: 30 }),
+        );
+      };
+      for (const element of [tilt, magnetic]) {
+        vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({
+          left: 0,
+          top: 0,
+          width: 100,
+          height: 100,
+        } as DOMRect);
+        element.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' }));
+        move(element);
+      }
+      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).not.toBe(0);
+      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).not.toBe(0);
+      const motion = TestBed.inject(HyMotion);
+      const fidelity = TestBed.inject(HyFidelity);
+      if (preference === 'reduced') motion.setReduced(true);
+      else fidelity.setTier('low');
+      await fixture.whenStable();
+      expect(tilt.style.getPropertyValue('--hy-ry')).toBe('0deg');
+      expect(magnetic.style.getPropertyValue('--hy-mx')).toBe('0px');
+      move(tilt);
+      move(magnetic);
+      expect(tilt.style.getPropertyValue('--hy-ry')).toBe('0deg');
+      expect(magnetic.style.getPropertyValue('--hy-mx')).toBe('0px');
+      motion.setReduced(false);
+      fidelity.setTier('high');
+      await fixture.whenStable();
+      move(tilt);
+      move(tilt);
+      move(magnetic);
+      move(magnetic);
+      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).not.toBe(0);
+      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).not.toBe(0);
+      fixture.destroy();
+      motion.setReduced(null);
+    },
+  );
 });
