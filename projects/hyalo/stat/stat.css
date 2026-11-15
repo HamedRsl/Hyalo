@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  padding: 1.5rem;
+  background: var(--hy-surface-1);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  color: var(--hy-ink);
+}
+dl,
+p {
+  margin: 0;
+}
+dt {
+  color: var(--hy-ink-2);
+  font-size: 0.875rem;
+}
+dd {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+p {
+  color: var(--hy-ink-2);
+  font-size: 0.8125rem;
+  margin-block-start: 0.5rem;
+}
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}

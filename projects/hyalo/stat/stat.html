@@ -1,0 +1,11 @@
+<dl>
+  <dt>{{ label() }}</dt>
+  <dd>
+    <span aria-hidden="true">{{ formatted() }}</span
+    ><span class="sr">{{ accessible() }}</span>
+  </dd>
+</dl>
+@if (trend()) {
+  <p>{{ trend() }}</p>
+}
+<ng-content />
