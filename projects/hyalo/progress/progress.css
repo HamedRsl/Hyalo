@@ -1,0 +1,71 @@
+:host {
+  --hy-progress-direction: 1;
+  display: block;
+  color: var(--hy-primary);
+}
+:host([data-variant='bar']) .track {
+  block-size: 0.5rem;
+  border-radius: var(--hy-radius-pill);
+  overflow: hidden;
+  background: var(--hy-surface-3);
+}
+:host([data-variant='bar']) .fill {
+  block-size: 100%;
+  background: currentColor;
+  transform-origin: left center;
+}
+:host-context([dir='rtl']) .fill {
+  transform-origin: right center;
+}
+:host([data-variant='circle']) {
+  inline-size: 3rem;
+  block-size: 3rem;
+}
+svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  transform: rotate(-90deg);
+}
+circle {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.track {
+  stroke: var(--hy-surface-3);
+}
+.fill {
+  stroke: currentColor;
+}
+:host(.indeterminate.moving) svg {
+  animation: hy-progress-spin 1s linear infinite;
+}
+:host(.indeterminate) .track > .fill {
+  inline-size: 30%;
+}
+:host(.indeterminate.moving) .track > .fill {
+  animation: hy-progress-slide 1.4s var(--hy-ease-inout) infinite;
+}
+@keyframes hy-progress-spin {
+  to {
+    transform: rotate(270deg);
+  }
+}
+:host-context([dir='rtl']) {
+  --hy-progress-direction: -1;
+}
+@keyframes hy-progress-slide {
+  0% {
+    transform: translateX(calc(-100% * var(--hy-progress-direction)));
+  }
+  100% {
+    transform: translateX(calc(340% * var(--hy-progress-direction)));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host-context(:root:not([data-hy-motion='full'])).moving svg,
+  :host-context(:root:not([data-hy-motion='full'])).moving .track > .fill {
+    animation: none;
+  }
+}

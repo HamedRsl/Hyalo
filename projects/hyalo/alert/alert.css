@@ -1,0 +1,50 @@
+:host {
+  --alert-color: var(--hy-primary);
+  display: block;
+  color: var(--hy-ink);
+}
+:host([hidden]) {
+  display: none;
+}
+:host([data-tone='success']) {
+  --alert-color: var(--hy-success);
+}
+:host([data-tone='warning']) {
+  --alert-color: var(--hy-warning);
+}
+:host([data-tone='danger']) {
+  --alert-color: var(--hy-danger);
+}
+section {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid var(--hy-line);
+  border-inline-start: 3px solid var(--alert-color);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+}
+strong {
+  display: block;
+  margin-block-end: 0.25rem;
+}
+button {
+  flex: none;
+  min-inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: var(--hy-radius-s);
+  color: var(--hy-ink);
+  background: transparent;
+  font: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--hy-surface-3);
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

@@ -1,0 +1,15 @@
+@if (visible()) {
+  <section [attr.role]="announce() ? (tone() === 'danger' ? 'alert' : 'status') : null">
+    <div>
+      @if (heading()) {
+        <strong>{{ heading() }}</strong>
+      }
+      <div><ng-content /></div>
+    </div>
+    @if (dismissible()) {
+      <button type="button" [attr.aria-label]="dismissLabel()" (click)="dismiss()">
+        <span aria-hidden="true">×</span>
+      </button>
+    }
+  </section>
+}
