@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+figure {
+  margin: 0;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  overflow: hidden;
+  background: var(--hy-surface-2);
+  color: var(--hy-ink);
+}
+figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-block-end: 1px solid var(--hy-line);
+  font-size: 0.875rem;
+}
+small {
+  color: var(--hy-ink-3);
+  margin-inline-start: 0.5rem;
+}
+button {
+  min-block-size: 44px;
+  padding: 0.5rem 0.75rem;
+  background: var(--hy-surface-1);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+pre {
+  margin: 0;
+  max-block-size: 32rem;
+  overflow: auto;
+  padding: 1rem;
+  font: 0.8125rem/1.7 var(--hy-font-mono);
+  tab-size: 2;
+}
+pre:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -3px;
+}
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

@@ -1,0 +1,14 @@
+<figure>
+  <figcaption>
+    <span
+      >{{ label() }} <small>{{ language() }}</small></span
+    >
+    @if (copyable()) {
+      <button type="button" (click)="copy()" [attr.aria-label]="'Copy ' + label()">
+        {{ status() === 'Copied' ? 'Copied' : 'Copy' }}
+      </button>
+    }
+  </figcaption>
+  <pre tabindex="0" [attr.aria-label]="label()" dir="ltr"><code>{{code()}}</code></pre>
+  <span role="status" class="sr">{{ status() }}</span>
+</figure>

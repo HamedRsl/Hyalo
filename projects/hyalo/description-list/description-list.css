@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+dl {
+  margin: 0;
+}
+dl > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) minmax(0, 2fr);
+  gap: 1rem;
+  padding-block: 1rem;
+  border-block-end: 1px solid var(--hy-line);
+}
+dt {
+  color: var(--hy-ink-2);
+}
+dd {
+  margin: 0;
+  color: var(--hy-ink);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 30rem) {
+  dl > div {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
