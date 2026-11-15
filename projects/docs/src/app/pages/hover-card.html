@@ -1,0 +1,40 @@
+<docs-page
+  heading="Hover card"
+  lead="Rich optional context available through pointer, focus, and touch."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <button
+        hyButton
+        variant="glass"
+        type="button"
+        [hyHoverCard]="profile"
+        hoverCardLabel="Mina Rahimi profile"
+      >
+        Mina Rahimi</button
+      ><ng-template #profile
+        ><div class="profile-card">
+          <strong>Mina Rahimi</strong>
+          <p>Product designer, building thoughtful tools for teams.</p>
+          <a href="/dashboard">View workspace</a>
+        </div></ng-template
+      >
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyHoverCard &#125; from '@hyalo/angular/hover-card';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Hover waits briefly; focus and touch open immediately. The card stays open while its content is
+    hovered or focused and Escape dismisses it. Press Arrow Down on the trigger to move focus into
+    the card. Keep essential information visible elsewhere. Use a popover for forms and tasks
+    requiring deliberate focus transfer.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

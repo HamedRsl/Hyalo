@@ -1,0 +1,61 @@
+.phase3-demo {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.demo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.demo-stack {
+  display: grid;
+  gap: 1rem;
+}
+.demo-note {
+  color: var(--hy-ink-2);
+  font-size: 0.875rem;
+}
+.demo-panel {
+  padding: 1.5rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+}
+.spark-demo {
+  max-inline-size: 24rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--hy-surface-1);
+  border-radius: var(--hy-radius-l);
+  border: 1px solid var(--hy-line);
+}
+.activity-list {
+  margin: 0;
+  padding-inline: 2rem 1rem;
+}
+.activity-list li {
+  padding-block: 1rem;
+  border-block-end: 1px solid var(--hy-line);
+}
+.activity-list span {
+  display: block;
+  color: var(--hy-ink-2);
+  font-size: 0.8125rem;
+}
+.profile-card p {
+  max-inline-size: 28ch;
+  color: var(--hy-ink-2);
+  margin-block: 0.5rem 1rem;
+}
+.profile-card a {
+  color: var(--hy-primary);
+  min-block-size: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+hy-stat + button {
+  margin-block-start: 1rem;
+}

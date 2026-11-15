@@ -1,0 +1,25 @@
+<docs-page
+  heading="Navigation and mega menu"
+  lead="Native links with accessible disclosure panels for larger destinations."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo"><hy-navigation-menu [items]="navigation" /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyNavigationMenu &#125; from '@hyalo/angular/navigation-menu';"
+  />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    This is website navigation with disclosure buttons. Tab follows the natural link order. Escape
+    closes the panel and returns focus to its trigger. Outside clicks and focus leaving the
+    navigation close it. No hover-only destinations.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

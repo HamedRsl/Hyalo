@@ -1,0 +1,24 @@
+<docs-page heading="Keyboard key" lead="A small typographic cue for available keyboard shortcuts.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <p>
+        Open search with <kbd hyKbd>Ctrl</kbd> + <kbd hyKbd>K</kbd>. Use <kbd hyKbd>Esc</kbd> to
+        close.
+      </p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyKbd &#125; from '@hyalo/angular/kbd';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    This component communicates a key; it does not register shortcuts. Provide a visible button for
+    the same action and account for platform conventions in application copy.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

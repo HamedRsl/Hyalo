@@ -1,0 +1,36 @@
+<docs-page
+  heading="Table"
+  lead="A semantic table with stable sorting, sticky headers, and controlled row selection."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-table
+        caption="Recent projects"
+        [data]="projects"
+        [columns]="columns"
+        [rowKey]="key"
+        [rowLabel]="rowLabel"
+        selectable
+        stickyHeader
+        [(selected)]="selected"
+      />
+      <p class="demo-note" role="status">{{ selected().length }} selected</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyTable, HyTableColumn &#125; from '@hyalo/angular/table';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Sorting never mutates supplied data. Header buttons expose aria-sort on their column. Select-all
+    applies to visible rows and preserves selections on other pages. Provide meaningful rowLabel
+    text. Use pagination for large datasets; virtualization and editable grids belong to a later
+    phase.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

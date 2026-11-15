@@ -8,7 +8,9 @@ Liquid glass components for Angular.
 
 Hyalo is a small, open source UI kit built on Angular Aria and the Angular CDK. It is signal based, zoneless, safe to render on the server, and works with a keyboard and a screen reader in both reading directions. The glass is a material you choose per surface, and it steps down by itself on devices or settings where blur would hurt.
 
-Status: 0.2, phase 2 of the roadmap. The API can still change before 1.0.
+Status: 0.3, phase 3 of the roadmap. The API can still change before 1.0.
+
+Phase 3 adds the app shell and data collection: collapsible sidebar, breadcrumb, dropdown and split menus, command palette, mega navigation, pagination, sortable/selectable table, KPI tile, lazy Chart.js wrapper, sparkline, progress, spinner, alerts, empty states, lists, and layout helpers. Run the docs and open `/dashboard` for the composed workspace demo.
 
 ## Install
 
@@ -193,6 +195,35 @@ Serve the files from somewhere else with ``provideHyalo({ paletteHref: (name) =>
 Every style uses logical properties, so `dir="rtl"` on the page is enough. Placements are `start` and `end` instead of left and right, drawers slide from the correct edge, arrow keys are mirrored in tabs and radio groups, and icons that point somewhere (like `chevron-end`) flip on their own. `lang="fa"` switches to a Persian friendly font stack and line height.
 
 If you change direction at runtime, update the CDK `Directionality` as well, so overlays follow.
+
+## App shell and data
+
+| What you get             | Import from                       |
+| ------------------------ | --------------------------------- |
+| Sidebar                  | `@hyalo/angular/sidebar`          |
+| Breadcrumb               | `@hyalo/angular/breadcrumb`       |
+| Dropdown menu            | `@hyalo/angular/menu`             |
+| Command palette          | `@hyalo/angular/command`          |
+| Navigation and mega menu | `@hyalo/angular/navigation-menu`  |
+| Pagination               | `@hyalo/angular/pagination`       |
+| Table                    | `@hyalo/angular/table`            |
+| Stat and KPI             | `@hyalo/angular/stat`             |
+| Charts                   | `@hyalo/angular/chart`            |
+| Sparkline                | `@hyalo/angular/sparkline`        |
+| Progress and spinner     | `@hyalo/angular/progress`         |
+| Alert and inline message | `@hyalo/angular/alert`            |
+| Empty state              | `@hyalo/angular/empty-state`      |
+| List and list item       | `@hyalo/angular/list`             |
+| Bento grid               | `@hyalo/angular/bento`            |
+| Scroll area              | `@hyalo/angular/scroll-area`      |
+| Hover card               | `@hyalo/angular/hover-card`       |
+| Description list         | `@hyalo/angular/description-list` |
+| Keyboard key             | `@hyalo/angular/kbd`              |
+| Code block               | `@hyalo/angular/code-block`       |
+
+Charts use an optional peer. Install `chart.js` only when importing `@hyalo/angular/chart`. The engine is loaded near the viewport, and every chart includes a server-rendered data table. Sparklines have no chart-engine dependency.
+
+The command palette uses CDK dialog focus management and returns typed selections through its dialog reference. Sorting and row selection do not mutate caller-owned data.
 
 ## Motion
 

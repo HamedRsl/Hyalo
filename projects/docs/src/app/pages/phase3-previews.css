@@ -1,0 +1,57 @@
+.phase3-preview {
+  inline-size: 100%;
+  max-block-size: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.phase3-preview hy-stat {
+  padding: 1rem;
+}
+.phase3-preview hy-table {
+  font-size: 0.75rem;
+}
+.phase3-preview hy-sidebar {
+  margin-inline: auto;
+  max-block-size: 11rem;
+}
+.phase3-preview hy-empty-state {
+  padding: 1rem;
+}
+.mini-command,
+.mini-chart {
+  padding: 1rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  display: grid;
+  gap: 0.5rem;
+}
+.mini-command span,
+.mini-chart small {
+  color: var(--hy-ink-2);
+  font-size: 0.75rem;
+}
+.mini-command hr {
+  inline-size: 100%;
+  border: 0;
+  border-block-start: 1px solid var(--hy-line);
+}
+.mini-progress {
+  display: grid;
+  gap: 1rem;
+}
+.mini-progress > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.mini-bento {
+  padding: 0.75rem;
+  background: var(--hy-surface-1);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  font-size: 0.75rem;
+}
+.mini-chart hy-sparkline {
+  block-size: 4rem;
+}

@@ -1,0 +1,129 @@
+<docs-page
+  eyebrow="Phase 3 · App shell and data"
+  heading="A workspace, composed"
+  lead="A working dashboard built from the new components. Filter projects, select rows, sort columns, search, and switch the display settings."
+  ><div class="workspace">
+    <hy-sidebar [(collapsed)]="collapsed" label="Demo workspace"
+      ><strong hySidebarBrand>Atelier</strong
+      ><a
+        hySidebarItem
+        href="/dashboard"
+        label="Overview"
+        aria-label="Overview"
+        icon="home"
+        active
+      ></a
+      ><a
+        hySidebarItem
+        href="/components/table"
+        label="Projects"
+        aria-label="Projects"
+        icon="grid"
+      ></a
+      ><a hySidebarItem href="/components/list" label="Team" aria-label="Team" icon="user"></a
+      ><a hySidebarItem href="/theming" label="Settings" aria-label="Settings" icon="settings"></a
+      ><small hySidebarFooter>Team workspace</small></hy-sidebar
+    >
+    <section class="workspace-content" aria-label="Workspace overview">
+      <div class="toolbar">
+        <hy-breadcrumb [items]="trail" /><button hyButton variant="glass" (click)="search()">
+          Search <kbd hyKbd>Ctrl K</kbd>
+        </button>
+      </div>
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">MONDAY, JUNE 16</p>
+          <h2>A little more momentum.</h2>
+          <p>Here is what is happening across your workspace.</p>
+        </div>
+        <hy-split-button
+          label="Export report"
+          [menu]="exportMenu"
+          menuLabel="Report formats"
+          (activated)="export()"
+        />
+      </div>
+      <ng-template #exportMenu
+        ><hy-menu aria-label="Report format"
+          ><button hyMenuItem (triggered)="export()">CSV report</button
+          ><button hyMenuItem (triggered)="export()">PDF summary</button></hy-menu
+        ></ng-template
+      >
+      @if (notice()) {
+        <hy-alert
+          heading="Report ready"
+          tone="success"
+          announce
+          dismissible
+          (dismissed)="notice.set('')"
+          >{{ notice() }}</hy-alert
+        >
+      }
+      <hy-bento
+        ><hy-stat
+          hyBentoTile
+          label="Total revenue"
+          [value]="48250"
+          prefix="$"
+          trend="Up 12.8% from last month"
+          ><hy-sparkline [data]="trend" label="Revenue is trending upward" /></hy-stat
+        ><hy-stat
+          hyBentoTile
+          label="Active projects"
+          [value]="4"
+          trend="2 completed this month" /><hy-stat
+          hyBentoTile
+          label="Team capacity"
+          [value]="72"
+          suffix="%"
+          trend="Healthy workload"
+          ><hy-progress label="Team capacity" [value]="72" /></hy-stat></hy-bento
+      ><hy-chart
+        label="Revenue overview"
+        summary="Revenue grew 78% from January to June, while expenses rose 42%."
+        [data]="chart"
+      />
+      <section class="projects" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <div>
+            <h3 id="projects-heading">Projects</h3>
+            <p>Good work, moving forward.</p>
+          </div>
+          <span class="selected-count" role="status">{{ selection().length }} selected</span>
+        </div>
+        <div class="filters" aria-label="Project status filters">
+          <hy-chip [selected]="includeActive()" (selectedChange)="filter(true, $event)"
+            >Active</hy-chip
+          ><hy-chip [selected]="includeComplete()" (selectedChange)="filter(false, $event)"
+            >Complete</hy-chip
+          ><span>{{ filtered().length }} projects</span>
+        </div>
+        @if (filtered().length) {
+          <hy-table
+            caption="Workspace projects"
+            [data]="paged()"
+            [columns]="columns"
+            [rowKey]="key"
+            [rowLabel]="rowLabel"
+            selectable
+            stickyHeader
+            [(selected)]="selection"
+          />
+          <div class="pagination">
+            <span>Showing up to 3 projects per page</span
+            ><hy-pagination [total]="filtered().length" [pageSize]="3" [(page)]="page" />
+          </div>
+        } @else {
+          <hy-empty-state
+            [headingLevel]="4"
+            heading="No projects match"
+            description="Select a status to see your projects."
+            ><button hyButton (click)="filter(true, true)">
+              Show active projects
+            </button></hy-empty-state
+          >
+        }
+      </section>
+    </section>
+  </div></docs-page
+>

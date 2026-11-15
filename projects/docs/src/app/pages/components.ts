@@ -1,3 +1,21 @@
+import { HY_SIDEBAR } from '@hyalo/angular/sidebar';
+import { HyBreadcrumb } from '@hyalo/angular/breadcrumb';
+import { HY_MENU } from '@hyalo/angular/menu';
+import { HyNavigationMenu } from '@hyalo/angular/navigation-menu';
+import { HyPagination } from '@hyalo/angular/pagination';
+import { HyTable } from '@hyalo/angular/table';
+import { HyStat } from '@hyalo/angular/stat';
+import { HySparkline } from '@hyalo/angular/sparkline';
+import { HY_PROGRESS } from '@hyalo/angular/progress';
+import { HyAlert } from '@hyalo/angular/alert';
+import { HyEmptyState } from '@hyalo/angular/empty-state';
+import { HY_LIST } from '@hyalo/angular/list';
+import { HY_BENTO } from '@hyalo/angular/bento';
+import { HyScrollArea } from '@hyalo/angular/scroll-area';
+import { HyHoverCard } from '@hyalo/angular/hover-card';
+import { HyDescriptionList } from '@hyalo/angular/description-list';
+import { HyKbd } from '@hyalo/angular/kbd';
+import { HyCodeBlock } from '@hyalo/angular/code-block';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HY_ACCORDION } from '@hyalo/angular/accordion';
@@ -24,6 +42,37 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/sidebar': 'An app rail that collapses to familiar icons without losing link names.',
+  '/components/breadcrumb': 'A quiet path back through the information hierarchy.',
+  '/components/menu':
+    'Keyboard-driven actions, checkable options, nested menus, and a split button.',
+  '/components/command':
+    'Find pages and actions immediately, without waiting for a search animation.',
+  '/components/navigation-menu':
+    'Native links with accessible disclosure panels for larger destinations.',
+  '/components/pagination':
+    'A compact, localized page window that stays bounded as result counts change.',
+  '/components/table':
+    'A semantic table with stable sorting, sticky headers, and controlled row selection.',
+  '/components/stat':
+    'Clear numbers with optional, interruptible updates and stable screen-reader text.',
+  '/components/chart':
+    'Theme-aware Chart.js line, bar, and doughnut charts with an accessible data fallback.',
+  '/components/sparkline':
+    'A small trend line for compact metric contexts, without loading a chart engine.',
+  '/components/progress':
+    'Determinate progress and quiet loading indicators that respect motion preferences.',
+  '/components/alert': 'Contextual feedback with explicit announcement and dismissal behavior.',
+  '/components/empty-state': 'Explain what happened and give people a useful next step.',
+  '/components/list': 'Readable rows with descriptions and application-owned actions.',
+  '/components/bento': 'Responsive dashboard tiles with a consistent spacing rhythm.',
+  '/components/scroll-area': 'Native scrolling, visible focus, and restrained scrollbar styling.',
+  '/components/hover-card': 'Rich optional context available through pointer, focus, and touch.',
+  '/components/description-list':
+    'Structured labels and values with native definition-list semantics.',
+  '/components/kbd': 'A small typographic cue for available keyboard shortcuts.',
+  '/components/code-block':
+    'Copyable code with safe text rendering and an independently focusable scroll area.',
   '/components/carousel':
     'Swipe with native touch inertia, drag with a mouse, or use the keyboard.',
   '/components/lightbox':
@@ -63,6 +112,24 @@ const SUMMARIES: Record<string, string> = {
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HY_SIDEBAR,
+    HyBreadcrumb,
+    HY_MENU,
+    HyNavigationMenu,
+    HyPagination,
+    HyTable,
+    HyStat,
+    HySparkline,
+    HY_PROGRESS,
+    HyAlert,
+    HyEmptyState,
+    HY_LIST,
+    HY_BENTO,
+    HyScrollArea,
+    HyHoverCard,
+    HyDescriptionList,
+    HyKbd,
+    HyCodeBlock,
     HyBadge,
     HyChip,
     HY_AVATAR,
@@ -89,9 +156,29 @@ const SUMMARIES: Record<string, string> = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './components.html',
-  styleUrl: './components.css',
+  styleUrls: ['./components.css', './phase3-previews.css'],
 })
 export default class ComponentsPage {
+  protected readonly previewTrail = [{ label: 'Workspace', href: '/' }, { label: 'Overview' }];
+  protected readonly previewData = [
+    { id: 1, name: 'Website', status: 'Active' },
+    { id: 2, name: 'Design system', status: 'Complete' },
+  ];
+  protected readonly previewColumns = [
+    { id: 'name', header: 'Project', cell: (row: { name: string }) => row.name },
+    { id: 'status', header: 'Status', cell: (row: { status: string }) => row.status },
+  ];
+  protected readonly previewKey = (row: { id: number }): number => row.id;
+  protected readonly previewNavigation = [
+    { id: 'product', label: 'Product', href: '/components' },
+    { id: 'learn', label: 'Learn', href: '/foundations' },
+  ];
+  protected readonly previewDetails = [
+    { term: 'Plan', detail: 'Team' },
+    { term: 'Region', detail: 'Europe' },
+  ];
+  protected readonly previewTrend = [10, 18, 15, 25, 24, 32, 38];
+  protected readonly previewSource = "import { HyTable } from '@hyalo/angular/table';";
   protected readonly items = (NAV.find((g) => g.title === 'Components')?.items ?? [])
     .filter((item) => item.path in SUMMARIES)
     .map((item) => ({ ...item, summary: SUMMARIES[item.path] }));

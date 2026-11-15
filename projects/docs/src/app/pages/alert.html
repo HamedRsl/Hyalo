@@ -1,0 +1,33 @@
+<docs-page
+  heading="Alert and inline message"
+  lead="Contextual feedback with explicit announcement and dismissal behavior."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="demo-stack">
+        <hy-alert heading="Your changes are saved" tone="success" dismissible [(visible)]="visible"
+          >The workspace is up to date.</hy-alert
+        ><hy-alert heading="Storage is almost full" tone="warning"
+          >Review large files before uploading more.</hy-alert
+        ><button hyButton variant="ghost" type="button" (click)="visible.set(true)">
+          Show saved message
+        </button>
+      </div>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyAlert &#125; from '@hyalo/angular/alert';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Static messages are not live regions by default. Opt into announce for messages inserted after
+    an action. Heading and body convey meaning without relying on color. The application manages
+    focus if dismissal removes the focused control.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

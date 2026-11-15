@@ -18,6 +18,16 @@
   <div hyNavbarActions>
     <button
       hyButton
+      type="button"
+      variant="ghost"
+      size="sm"
+      (click)="openSearch()"
+      aria-label="Search documentation"
+    >
+      <hy-icon name="search" /><kbd hyKbd>Ctrl K</kbd>
+    </button>
+    <button
+      hyButton
       variant="ghost"
       tone="neutral"
       size="sm"

@@ -1,0 +1,24 @@
+<docs-page
+  heading="Code block"
+  lead="Copyable code with safe text rendering and an independently focusable scroll area."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-code-block label="Table import" language="TypeScript" [code]="sample" /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyCodeBlock &#125; from '@hyalo/angular/code-block';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Copy feedback is announced without moving focus. Source is interpolated as text and remains
+    selectable. No runtime syntax parser or HTML injection is needed. Long lines scroll within the
+    block.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

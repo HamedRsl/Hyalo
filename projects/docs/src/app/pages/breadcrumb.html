@@ -1,0 +1,19 @@
+<docs-page heading="Breadcrumb" lead="A quiet path back through the information hierarchy.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo"><hy-breadcrumb [items]="trail" /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyBreadcrumb &#125; from '@hyalo/angular/breadcrumb';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The last item exposes aria-current="page". Separators are decorative. The path wraps on narrow
+    screens and follows the reading direction.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

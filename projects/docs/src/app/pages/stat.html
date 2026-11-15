@@ -1,0 +1,33 @@
+<docs-page
+  heading="Stat and KPI"
+  lead="Clear numbers with optional, interruptible updates and stable screen-reader text."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-stat
+        label="Monthly revenue"
+        [value]="revenue()"
+        [format]="{ style: 'currency', currency: 'USD', maximumFractionDigits: 0 }"
+        trend="Up 12.8% from last month"
+        animate
+      /><button hyButton type="button" variant="ghost" (click)="revenue.update(increase)">
+        Simulate update
+      </button>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyStat &#125; from '@hyalo/angular/stat';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The initial value renders identically on the server and client. Updates keep spring velocity
+    when retargeted. Reduced motion, low fidelity, and offscreen states settle directly to the new
+    value. Assistive technology sees the final number, not every animation frame.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

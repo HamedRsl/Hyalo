@@ -5,7 +5,27 @@ import ts from 'typescript';
 import { parseTemplate } from '@angular/compiler';
 import { format } from 'prettier';
 
-const phase2 = new Set([
+const singleExamplePages = new Set([
+  'sidebar',
+  'breadcrumb',
+  'menu',
+  'command',
+  'navigation-menu',
+  'pagination',
+  'table',
+  'stat',
+  'chart',
+  'sparkline',
+  'progress',
+  'alert',
+  'empty-state',
+  'list',
+  'bento',
+  'scroll-area',
+  'hover-card',
+  'description-list',
+  'kbd',
+  'code-block',
   'carousel',
   'lightbox',
   'image-compare',
@@ -196,7 +216,7 @@ for (const name of readdirSync(root).filter((name) => name.endsWith('.html'))) {
     });
     if (snippet.css) snippet.css = await format(snippet.css, { parser: 'css', printWidth: 88 });
   }
-  const single = phase2.has(slug),
+  const single = singleExamplePages.has(slug),
     symbol = single ? 'EXAMPLE' : 'EXAMPLES',
     member = single ? 'example' : 'examples';
   const target = join(root, 'examples', `${slug}.ts`);

@@ -1,0 +1,105 @@
+.workspace {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-2);
+  min-inline-size: 0;
+}
+.workspace > hy-sidebar {
+  flex: none;
+  inline-size: 12rem;
+  align-self: stretch;
+}
+.workspace > hy-sidebar[data-collapsed='true'] {
+  inline-size: 5.5rem;
+}
+.workspace-content {
+  display: grid;
+  align-content: start;
+  gap: 1.5rem;
+  flex: 1;
+  min-inline-size: 0;
+}
+.toolbar,
+.page-heading,
+.section-heading,
+.pagination,
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.eyebrow {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--hy-ink-3);
+}
+h2 {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+h3 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.page-heading p:not(.eyebrow),
+.section-heading p {
+  font-size: 0.8125rem;
+  color: var(--hy-ink-2);
+  margin: 0.5rem 0 0;
+}
+.projects {
+  display: grid;
+  gap: 1rem;
+}
+.selected-count,
+.pagination > span,
+.filters > span {
+  font-size: 0.75rem;
+  color: var(--hy-ink-2);
+}
+.filters {
+  justify-content: start;
+  gap: 0.5rem;
+}
+hy-sparkline {
+  block-size: 2.5rem;
+  margin-block-start: 1rem;
+}
+hy-progress {
+  margin-block-start: 1.5rem;
+}
+@media (max-width: 75rem) {
+  .workspace {
+    flex-direction: column;
+  }
+  .workspace > hy-sidebar {
+    inline-size: 100%;
+    max-inline-size: none;
+  }
+  .workspace > hy-sidebar[data-collapsed='true'] {
+    inline-size: 5.5rem;
+  }
+}
+@media (max-width: 35rem) {
+  .workspace {
+    padding: 0.75rem;
+  }
+  .page-heading > hy-split-button {
+    inline-size: 100%;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+
+docs-page {
+  max-inline-size: 72rem;
+}

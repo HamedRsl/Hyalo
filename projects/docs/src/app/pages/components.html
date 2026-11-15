@@ -9,6 +9,162 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/sidebar') {
+                <div class="phase3-preview">
+                  <hy-sidebar [collapsed]="true" label="Preview navigation"
+                    ><a hySidebarItem label="Home" aria-label="Home" icon="home" active></a
+                    ><a hySidebarItem label="Settings" aria-label="Settings" icon="settings"></a
+                  ></hy-sidebar>
+                </div>
+              }
+              @case ('/components/breadcrumb') {
+                <div class="phase3-preview"><hy-breadcrumb [items]="previewTrail" /></div>
+              }
+              @case ('/components/menu') {
+                <div class="phase3-preview">
+                  <hy-menu aria-label="Preview actions"
+                    ><button hyMenuItem>Open project</button
+                    ><button hyMenuItem>Export report</button></hy-menu
+                  >
+                </div>
+              }
+              @case ('/components/command') {
+                <div class="phase3-preview">
+                  <div class="mini-command">
+                    <span>Search pages and actions…</span><kbd hyKbd>Ctrl K</kbd>
+                    <hr />
+                    <strong>Overview</strong><span class="demo-muted">Revenue and activity</span>
+                  </div>
+                </div>
+              }
+              @case ('/components/navigation-menu') {
+                <div class="phase3-preview"><hy-navigation-menu [items]="previewNavigation" /></div>
+              }
+              @case ('/components/pagination') {
+                <div class="phase3-preview"><hy-pagination [total]="80" [page]="3" /></div>
+              }
+              @case ('/components/table') {
+                <div class="phase3-preview">
+                  <hy-table
+                    caption="Projects"
+                    [data]="previewData"
+                    [columns]="previewColumns"
+                    [rowKey]="previewKey"
+                  />
+                </div>
+              }
+              @case ('/components/stat') {
+                <div class="phase3-preview">
+                  <hy-stat label="Monthly revenue" [value]="48250" prefix="$" trend="Up 12.8%" />
+                </div>
+              }
+              @case ('/components/chart') {
+                <div class="phase3-preview">
+                  <div class="mini-chart">
+                    <strong>Revenue overview</strong
+                    ><hy-sparkline [data]="previewTrend" label="Revenue trending up" /><small
+                      >Jan · Feb · Mar · Apr · May · Jun</small
+                    >
+                  </div>
+                </div>
+              }
+              @case ('/components/sparkline') {
+                <div class="phase3-preview">
+                  <div class="mini-chart">
+                    <strong>Weekly activity</strong
+                    ><hy-sparkline [data]="previewTrend" label="Activity trending up" />
+                  </div>
+                </div>
+              }
+              @case ('/components/progress') {
+                <div class="phase3-preview">
+                  <div class="mini-progress">
+                    <hy-progress label="Upload" [value]="64" />
+                    <div class="demo-row">
+                      <hy-progress variant="circle" label="Upload" [value]="64" /><hy-spinner
+                        label="Loading"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+              @case ('/components/alert') {
+                <div class="phase3-preview">
+                  <hy-alert heading="Changes saved" tone="success"
+                    >Your workspace is up to date.</hy-alert
+                  >
+                </div>
+              }
+              @case ('/components/empty-state') {
+                <div class="phase3-preview">
+                  <hy-empty-state
+                    heading="No projects yet"
+                    description="Start with your first idea."
+                    icon="grid"
+                    ><button hyButton>Create project</button></hy-empty-state
+                  >
+                </div>
+              }
+              @case ('/components/list') {
+                <div class="phase3-preview">
+                  <hy-list label="Members"
+                    ><li hyListItem heading="Mina Rahimi" description="Workspace owner"></li>
+                    <li hyListItem heading="Arman Nouri" description="Editor"></li
+                  ></hy-list>
+                </div>
+              }
+              @case ('/components/bento') {
+                <div class="phase3-preview">
+                  <hy-bento
+                    ><div hyBentoTile [columns]="2" class="mini-bento">
+                      Revenue<br /><strong>$48,250</strong>
+                    </div>
+                    <div hyBentoTile class="mini-bento">24<br />Projects</div>
+                    <div hyBentoTile [columns]="3" class="mini-bento">
+                      Workspace activity
+                    </div></hy-bento
+                  >
+                </div>
+              }
+              @case ('/components/scroll-area') {
+                <div class="phase3-preview">
+                  <hy-scroll-area label="Activity preview" maxHeight="9rem"
+                    ><hy-list label="Activity"
+                      ><li hyListItem heading="Project created"></li>
+                      <li hyListItem heading="Design approved"></li>
+                      <li hyListItem heading="Report exported"></li></hy-list
+                  ></hy-scroll-area>
+                </div>
+              }
+              @case ('/components/hover-card') {
+                <div class="phase3-preview">
+                  <div class="mini-command">
+                    <button hyButton [hyHoverCard]="hoverPreview" hoverCardLabel="Profile">
+                      Mina Rahimi
+                    </button>
+                    <p>Product designer</p>
+                  </div>
+                  <ng-template #hoverPreview>Product designer at Atelier</ng-template>
+                </div>
+              }
+              @case ('/components/description-list') {
+                <div class="phase3-preview"><hy-description-list [items]="previewDetails" /></div>
+              }
+              @case ('/components/kbd') {
+                <div class="phase3-preview">
+                  <p>Search with <kbd hyKbd>Ctrl</kbd> + <kbd hyKbd>K</kbd></p>
+                </div>
+              }
+              @case ('/components/code-block') {
+                <div class="phase3-preview">
+                  <hy-code-block
+                    label="Import"
+                    language="TypeScript"
+                    [code]="previewSource"
+                    [copyable]="false"
+                  />
+                </div>
+              }
               @case ('/components/carousel') {
                 <div class="preview-media">
                   <img src="showcase-steel.svg" alt="" loading="eager" fetchpriority="high" />

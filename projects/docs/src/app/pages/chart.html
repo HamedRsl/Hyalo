@@ -1,0 +1,55 @@
+<docs-page
+  heading="Charts"
+  lead="Theme-aware Chart.js line, bar, and doughnut charts with an accessible data fallback."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="demo-row">
+        <button
+          hyButton
+          variant="ghost"
+          (click)="type.set('line')"
+          [attr.aria-pressed]="type() === 'line'"
+        >
+          Line</button
+        ><button
+          hyButton
+          variant="ghost"
+          (click)="type.set('bar')"
+          [attr.aria-pressed]="type() === 'bar'"
+        >
+          Bar</button
+        ><button
+          hyButton
+          variant="ghost"
+          (click)="type.set('doughnut')"
+          [attr.aria-pressed]="type() === 'doughnut'"
+        >
+          Doughnut
+        </button>
+      </div>
+      <hy-chart
+        label="Revenue by month"
+        summary="Revenue increased from $18k in January to $32k in June."
+        [type]="type()"
+        [data]="revenue"
+      /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyChart, HyChartType &#125; from '@hyalo/angular/chart';" />
+  <p>Install the optional chart engine with <code>npm install chart.js</code>.</p>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Install chart.js as an optional peer only when using this entry point. The engine loads near the
+    viewport. Charts reserve height, disable animation, and dispose their canvas instance on
+    destroy. The data table is available during loading, on the server, and if the engine fails.
+    Theme and direction changes refresh colors and labels. Set --hy-chart-height to size the plot.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

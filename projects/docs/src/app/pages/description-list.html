@@ -1,0 +1,24 @@
+<docs-page
+  heading="Description list"
+  lead="Structured labels and values with native definition-list semantics."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo"><hy-description-list [items]="details" /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyDescriptionList &#125; from '@hyalo/angular/description-list';"
+  />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The component renders dl, dt, and dd. Labels and values stack on narrow screens. Long
+    identifiers wrap without widening the page.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

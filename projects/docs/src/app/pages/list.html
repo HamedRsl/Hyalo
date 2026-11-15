@@ -1,0 +1,32 @@
+<docs-page
+  heading="List and list item"
+  lead="Readable rows with descriptions and application-owned actions."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-list label="Workspace members"
+        ><li hyListItem heading="Mina Rahimi" description="Owner · mina@example.test">
+          <button hyButton variant="ghost" (click)="selected.set('Mina')">View Mina</button>
+        </li>
+        <li hyListItem heading="Arman Nouri" description="Editor · arman@example.test">
+          <button hyButton variant="ghost" (click)="selected.set('Arman')">View Arman</button>
+        </li></hy-list
+      >
+      <p role="status">{{ selected() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_LIST &#125; from '@hyalo/angular/list';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The container renders a ul and each item is a native li. Rows are not fake buttons. Put a
+    meaningful link or button in the content slot for each action.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

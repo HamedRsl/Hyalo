@@ -1,0 +1,47 @@
+<docs-page
+  heading="Dropdown menu"
+  lead="Keyboard-driven actions, checkable options, nested menus, and a split button."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="demo-row">
+        <button hyButton type="button" [hyMenuTriggerFor]="actions">Project actions</button
+        ><hy-split-button
+          label="Export"
+          [menu]="actions"
+          menuLabel="Export options"
+          (activated)="message.set('Export started')"
+        /><span role="status">{{ message() }}</span>
+      </div>
+      <ng-template #actions
+        ><hy-menu aria-label="Project actions"
+          ><button hyMenuItem (triggered)="message.set('Report opened')">Open report</button
+          ><button hyMenuCheckbox [checked]="pinned()" (triggered)="pinned.update(toggle)">
+            Pin project</button
+          ><button hyMenuItem [hyMenuTriggerFor]="formats">Export as</button
+          ><button hyMenuItem disabled>Archive unavailable</button></hy-menu
+        ></ng-template
+      ><ng-template #formats
+        ><hy-menu aria-label="Export format"
+          ><button hyMenuItem (triggered)="message.set('CSV selected')">CSV</button
+          ><button hyMenuItem (triggered)="message.set('PDF selected')">PDF</button></hy-menu
+        ></ng-template
+      >
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_MENU &#125; from '@hyalo/angular/menu';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    CDK menu primitives own arrow keys, typeahead, Escape, submenu direction, and focus return. Use
+    menus for actions. Website destinations belong in navigation. Keep checked values in application
+    state.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>
