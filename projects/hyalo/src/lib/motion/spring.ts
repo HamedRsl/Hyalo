@@ -6,7 +6,9 @@
  *   duration; the settle time falls out of the physics.
  */
 export interface HySpringConfig {
+  /** Finite and greater than zero, so the spring can settle. */
   readonly damping: number;
+  /** Finite and at least 1/60 second. Use set() for an immediate change. */
   readonly response: number;
 }
 
@@ -30,6 +32,12 @@ export interface HySpringTarget extends Partial<HySpringConfig> {
 }
 
 const STEP = 1 / 240;
+const MIN_RESPONSE = 1 / 60;
+const MAX_STEPS = 240;
+
+function assertFinite(value: number, name: string): void {
+  if (!Number.isFinite(value)) throw new RangeError(`HySpring: ${name} must be finite.`);
+}
 const REST_DELTA = 0.1;
 const REST_VELOCITY = 2;
 
@@ -53,6 +61,7 @@ export class HySpring {
     initial: number,
     private readonly onUpdate: (value: number) => void,
   ) {
+    assertFinite(initial, 'initial value');
     this.value = initial;
   }
 
@@ -63,12 +72,19 @@ export class HySpring {
 
   /** Springs toward `target`, from wherever it is now. */
   to(target: number, options: HySpringTarget = {}): void {
+    const damping = options.damping ?? SPRINGS.settle.damping;
+    const response = options.response ?? SPRINGS.settle.response;
+    const velocity = options.velocity ?? this.velocity;
+    assertFinite(target, 'target');
+    assertFinite(this.value, 'current value');
+    assertFinite(velocity, 'velocity');
+    if (!Number.isFinite(damping) || damping <= 0)
+      throw new RangeError('HySpring: damping must be finite and greater than zero.');
+    if (!Number.isFinite(response) || response < MIN_RESPONSE)
+      throw new RangeError('HySpring: response must be finite and at least 1/60 second.');
     this.target = target;
-    this.config = {
-      damping: options.damping ?? SPRINGS.settle.damping,
-      response: options.response ?? SPRINGS.settle.response,
-    };
-    if (options.velocity !== undefined) this.velocity = options.velocity;
+    this.config = { damping, response };
+    this.velocity = velocity;
     this.onRest = options.onRest ?? null;
     if (this.frame) return;
     this.last = -1;
@@ -77,6 +93,7 @@ export class HySpring {
 
   /** Jumps to a value and stops, as when a finger holds it. */
   set(value: number): void {
+    assertFinite(value, 'value');
     this.stop();
     this.value = value;
     this.velocity = 0;
@@ -101,15 +118,19 @@ export class HySpring {
     const stiffness = ((2 * Math.PI) / this.config.response) ** 2;
     const friction = (4 * Math.PI * this.config.damping) / this.config.response;
     // Stiffer springs need finer steps to stay stable.
-    const steps = Math.ceil(dt / Math.min(STEP, this.config.response / 60));
+    const steps = Math.max(
+      1,
+      Math.min(MAX_STEPS, Math.ceil(dt / Math.min(STEP, this.config.response / 60))),
+    );
     const h = dt / steps;
     for (let i = 0; i < steps; i++) {
       this.velocity += (-stiffness * (this.value - this.target) - friction * this.velocity) * h;
       this.value += this.velocity * h;
     }
     if (
-      Math.abs(this.velocity) < REST_VELOCITY &&
-      Math.abs(this.value - this.target) < REST_DELTA
+      !Number.isFinite(this.value) ||
+      !Number.isFinite(this.velocity) ||
+      (Math.abs(this.velocity) < REST_VELOCITY && Math.abs(this.value - this.target) < REST_DELTA)
     ) {
       this.value = this.target;
       this.velocity = 0;
