@@ -1,0 +1,12 @@
+<section>
+  <div class="media"><ng-content select="[hyBlockMedia]" /></div>
+  <div>
+    <p>{{ category() }}</p>
+    <h2>{{ heading() }}</h2>
+    <p>{{ description() }}</p>
+    <strong>{{ price() }}</strong>
+    <div class="choices"><ng-content select="[hyBlockOptions]" /></div>
+    <a hyButton [href]="actionHref()">{{ actionLabel() }}</a
+    ><ng-content />
+  </div>
+</section>

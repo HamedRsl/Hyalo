@@ -7,7 +7,7 @@
 Liquid glass components for Angular, built on Angular Aria and the CDK. Signal based, zoneless, server-render safe, accessible, and ready for RTL.
 
 ```sh
-npm install @hyalo/angular @angular/cdk @angular/aria
+npm install @hyalo/angular
 ```
 
 Add the stylesheet before your own styles in `angular.json`:
@@ -36,6 +36,10 @@ controls are included too. The existing segmented control provides toggle groups
 Refraction uses a supplied same-origin or CORS-enabled image and one shared WebGL
 context on high fidelity. CSS glass remains available on other tiers or when WebGL
 cannot run. The gallery uses the existing dialog overlay styles.
+
+Version 0.3 adds app navigation, tables, optional Chart.js charts, filters, command search,
+statistics, copy controls, and composed blocks. Import foundations from
+`@hyalo/angular/core` and optional motion from `@hyalo/angular/motion`.
 
 Configuration, theming, RTL, motion and the full component list are in the [repository README](https://github.com/HamedRsl/Hyalo#readme).
 

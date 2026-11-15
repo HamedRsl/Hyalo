@@ -12,18 +12,30 @@
           label="Overview"
           aria-label="Overview"
           icon="home"
-          active
+          [active]="selected() === 'Overview'"
+          (click)="select($event, 'Overview')"
         ></a
-        ><a hySidebarItem href="#projects" label="Projects" aria-label="Projects" icon="grid"></a
+        ><a
+          hySidebarItem
+          href="#projects"
+          label="Projects"
+          aria-label="Projects"
+          icon="grid"
+          [active]="selected() === 'Projects'"
+          (click)="select($event, 'Projects')"
+        ></a
         ><a
           hySidebarItem
           href="#settings"
           label="Settings"
           aria-label="Settings"
           icon="settings"
+          [active]="selected() === 'Settings'"
+          (click)="select($event, 'Settings')"
         ></a
         ><small hySidebarFooter>Personal workspace</small></hy-sidebar
       >
+      <p role="status">Preview: {{ selected() }}</p>
     </div></docs-example
   >
   <h2>Import</h2>

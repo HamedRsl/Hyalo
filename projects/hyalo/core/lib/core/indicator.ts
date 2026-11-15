@@ -25,6 +25,10 @@ export function trackIndicator(
   // Bumped when the row resizes, for example after web fonts load.
   const size = signal(0);
   const destroyRef = inject(DestroyRef);
+  let frame = 0;
+  destroyRef.onDestroy(() => {
+    if (frame) cancelAnimationFrame(frame);
+  });
 
   afterNextRender(() => {
     const row = container()?.nativeElement;
@@ -56,7 +60,11 @@ export function trackIndicator(
       if (!m) return;
       m.row.style.setProperty('--hy-ind-x', `${m.x}px`);
       m.row.style.setProperty('--hy-ind-size', `${m.size}px`);
-      if (!ready()) requestAnimationFrame(() => ready.set(true));
+      if (!ready() && !frame)
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          ready.set(true);
+        });
     },
   });
 

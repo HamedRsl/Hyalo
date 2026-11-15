@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+.billing {
+  display: flex;
+  gap: 0.5rem;
+  margin-block: 1rem;
+}
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+}
+hy-card {
+  padding: 1.5rem;
+}
+.featured {
+  outline: 2px solid var(--hy-primary);
+}
+strong {
+  font-size: 2rem;
+}
+p,
+li {
+  color: var(--hy-ink-2);
+  line-height: 1.7;
+}
+button {
+  min-block-size: 44px;
+  font: inherit;
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+button[aria-pressed='true'] {
+  background: var(--hy-primary-wash);
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}

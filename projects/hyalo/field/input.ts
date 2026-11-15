@@ -36,7 +36,11 @@ export class HyInput implements HyFieldControl, DoCheck {
   // The token, not the FormField class, so apps without forms do not bundle them.
   private readonly formField = inject(FORM_FIELD, { self: true, optional: true });
 
-  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+  // Signal Forms exposes a lightweight NgControl bridge, not an AbstractControl.
+  // Its state is already reactive through FORM_FIELD, so no event subscription is needed.
+  private readonly ngControl = this.formField
+    ? null
+    : inject(NgControl, { self: true, optional: true });
   private readonly destroy = inject(DestroyRef);
   private readonly revision = signal(0);
   private control: AbstractControl | null | undefined;

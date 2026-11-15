@@ -1,3 +1,6 @@
+import { HyBorderBeam } from '@hyalo/angular/border-beam';
+import { HyNumberTicker } from '@hyalo/angular/number-ticker';
+import { HyCopy } from '@hyalo/angular/copy';
 import { HY_SIDEBAR } from '@hyalo/angular/sidebar';
 import { HyBreadcrumb } from '@hyalo/angular/breadcrumb';
 import { HY_MENU } from '@hyalo/angular/menu';
@@ -42,6 +45,14 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/border-beam':
+    'A restrained border highlight, with movement only when explicitly enabled.',
+  '/components/copy': 'Copy text with clear success or failure feedback and stable keyboard focus.',
+  '/components/filter': 'Compose typed filters for status, search, and date ranges in one bar.',
+  '/components/number-ticker':
+    'Localized numbers with optional, interruptible transitions between values.',
+  '/components/progressive-blur':
+    'A soft edge treatment that separates floating chrome from scrolling content.',
   '/components/sidebar': 'An app rail that collapses to familiar icons without losing link names.',
   '/components/breadcrumb': 'A quiet path back through the information hierarchy.',
   '/components/menu':
@@ -109,9 +120,16 @@ const SUMMARIES: Record<string, string> = {
   '/components/tooltip-popover': 'Hints on hover or focus, and panels anchored to a trigger.',
 };
 
+export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.items ?? [])
+  .filter((item) => item.path in SUMMARIES)
+  .map((item) => ({ ...item, summary: SUMMARIES[item.path] }));
+
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyBorderBeam,
+    HyNumberTicker,
+    HyCopy,
     HY_SIDEBAR,
     HyBreadcrumb,
     HY_MENU,
@@ -179,9 +197,7 @@ export default class ComponentsPage {
   ];
   protected readonly previewTrend = [10, 18, 15, 25, 24, 32, 38];
   protected readonly previewSource = "import { HyTable } from '@hyalo/angular/table';";
-  protected readonly items = (NAV.find((g) => g.title === 'Components')?.items ?? [])
-    .filter((item) => item.path in SUMMARIES)
-    .map((item) => ({ ...item, summary: SUMMARIES[item.path] }));
+  protected readonly items = COMPONENT_CATALOG;
 
   protected readonly straps = [
     { value: 'leather', label: 'Leather' },

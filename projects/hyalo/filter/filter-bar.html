@@ -1,0 +1,45 @@
+<div class="editors" role="group" [attr.aria-label]="label()">
+  @for (field of fields(); track field.field) {
+    <hy-field class="field" [label]="field.label">
+      @if (field.options; as options) {
+        <hy-select
+          [options]="options"
+          [native]="true"
+          [value]="raw(field.field)"
+          (valueChange)="change(field, $event ?? '')"
+          [placeholder]="anyLabel()"
+        />
+      } @else {
+        <input
+          hyInput
+          type="search"
+          [attr.aria-label]="field.label"
+          [value]="raw(field.field)"
+          (input)="change(field, $any($event.target).value)"
+        />
+      }
+    </hy-field>
+  }
+  @if (clauses().length) {
+    <button type="button" (click)="clauses.set([])">{{ clearLabel() }}</button>
+  }
+  <ng-content />
+</div>
+<div class="tokens" role="list" [attr.aria-label]="activeLabel()">
+  @for (item of view(); track item.clause.id) {
+    <span role="listitem">
+      @if (item.editor; as editor) {
+        <ng-container [ngTemplateOutlet]="editor" [ngTemplateOutletContext]="item.context" />
+      } @else {
+        <span>{{ item.label }}: {{ item.text }}</span>
+      }
+      <button
+        type="button"
+        [attr.aria-label]="removeLabel() + ' ' + item.label"
+        (click)="remove(item.clause.id)"
+      >
+        ×
+      </button>
+    </span>
+  }
+</div>

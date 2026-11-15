@@ -24,64 +24,8 @@ import { DocsPage } from '../shared/page';
     HyCodeBlock,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<docs-page
-    eyebrow="Composable sections"
-    heading="Blocks that belong to your page"
-    lead="Responsive marketing and app sections built on public Hyalo primitives. Applications own data, actions and backend integrations."
-  >
-    <hy-hero-block
-      eyebrow="Atelier"
-      heading="Make room for thoughtful work"
-      description="A complete hero without a required animation engine."
-      actionHref="/dashboard"
-      actionLabel="Explore the dashboard"
-      ><div hyBlockMedia class="stage">
-        Your media, refraction surface or interactive stage
-      </div></hy-hero-block
-    >
-    <hy-feature-block [features]="features" />
-    <hy-pricing-block [plans]="plans" />
-    <hy-testimonials-block [items]="testimonials" />
-    <hy-product-block
-      category="Objects of intention"
-      heading="A considered edition"
-      description="Supply your own gallery, variants and commerce actions."
-      price="$240"
-      actionHref="/components/lightbox"
-      actionLabel="Explore the gallery"
-      ><div hyBlockMedia class="stage">Product media slot</div></hy-product-block
-    >
-    <h2>Dashboard compositions</h2>
-    <hy-kpi-strip-block [items]="kpis" /><hy-activity-block [items]="activities" />
-    <p>
-      HyDashboardBlock projects a sidebar, toolbar and main content. HyFilterToolbarBlock preserves
-      the same typed filter state as HyFilterBar. The dashboard demo shows the complete composition.
-    </p>
-    <hy-code-block [code]="source" language="html" />
-  </docs-page>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    hy-pricing-block,
-    hy-feature-block,
-    hy-testimonials-block,
-    hy-product-block,
-    hy-activity-block {
-      display: block;
-      margin-block: 3rem;
-    }
-    .stage {
-      display: grid;
-      place-content: center;
-      min-block-size: 18rem;
-      border-radius: var(--hy-radius-l);
-      background: linear-gradient(135deg, var(--hy-primary-wash), var(--hy-surface-2));
-      color: var(--hy-ink-2);
-      padding: 2rem;
-      text-align: center;
-    }
-  `,
+  templateUrl: './blocks.html',
+  styleUrl: './blocks.css',
 })
 export default class BlocksPage {
   protected readonly features = [

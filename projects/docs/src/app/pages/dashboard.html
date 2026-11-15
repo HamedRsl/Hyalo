@@ -4,37 +4,66 @@
   lead="A working dashboard built from the new components. Filter projects, select rows, sort columns, search, and switch the display settings."
   ><div class="workspace">
     <hy-sidebar [(collapsed)]="collapsed" label="Demo workspace"
-      ><strong hySidebarBrand>Atelier</strong
-      ><a
+      ><div hySidebarBrand class="workspace-brand">
+        <span class="workspace-monogram" aria-hidden="true">a</span
+        ><span>Atelier<small>Studio workspace</small></span>
+      </div>
+      <a
         hySidebarItem
-        href="/dashboard"
+        href="#dashboard-overview"
+        [active]="selectedView() === 'Overview'"
+        (click)="selectView($event, 'Overview')"
         label="Overview"
         aria-label="Overview"
         icon="home"
-        active
       ></a
       ><a
         hySidebarItem
-        href="/components/table"
+        href="#dashboard-projects"
+        [active]="selectedView() === 'Projects'"
+        (click)="selectView($event, 'Projects')"
         label="Projects"
         aria-label="Projects"
         icon="grid"
       ></a
-      ><a hySidebarItem href="/components/list" label="Team" aria-label="Team" icon="user"></a
-      ><a hySidebarItem href="/theming" label="Settings" aria-label="Settings" icon="settings"></a
-      ><small hySidebarFooter>Team workspace</small></hy-sidebar
+      ><a
+        hySidebarItem
+        href="#dashboard-team"
+        [active]="selectedView() === 'Team'"
+        (click)="selectView($event, 'Team')"
+        label="Team"
+        aria-label="Team"
+        icon="user"
+      ></a
+      ><a
+        hySidebarItem
+        href="#dashboard-settings"
+        [active]="selectedView() === 'Settings'"
+        (click)="selectView($event, 'Settings')"
+        label="Settings"
+        aria-label="Settings"
+        icon="settings"
+      ></a>
+      <div hySidebarFooter class="workspace-member">
+        <span class="member-avatar" aria-hidden="true">MR</span
+        ><span>Mina Rahimi<small>Workspace admin</small></span>
+      </div></hy-sidebar
     >
     <section class="workspace-content" aria-label="Workspace overview">
       <div class="toolbar">
-        <hy-breadcrumb [items]="trail" /><button hyButton variant="glass" (click)="search()">
-          Search <kbd hyKbd>Ctrl K</kbd>
+        <hy-breadcrumb [items]="trail()" (click)="followTrail($event)" /><button
+          hyButton
+          variant="glass"
+          (click)="search()"
+        >
+          Search workspace
         </button>
       </div>
       <div class="page-heading">
         <div>
-          <p class="eyebrow">MONDAY, JUNE 16</p>
-          <h2>A little more momentum.</h2>
-          <p>Here is what is happening across your workspace.</p>
+          <p class="eyebrow">WORKSPACE OVERVIEW</p>
+          <h2>{{ selectedView() === 'Overview' ? 'A little more momentum.' : selectedView() }}</h2>
+          <p>Preview the {{ selectedView().toLowerCase() }} area of your workspace.</p>
         </div>
         <hy-split-button
           label="Export report"
@@ -96,7 +125,7 @@
           [clauses]="clauses()"
           (clausesChange)="updateFilters($event)"
         />
-        <p>Preset ranges use rolling elapsed time in UTC. Demo row ages are fixed sample data.</p>
+        <p class="filter-hint">Filter by status, project name, or last update.</p>
         @if (filtered().length) {
           <hy-table
             caption="Workspace projects"

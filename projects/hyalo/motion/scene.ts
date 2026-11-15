@@ -164,10 +164,11 @@ export class HySceneLight {
     const event = this.event;
     if (!event || !this.motion.enabled() || this.document.hidden) return;
     const work: { entry: Participant; rect: DOMRect; inside: boolean }[] = [];
+    const inactive: Participant[] = [];
     for (const group of this.entries.values())
       for (const entry of group) {
         if (!entry.intersecting || !entry.host.isConnected || work.length >= 64) {
-          this.leave(entry);
+          inactive.push(entry);
           continue;
         }
         if (this.dirty || !entry.rect) entry.rect = entry.host.getBoundingClientRect();
@@ -181,6 +182,7 @@ export class HySceneLight {
       }
     this.dirty = false;
     // Finish geometry reads before invoking handlers that write styles.
+    for (const entry of inactive) this.leave(entry);
     for (const { entry, rect, inside } of work) {
       if (!inside && !entry.scene) {
         this.leave(entry);

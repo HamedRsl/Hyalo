@@ -17,6 +17,11 @@ export default class SidebarPage {
   protected readonly example = EXAMPLE;
 
   protected readonly collapsed = signal(false);
+  protected readonly selected = signal('Overview');
+  protected select(event: MouseEvent, page: string): void {
+    event.preventDefault();
+    this.selected.set(page);
+  }
   protected readonly rows: ApiRow[] = [
     {
       name: 'collapsed',

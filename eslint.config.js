@@ -65,8 +65,8 @@ module.exports = defineConfig([
     },
   },
   {
-    // The primary entry point is the base layer and never imports the others.
-    files: ['projects/hyalo/src/**/*.ts'],
+    // Core is the base layer; the primary entry point is a compatibility facade.
+    files: ['projects/hyalo/core/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -74,7 +74,7 @@ module.exports = defineConfig([
           patterns: [
             {
               group: ['@hyalo/angular', '@hyalo/angular/*'],
-              message: 'The primary entry point must not depend on another entry point.',
+              message: 'Core must not depend on another entry point.',
             },
           ],
         },

@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+hy-card {
+  padding: 1.5rem;
+}
+hy-card:first-child {
+  grid-column: span 2;
+}
+p {
+  line-height: 1.7;
+  color: var(--hy-ink-2);
+}
+@media (max-width: 40rem) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  hy-card:first-child {
+    grid-column: auto;
+  }
+}

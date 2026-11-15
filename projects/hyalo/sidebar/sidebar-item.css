@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: var(--hy-sidebar-item-justify, start);
+  gap: 0.75rem;
+  min-block-size: 44px;
+  min-inline-size: 0;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--hy-radius-s);
+  color: var(--hy-ink-2);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+.label {
+  display: var(--hy-sidebar-label-display, inline);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) and (pointer: fine) {
+  :host(:hover) {
+    background: var(--hy-surface-3);
+    color: var(--hy-ink);
+  }
+}
+:host(:active) {
+  background: var(--hy-surface-4);
+}
+:host([aria-current='page']) {
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
+  font-weight: 600;
+}
+:host(:focus-visible) {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+hy-icon {
+  flex: none;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}

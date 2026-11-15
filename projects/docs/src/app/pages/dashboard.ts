@@ -20,7 +20,6 @@ import { HyCommand } from '@hyalo/angular/command';
 import { HY_MENU } from '@hyalo/angular/menu';
 import { HyProgress } from '@hyalo/angular/progress';
 import { HyEmptyState } from '@hyalo/angular/empty-state';
-import { HyKbd } from '@hyalo/angular/kbd';
 import { DocsPage } from '../shared/page';
 type DashboardFilter = HyFilterClause<{
   status:
@@ -47,7 +46,6 @@ type DashboardFilter = HyFilterClause<{
     HY_MENU,
     HyProgress,
     HyEmptyState,
-    HyKbd,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.html',
@@ -55,6 +53,16 @@ type DashboardFilter = HyFilterClause<{
 })
 export default class DashboardPage {
   protected readonly collapsed = signal(false);
+  protected readonly selectedView = signal('Overview');
+  protected selectView(event: MouseEvent, view: string): void {
+    event.preventDefault();
+    this.selectedView.set(view);
+  }
+  protected followTrail(event: MouseEvent): void {
+    if (!(event.target as Element).closest('a')) return;
+    event.preventDefault();
+    this.selectedView.set('Overview');
+  }
   protected readonly page = signal(1);
   protected readonly selection = signal<readonly (string | number)[]>([]);
   protected readonly clauses = signal<readonly DashboardFilter[]>([]);
@@ -100,7 +108,10 @@ export default class DashboardPage {
   protected readonly notice = signal('');
   private readonly command = inject(HyCommand);
   private readonly router = inject(Router);
-  protected readonly trail = [{ label: 'Workspace', href: '/' }, { label: 'Overview' }];
+  protected readonly trail = computed(() => [
+    { label: 'Workspace', href: '#dashboard-workspace' },
+    { label: this.selectedView() },
+  ]);
   protected readonly projects = [
     { id: '1', name: 'Website refresh', owner: 'Mina Rahimi', status: 'Active', budget: 12400 },
     { id: '2', name: 'Design system', owner: 'Arman Nouri', status: 'Active', budget: 8600 },

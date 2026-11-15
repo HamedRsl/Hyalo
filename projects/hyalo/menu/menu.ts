@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { HyMaterialDirective } from '@hyalo/angular/core';
 import { HyButton } from '@hyalo/angular/button';
+import { HyIcon } from '@hyalo/angular/icon';
 @Component({
   selector: 'hy-menu',
   hostDirectives: [CdkMenu, { directive: HyMaterialDirective, inputs: ['hyMaterial: material'] }],
@@ -90,12 +91,12 @@ export class HyMenuCheckbox {}
 export class HyMenuRadio {}
 @Component({
   selector: 'hy-split-button',
-  imports: [HyButton, HyMenuTrigger],
+  imports: [HyButton, HyMenuTrigger, HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template:
-    '<button hyButton type="button" [disabled]="disabled()" (click)="activated.emit()">{{label()}}</button><button hyButton type="button" [disabled]="disabled()" [hyMenuTriggerFor]="menu()" [attr.aria-label]="menuLabel()"><span aria-hidden="true">⌄</span></button>',
+    '<button hyButton type="button" [disabled]="disabled()" (click)="activated.emit()">{{label()}}</button><button hyButton type="button" [disabled]="disabled()" [hyMenuTriggerFor]="menu()" [attr.aria-label]="menuLabel()"><hy-icon class="chevron" name="chevron-down" size="1rem" /></button>',
   styles:
-    ':host{display:inline-flex;gap:1px}button:first-child{border-start-end-radius:0;border-end-end-radius:0}button:last-child{border-start-start-radius:0;border-end-start-radius:0;min-inline-size:44px}',
+    ':host{display:inline-flex;gap:1px}button:first-child{border-start-end-radius:0;border-end-end-radius:0}button:last-child{border-start-start-radius:0;border-end-start-radius:0;min-inline-size:44px}.chevron{transition:rotate var(--hy-dur-quick) var(--hy-ease-out)}button[aria-expanded=true] .chevron{rotate:180deg}@media(prefers-reduced-motion:reduce){.chevron{transition:none}}',
 })
 export class HySplitButton {
   readonly label = input.required<string>();

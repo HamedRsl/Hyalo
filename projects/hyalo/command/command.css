@@ -13,6 +13,13 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-block-end: 1px solid var(--hy-line);
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+/* Focus belongs to the rounded search row rather than its rectangular input. */
+.search:focus-within {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -3px;
 }
 input {
   flex: 1;
@@ -81,7 +88,7 @@ kbd {
   color: var(--hy-ink-2);
   font-size: 0.75rem;
 }
-:is(button, a, input):focus-visible {
+:is(button, a):focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 3px;
 }

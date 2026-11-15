@@ -1,0 +1,14 @@
+<section>
+  <div>
+    <p class="eyebrow">{{ eyebrow() }}</p>
+    <h2>{{ heading() }}</h2>
+    <p>{{ description() }}</p>
+    <div class="actions">
+      @if (actionHref()) {
+        <a hyButton [href]="actionHref()">{{ actionLabel() }}</a>
+      }
+      <ng-content select="[hyBlockActions]" />
+    </div>
+  </div>
+  <div class="stage"><ng-content select="[hyBlockMedia]" /></div>
+</section>

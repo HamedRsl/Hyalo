@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormField, email, form, required } from '@angular/forms/signals';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { expectNoAxeViolations } from '../src/testing/axe';
 import { HY_TEXT_FIELD } from './field';
 
@@ -23,6 +24,16 @@ class Host {
     email(p.email, { message: 'That does not look like an email' });
   });
   readonly serverError = signal<string | undefined>(undefined);
+}
+
+@Component({
+  imports: [HY_TEXT_FIELD, ReactiveFormsModule],
+  template: '<hy-field label="Name"><input hyInput [formControl]="control()" /></hy-field>',
+})
+class ReactiveHost {
+  readonly control = signal(
+    new FormControl('', { nonNullable: true, validators: Validators.required }),
+  );
 }
 
 describe('HyField', () => {
@@ -71,6 +82,28 @@ describe('HyField', () => {
     await fixture.whenStable();
     expect(notesField.dataset['invalid']).toBe('true');
     expect(notesField.querySelector('textarea')!.getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('tracks reactive control validity and replacement without using the Signal Forms bridge', async () => {
+    const fixture = TestBed.createComponent(ReactiveHost);
+    await fixture.whenStable();
+    const first = fixture.componentInstance.control();
+    first.markAsTouched();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('input').getAttribute('aria-invalid')).toBe('true');
+    first.setValue('Hamed');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('input').getAttribute('aria-invalid')).toBeNull();
+    const replacement = new FormControl('', { nonNullable: true, validators: Validators.required });
+    replacement.markAsTouched();
+    fixture.componentInstance.control.set(replacement);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('input').getAttribute('aria-invalid')).toBe('true');
+    replacement.setValue('Hyalo');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('input').getAttribute('aria-invalid')).toBeNull();
+    fixture.destroy();
+    expect(() => replacement.setValue('After destroy')).not.toThrow();
   });
 
   it('has no axe violations', async () => {

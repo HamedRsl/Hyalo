@@ -16,7 +16,15 @@ describe('HyCommand', () => {
     await TestBed.inject((await import('@angular/core')).ApplicationRef).whenStable();
     const pane = document.querySelector('hy-command-panel')!;
     const input = pane.querySelector('input')!;
-    expect(input.getAttribute('aria-activedescendant')).toContain('-1');
+    input.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown', keyCode: 40, bubbles: true }),
+    );
+    TestBed.tick();
+    const activeId = input.getAttribute('aria-activedescendant');
+    expect(activeId).toBeTruthy();
+    const active = document.getElementById(activeId!);
+    expect(active?.textContent).toContain('Café');
+    expect(active?.getAttribute('aria-disabled')).not.toBe('true');
     const result = firstValueFrom(ref.closed);
     input.value = 'cafe';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -26,6 +34,24 @@ describe('HyCommand', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
     expect((await result)?.value).toBe(1);
   });
+  it('closes on the first click after the search input loses focus', async () => {
+    const ref = TestBed.inject(HyCommand).open({
+      items: [{ id: 'one', label: 'Reports', value: 1 }],
+    });
+    await TestBed.inject((await import('@angular/core')).ApplicationRef).whenStable();
+    const pane = document.querySelector('hy-command-panel')!;
+    const input = pane.querySelector('input')!;
+    const button = pane.querySelector('button')!;
+    const result = firstValueFrom(ref.closed);
+    input.focus();
+    button.focus();
+    TestBed.tick();
+    expect(pane.querySelectorAll('[role=option]').length).toBe(1);
+    button.click();
+    expect(await result).toBeUndefined();
+    expect(document.querySelector('hy-command-panel')).toBeNull();
+  });
+
   it('caps rendered results and closes immediately on Escape', async () => {
     const ref = TestBed.inject(HyCommand).open({
       items: Array.from({ length: 100 }, (_, i) => ({

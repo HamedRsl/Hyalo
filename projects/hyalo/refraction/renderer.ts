@@ -14,6 +14,8 @@ export class RefractionRenderer {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
   private readonly program: WebGLProgram;
+  private readonly buffer: WebGLBuffer | null;
+  private readonly uniforms: Record<string, WebGLUniformLocation | null>;
   private readonly surfaces = new Set<Surface>();
   private frame = 0;
   private lost = false;
@@ -66,11 +68,18 @@ export class RefractionRenderer {
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('WebGL link failed');
     gl.useProgram(program);
     const buffer = gl.createBuffer();
+    this.buffer = buffer;
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const position = gl.getAttribLocation(program, 'p');
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    this.uniforms = Object.fromEntries(
+      ['image', 'strength', 'aspect', 'imageAspect'].map((name) => [
+        name,
+        gl.getUniformLocation(program, name),
+      ]),
+    );
     this.canvas.addEventListener('webglcontextlost', this.onLost);
     // Keep CSS fallback after a context loss. A new renderer is created on the next registration.
   }
@@ -125,36 +134,38 @@ export class RefractionRenderer {
     this.frame =
       this.document.defaultView?.requestAnimationFrame(() => {
         this.frame = 0;
-        for (const surface of this.surfaces) this.render(surface);
+        const measured = [...this.surfaces]
+          .filter((surface) => surface.ready && surface.target.canvas.isConnected)
+          .map((surface) => ({ surface, rect: surface.target.canvas.getBoundingClientRect() }));
+        for (const { surface, rect } of measured) this.render(surface, rect);
       }) ?? 0;
   }
-  private render(surface: Surface): void {
+  private render(surface: Surface, rect: DOMRect): void {
     if (!surface.ready || !surface.texture) return;
     const { canvas } = surface.target;
-    const rect = canvas.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
     const dpr = Math.min(this.document.defaultView?.devicePixelRatio ?? 1, 2);
     const width = Math.min(2048, Math.round(rect.width * dpr)),
       height = Math.min(2048, Math.round(rect.height * dpr));
-    this.canvas.width = width;
-    this.canvas.height = height;
+    if (this.canvas.width !== width) this.canvas.width = width;
+    if (this.canvas.height !== height) this.canvas.height = height;
     const gl = this.gl;
     gl.viewport(0, 0, width, height);
     gl.useProgram(this.program);
     gl.bindTexture(gl.TEXTURE_2D, surface.texture);
-    gl.uniform1i(gl.getUniformLocation(this.program, 'image'), 0);
+    gl.uniform1i(this.uniforms['image'] ?? null, 0);
     gl.uniform1f(
-      gl.getUniformLocation(this.program, 'strength'),
+      this.uniforms['strength'] ?? null,
       Math.max(0, Math.min(1, surface.target.strength())),
     );
-    gl.uniform1f(gl.getUniformLocation(this.program, 'aspect'), width / height);
+    gl.uniform1f(this.uniforms['aspect'] ?? null, width / height);
     gl.uniform1f(
-      gl.getUniformLocation(this.program, 'imageAspect'),
+      this.uniforms['imageAspect'] ?? null,
       surface.image.naturalWidth / surface.image.naturalHeight,
     );
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    canvas.width = width;
-    canvas.height = height;
+    if (canvas.width !== width) canvas.width = width;
+    if (canvas.height !== height) canvas.height = height;
     const context = canvas.getContext('2d');
     if (context) {
       context.drawImage(this.canvas, 0, 0);
@@ -166,11 +177,16 @@ export class RefractionRenderer {
     this.frame = 0;
   }
   destroy(): void {
+    this.lost = true;
     this.stop();
-    for (const surface of this.surfaces)
+    for (const surface of this.surfaces) {
+      surface.image.onload = null;
       if (surface.texture) this.gl.deleteTexture(surface.texture);
+    }
     this.surfaces.clear();
     this.canvas.removeEventListener('webglcontextlost', this.onLost);
+    this.gl.deleteBuffer(this.buffer);
+    this.gl.deleteProgram(this.program);
     this.gl.getExtension('WEBGL_lose_context')?.loseContext();
   }
 }

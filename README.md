@@ -15,7 +15,7 @@ Phase 3 adds the app shell and data collection: collapsible sidebar, breadcrumb,
 ## Install
 
 ```sh
-npm install @hyalo/angular @angular/cdk @angular/aria
+npm install @hyalo/angular
 ```
 
 Requires Angular 22.2 or later. GSAP is optional (see [Motion](#motion)).

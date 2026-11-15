@@ -3,7 +3,7 @@
   lead="Theme-aware Chart.js line, bar, and doughnut charts with an accessible data fallback."
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><div class="phase3-demo">
+    ><div class="phase3-demo chart-demo">
       <div class="demo-row">
         <button
           hyButton
@@ -12,7 +12,14 @@
           [attr.aria-pressed]="type() === 'line'"
         >
           Line</button
-        ><button hyButton variant="glass" (click)="type.set('area')">Area</button>
+        ><button
+          hyButton
+          variant="ghost"
+          (click)="type.set('area')"
+          [attr.aria-pressed]="type() === 'area'"
+        >
+          Area
+        </button>
         <button
           hyButton
           variant="ghost"

@@ -1,7 +1,13 @@
 <docs-page heading="Breadcrumb" lead="A quiet path back through the information hierarchy.">
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><div class="phase3-demo"><hy-breadcrumb [items]="trail" /></div
-  ></docs-example>
+    ><div class="phase3-demo">
+      <hy-breadcrumb [items]="trail()" (click)="follow($event)" />
+      <p role="status">Preview: {{ current() }}</p>
+      <button hyButton variant="soft" size="sm" type="button" (click)="current.set('Breadcrumb')">
+        Reset path
+      </button>
+    </div></docs-example
+  >
   <h2>Import</h2>
   <docs-import code="import &#123; HyBreadcrumb &#125; from '@hyalo/angular/breadcrumb';" />
   <h2>Behavior and accessibility</h2>

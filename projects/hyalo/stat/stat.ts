@@ -2,19 +2,10 @@ import { HyNumberTicker } from '@hyalo/angular/number-ticker';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  ElementRef,
-  Injector,
-  afterNextRender,
   booleanAttribute,
   computed,
-  effect,
-  inject,
   input,
-  signal,
-  untracked,
 } from '@angular/core';
-import { HyMotion, HySpring } from '@hyalo/angular/motion';
 @Component({
   selector: 'hy-stat',
   imports: [HyNumberTicker],

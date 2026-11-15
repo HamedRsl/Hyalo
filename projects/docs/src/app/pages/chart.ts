@@ -11,7 +11,7 @@ import { DocsApiTable, type ApiRow } from '../shared/api-table';
   imports: [DocsPage, DocsExample, DocsImport, DocsApiTable, HyChart, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chart.html',
-  styleUrl: './phase3.css',
+  styleUrl: './chart.css',
 })
 export default class ChartPage {
   protected readonly example = EXAMPLE;

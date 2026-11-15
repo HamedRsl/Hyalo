@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+.shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem;
+}
+.main {
+  min-inline-size: 0;
+}
+header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  background: var(--hy-surface-1);
+  padding-block: 0.75rem;
+}
+@media (max-width: 40rem) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    overflow: auto;
+  }
+}

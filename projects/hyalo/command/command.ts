@@ -61,6 +61,11 @@ export class HyCommandPanel {
   protected choose(item: HyCommandItem): void {
     if (!item.disabled) this.ref.close(item);
   }
+  protected dismiss(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.close();
+  }
   protected close(): void {
     this.ref.close();
   }

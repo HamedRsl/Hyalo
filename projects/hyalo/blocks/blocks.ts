@@ -9,60 +9,8 @@ import { HyFilterBar, type HyFilterField, type HyFilterToken } from '@hyalo/angu
   selector: 'hy-hero-block',
   imports: [HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <div>
-      <p class="eyebrow">{{ eyebrow() }}</p>
-      <h2>{{ heading() }}</h2>
-      <p>{{ description() }}</p>
-      <div class="actions">
-        @if (actionHref()) {
-          <a hyButton [href]="actionHref()">{{ actionLabel() }}</a>
-        }
-        <ng-content select="[hyBlockActions]" />
-      </div>
-    </div>
-    <div class="stage"><ng-content select="[hyBlockMedia]" /></div>
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    section {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: center;
-      gap: clamp(1.5rem, 5vw, 5rem);
-      padding-block: clamp(2rem, 6vw, 6rem);
-    }
-    h2 {
-      font-size: clamp(2rem, 5vw, 4rem);
-      line-height: 1.1;
-      margin: 0.5rem 0;
-      max-inline-size: 16ch;
-    }
-    p {
-      line-height: 1.7;
-      color: var(--hy-ink-2);
-    }
-    .eyebrow {
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    .stage {
-      min-inline-size: 0;
-    }
-    @media (max-width: 48rem) {
-      section {
-        grid-template-columns: 1fr;
-      }
-    }
-  `,
+  templateUrl: './hero-block.html',
+  styleUrl: './hero-block.css',
 })
 export class HyHeroBlock {
   readonly eyebrow = input('');
@@ -85,94 +33,8 @@ export interface HyPricingPlan {
   selector: 'hy-pricing-block',
   imports: [HyCard, HyButton, HyNumberTicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <h2>{{ heading() }}</h2>
-    <div class="billing" role="group" [attr.aria-label]="billingLabel()">
-      <button
-        type="button"
-        [attr.aria-pressed]="billing() === 'monthly'"
-        (click)="billing.set('monthly')"
-      >
-        {{ monthlyLabel() }}</button
-      ><button
-        type="button"
-        [attr.aria-pressed]="billing() === 'annual'"
-        (click)="billing.set('annual')"
-      >
-        {{ annualLabel() }}
-      </button>
-    </div>
-    <div class="plans">
-      @for (plan of plans(); track plan.id) {
-        <hy-card material="tinted" [class.featured]="plan.featured"
-          ><h3>{{ plan.name }}</h3>
-          <p>{{ plan.description }}</p>
-          <strong
-            ><hy-number-ticker
-              [value]="billing() === 'monthly' ? plan.monthly : plan.annual"
-              [locale]="locale()"
-              [format]="currencyFormat()"
-          /></strong>
-          <p>{{ billing() === 'monthly' ? monthlyLabel() : annualLabel() }}</p>
-          <ul>
-            @for (feature of plan.features; track feature) {
-              <li>{{ feature }}</li>
-            }
-          </ul>
-          <a hyButton [href]="plan.href">{{ actionLabel() }} {{ plan.name }}</a></hy-card
-        >
-      }
-    </div>
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    h2 {
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-    }
-    .billing {
-      display: flex;
-      gap: 0.5rem;
-      margin-block: 1rem;
-    }
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-      gap: 1rem;
-    }
-    hy-card {
-      padding: 1.5rem;
-    }
-    .featured {
-      outline: 2px solid var(--hy-primary);
-    }
-    strong {
-      font-size: 2rem;
-    }
-    p,
-    li {
-      color: var(--hy-ink-2);
-      line-height: 1.7;
-    }
-    button {
-      min-block-size: 44px;
-      font: inherit;
-      background: var(--hy-surface-1);
-      color: var(--hy-ink);
-      border: 1px solid var(--hy-line);
-      border-radius: var(--hy-radius-s);
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-    }
-    button[aria-pressed='true'] {
-      background: var(--hy-primary-wash);
-    }
-    button:focus-visible {
-      outline: 2px solid var(--hy-primary);
-      outline-offset: 2px;
-    }
-  `,
+  templateUrl: './pricing-block.html',
+  styleUrl: './pricing-block.css',
 })
 export class HyPricingBlock {
   readonly heading = input('Plans for your next chapter');
@@ -198,46 +60,8 @@ export interface HyFeature {
   selector: 'hy-feature-block',
   imports: [HyCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <h2>{{ heading() }}</h2>
-    <div class="grid">
-      @for (feature of features(); track feature.id) {
-        <hy-card material="tinted"
-          ><h3>{{ feature.title }}</h3>
-          <p>{{ feature.description }}</p></hy-card
-        >
-      }
-      <ng-content />
-    </div>
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-    }
-    hy-card {
-      padding: 1.5rem;
-    }
-    hy-card:first-child {
-      grid-column: span 2;
-    }
-    p {
-      line-height: 1.7;
-      color: var(--hy-ink-2);
-    }
-    @media (max-width: 40rem) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      hy-card:first-child {
-        grid-column: auto;
-      }
-    }
-  `,
+  templateUrl: './feature-block.html',
+  styleUrl: './feature-block.css',
 })
 export class HyFeatureBlock {
   readonly heading = input('Built for the way you work');
@@ -253,53 +77,8 @@ export interface HyTestimonial {
   selector: 'hy-testimonials-block',
   imports: [HyCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <h2>{{ heading() }}</h2>
-    <div class="wall">
-      @for (item of items(); track item.id) {
-        <hy-card material="tinted"
-          ><figure>
-            <blockquote>{{ item.quote }}</blockquote>
-            <figcaption>
-              <strong>{{ item.author }}</strong
-              ><span>{{ item.role }}</span>
-            </figcaption>
-          </figure></hy-card
-        >
-      }
-    </div>
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    .wall {
-      columns: 18rem;
-      column-gap: 1rem;
-    }
-    hy-card {
-      display: block;
-      break-inside: avoid;
-      margin-block-end: 1rem;
-      padding: 1.5rem;
-    }
-    figure,
-    blockquote {
-      margin: 0;
-    }
-    blockquote {
-      line-height: 1.8;
-    }
-    figcaption {
-      display: grid;
-      gap: 0.25rem;
-      margin-block-start: 1.5rem;
-    }
-    span {
-      font-size: 0.875rem;
-      color: var(--hy-ink-2);
-    }
-  `,
+  templateUrl: './testimonials-block.html',
+  styleUrl: './testimonials-block.css',
 })
 export class HyTestimonialsBlock {
   readonly heading = input('Trusted by thoughtful teams');
@@ -309,50 +88,8 @@ export class HyTestimonialsBlock {
   selector: 'hy-product-block',
   imports: [HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <div class="media"><ng-content select="[hyBlockMedia]" /></div>
-    <div>
-      <p>{{ category() }}</p>
-      <h2>{{ heading() }}</h2>
-      <p>{{ description() }}</p>
-      <strong>{{ price() }}</strong>
-      <div class="choices"><ng-content select="[hyBlockOptions]" /></div>
-      <a hyButton [href]="actionHref()">{{ actionLabel() }}</a
-      ><ng-content />
-    </div>
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    section {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: center;
-      gap: 2rem;
-    }
-    .media {
-      min-inline-size: 0;
-    }
-    h2 {
-      font-size: clamp(1.75rem, 4vw, 3rem);
-    }
-    p {
-      color: var(--hy-ink-2);
-      line-height: 1.8;
-    }
-    .choices {
-      margin-block: 1.5rem;
-    }
-    strong {
-      font-size: 1.5rem;
-    }
-    @media (max-width: 48rem) {
-      section {
-        grid-template-columns: 1fr;
-      }
-    }
-  `,
+  templateUrl: './product-block.html',
+  styleUrl: './product-block.css',
 })
 export class HyProductBlock {
   readonly category = input('');
@@ -365,41 +102,8 @@ export class HyProductBlock {
 @Component({
   selector: 'hy-dashboard-block',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="shell">
-    <aside><ng-content select="[hyBlockSidebar]" /></aside>
-    <div class="main">
-      <header><ng-content select="[hyBlockToolbar]" /></header>
-      <ng-content />
-    </div>
-  </div>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    .shell {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 1.5rem;
-    }
-    .main {
-      min-inline-size: 0;
-    }
-    header {
-      position: sticky;
-      inset-block-start: 0;
-      z-index: 1;
-      background: var(--hy-surface-1);
-      padding-block: 0.75rem;
-    }
-    @media (max-width: 40rem) {
-      .shell {
-        grid-template-columns: 1fr;
-      }
-      aside {
-        overflow: auto;
-      }
-    }
-  `,
+  templateUrl: './dashboard-block.html',
+  styleUrl: './dashboard-block.css',
 })
 export class HyDashboardBlock {}
 export interface HyKpi {
@@ -414,28 +118,8 @@ export interface HyKpi {
   selector: 'hy-kpi-strip-block',
   imports: [HyStat],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="strip">
-    @for (item of items(); track item.id) {
-      <hy-stat
-        [label]="item.label"
-        [value]="item.value"
-        [trend]="item.trend ?? ''"
-        [prefix]="item.prefix ?? ''"
-        [suffix]="item.suffix ?? ''"
-        [locale]="locale()"
-      />
-    }
-  </div>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    .strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-      gap: 1rem;
-    }
-  `,
+  templateUrl: './kpi-strip-block.html',
+  styleUrl: './kpi-strip-block.css',
 })
 export class HyKpiStripBlock {
   readonly items = input.required<readonly HyKpi[]>();
@@ -451,48 +135,8 @@ export interface HyActivity {
 @Component({
   selector: 'hy-activity-block',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<section>
-    <h2>{{ heading() }}</h2>
-    <ol>
-      @for (item of items(); track item.id) {
-        <li>
-          <div>
-            <strong>{{ item.heading }}</strong>
-            <p>{{ item.description }}</p>
-          </div>
-          <time [attr.datetime]="item.dateTime">{{ item.time }}</time>
-        </li>
-      }
-    </ol>
-    <ng-content />
-  </section>`,
-  styles: `
-    :host {
-      display: block;
-    }
-    ol {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      padding-block: 1rem;
-      border-block-end: 1px solid var(--hy-line);
-    }
-    p,
-    time {
-      color: var(--hy-ink-2);
-      font-size: 0.875rem;
-    }
-    p {
-      margin-block: 0.5rem 0;
-    }
-    time {
-      white-space: nowrap;
-    }
-  `,
+  templateUrl: './activity-block.html',
+  styleUrl: './activity-block.css',
 })
 export class HyActivityBlock {
   readonly heading = input('Recent activity');
@@ -502,13 +146,7 @@ export class HyActivityBlock {
   selector: 'hy-filter-toolbar-block',
   imports: [HyFilterBar],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<hy-filter-bar
-    [fields]="fields()"
-    [clauses]="clauses()"
-    (clausesChange)="clauses.set($event)"
-    [label]="label()"
-    ><ng-content
-  /></hy-filter-bar>`,
+  templateUrl: './filter-toolbar-block.html',
 })
 export class HyFilterToolbarBlock<C extends HyFilterToken> {
   readonly fields = input.required<readonly HyFilterField<C>[]>();

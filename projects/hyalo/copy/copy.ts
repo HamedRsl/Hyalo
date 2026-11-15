@@ -16,34 +16,7 @@ import {
       {{ copied() ? copiedLabel() : label() }}</button
     ><span class="sr" role="status">{{ status() }}</span
     ><ng-content />`,
-  styles: `
-    :host {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    button {
-      min-block-size: 44px;
-      border: 1px solid var(--hy-line);
-      background: var(--hy-surface-1);
-      color: var(--hy-ink);
-      border-radius: var(--hy-radius-s);
-      font: inherit;
-      padding: 0.5rem 0.75rem;
-      cursor: pointer;
-    }
-    button:focus-visible {
-      outline: 2px solid var(--hy-primary);
-      outline-offset: 2px;
-    }
-    .sr {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      clip-path: inset(50%);
-      overflow: hidden;
-    }
-  `,
+  styleUrl: './copy.css',
 })
 export class HyCopy {
   readonly text = input.required<string>();

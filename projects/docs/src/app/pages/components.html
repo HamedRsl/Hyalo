@@ -9,6 +9,40 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/border-beam') {
+                <div class="mini-beam">
+                  <hy-border-beam [animated]="false" /><strong>A quiet highlight.</strong
+                  ><span>Craft, at the edges.</span>
+                </div>
+              }
+              @case ('/components/copy') {
+                <div class="mini-copy">
+                  <code>npm install @hyalo/angular</code
+                  ><hy-copy text="npm install @hyalo/angular" />
+                </div>
+              }
+              @case ('/components/filter') {
+                <div class="mini-filters">
+                  <span class="mini-filter-label">Projects</span
+                  ><hy-chip [selected]="true">Status: Active</hy-chip
+                  ><hy-chip>Updated: 7 days</hy-chip>
+                </div>
+              }
+              @case ('/components/number-ticker') {
+                <div class="mini-number">
+                  <span>Total revenue</span
+                  ><hy-number-ticker [value]="48250" prefix="$" [animate]="false" /><small
+                    >Up 12.8% this month</small
+                  >
+                </div>
+              }
+              @case ('/components/progressive-blur') {
+                <div class="mini-blur">
+                  <div class="mini-blur-edge"></div>
+                  <span>Activity</span><strong>Website refresh</strong><span>Design system</span
+                  ><span>Mobile launch</span>
+                </div>
+              }
               @case ('/components/sidebar') {
                 <div class="phase3-preview">
                   <hy-sidebar [collapsed]="true" label="Preview navigation"

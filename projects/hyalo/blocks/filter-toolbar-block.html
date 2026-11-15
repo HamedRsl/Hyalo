@@ -1,0 +1,7 @@
+<hy-filter-bar
+  [fields]="fields()"
+  [clauses]="clauses()"
+  (clausesChange)="clauses.set($event)"
+  [label]="label()"
+  ><ng-content
+/></hy-filter-bar>

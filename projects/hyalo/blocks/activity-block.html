@@ -1,0 +1,15 @@
+<section>
+  <h2>{{ heading() }}</h2>
+  <ol>
+    @for (item of items(); track item.id) {
+      <li>
+        <div>
+          <strong>{{ item.heading }}</strong>
+          <p>{{ item.description }}</p>
+        </div>
+        <time [attr.datetime]="item.dateTime">{{ item.time }}</time>
+      </li>
+    }
+  </ol>
+  <ng-content />
+</section>

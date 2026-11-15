@@ -55,3 +55,55 @@
 .mini-chart hy-sparkline {
   block-size: 4rem;
 }
+.mini-beam,
+.mini-copy,
+.mini-number,
+.mini-blur {
+  position: relative;
+  display: grid;
+  gap: 0.625rem;
+  padding: 1.25rem;
+  inline-size: 100%;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  box-sizing: border-box;
+}
+.mini-beam span,
+.mini-number span,
+.mini-number small,
+.mini-blur span {
+  color: var(--hy-ink-2);
+  font-size: 0.75rem;
+}
+.mini-copy code {
+  font-size: 0.6875rem;
+  overflow-wrap: anywhere;
+}
+.mini-number hy-number-ticker {
+  color: var(--hy-ink);
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.mini-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+.mini-filter-label {
+  flex-basis: 100%;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.mini-blur {
+  overflow: clip;
+}
+.mini-blur-edge {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3rem;
+  background: linear-gradient(var(--hy-surface-1), transparent);
+  pointer-events: none;
+}

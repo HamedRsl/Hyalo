@@ -36,10 +36,9 @@ button[aria-expanded='true'] {
   background: var(--hy-primary-wash);
 }
 .panel {
-  position: absolute;
-  inset-block-start: calc(100% + 0.5rem);
-  inset-inline: 0;
-  z-index: var(--hy-z-sticky);
+  inline-size: min(40rem, calc(100vw - 2rem));
+  box-sizing: border-box;
+  color: var(--hy-ink);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 1rem;
@@ -50,9 +49,6 @@ button[aria-expanded='true'] {
   box-shadow: var(--hy-glass-shadow);
   max-block-size: 65dvh;
   overflow: auto;
-}
-.panel[hidden] {
-  display: none;
 }
 .panel h3 {
   font-size: 0.75rem;
@@ -75,4 +71,17 @@ button[aria-expanded='true'] {
 :is(button, a, input):focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 3px;
+}
+
+.chevron {
+  color: var(--hy-ink-3);
+  transition: rotate var(--hy-dur-quick) var(--hy-ease-out);
+}
+button[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
 }

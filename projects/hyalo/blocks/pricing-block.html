@@ -1,0 +1,39 @@
+<section>
+  <h2>{{ heading() }}</h2>
+  <div class="billing" role="group" [attr.aria-label]="billingLabel()">
+    <button
+      type="button"
+      [attr.aria-pressed]="billing() === 'monthly'"
+      (click)="billing.set('monthly')"
+    >
+      {{ monthlyLabel() }}</button
+    ><button
+      type="button"
+      [attr.aria-pressed]="billing() === 'annual'"
+      (click)="billing.set('annual')"
+    >
+      {{ annualLabel() }}
+    </button>
+  </div>
+  <div class="plans">
+    @for (plan of plans(); track plan.id) {
+      <hy-card material="tinted" [class.featured]="plan.featured"
+        ><h3>{{ plan.name }}</h3>
+        <p>{{ plan.description }}</p>
+        <strong
+          ><hy-number-ticker
+            [value]="billing() === 'monthly' ? plan.monthly : plan.annual"
+            [locale]="locale()"
+            [format]="currencyFormat()"
+        /></strong>
+        <p>{{ billing() === 'monthly' ? monthlyLabel() : annualLabel() }}</p>
+        <ul>
+          @for (feature of plan.features; track feature) {
+            <li>{{ feature }}</li>
+          }
+        </ul>
+        <a hyButton [href]="plan.href">{{ actionLabel() }} {{ plan.name }}</a></hy-card
+      >
+    }
+  </div>
+</section>

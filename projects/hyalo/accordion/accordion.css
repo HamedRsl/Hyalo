@@ -40,6 +40,8 @@
 }
 
 .hy-accordion__chevron {
+  --hy-icon-size: 1rem;
+  transform-origin: center;
   flex: none;
   color: var(--hy-ink-3);
   transition: rotate var(--hy-dur-quick) var(--hy-ease-out);
@@ -83,5 +85,11 @@
 
   .hy-accordion__panel[inert] .hy-accordion__content {
     visibility: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hy-accordion__chevron {
+    transition: none;
   }
 }

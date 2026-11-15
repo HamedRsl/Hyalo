@@ -63,6 +63,20 @@ class PointerHost {}
 describe('live pointer motion preferences', () => {
   beforeEach(() => {
     vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        constructor(private readonly callback: IntersectionObserverCallback) {}
+        observe(target: Element): void {
+          this.callback(
+            [{ target, isIntersecting: true } as IntersectionObserverEntry],
+            this as unknown as IntersectionObserver,
+          );
+        }
+        unobserve(): void {}
+        disconnect(): void {}
+      },
+    );
+    vi.stubGlobal(
       'matchMedia',
       (query: string) =>
         ({
@@ -96,12 +110,15 @@ describe('live pointer motion preferences', () => {
           top: 0,
           width: 100,
           height: 100,
+          right: 100,
+          bottom: 100,
         } as DOMRect);
         element.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' }));
         move(element);
       }
-      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).not.toBe(0);
-      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).not.toBe(0);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).toBeGreaterThan(0);
+      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).toBeGreaterThan(0);
       const motion = TestBed.inject(HyMotion);
       const fidelity = TestBed.inject(HyFidelity);
       if (preference === 'reduced') motion.setReduced(true);
@@ -120,8 +137,9 @@ describe('live pointer motion preferences', () => {
       move(tilt);
       move(magnetic);
       move(magnetic);
-      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).not.toBe(0);
-      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).not.toBe(0);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      expect(parseFloat(tilt.style.getPropertyValue('--hy-ry'))).toBeGreaterThan(0);
+      expect(parseFloat(magnetic.style.getPropertyValue('--hy-mx'))).toBeGreaterThan(0);
       fixture.destroy();
       motion.setReduced(null);
     },

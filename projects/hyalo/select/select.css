@@ -47,11 +47,13 @@
 }
 
 .hy-select__chevron {
+  --hy-icon-size: 1rem;
+  transform-origin: center;
   position: absolute;
   inset-inline-end: 0;
   color: var(--hy-ink-3);
   pointer-events: none;
-  transition: rotate var(--hy-dur-settle) var(--hy-ease-out);
+  transition: rotate var(--hy-dur-quick) var(--hy-ease-out);
 }
 
 .hy-select__trigger[aria-expanded='true'] .hy-select__chevron {
@@ -65,4 +67,10 @@
   padding: var(--hy-space-2);
   color: var(--hy-ink-2);
   font-size: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hy-select__chevron {
+    transition: none;
+  }
 }

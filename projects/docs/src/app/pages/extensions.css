@@ -1,0 +1,46 @@
+hy-number-ticker {
+  display: inline-block;
+  font-size: 2.5rem;
+  margin-inline-end: 1rem;
+}
+.beam {
+  position: relative;
+  padding: 2rem;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+.cards hy-card {
+  padding: 2rem;
+}
+.layout {
+  inline-size: 70%;
+  padding: 1.5rem;
+  margin-block: 1rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+}
+.expanded {
+  inline-size: 100%;
+}
+.scroll-demo {
+  position: relative;
+  overflow: auto;
+  max-block-size: 18rem;
+  padding: 2rem;
+}
+hy-code-block {
+  display: block;
+  margin-block: 1.5rem;
+}
+input {
+  display: block;
+  min-block-size: 44px;
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  padding: 0.5rem;
+}

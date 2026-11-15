@@ -1,0 +1,16 @@
+<section>
+  <h2>{{ heading() }}</h2>
+  <div class="wall">
+    @for (item of items(); track item.id) {
+      <hy-card material="tinted"
+        ><figure>
+          <blockquote>{{ item.quote }}</blockquote>
+          <figcaption>
+            <strong>{{ item.author }}</strong
+            ><span>{{ item.role }}</span>
+          </figcaption>
+        </figure></hy-card
+      >
+    }
+  </div>
+</section>

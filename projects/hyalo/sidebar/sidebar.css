@@ -1,27 +1,31 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  inline-size: 16rem;
+  flex: none;
+  gap: 1.5rem;
+  inline-size: var(--hy-sidebar-width, 16rem);
   max-inline-size: 100%;
-  padding: 1rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
   border: 1px solid var(--hy-line);
-  border-radius: var(--hy-radius-l);
-  background: var(--hy-surface-1);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
   box-sizing: border-box;
 }
 :host([data-collapsed='true']) {
-  inline-size: 5.5rem;
+  inline-size: 4.5rem;
 }
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  min-block-size: 44px;
 }
 .brand {
   display: var(--hy-sidebar-label-display, block);
   min-inline-size: 0;
+  padding-inline-start: 0.375rem;
 }
 button {
   display: grid;
@@ -29,21 +33,57 @@ button {
   flex: none;
   inline-size: 44px;
   block-size: 44px;
+  padding: 0;
   background: transparent;
-  color: var(--hy-ink);
-  border: 1px solid var(--hy-line);
+  color: var(--hy-ink-2);
+  border: 1px solid transparent;
   border-radius: var(--hy-radius-s);
   cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+button svg {
+  transition: transform var(--hy-dur-quick) var(--hy-ease-out);
+}
+:host([data-collapsed='true']) button svg {
+  transform: rotateY(180deg);
+}
+:host-context([dir='rtl']) button svg {
+  scale: -1 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    background: var(--hy-surface-3);
+    color: var(--hy-ink);
+  }
+}
+button:active {
+  background: var(--hy-surface-4);
 }
 nav {
   display: grid;
-  gap: 0.25rem;
+  align-content: start;
+  gap: 0.375rem;
 }
 footer {
   margin-block-start: auto;
   display: var(--hy-sidebar-label-display, block);
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--hy-line);
 }
-:is(button, a, input):focus-visible {
+footer:empty {
+  display: none;
+}
+button:focus-visible {
   outline: 2px solid var(--hy-primary);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  button svg {
+    transition: none;
+  }
+}
+:host-context([data-hy-motion='reduced']) button svg {
+  transition: none;
 }

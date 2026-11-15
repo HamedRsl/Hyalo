@@ -19,18 +19,7 @@ import { HyMotion, HySpring, injectHyVisibility } from '@hyalo/angular/motion';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<span aria-hidden="true">{{ formatted() }}</span
     ><span class="sr">{{ accessible() }}</span>`,
-  styles: `
-    :host {
-      font-variant-numeric: tabular-nums;
-    }
-    .sr {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      clip-path: inset(50%);
-      overflow: hidden;
-    }
-  `,
+  styleUrl: './number-ticker.css',
 })
 export class HyNumberTicker {
   readonly value = input.required<number>();

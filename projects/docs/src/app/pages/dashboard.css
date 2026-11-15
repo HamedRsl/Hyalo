@@ -2,19 +2,16 @@
   display: flex;
   align-items: stretch;
   gap: 1.5rem;
-  padding: 1.25rem;
+  padding: 0.75rem;
   border: 1px solid var(--hy-line);
   border-radius: var(--hy-radius-l);
-  background: var(--hy-surface-2);
+  background: var(--hy-surface-1);
   min-inline-size: 0;
+  container-type: inline-size;
 }
 .workspace > hy-sidebar {
-  flex: none;
-  inline-size: 12rem;
+  --hy-sidebar-width: 14rem;
   align-self: stretch;
-}
-.workspace > hy-sidebar[data-collapsed='true'] {
-  inline-size: 5.5rem;
 }
 .workspace-content {
   display: grid;
@@ -22,32 +19,79 @@
   gap: 1.5rem;
   flex: 1;
   min-inline-size: 0;
+  padding-block: 1rem;
+  padding-inline: 0 0.75rem;
+}
+.workspace-brand,
+.workspace-member {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--hy-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.workspace-brand small,
+.workspace-member small {
+  display: block;
+  margin-block-start: 0.125rem;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: var(--hy-ink-2);
+}
+.workspace-monogram,
+.member-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  background: var(--hy-surface-1);
+}
+.workspace-monogram {
+  color: var(--hy-primary);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+.member-avatar {
+  border-radius: 50%;
+  font-size: 0.625rem;
+  color: var(--hy-ink-2);
 }
 .toolbar,
 .page-heading,
 .section-heading,
-.pagination,
-.filters {
+.pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
 }
+.toolbar {
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--hy-line);
+}
 .eyebrow {
+  margin: 0 0 0.5rem;
   font-size: 0.625rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--hy-ink-3);
+  letter-spacing: 0.1em;
+  color: var(--hy-ink-2);
 }
 h2 {
   font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.2;
   letter-spacing: -0.03em;
   margin: 0;
 }
 h3 {
   margin: 0;
   font-size: 1.125rem;
+  letter-spacing: -0.015em;
 }
 .page-heading p:not(.eyebrow),
 .section-heading p {
@@ -58,16 +102,23 @@ h3 {
 .projects {
   display: grid;
   gap: 1rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px solid var(--hy-line);
+}
+.selected-count {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-pill);
+  font-variant-numeric: tabular-nums;
 }
 .selected-count,
 .pagination > span,
-.filters > span {
+.filter-hint {
   font-size: 0.75rem;
   color: var(--hy-ink-2);
 }
-.filters {
-  justify-content: start;
-  gap: 0.5rem;
+.filter-hint {
+  margin: -0.5rem 0 0;
 }
 hy-sparkline {
   block-size: 2.5rem;
@@ -76,21 +127,30 @@ hy-sparkline {
 hy-progress {
   margin-block-start: 1.5rem;
 }
-@media (max-width: 75rem) {
+@container (max-width: 42rem) {
+  .workspace > hy-sidebar {
+    --hy-sidebar-width: 11rem;
+  }
+  .workspace-content {
+    padding-inline-end: 0;
+  }
+}
+@media (max-width: 60rem) {
   .workspace {
     flex-direction: column;
+    gap: 1rem;
   }
   .workspace > hy-sidebar {
-    inline-size: 100%;
+    --hy-sidebar-width: 100%;
     max-inline-size: none;
   }
-  .workspace > hy-sidebar[data-collapsed='true'] {
-    inline-size: 5.5rem;
+  .workspace-content {
+    padding: 0.5rem;
   }
 }
 @media (max-width: 35rem) {
   .workspace {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   .page-heading > hy-split-button {
     inline-size: 100%;
@@ -99,7 +159,6 @@ hy-progress {
     justify-content: center;
   }
 }
-
 docs-page {
-  max-inline-size: 72rem;
+  max-inline-size: 76rem;
 }

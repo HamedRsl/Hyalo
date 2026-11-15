@@ -2,7 +2,26 @@
 
 All notable changes to `@hyalo/angular` are listed here. The format follows [Keep a Changelog](https://keepachangelog.com), and versions follow [Semantic Versioning](https://semver.org). Until 1.0, a minor version can include breaking changes.
 
-## 0.2.0 (unreleased)
+## 0.3.1 (2026-11-15)
+
+### App shell and data
+
+- Added sidebar, breadcrumb, dropdown and navigation menus, command palette,
+  pagination, tables, charts, sparklines, statistics, progress, alerts and lists.
+- Added filters, copy controls, number tickers, progressive blur and composed blocks.
+- Separated core and motion entry points; chart and syntax engines remain optional.
+
+### Polish and fixes
+
+- Sorted documentation navigation and completed all component catalog previews.
+- Refined dashboard spacing, sidebar surfaces, collapsed navigation and responsive layout.
+- Matched input focus rings to rounded field surfaces and standardized SVG chevrons.
+- Fixed Signal Forms integration, command dismissal and exact code-block whitespace.
+- Batched pointer and WebGL geometry reads, canceled pending indicator work on destroy,
+  cached shader uniforms and released WebGL resources explicitly.
+- Extracted larger templates and styles and aligned lint checks with package boundaries.
+
+## 0.2.0
 
 ### Showcase and marketing
 
