@@ -94,3 +94,12 @@ button:focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 3px;
 }
+
+.chart-tooltip {
+  pointer-events: none;
+  padding: 0.75rem 1rem;
+  border-radius: var(--hy-radius-m);
+  color: var(--hy-ink);
+  font-family: var(--hy-font);
+  max-inline-size: 22rem;
+}

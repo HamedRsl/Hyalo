@@ -11,6 +11,7 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 Chart.register(
   LineController,
@@ -24,5 +25,6 @@ Chart.register(
   ArcElement,
   Tooltip,
   Legend,
+  Filler,
 );
 export { Chart };

@@ -9,7 +9,7 @@ import {
   output,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 
 /**
  * A group of radio buttons. Holds the value; the radios inside only say

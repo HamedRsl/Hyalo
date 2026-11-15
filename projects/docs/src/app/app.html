@@ -95,12 +95,33 @@
       [options]="directions"
       [(value)]="settings.direction"
     />
+    <label
+      >Locale
+      <select [value]="settings.locale()" (change)="settings.setLocale($any($event.target).value)">
+        <option value="en">English</option>
+        <option value="fa">فارسی</option>
+      </select></label
+    >
+    <label
+      >Material
+      <select
+        [value]="settings.material() ?? ''"
+        (change)="settings.setMaterial($any($event.target).value)"
+      >
+        <option value="">Component default</option>
+        <option value="clear">Clear</option>
+        <option value="frosted">Frosted</option>
+        <option value="tinted">Tinted</option>
+        <option value="solid">Solid</option>
+      </select></label
+    >
+    <p>Detected: {{ settings.detectedTier() }} · Active: {{ settings.tier() }}</p>
     <hy-segmented label="Motion" size="sm" [options]="motions" [(value)]="settings.motionChoice" />
     <hy-segmented
       label="Fidelity"
       size="sm"
       [options]="tiers"
-      [value]="settings.tier()"
+      [value]="settings.tierChoice()"
       (valueChange)="$event && settings.setTier($event)"
     />
   </div>

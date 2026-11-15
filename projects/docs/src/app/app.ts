@@ -22,7 +22,7 @@ import { HyIcon } from '@hyalo/angular/icon';
 import { HY_NAVBAR } from '@hyalo/angular/navbar';
 import { HyPopover } from '@hyalo/angular/popover';
 import { HySegmented } from '@hyalo/angular/segmented';
-import type { HyFidelityTier } from '@hyalo/angular';
+import type { HyFidelityTier } from '@hyalo/angular/core';
 import type { HyPaletteName } from '@hyalo/angular/theme';
 import { NAV } from './nav';
 import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } from './settings';
@@ -88,19 +88,17 @@ export class App {
     try {
       const { HyCommand } = await import('@hyalo/angular/command');
       if (this.destroyed) return;
-      this.commandRef = this.injector
-        .get(HyCommand)
-        .open({
-          label: 'Search documentation',
-          items: NAV.flatMap((group) =>
-            group.items.map((item) => ({
-              id: item.path,
-              label: item.label,
-              group: group.title,
-              value: item.path,
-            })),
-          ),
-        });
+      this.commandRef = this.injector.get(HyCommand).open({
+        label: 'Search documentation',
+        items: NAV.flatMap((group) =>
+          group.items.map((item) => ({
+            id: item.path,
+            label: item.label,
+            group: group.title,
+            value: item.path,
+          })),
+        ),
+      });
       this.commandRef.closed.subscribe((item) => {
         this.commandRef = null;
         if (item) void this.router.navigateByUrl(item.value);
@@ -146,6 +144,7 @@ export class App {
     () => this.palettes.find((p) => p.value === this.settings.palette())?.label ?? 'Hyalo',
   );
   protected readonly tiers = [
+    { value: 'auto' as const, label: 'Auto' },
     { value: 'high' as HyFidelityTier, label: 'High' },
     { value: 'medium' as HyFidelityTier, label: 'Medium' },
     { value: 'low' as HyFidelityTier, label: 'Low' },

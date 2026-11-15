@@ -1,4 +1,6 @@
+import { HyLocale } from '@hyalo/angular/core';
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import { inject } from '@angular/core';
 const positive = (value: number): number =>
   Number.isFinite(value) ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(1, Math.floor(value))) : 1;
 @Component({
@@ -11,7 +13,9 @@ export class HyPagination {
   readonly page = model(1);
   readonly total = input.required<number>();
   readonly pageSize = input(10);
-  readonly locale = input('en');
+  readonly locale = input<string>();
+  private readonly globalLocale = inject(HyLocale);
+  private readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   readonly label = input('Pagination');
   readonly previousLabel = input('Previous page');
   readonly nextLabel = input('Next page');
@@ -35,7 +39,7 @@ export class HyPagination {
     for (let n = Math.max(1, current - 1); n <= Math.min(last, current + 1); n++) set.add(n);
     const nums = [...set].sort((a, b) => a - b),
       result: ({ value: number; label: string } | null)[] = [];
-    const fmt = new Intl.NumberFormat(this.locale());
+    const fmt = new Intl.NumberFormat(this.effectiveLocale());
     let previous = 0;
     for (const value of nums) {
       if (previous && value - previous > 1) result.push(null);

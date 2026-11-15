@@ -1,6 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
+  DestroyRef,
+  TemplateRef,
+  afterNextRender,
   ElementRef,
   booleanAttribute,
   computed,
@@ -17,16 +22,22 @@ import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox'
 import { Listbox, Option } from '@angular/aria/listbox';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import type { FormValueControl } from '@angular/forms/signals';
-import { HyFidelity, injectId } from '@hyalo/angular';
+import { HyFidelity, injectId } from '@hyalo/angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
 import { HY_FIELD, type HyFieldControl } from '@hyalo/angular/field';
 import { hyDropdownPositions, ɵHyPresence as HyPresence } from '@hyalo/angular/overlay';
 
 /** One choice in a select. */
 export interface HySelectOption<T> {
+  readonly key?: string | number;
+  readonly group?: { readonly key: string; readonly label: string; readonly disabled?: boolean };
   readonly value: T;
   readonly label: string;
   readonly disabled?: boolean;
+}
+
+export interface HySelectOptionContext<T> {
+  readonly $implicit: HySelectOption<T>;
 }
 
 /**
@@ -49,6 +60,7 @@ export interface HySelectOption<T> {
 @Component({
   selector: 'hy-select',
   imports: [
+    NgTemplateOutlet,
     Combobox,
     ComboboxPopup,
     ComboboxWidget,
@@ -62,12 +74,17 @@ export interface HySelectOption<T> {
   host: {
     class: 'hy-select',
     '[attr.data-native]': 'useNative() || null',
+    '(focusout)': 'scheduleMode()',
   },
   templateUrl: './select.html',
   styleUrl: './select.css',
 })
 export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldControl {
   private readonly fidelity = inject(HyFidelity);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly document = inject(DOCUMENT);
+  private readonly destroy = inject(DestroyRef);
+  private readonly ready = signal(false);
   protected readonly field = inject(HY_FIELD, { optional: true });
   private readonly trigger = viewChild<ElementRef<HTMLElement>>('trigger');
   private readonly overlay = viewChild(CdkConnectedOverlay);
@@ -79,6 +96,8 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly value = model<T | undefined>(undefined);
   /** Text shown while nothing is selected. */
   readonly placeholder = input('Select');
+  readonly name = input('');
+  readonly optionTemplate = input<TemplateRef<HySelectOptionContext<T>>>();
   /** Disables the select. Set automatically by Signal Forms. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Marks the field as required. Set automatically by Signal Forms. */
@@ -95,7 +114,9 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly touch = output<void>();
 
   readonly labelable = true;
-  readonly id = signal(injectId('select')).asReadonly();
+  protected readonly nativeId = injectId('select');
+  protected readonly triggerId = this.nativeId + '-trigger';
+  readonly id = computed(() => (this.useNative() ? this.nativeId : this.triggerId));
   readonly errorMessage = computed(() => {
     const first = this.errors()[0];
     return first ? (first.message ?? first.kind) : undefined;
@@ -106,7 +127,53 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   protected readonly rendered = signal(false);
   protected readonly positions = hyDropdownPositions();
   protected readonly panelWidth = signal(0);
-  protected readonly useNative = computed(() => this.native() || this.fidelity.tier() === 'low');
+  protected readonly useNative = signal(true);
+  protected readonly keyedOptions = computed(() => {
+    const keys = new Set<string>();
+    return this.options().map((option) => {
+      const value = option.value;
+      if (option.key === undefined && (typeof value === 'object' || typeof value === 'function'))
+        throw new Error('HySelect: object values require a stable option key');
+      const key =
+        option.key === undefined
+          ? `${typeof value}:${String(value)}`
+          : `${typeof option.key}:${option.key}`;
+      if (keys.has(key)) throw new Error('HySelect: duplicate option key ' + key);
+      keys.add(key);
+      return {
+        option,
+        key,
+        disabled: !!(option.disabled || option.group?.disabled),
+        context: { $implicit: option },
+      };
+    });
+  });
+  protected readonly groups = computed(() => {
+    const groups = new Map<
+      string,
+      {
+        key: string;
+        label: string;
+        options: {
+          option: HySelectOption<T>;
+          key: string;
+          disabled: boolean;
+          context: HySelectOptionContext<T>;
+        }[];
+      }
+    >();
+    for (const option of this.keyedOptions()) {
+      const key = option.option.group?.key ?? '';
+      const group = groups.get(key) ?? {
+        key,
+        label: option.option.group?.label ?? '',
+        options: [],
+      };
+      group.options.push(option);
+      groups.set(key, group);
+    }
+    return [...groups.values()];
+  });
   protected readonly selectedOption = computed(() =>
     this.options().find((o) => o.value === this.value()),
   );
@@ -119,6 +186,13 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   );
 
   constructor() {
+    afterNextRender(() => this.ready.set(true));
+    effect(() => {
+      this.ready();
+      this.native();
+      this.fidelity.tier();
+      this.scheduleMode();
+    });
     effect(() => {
       const open = this.expanded();
       untracked(() => {
@@ -180,13 +254,21 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     this.trigger()?.nativeElement.focus();
   }
 
-  protected pickNative(event: Event): void {
-    const index = Number((event.target as HTMLSelectElement).value);
-    const option = this.options()[index];
-    if (option) this.value.set(option.value);
+  protected scheduleMode(): void {
+    queueMicrotask(() => {
+      if (this.destroy.destroyed || !this.ready()) return;
+      if (this.expanded() || this.host.contains(this.document.activeElement)) return;
+      this.useNative.set(this.native() || this.fidelity.tier() === 'low');
+    });
   }
 
-  protected indexOf(value: T | undefined): number {
-    return this.options().findIndex((o) => o.value === value);
+  protected pickNative(event: Event): void {
+    const key = (event.target as HTMLSelectElement).value;
+    if (!key && !this.required()) {
+      this.value.set(undefined);
+      return;
+    }
+    const choice = this.keyedOptions().find((item) => item.key === key);
+    if (choice && !choice.disabled) this.value.set(choice.option.value);
   }
 }

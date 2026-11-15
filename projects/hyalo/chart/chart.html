@@ -6,7 +6,7 @@
     }
   </figcaption>
   <div #palette class="palette" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="plot">
+  <div class="plot" cdkOverlayOrigin #origin="cdkOverlayOrigin">
     <canvas #canvas role="img" [attr.aria-label]="label()">{{ summary() }}</canvas>
     @if (error()) {
       <div class="fallback">
@@ -45,4 +45,25 @@
       </table>
     </div>
   </details>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="!!tooltip()"
+    [cdkConnectedOverlayPositions]="tooltipPositions"
+    [cdkConnectedOverlayOffsetX]="tooltip()?.x ?? 0"
+    [cdkConnectedOverlayOffsetY]="tooltip()?.y ?? 0"
+  >
+    @if (tooltip(); as tip) {
+      <div
+        class="chart-tooltip hy-glass"
+        [attr.data-material]="fidelityTier() === 'low' ? 'solid' : 'frosted'"
+        role="tooltip"
+      >
+        <strong>{{ tip.title }}</strong>
+        @for (line of tip.lines; track $index) {
+          <div>{{ line }}</div>
+        }
+      </div>
+    }
+  </ng-template>
 </figure>

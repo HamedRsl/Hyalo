@@ -12,7 +12,8 @@
           [attr.aria-pressed]="type() === 'line'"
         >
           Line</button
-        ><button
+        ><button hyButton variant="glass" (click)="type.set('area')">Area</button>
+        <button
           hyButton
           variant="ghost"
           (click)="type.set('bar')"

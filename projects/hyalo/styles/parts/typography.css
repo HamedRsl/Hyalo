@@ -62,3 +62,20 @@
     radial-gradient(55% 55% at 90% 20%, rgb(88 101 242 / 0.3), transparent 70%),
     radial-gradient(50% 60% at 60% 100%, rgb(56 189 248 / 0.22), transparent 70%), var(--hy-bg);
 }
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+  color: var(--hy-primary);
+}
+.hljs-string,
+.hljs-attr {
+  color: var(--hy-success);
+}
+.hljs-number,
+.hljs-type {
+  color: var(--hy-warning);
+}
+.hljs-comment {
+  color: var(--hy-ink-3);
+}

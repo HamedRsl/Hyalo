@@ -14,7 +14,7 @@ import {
   effect,
   untracked,
 } from '@angular/core';
-import { HyFidelity, injectId, type HyMaterial } from '@hyalo/angular';
+import { HyFidelity, injectId, type HyMaterial } from '@hyalo/angular/core';
 import {
   hyConnectedPositions,
   type HyPlacement,

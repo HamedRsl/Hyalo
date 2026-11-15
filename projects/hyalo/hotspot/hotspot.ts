@@ -8,7 +8,7 @@ import {
   model,
   output,
 } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 import { HyPopover } from '@hyalo/angular/popover';
 import type { HyPlacement } from '@hyalo/angular/overlay';
 export type HyHotspotMode = 'label' | 'pin';

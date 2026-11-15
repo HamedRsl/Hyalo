@@ -24,7 +24,14 @@ export default class ChartPage {
       { label: 'Previous period ($k)', values: [14, 16, 19, 22, 24, 26] },
     ],
   };
-  protected readonly rows: ApiRow[] = [{name:'HY_CHART_LOADER',type:'InjectionToken<() => Promise<ChartEngine>>',default:'lazy Chart.js',description:'Override the engine loader when sharing a Chart.js chunk across the application.'},
+  protected readonly rows: ApiRow[] = [
+    {
+      name: 'HY_CHART_LOADER',
+      type: 'InjectionToken<() => Promise<ChartEngine>>',
+      default: 'lazy Chart.js',
+      description:
+        'Override the engine loader when sharing a Chart.js chunk across the application.',
+    },
     {
       name: 'data',
       type: 'HyChartData',
@@ -33,7 +40,7 @@ export default class ChartPage {
     },
     {
       name: 'type',
-      type: 'line | bar | doughnut',
+      type: 'line | area | bar | doughnut',
       default: 'line',
       description: 'Registered Chart.js controller.',
     },

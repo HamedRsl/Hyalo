@@ -8,7 +8,8 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { HyMotion, ɵinjectIsBrowser } from '@hyalo/angular';
+import { ɵinjectIsBrowser } from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 @Component({
   selector: 'hy-scroll-to-top',
   changeDetection: ChangeDetectionStrategy.OnPush,

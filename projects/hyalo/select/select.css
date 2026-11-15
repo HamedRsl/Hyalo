@@ -57,3 +57,12 @@
 .hy-select__trigger[aria-expanded='true'] .hy-select__chevron {
   rotate: 180deg;
 }
+
+[hidden] {
+  display: none !important;
+}
+.hy-select__group-label {
+  padding: var(--hy-space-2);
+  color: var(--hy-ink-2);
+  font-size: 0.75rem;
+}

@@ -11,7 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 /** Splits measured lines after hydration. The accessible text is read once. */
 @Component({
   selector: 'hy-split-text',

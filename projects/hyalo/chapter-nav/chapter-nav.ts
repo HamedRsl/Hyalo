@@ -13,7 +13,7 @@ import {
   signal,
 } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 
 export interface HyChapter {
   readonly id: string;

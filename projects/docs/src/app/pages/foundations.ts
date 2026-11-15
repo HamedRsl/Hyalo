@@ -1,7 +1,7 @@
 import { EXAMPLES } from './examples/foundations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HyMaterialDirective, type HyMaterial } from '@hyalo/angular';
+import { HyMaterialDirective, type HyMaterial } from '@hyalo/angular/core';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';

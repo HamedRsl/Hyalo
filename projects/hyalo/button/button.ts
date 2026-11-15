@@ -7,7 +7,14 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { HY_CONFIG, HyFidelity, HyInteractive, type HySize, type HyTone } from '@hyalo/angular';
+import {
+  HyAppearance,
+  HY_CONFIG,
+  HyFidelity,
+  HyInteractive,
+  type HySize,
+  type HyTone,
+} from '@hyalo/angular/core';
 
 /**
  * - `solid`: filled with the tone colour. The main action on a view.
@@ -62,6 +69,7 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
 })
 export class HyButton {
   private readonly config = inject(HY_CONFIG);
+  private readonly appearance = inject(HyAppearance);
   private readonly fidelity = inject(HyFidelity);
   private readonly el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   protected readonly isButton = this.el.tagName === 'BUTTON';
@@ -82,7 +90,9 @@ export class HyButton {
   /** Glass follows the configured material and goes solid on the low tier. */
   protected readonly material = computed(() => {
     if (this.variant() !== 'glass') return null;
-    return this.fidelity.tier() === 'low' ? 'solid' : this.config.material;
+    return this.fidelity.tier() === 'low'
+      ? 'solid'
+      : (this.appearance.material() ?? this.config.material);
   });
 
   /** True when clicks should be ignored. */

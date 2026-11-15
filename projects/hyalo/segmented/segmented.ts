@@ -10,7 +10,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
-import { type HySize, injectId, ɵtrackIndicator as trackIndicator } from '@hyalo/angular';
+import { type HySize, injectId, ɵtrackIndicator as trackIndicator } from '@hyalo/angular/core';
 
 import { HyIcon } from '@hyalo/angular/icon';
 

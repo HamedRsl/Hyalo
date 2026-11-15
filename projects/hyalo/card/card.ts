@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Directive, input } from '@angular/core';
-import { HyMaterialDirective } from '@hyalo/angular';
+import { HyMaterialDirective } from '@hyalo/angular/core';
 
 /** Inner spacing of a card. */
 export type HyCardPadding = 'none' | 'sm' | 'md' | 'lg';

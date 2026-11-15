@@ -1,0 +1,337 @@
+- generic [ref=f2e2]:
+  - link "Skip to content" [ref=f2e3] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f2e5]:
+    - link "Hyalo" [ref=f2e6] [cursor=pointer]:
+      - /url: /
+    - navigation "Site" [ref=f2e7]:
+      - link "Introduction" [ref=f2e8] [cursor=pointer]:
+        - /url: /
+      - link "Components" [ref=f2e9] [cursor=pointer]:
+        - /url: /components
+      - link "GitHub" [ref=f2e10] [cursor=pointer]:
+        - /url: https://github.com/HamedRsl/Hyalo
+    - generic [ref=f2e11]:
+      - button "Search documentation" [ref=f2e12] [cursor=pointer]:
+        - generic [ref=f2e13]: Ctrl K
+      - button "Display settings" [ref=f2e17] [cursor=pointer]
+  - generic [ref=f2e21]:
+    - navigation "Pages" [ref=f2e22]:
+      - paragraph [ref=f2e23]: Start
+      - list [ref=f2e24]:
+        - listitem [ref=f2e25]:
+          - link "Introduction" [ref=f2e26] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=f2e27]:
+          - link "Foundations" [ref=f2e28] [cursor=pointer]:
+            - /url: /foundations
+        - listitem [ref=f2e29]:
+          - link "Theming" [ref=f2e30] [cursor=pointer]:
+            - /url: /theming
+        - listitem [ref=f2e31]:
+          - link "Motion and fidelity" [ref=f2e32] [cursor=pointer]:
+            - /url: /motion
+        - listitem [ref=f2e33]:
+          - link "Dashboard demo" [ref=f2e34] [cursor=pointer]:
+            - /url: /dashboard
+      - paragraph [ref=f2e35]: Components
+      - list [ref=f2e36]:
+        - listitem [ref=f2e37]:
+          - link "All components" [ref=f2e38] [cursor=pointer]:
+            - /url: /components
+        - listitem [ref=f2e39]:
+          - link "Sidebar" [ref=f2e40] [cursor=pointer]:
+            - /url: /components/sidebar
+        - listitem [ref=f2e41]:
+          - link "Breadcrumb" [ref=f2e42] [cursor=pointer]:
+            - /url: /components/breadcrumb
+        - listitem [ref=f2e43]:
+          - link "Dropdown menu" [ref=f2e44] [cursor=pointer]:
+            - /url: /components/menu
+        - listitem [ref=f2e45]:
+          - link "Command palette" [ref=f2e46] [cursor=pointer]:
+            - /url: /components/command
+        - listitem [ref=f2e47]:
+          - link "Navigation and mega menu" [ref=f2e48] [cursor=pointer]:
+            - /url: /components/navigation-menu
+        - listitem [ref=f2e49]:
+          - link "Pagination" [ref=f2e50] [cursor=pointer]:
+            - /url: /components/pagination
+        - listitem [ref=f2e51]:
+          - link "Table" [ref=f2e52] [cursor=pointer]:
+            - /url: /components/table
+        - listitem [ref=f2e53]:
+          - link "Stat and KPI" [ref=f2e54] [cursor=pointer]:
+            - /url: /components/stat
+        - listitem [ref=f2e55]:
+          - link "Charts" [ref=f2e56] [cursor=pointer]:
+            - /url: /components/chart
+        - listitem [ref=f2e57]:
+          - link "Sparkline" [ref=f2e58] [cursor=pointer]:
+            - /url: /components/sparkline
+        - listitem [ref=f2e59]:
+          - link "Progress and spinner" [ref=f2e60] [cursor=pointer]:
+            - /url: /components/progress
+        - listitem [ref=f2e61]:
+          - link "Alert and inline message" [ref=f2e62] [cursor=pointer]:
+            - /url: /components/alert
+        - listitem [ref=f2e63]:
+          - link "Empty state" [ref=f2e64] [cursor=pointer]:
+            - /url: /components/empty-state
+        - listitem [ref=f2e65]:
+          - link "List and list item" [ref=f2e66] [cursor=pointer]:
+            - /url: /components/list
+        - listitem [ref=f2e67]:
+          - link "Bento grid" [ref=f2e68] [cursor=pointer]:
+            - /url: /components/bento
+        - listitem [ref=f2e69]:
+          - link "Scroll area" [ref=f2e70] [cursor=pointer]:
+            - /url: /components/scroll-area
+        - listitem [ref=f2e71]:
+          - link "Hover card" [ref=f2e72] [cursor=pointer]:
+            - /url: /components/hover-card
+        - listitem [ref=f2e73]:
+          - link "Description list" [ref=f2e74] [cursor=pointer]:
+            - /url: /components/description-list
+        - listitem [ref=f2e75]:
+          - link "Keyboard key" [ref=f2e76] [cursor=pointer]:
+            - /url: /components/kbd
+        - listitem [ref=f2e77]:
+          - link "Code block" [ref=f2e78] [cursor=pointer]:
+            - /url: /components/code-block
+        - listitem [ref=f2e79]:
+          - link "Carousel" [ref=f2e80] [cursor=pointer]:
+            - /url: /components/carousel
+        - listitem [ref=f2e81]:
+          - link "Lightbox and gallery" [ref=f2e82] [cursor=pointer]:
+            - /url: /components/lightbox
+        - listitem [ref=f2e83]:
+          - link "Image compare" [ref=f2e84] [cursor=pointer]:
+            - /url: /components/image-compare
+        - listitem [ref=f2e85]:
+          - link "Marquee and logo wall" [ref=f2e86] [cursor=pointer]:
+            - /url: /components/marquee
+        - listitem [ref=f2e87]:
+          - link "Split-text reveal" [ref=f2e88] [cursor=pointer]:
+            - /url: /components/split-text
+        - listitem [ref=f2e89]:
+          - link "Refraction surface" [ref=f2e90] [cursor=pointer]:
+            - /url: /components/refraction
+        - listitem [ref=f2e91]:
+          - link "3D hotspot" [ref=f2e92] [cursor=pointer]:
+            - /url: /components/hotspot
+        - listitem [ref=f2e93]:
+          - link "Mesh background" [ref=f2e94] [cursor=pointer]:
+            - /url: /components/mesh
+        - listitem [ref=f2e95]:
+          - link "Timeline" [ref=f2e96] [cursor=pointer]:
+            - /url: /components/timeline
+        - listitem [ref=f2e97]:
+          - link "Stepper" [ref=f2e98] [cursor=pointer]:
+            - /url: /components/stepper
+        - listitem [ref=f2e99]:
+          - link "Badge, tag and chip" [ref=f2e100] [cursor=pointer]:
+            - /url: /components/badge
+        - listitem [ref=f2e101]:
+          - link "Avatar and avatar group" [ref=f2e102] [cursor=pointer]:
+            - /url: /components/avatar
+        - listitem [ref=f2e103]:
+          - link "Skeleton" [ref=f2e104] [cursor=pointer]:
+            - /url: /components/skeleton
+        - listitem [ref=f2e105]:
+          - link "Button group" [ref=f2e106] [cursor=pointer]:
+            - /url: /components/button-group
+        - listitem [ref=f2e107]:
+          - link "Link" [ref=f2e108] [cursor=pointer]:
+            - /url: /components/link
+        - listitem [ref=f2e109]:
+          - link "Divider" [ref=f2e110] [cursor=pointer]:
+            - /url: /components/divider
+        - listitem [ref=f2e111]:
+          - link "Aspect ratio" [ref=f2e112] [cursor=pointer]:
+            - /url: /components/aspect-ratio
+        - listitem [ref=f2e113]:
+          - link "Chapter navigation" [ref=f2e114] [cursor=pointer]:
+            - /url: /components/chapter-nav
+        - listitem [ref=f2e115]:
+          - link "Scroll to top" [ref=f2e116] [cursor=pointer]:
+            - /url: /components/scroll-to-top
+        - listitem [ref=f2e117]:
+          - link "Accordion" [ref=f2e118] [cursor=pointer]:
+            - /url: /components/accordion
+        - listitem [ref=f2e119]:
+          - link "Button" [ref=f2e120] [cursor=pointer]:
+            - /url: /components/button
+        - listitem [ref=f2e121]:
+          - link "Card" [ref=f2e122] [cursor=pointer]:
+            - /url: /components/card
+        - listitem [ref=f2e123]:
+          - link "Checkbox, radio, switch" [ref=f2e124] [cursor=pointer]:
+            - /url: /components/checkbox-radio-switch
+        - listitem [ref=f2e125]:
+          - link "Dialog" [ref=f2e126] [cursor=pointer]:
+            - /url: /components/dialog
+        - listitem [ref=f2e127]:
+          - link "Drawer" [ref=f2e128] [cursor=pointer]:
+            - /url: /components/drawer
+        - listitem [ref=f2e129]:
+          - link "Navbar" [ref=f2e130] [cursor=pointer]:
+            - /url: /components/navbar
+        - listitem [ref=f2e131]:
+          - link "Select" [ref=f2e132] [cursor=pointer]:
+            - /url: /components/select
+        - listitem [ref=f2e133]:
+          - link "Tabs and segmented" [ref=f2e134] [cursor=pointer]:
+            - /url: /components/tabs
+        - listitem [ref=f2e135]:
+          - link "Text field" [ref=f2e136] [cursor=pointer]:
+            - /url: /components/text-field
+        - listitem [ref=f2e137]:
+          - link "Toast" [ref=f2e138] [cursor=pointer]:
+            - /url: /components/toast
+        - listitem [ref=f2e139]:
+          - link "Tooltip and popover" [ref=f2e140] [cursor=pointer]:
+            - /url: /components/tooltip-popover
+    - main [ref=f2e141]:
+      - generic [ref=f2e143]:
+        - generic [ref=f2e144]:
+          - paragraph [ref=f2e145]: Phase 3 · App shell and data
+          - heading "A workspace, composed" [level=1] [ref=f2e146]
+          - paragraph [ref=f2e147]: A working dashboard built from the new components. Filter projects, select rows, sort columns, search, and switch the display settings.
+        - generic [ref=f2e148]:
+          - generic [ref=f2e149]:
+            - generic [ref=f2e150]:
+              - strong [ref=f2e152]: Atelier
+              - button "Collapse navigation" [expanded] [ref=f2e153] [cursor=pointer]
+            - navigation "Demo workspace" [ref=f2e156]:
+              - link "Overview" [ref=f2e157] [cursor=pointer]:
+                - /url: /dashboard
+              - link "Projects" [ref=f2e161] [cursor=pointer]:
+                - /url: /components/table
+              - link "Team" [ref=f2e165] [cursor=pointer]:
+                - /url: /components/list
+              - link "Settings" [ref=f2e169] [cursor=pointer]:
+                - /url: /theming
+            - generic [ref=f2e173]: Team workspace
+          - region "Workspace overview" [ref=f2e174]:
+            - generic [ref=f2e175]:
+              - navigation "Breadcrumb" [ref=f2e177]:
+                - list [ref=f2e178]:
+                  - listitem [ref=f2e179]:
+                    - link "Workspace" [ref=f2e180] [cursor=pointer]:
+                      - /url: /
+                    - generic [aria-hidden] [ref=f2e181]: /
+                  - listitem [ref=f2e182]:
+                    - generic [ref=f2e183]: Overview
+              - button "Search Ctrl K" [ref=f2e184] [cursor=pointer]:
+                - generic [ref=f2e185]:
+                  - text: Search
+                  - generic [ref=f2e186]: Ctrl K
+            - generic [ref=f2e187]:
+              - generic [ref=f2e188]:
+                - paragraph [ref=f2e189]: MONDAY, JUNE 16
+                - heading "A little more momentum." [level=2] [ref=f2e190]
+                - paragraph [ref=f2e191]: Here is what is happening across your workspace.
+              - generic [ref=f2e192]:
+                - button "Export report" [ref=f2e193] [cursor=pointer]
+                - button "Report formats" [ref=f2e195] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e197]: ⌄
+            - generic [ref=f2e199]:
+              - generic [ref=f2e200]:
+                - generic [ref=f2e201]:
+                  - term [ref=f2e202]: Total revenue
+                  - definition [ref=f2e203]:
+                    - text: $48,250
+                    - generic [ref=f2e204]: $48,250
+                - paragraph [ref=f2e205]: Up 12.8% from last month
+                - img "Revenue is trending upward" [ref=f2e206]
+              - generic [ref=f2e209]:
+                - generic [ref=f2e210]:
+                  - term [ref=f2e211]: Active projects
+                  - definition [ref=f2e212]:
+                    - text: "4"
+                    - generic [ref=f2e213]: "4"
+                - paragraph [ref=f2e214]: 2 completed this month
+              - generic [ref=f2e215]:
+                - generic [ref=f2e216]:
+                  - term [ref=f2e217]: Team capacity
+                  - definition [ref=f2e218]:
+                    - text: 72%
+                    - generic [ref=f2e219]: 72%
+                - paragraph [ref=f2e220]: Healthy workload
+                - progressbar "Team capacity" [ref=f2e221]
+            - figure "Revenue overview Revenue grew 78% from January to June, while expenses rose 42%." [ref=f2e225]:
+              - generic [ref=f2e226]:
+                - strong [ref=f2e227]: Revenue overview
+                - paragraph [ref=f2e228]: Revenue grew 78% from January to June, while expenses rose 42%.
+              - img "Revenue overview" [ref=f2e230]: Revenue grew 78% from January to June, while expenses rose 42%.
+              - group [ref=f2e231]:
+                - generic "View chart data" [ref=f2e232] [cursor=pointer]
+            - region "Projects" [ref=f2e233]:
+              - generic [ref=f2e234]:
+                - generic [ref=f2e235]:
+                  - heading "Projects" [level=3] [ref=f2e236]
+                  - paragraph [ref=f2e237]: Good work, moving forward.
+                - status [ref=f2e238]: 0 selected
+              - generic "Project status filters" [ref=f2e239]:
+                - button "Active" [pressed] [ref=f2e241] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e242]: ✓
+                  - text: Active
+                - button "Complete" [pressed] [ref=f2e244] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e245]: ✓
+                  - text: Complete
+                - generic [ref=f2e246]: 6 projects
+              - region "Workspace projects" [ref=f2e248]:
+                - table "Workspace projects" [ref=f2e249]:
+                  - caption [ref=f2e250]: Workspace projects
+                  - rowgroup [ref=f2e251]:
+                    - row [ref=f2e252]:
+                      - columnheader "Select all visible rows" [ref=f2e253]:
+                        - checkbox "Select all visible rows" [ref=f2e255] [cursor=pointer]
+                      - columnheader "Project" [ref=f2e256]:
+                        - button "Project" [ref=f2e257] [cursor=pointer]:
+                          - text: Project
+                          - generic [aria-hidden] [ref=f2e258]: ↑↓
+                      - columnheader "Owner" [ref=f2e259]:
+                        - button "Owner" [ref=f2e260] [cursor=pointer]:
+                          - text: Owner
+                          - generic [aria-hidden] [ref=f2e261]: ↑↓
+                      - columnheader "Status" [ref=f2e262]:
+                        - button "Status" [ref=f2e263] [cursor=pointer]:
+                          - text: Status
+                          - generic [aria-hidden] [ref=f2e264]: ↑↓
+                      - columnheader "Budget ($)" [ref=f2e265]:
+                        - button "Budget ($)" [ref=f2e266] [cursor=pointer]:
+                          - text: Budget ($)
+                          - generic [aria-hidden] [ref=f2e267]: ↑↓
+                  - rowgroup [ref=f2e268]:
+                    - row [ref=f2e269]:
+                      - cell [ref=f2e270]:
+                        - checkbox "Select Website refresh" [ref=f2e272] [cursor=pointer]
+                      - cell "Website refresh" [ref=f2e273]
+                      - cell "Mina Rahimi" [ref=f2e274]
+                      - cell "Active" [ref=f2e275]
+                      - cell "12400" [ref=f2e276]
+                    - row [ref=f2e277]:
+                      - cell [ref=f2e278]:
+                        - checkbox "Select Design system" [ref=f2e280] [cursor=pointer]
+                      - cell "Design system" [ref=f2e281]
+                      - cell "Arman Nouri" [ref=f2e282]
+                      - cell "Active" [ref=f2e283]
+                      - cell "8600" [ref=f2e284]
+                    - row [ref=f2e285]:
+                      - cell [ref=f2e286]:
+                        - checkbox "Select Mobile launch" [ref=f2e288] [cursor=pointer]
+                      - cell "Mobile launch" [ref=f2e289]
+                      - cell "Sara Ahmadi" [ref=f2e290]
+                      - cell "Complete" [ref=f2e291]
+                      - cell "19200" [ref=f2e292]
+              - generic [ref=f2e293]:
+                - generic [ref=f2e294]: Showing up to 3 projects per page
+                - navigation "Pagination" [ref=f2e296]:
+                  - button "Previous page" [disabled] [ref=f2e297]:
+                    - generic [aria-hidden] [ref=f2e298]: ‹
+                  - button "Page 1" [ref=f2e299] [cursor=pointer]: "1"
+                  - button "Page 2" [ref=f2e300] [cursor=pointer]: "2"
+                  - button "Next page" [ref=f2e301] [cursor=pointer]:
+                    - generic [aria-hidden] [ref=f2e302]: ›

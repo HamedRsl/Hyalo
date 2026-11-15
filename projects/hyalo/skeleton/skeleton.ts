@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 export type HySkeletonAnimation = 'shimmer' | 'pulse' | 'none';
 /** Decorative placeholder. Put aria-busy on the region being loaded. */
 @Component({

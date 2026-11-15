@@ -6,7 +6,7 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import { HyMotion, MOTION } from '@hyalo/angular';
+import { HyMotion, MOTION } from '@hyalo/angular/motion';
 
 import { bindPointer, cssVarSetter } from './pointer';
 
@@ -40,6 +40,10 @@ export class HyTilt {
       const rx = cssVarSetter(this.el, '--hy-rx', 'deg', this.motion, vars);
       const ry = cssVarSetter(this.el, '--hy-ry', 'deg', this.motion, vars);
       return {
+        destroy: () => {
+          rx.destroy();
+          ry.destroy();
+        },
         enter: () => {
           if (this.tiltGlow()) this.el.style.setProperty('--hy-glow', '0.32');
         },

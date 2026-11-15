@@ -14,7 +14,7 @@ import {
 import { Tab, TabList, TabPanel, Tabs } from '@angular/aria/tabs';
 import { HyIcon } from '@hyalo/angular/icon';
 
-import { ɵtrackIndicator as trackIndicator } from '@hyalo/angular';
+import { ɵtrackIndicator as trackIndicator } from '@hyalo/angular/core';
 
 /**
  * One tab and its panel. The panel content is rendered up front and hidden

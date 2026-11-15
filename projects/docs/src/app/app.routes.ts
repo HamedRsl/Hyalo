@@ -5,11 +5,38 @@ export const routes: Routes = [
   { path: 'foundations', loadComponent: () => import('./pages/foundations') },
   { path: 'theming', loadComponent: () => import('./pages/theming') },
   { path: 'dashboard', loadComponent: () => import('./pages/dashboard') },
+  { path: 'blocks', loadComponent: () => import('./pages/blocks') },
+  { path: 'motion-layout', loadComponent: () => import('./pages/extensions') },
   { path: 'motion', loadComponent: () => import('./pages/motion') },
   {
     path: 'components',
     children: [
       { path: '', pathMatch: 'full', loadComponent: () => import('./pages/components') },
+      {
+        path: 'number-ticker',
+        loadComponent: () => import('./pages/extensions'),
+        data: { feature: 'number-ticker' },
+      },
+      {
+        path: 'border-beam',
+        loadComponent: () => import('./pages/extensions'),
+        data: { feature: 'border-beam' },
+      },
+      {
+        path: 'copy',
+        loadComponent: () => import('./pages/extensions'),
+        data: { feature: 'copy' },
+      },
+      {
+        path: 'filter',
+        loadComponent: () => import('./pages/extensions'),
+        data: { feature: 'filter' },
+      },
+      {
+        path: 'progressive-blur',
+        loadComponent: () => import('./pages/extensions'),
+        data: { feature: 'progressive-blur' },
+      },
       { path: 'sidebar', loadComponent: () => import('./pages/sidebar') },
       { path: 'breadcrumb', loadComponent: () => import('./pages/breadcrumb') },
       { path: 'menu', loadComponent: () => import('./pages/menu') },

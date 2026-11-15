@@ -11,7 +11,7 @@ import {
   input,
   model,
 } from '@angular/core';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 
 @Component({
   selector: 'hy-step',

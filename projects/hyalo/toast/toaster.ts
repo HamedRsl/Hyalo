@@ -6,7 +6,8 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Injectable, Injector, inject, signal } from '@angular/core';
-import { MOTION, ɵinjectIsBrowser as injectIsBrowser } from '@hyalo/angular';
+import { ɵinjectIsBrowser as injectIsBrowser } from '@hyalo/angular/core';
+import { MOTION } from '@hyalo/angular/motion';
 import { HyToastStack } from './toast-stack';
 
 /** Colour and icon of a toast. */

@@ -91,13 +91,12 @@
           </div>
           <span class="selected-count" role="status">{{ selection().length }} selected</span>
         </div>
-        <div class="filters" aria-label="Project status filters">
-          <hy-chip [selected]="includeActive()" (selectedChange)="filter(true, $event)"
-            >Active</hy-chip
-          ><hy-chip [selected]="includeComplete()" (selectedChange)="filter(false, $event)"
-            >Complete</hy-chip
-          ><span>{{ filtered().length }} projects</span>
-        </div>
+        <hy-filter-bar
+          [fields]="filterFields"
+          [clauses]="clauses()"
+          (clausesChange)="updateFilters($event)"
+        />
+        <p>Preset ranges use rolling elapsed time in UTC. Demo row ages are fixed sample data.</p>
         @if (filtered().length) {
           <hy-table
             caption="Workspace projects"
@@ -117,10 +116,8 @@
           <hy-empty-state
             [headingLevel]="4"
             heading="No projects match"
-            description="Select a status to see your projects."
-            ><button hyButton (click)="filter(true, true)">
-              Show active projects
-            </button></hy-empty-state
+            description="Clear filters to see your projects."
+            ><button hyButton (click)="updateFilters([])">Clear filters</button></hy-empty-state
           >
         }
       </section>

@@ -1,7 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { InjectionToken } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { MOTION } from '@hyalo/angular';
+import { MOTION } from '@hyalo/angular/motion';
 
 /** Data passed to a dialog or drawer through `open(..., { data })`. */
 export const HY_DIALOG_DATA = new InjectionToken<unknown>('HY_DIALOG_DATA');

@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 @Directive({ selector: 'ng-template[hyMarqueeItem]' })
 export class HyMarqueeItem {
   readonly template = inject<TemplateRef<unknown>>(TemplateRef);

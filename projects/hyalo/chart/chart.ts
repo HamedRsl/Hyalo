@@ -1,3 +1,10 @@
+import { HyLocale } from '@hyalo/angular/core';
+import {
+  CdkConnectedOverlay,
+  CdkOverlayOrigin,
+  type ConnectedPosition,
+} from '@angular/cdk/overlay';
+import { HyFidelity } from '@hyalo/angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -23,7 +30,7 @@ export interface HyChartData {
   readonly labels: readonly string[];
   readonly series: readonly HyChartSeries[];
 }
-export type HyChartType = 'line' | 'bar' | 'doughnut';
+export type HyChartType = 'line' | 'area' | 'bar' | 'doughnut';
 let engine: Promise<typeof import('./engine')> | undefined;
 const loadEngine = (): Promise<typeof import('./engine')> =>
   (engine ??= import('./engine').catch((error: unknown) => {
@@ -37,6 +44,7 @@ export const HY_CHART_LOADER = new InjectionToken<() => Promise<typeof import('.
 );
 @Component({
   selector: 'hy-chart',
+  imports: [CdkConnectedOverlay, CdkOverlayOrigin],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chart.html',
   styleUrl: './chart.css',
@@ -46,9 +54,22 @@ export class HyChart {
   readonly type = input<HyChartType>('line');
   readonly label = input.required<string>();
   readonly summary = input('');
-  readonly locale = input('en');
+  readonly locale = input<string>();
+  private readonly globalLocale = inject(HyLocale);
+  private readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   readonly tableLabel = input('View chart data');
   protected readonly error = signal(false);
+  protected readonly tooltip = signal<{
+    x: number;
+    y: number;
+    title: string;
+    lines: readonly string[];
+  } | null>(null);
+  protected readonly tooltipPositions: ConnectedPosition[] = [
+    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
+  ];
+  private readonly fidelity = inject(HyFidelity);
+  protected readonly fidelityTier = this.fidelity.tier;
   private readonly visible = signal(false);
   private readonly theme = signal(0);
   private readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
@@ -59,7 +80,7 @@ export class HyChart {
   private chart: Chart | undefined;
   private generation = 0;
   private destroyed = false;
-  private readonly formatter = computed(() => new Intl.NumberFormat(this.locale()));
+  private readonly formatter = computed(() => new Intl.NumberFormat(this.effectiveLocale()));
   readonly rows = computed(() =>
     this.data().labels.map((label, index) => ({
       label,
@@ -83,18 +104,33 @@ export class HyChart {
         observer.observe(this.host.nativeElement);
       }
       mutation = new MutationObserver(changed);
-      mutation.observe(this.document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'dir', 'data-hy-theme', 'data-hy-palette'],
-      });
+      for (
+        let element: HTMLElement | null = this.host.nativeElement;
+        element;
+        element = element.parentElement
+      ) {
+        mutation.observe(element, {
+          attributes: true,
+          attributeFilter: [
+            'class',
+            'style',
+            'dir',
+            'lang',
+            'data-hy-theme',
+            'data-hy-palette',
+            'data-hy-fidelity',
+          ],
+        });
+      }
       media = this.document.defaultView?.matchMedia('(prefers-color-scheme: dark)');
       media?.addEventListener('change', changed);
     });
     afterRenderEffect(() => {
       const data = this.data(),
         type = this.type(),
-        locale = this.locale();
+        locale = this.effectiveLocale();
       this.theme();
+      this.fidelity.tier();
       if (!this.visible()) return;
       untracked(() => void this.render(data, type, locale));
     });
@@ -104,6 +140,7 @@ export class HyChart {
       observer?.disconnect();
       mutation?.disconnect();
       media?.removeEventListener('change', changed);
+      this.tooltip.set(null);
       this.chart?.destroy();
     });
   }
@@ -133,15 +170,32 @@ export class HyChart {
         backgroundColor:
           type === 'doughnut'
             ? data.labels.map((_, i) => colors[i % colors.length])
-            : colors[index % colors.length],
+            : type === 'area'
+              ? (context: { chart: Chart }) => {
+                  const area = context.chart.chartArea;
+                  if (!area) return colors[index % colors.length];
+                  const gradient = context.chart.ctx.createLinearGradient(
+                    0,
+                    area.top,
+                    0,
+                    area.bottom,
+                  );
+                  const color = colors[index % colors.length] ?? 'transparent';
+                  gradient.addColorStop(0, color);
+                  gradient.addColorStop(1, 'transparent');
+                  return gradient;
+                }
+              : colors[index % colors.length],
         borderWidth: 2,
         pointRadius: 2,
         tension: 0.25,
+        fill: type === 'area',
       }));
+      this.tooltip.set(null);
       this.chart?.destroy();
       this.chart = undefined;
       this.chart = new kit.Chart(canvas, {
-        type,
+        type: type === 'area' ? 'line' : type,
         data: { labels: [...data.labels], datasets },
         options: {
           responsive: true,
@@ -155,7 +209,23 @@ export class HyChart {
               textDirection: rtl ? 'rtl' : 'ltr',
               labels: { color: ink, usePointStyle: true },
             },
-            tooltip: { rtl, textDirection: rtl ? 'rtl' : 'ltr' },
+            tooltip: {
+              enabled: false,
+              external: ({ tooltip }) => {
+                if (!tooltip.opacity) {
+                  this.tooltip.set(null);
+                  return;
+                }
+                this.tooltip.set({
+                  x: tooltip.caretX,
+                  y: tooltip.caretY - 8,
+                  title: tooltip.title?.join(' ') ?? '',
+                  lines: tooltip.dataPoints.map(
+                    (point) => `${point.dataset.label ?? ''}: ${point.formattedValue}`,
+                  ),
+                });
+              },
+            },
           },
           ...(type === 'doughnut'
             ? {}

@@ -4,3 +4,5 @@
 export * from './positions';
 /** @internal */
 export { HyPresence as ɵHyPresence } from './presence';
+
+export * from './hover-intent';

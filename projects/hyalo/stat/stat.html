@@ -1,8 +1,14 @@
 <dl>
   <dt>{{ label() }}</dt>
   <dd>
-    <span aria-hidden="true">{{ formatted() }}</span
-    ><span class="sr">{{ accessible() }}</span>
+    <hy-number-ticker
+      [value]="value()"
+      [locale]="locale()"
+      [format]="format()"
+      [animate]="animate()"
+      [prefix]="prefix()"
+      [suffix]="suffix()"
+    />
   </dd>
 </dl>
 @if (trend()) {

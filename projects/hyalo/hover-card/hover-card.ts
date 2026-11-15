@@ -17,15 +17,15 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { HyFidelity, injectId } from '@hyalo/angular';
-import { hyConnectedPositions, type HyPlacement } from '@hyalo/angular/overlay';
+import { HyFidelity, injectId } from '@hyalo/angular/core';
+import { HyHoverIntent, hyConnectedPositions, type HyPlacement } from '@hyalo/angular/overlay';
 import { take } from 'rxjs';
 @Directive({
   selector: '[hyHoverCard]',
   exportAs: 'hyHoverCard',
   host: {
     '(pointerenter)': 'enter($event)',
-    '(pointerleave)': 'leave()',
+    '(pointerleave)': 'leave($event)',
     '(focusin)': 'focusTrigger()',
     '(focusout)': 'focusOut($event)',
     '(keydown.escape)': 'escape($event)',
@@ -47,6 +47,7 @@ export class HyHoverCard {
   private readonly container = inject(ViewContainerRef);
   private readonly fidelity = inject(HyFidelity);
   private readonly document = inject(DOCUMENT);
+  private readonly intent = new HyHoverIntent(this.document);
   private ref: OverlayRef | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private disposed = false;
@@ -58,24 +59,26 @@ export class HyHoverCard {
     inject(DestroyRef).onDestroy(() => {
       this.disposed = true;
       clearTimeout(this.timer);
+      this.intent.cancel();
       this.ref?.dispose();
     });
   }
   protected enter(event: PointerEvent): void {
+    this.intent.cancel();
     if (event.pointerType === 'touch') return;
     clearTimeout(this.timer);
     this.timer = setTimeout(() => this.show(), 250);
   }
-  protected leave(): void {
+  protected leave(event?: PointerEvent): void {
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
+    this.intent.leave(event, this.ref?.overlayElement, () => {
       if (
         this.ref?.overlayElement.contains(this.document.activeElement) ||
         this.host.nativeElement.contains(this.document.activeElement)
       )
         return;
       this.hide();
-    }, 150);
+    });
   }
   protected focusOut(event: FocusEvent): void {
     if (event.relatedTarget && this.ref?.overlayElement.contains(event.relatedTarget as Node))
@@ -122,7 +125,10 @@ export class HyHoverCard {
         'max-inline-size:min(22rem,calc(100vw - 2rem));max-block-size:70dvh;overflow:auto;padding:1.25rem;border-radius:var(--hy-radius-m);border:1px solid var(--hy-line-strong);color:var(--hy-ink)';
       pane.id = this.id;
       pane.setAttribute('role', 'dialog');
-      pane.addEventListener('pointerenter', () => clearTimeout(this.timer));
+      pane.addEventListener('pointerenter', () => {
+        clearTimeout(this.timer);
+        this.intent.cancel();
+      });
       pane.addEventListener('pointerleave', () => this.leave());
       pane.addEventListener('focusout', (event) => {
         const next = event.relatedTarget as Node | null;
@@ -150,6 +156,7 @@ export class HyHoverCard {
   }
   hide(): void {
     clearTimeout(this.timer);
+    this.intent.cancel();
     this.open.set(false);
     this.ref?.detach();
   }

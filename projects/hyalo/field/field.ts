@@ -8,7 +8,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { type HySize, injectId } from '@hyalo/angular';
+import { type HySize, injectId } from '@hyalo/angular/core';
 
 import { HY_FIELD, type HyFieldContext, type HyFieldControl } from './field-control';
 import { HyInput } from './input';

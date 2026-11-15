@@ -1,5 +1,5 @@
 import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
-import { HY_CONFIG, ɵinjectIsBrowser as injectIsBrowser } from '@hyalo/angular';
+import { HY_CONFIG, ɵinjectIsBrowser as injectIsBrowser } from '@hyalo/angular/core';
 
 /** The palettes in `styles/palettes/`. Apps can add their own names too. */
 export type HyPaletteName = 'aurora' | 'ember' | 'orchid' | 'ocean' | 'rose' | 'graphite';

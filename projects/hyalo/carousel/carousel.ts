@@ -18,7 +18,8 @@ import {
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { HyMotion, ɵinjectIsBrowser } from '@hyalo/angular';
+import { ɵinjectIsBrowser } from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 import { HyButton } from '@hyalo/angular/button';
 import { HyIcon } from '@hyalo/angular/icon';
 export type HyCarouselMode = 'slide' | 'fade';

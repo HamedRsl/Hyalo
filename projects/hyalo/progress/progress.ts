@@ -10,7 +10,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 @Component({
   selector: 'hy-progress',
   changeDetection: ChangeDetectionStrategy.OnPush,

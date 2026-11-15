@@ -12,7 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { HyFidelity, HyMaterialDirective } from '@hyalo/angular';
+import { HyFidelity, HyMaterialDirective } from '@hyalo/angular/core';
 import type { RefractionRenderer, RefractionTarget } from './renderer';
 
 @Injectable({ providedIn: 'root' })

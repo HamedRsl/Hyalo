@@ -1,5 +1,5 @@
 import { Directive, ElementRef, inject, input, numberAttribute } from '@angular/core';
-import { HyMotion, MOTION } from '@hyalo/angular';
+import { HyMotion, MOTION } from '@hyalo/angular/motion';
 
 import { bindPointer, cssVarSetter } from './pointer';
 
@@ -30,6 +30,10 @@ export class HyMagnetic {
       const clamp = (v: number): number =>
         Math.max(-this.magneticMax(), Math.min(this.magneticMax(), v));
       return {
+        destroy: () => {
+          mx.destroy();
+          my.destroy();
+        },
         move: (event, rect) => {
           const strength = this.magneticStrength();
           mx(clamp((event.clientX - rect.left - rect.width / 2) * strength));

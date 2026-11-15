@@ -1,4 +1,4 @@
-import { MOTION } from '@hyalo/angular';
+import { MOTION } from '@hyalo/angular/motion';
 
 /**
  * @internal Enter and exit for small overlays (tooltips, popovers, select

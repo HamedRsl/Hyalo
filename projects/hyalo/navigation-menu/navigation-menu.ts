@@ -9,7 +9,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 export interface HyNavigationLink {
   readonly label: string;
   readonly href: string;

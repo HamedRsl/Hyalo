@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 /** Native range input provides pointer, touch, keyboard and screen reader controls. */
 @Component({
   selector: 'hy-image-compare',

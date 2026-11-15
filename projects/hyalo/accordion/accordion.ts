@@ -9,7 +9,7 @@ import {
 import { AccordionGroup, AccordionPanel, AccordionTrigger } from '@angular/aria/accordion';
 import { HyIcon } from '@hyalo/angular/icon';
 
-import { HyMaterialDirective } from '@hyalo/angular';
+import { HyMaterialDirective } from '@hyalo/angular/core';
 
 /**
  * One collapsible section. The panel content stays in the DOM while closed

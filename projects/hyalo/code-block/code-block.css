@@ -56,3 +56,12 @@ pre:focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 3px;
 }
+
+.languages {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+.languages [aria-pressed='true'] {
+  background: var(--hy-primary-wash);
+}

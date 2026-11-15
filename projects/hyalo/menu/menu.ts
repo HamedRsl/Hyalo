@@ -13,7 +13,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import { HyMaterialDirective } from '@hyalo/angular';
+import { HyMaterialDirective } from '@hyalo/angular/core';
 import { HyButton } from '@hyalo/angular/button';
 @Component({
   selector: 'hy-menu',

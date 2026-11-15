@@ -11,7 +11,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 import { copyText } from './copy-text';
 
 export type DocsCodeLanguage = 'html' | 'ts' | 'css';

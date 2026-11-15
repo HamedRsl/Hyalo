@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import type { HySize } from '@hyalo/angular';
+import type { HySize } from '@hyalo/angular/core';
 @Component({
   selector: 'hy-avatar',
   changeDetection: ChangeDetectionStrategy.OnPush,

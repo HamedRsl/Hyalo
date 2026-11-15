@@ -1,4 +1,4 @@
-import { HySpring, HyVelocityTracker, project, rubberband, SPRINGS } from '@hyalo/angular';
+import { HySpring, HyVelocityTracker, project, rubberband, SPRINGS } from '@hyalo/angular/motion';
 import type { HyDrawerSide } from './drawer';
 
 /** Movement before a press turns into a drag, in px. */

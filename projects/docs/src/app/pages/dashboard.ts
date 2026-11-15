@@ -1,3 +1,9 @@
+import {
+  HyFilterBar,
+  type HyFilterClause,
+  type HyFilterField,
+  type HyDateRangeValue,
+} from '@hyalo/angular/filter';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HY_SIDEBAR } from '@hyalo/angular/sidebar';
@@ -8,7 +14,6 @@ import { HySparkline } from '@hyalo/angular/sparkline';
 import { HyChart } from '@hyalo/angular/chart';
 import { HyTable, type HyTableColumn } from '@hyalo/angular/table';
 import { HyPagination } from '@hyalo/angular/pagination';
-import { HyChip } from '@hyalo/angular/badge';
 import { HyButton } from '@hyalo/angular/button';
 import { HyAlert } from '@hyalo/angular/alert';
 import { HyCommand } from '@hyalo/angular/command';
@@ -17,9 +22,17 @@ import { HyProgress } from '@hyalo/angular/progress';
 import { HyEmptyState } from '@hyalo/angular/empty-state';
 import { HyKbd } from '@hyalo/angular/kbd';
 import { DocsPage } from '../shared/page';
+type DashboardFilter = HyFilterClause<{
+  status:
+    | { readonly operator: 'eq'; readonly value: 'Active' | 'Complete' }
+    | { readonly operator: 'in'; readonly value: readonly ('Active' | 'Complete')[] };
+  query: { readonly operator: 'contains'; readonly value: string };
+  createdAt: { readonly operator: 'between'; readonly value: HyDateRangeValue };
+}>;
 @Component({
   selector: 'docs-dashboard',
   imports: [
+    HyFilterBar,
     DocsPage,
     HY_SIDEBAR,
     HyBreadcrumb,
@@ -29,7 +42,6 @@ import { DocsPage } from '../shared/page';
     HyChart,
     HyTable,
     HyPagination,
-    HyChip,
     HyButton,
     HyAlert,
     HY_MENU,
@@ -45,8 +57,46 @@ export default class DashboardPage {
   protected readonly collapsed = signal(false);
   protected readonly page = signal(1);
   protected readonly selection = signal<readonly (string | number)[]>([]);
-  protected readonly includeComplete = signal(true);
-  protected readonly includeActive = signal(true);
+  protected readonly clauses = signal<readonly DashboardFilter[]>([]);
+  protected readonly filterFields: readonly HyFilterField<DashboardFilter>[] = [
+    {
+      field: 'status',
+      label: 'Status',
+      options: [
+        { value: 'Active', label: 'Active' },
+        { value: 'Complete', label: 'Complete' },
+      ],
+      create: (id, value) =>
+        value === 'Active' || value === 'Complete'
+          ? { id, field: 'status', operator: 'eq', value }
+          : null,
+    },
+    {
+      field: 'query',
+      label: 'Find project',
+      create: (id, value) => ({ id, field: 'query', operator: 'contains', value }),
+    },
+    {
+      field: 'createdAt',
+      label: 'Updated within',
+      options: ['24H', '7D', '30D', '1Y'].map((value) => ({ value, label: value })),
+      create: (id, value) =>
+        ['24H', '7D', '30D', '1Y'].includes(value)
+          ? {
+              id,
+              field: 'createdAt',
+              operator: 'between',
+              value: {
+                kind: 'preset',
+                preset: value as '24H' | '7D' | '30D' | '1Y',
+                timeZone: 'UTC',
+              },
+            }
+          : null,
+      format: (clause) =>
+        clause.field === 'createdAt' && clause.value.kind === 'preset' ? clause.value.preset : '',
+    },
+  ];
   protected readonly notice = signal('');
   private readonly command = inject(HyCommand);
   private readonly router = inject(Router);
@@ -72,8 +122,18 @@ export default class DashboardPage {
     { id: 'budget', header: 'Budget ($)', cell: (row) => row.budget, sortable: true, align: 'end' },
   ];
   protected readonly filtered = computed(() =>
-    this.projects.filter((row) =>
-      row.status === 'Active' ? this.includeActive() : this.includeComplete(),
+    this.projects.filter((row, index) =>
+      this.clauses().every((clause) => {
+        if (clause.field === 'status')
+          return clause.operator === 'in'
+            ? clause.value.some((value) => value === row.status)
+            : row.status === clause.value;
+        if (clause.field === 'query')
+          return row.name.toLocaleLowerCase().includes(clause.value.toLocaleLowerCase());
+        const dayAge = [0, 2, 10, 20, 45, 200][index] ?? 0;
+        if (clause.value.kind !== 'preset') return false;
+        return dayAge < { '24H': 1, '7D': 7, '30D': 30, '1Y': 365 }[clause.value.preset];
+      }),
     ),
   );
   protected readonly paged = computed(() =>
@@ -89,8 +149,8 @@ export default class DashboardPage {
     ],
   };
   protected readonly trend = [12, 18, 16, 23, 21, 28, 26, 32];
-  protected filter(active: boolean, value: boolean): void {
-    (active ? this.includeActive : this.includeComplete).set(value);
+  protected updateFilters(clauses: readonly DashboardFilter[]): void {
+    this.clauses.set(clauses);
     this.page.set(1);
   }
   protected search(): void {

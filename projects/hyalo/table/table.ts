@@ -1,3 +1,4 @@
+import { HyLocale } from '@hyalo/angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -6,6 +7,7 @@ import {
   booleanAttribute,
   computed,
   input,
+  inject,
   model,
 } from '@angular/core';
 export type HyRowKey = string | number;
@@ -38,7 +40,9 @@ export class HyTable<T> {
   readonly columns = input.required<readonly HyTableColumn<T>[]>();
   readonly rowKey = input.required<(row: T) => HyRowKey>();
   readonly caption = input.required<string>();
-  readonly locale = input('en');
+  readonly locale = input<string>();
+  private readonly globalLocale = inject(HyLocale);
+  private readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   readonly selectable = input(false, { transform: booleanAttribute });
   readonly stickyHeader = input(false, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
@@ -53,7 +57,10 @@ export class HyTable<T> {
       sort = this.sort(),
       col = this.columns().find((c) => c.id === sort?.column);
     if (!sort || !col?.sortable) return rows;
-    const collator = new Intl.Collator(this.locale(), { numeric: true, sensitivity: 'base' });
+    const collator = new Intl.Collator(this.effectiveLocale(), {
+      numeric: true,
+      sensitivity: 'base',
+    });
     return rows.sort((a, b) => {
       const av = col.cell(a),
         bv = col.cell(b);

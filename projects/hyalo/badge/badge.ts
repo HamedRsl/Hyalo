@@ -7,7 +7,7 @@ import {
   model,
   output,
 } from '@angular/core';
-import { HY_CONFIG, HyMaterialDirective, type HySize, type HyTone } from '@hyalo/angular';
+import { HY_CONFIG, HyMaterialDirective, type HySize, type HyTone } from '@hyalo/angular/core';
 @Component({
   selector: 'hy-badge',
   changeDetection: ChangeDetectionStrategy.OnPush,

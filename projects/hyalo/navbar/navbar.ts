@@ -14,7 +14,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
-import { HyMaterialDirective, injectId } from '@hyalo/angular';
+import { HyMaterialDirective, injectId } from '@hyalo/angular/core';
 
 /** The logo or product name, at the start of the bar. */
 @Directive({ selector: '[hyNavbarBrand]', host: { class: 'hy-navbar__brand' } })

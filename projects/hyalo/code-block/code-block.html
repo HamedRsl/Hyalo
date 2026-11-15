@@ -1,14 +1,28 @@
 <figure>
   <figcaption>
     <span
-      >{{ label() }} <small>{{ language() }}</small></span
+      >{{ label() }} <small>{{ active().language }}</small></span
     >
     @if (copyable()) {
-      <button type="button" (click)="copy()" [attr.aria-label]="'Copy ' + label()">
-        {{ status() === 'Copied' ? 'Copied' : 'Copy' }}
-      </button>
+      <hy-copy [text]="active().code" [label]="'Copy ' + label()" />
     }
   </figcaption>
-  <pre tabindex="0" [attr.aria-label]="label()" dir="ltr"><code>{{code()}}</code></pre>
-  <span role="status" class="sr">{{ status() }}</span>
+  @if (samples().length > 1) {
+    <div class="languages" role="group" aria-label="Code language">
+      @for (sample of samples(); track $index) {
+        <button
+          type="button"
+          [attr.aria-pressed]="selected() === $index"
+          (click)="selected.set($index)"
+        >
+          {{ sample.label }}
+        </button>
+      }
+    </div>
+  }
+  <pre
+    tabindex="0"
+    [attr.aria-label]="active().label"
+    dir="ltr"
+  ><code>@if (highlighted(); as html) { <span [innerHTML]="html"></span> } @else { {{ active().code }} }</code></pre>
 </figure>
