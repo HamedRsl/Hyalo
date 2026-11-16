@@ -46,3 +46,24 @@ hy-icon {
   inline-size: 1.125rem;
   block-size: 1.125rem;
 }
+
+.copy {
+  display: var(--hy-sidebar-label-display, grid);
+  gap: var(--hy-space-1);
+  min-inline-size: 0;
+  flex: 1;
+}
+.description {
+  color: var(--hy-ink-3);
+  font-size: 0.75rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.count {
+  display: var(--hy-sidebar-label-display, inline);
+  padding: 0 var(--hy-space-2);
+  border-radius: var(--hy-radius-pill);
+  background: var(--hy-surface-3);
+  color: var(--hy-ink);
+  font-variant-numeric: tabular-nums;
+}

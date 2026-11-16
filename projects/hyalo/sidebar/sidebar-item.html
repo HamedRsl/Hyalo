@@ -1,0 +1,13 @@
+@if (icon()) {
+  <hy-icon [name]="icon()" />
+}
+<span class="copy"
+  ><span class="label">{{ label() }}</span>
+  @if (description()) {
+    <span class="description">{{ ' ' + description() }}</span>
+  }
+</span>
+@if (countText() !== null) {
+  <span class="count" aria-hidden="true">{{ ' ' + countText() }}</span>
+}
+<ng-content />

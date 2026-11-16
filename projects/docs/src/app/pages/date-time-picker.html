@@ -1,0 +1,38 @@
+<docs-page
+  heading="Date-time picker"
+  lead="Choose an instant using a date, local time, and explicit timezone."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-stack">
+      <hy-field label="Scheduled at" hint="Times are shown in Tehran."
+        ><hy-date-time-picker [(value)]="instant" timeZone="Asia/Tehran" label="Scheduled at"
+      /></hy-field>
+      <p>Committed epoch milliseconds: {{ instant() ?? 'No appointment' }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyDateTimePicker &#125; from '@hyalo/angular/date-time-picker';
+import &#123; HyField &#125; from '@hyalo/angular/field';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Bind value directly or use Signal Forms through formField. Editing leaves the committed value
+    alone until Apply. Cancel restores it; Clear sets it to null. Translate the labels and
+    validationMessage for your application.
+  </p>
+  <p>
+    The date-only and time-only controls keep their existing formats. This component combines them
+    into an instant in the supplied timezone. UTC is the deterministic default. Supply the initial
+    value and timezone from the host for SSR.
+  </p>
+  <p>
+    Skipped local times cannot be applied. Repeated times default to the earlier instant; choose
+    later or reject through disambiguation. Exact min and max bounds are checked after resolving the
+    instant.
+  </p>
+  <p>
+    Pass HyJalaliDateAdapter, or provide HY_DATE_ADAPTER in a parent, to display the same instant in
+    a Jalali calendar.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" /><docs-tokens [groups]="['dateTime']"
+/></docs-page>

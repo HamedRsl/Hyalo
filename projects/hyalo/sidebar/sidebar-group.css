@@ -1,0 +1,13 @@
+:host {
+  display: grid;
+  gap: var(--hy-space-1);
+  min-inline-size: 0;
+}
+.heading {
+  display: var(--hy-sidebar-label-display, block);
+  margin: 0;
+  padding: var(--hy-space-2) var(--hy-space-3);
+  color: var(--hy-ink-3);
+  font-size: var(--hy-step--1);
+  font-weight: 600;
+}

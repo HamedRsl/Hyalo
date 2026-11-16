@@ -1,0 +1,41 @@
+<docs-page heading="Gauge" lead="Radial and semicircular measurements without a chart engine."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-row">
+      <hy-gauge
+        label="Capacity"
+        [value]="value()"
+        unit="%"
+        [bands]="bands"
+        needle
+        [valueText]="value() + ' percent capacity'"
+      /><hy-gauge
+        label="Temperature"
+        variant="semicircle"
+        [value]="42"
+        [min]="-20"
+        [max]="80"
+        unit="°C"
+        tone="success"
+      />
+    </div>
+    <button hyButton type="button" variant="ghost" (click)="value.set((value() + 20) % 120)">
+      Change capacity
+    </button></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyGauge, type HyGaugeBand &#125; from '@hyalo/angular/gauge';
+import &#123; HyButton &#125; from '@hyalo/angular/button';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The SVG is decorative; one named meter exposes the reading, range, and formatted value. Missing
+    readings have no needle. Bands change the indicator tone; communicate meaningful thresholds
+    through valueText or adjacent text.
+  </p>
+  <p>
+    Values update immediately. There is no continuous animation, telemetry dependency, or
+    chart-engine dependency.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" /><docs-tokens [groups]="['gauge']"
+/></docs-page>

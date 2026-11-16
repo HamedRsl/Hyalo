@@ -4,6 +4,10 @@ import { COMPONENT_TOKEN_PAGES, COMPONENT_TOKENS, type ComponentTokenGroup } fro
 
 /** Example values for first tokens that are not a radius. */
 const EXAMPLES: Partial<Record<string, string>> = {
+  '--hy-gauge-size': '14rem',
+  '--hy-state-padding': 'var(--hy-space-6)',
+  '--hy-status-dot-size': '0.75rem',
+  '--hy-sidebar-width': '18rem',
   '--hy-accordion-divider': 'var(--hy-line-strong)',
   '--hy-choice-checked': 'var(--hy-success)',
   '--hy-navbar-height': '4rem',

@@ -1,0 +1,43 @@
+@if (compact()) {
+  <div class="compact">
+    <div class="copy">
+      <strong>{{ heading() }}</strong>
+      @if (description()) {
+        <p>{{ description() }}</p>
+      }
+    </div>
+    @if (retryLabel()) {
+      <button
+        hyButton
+        type="button"
+        variant="ghost"
+        [loading]="retrying()"
+        [attr.aria-label]="retryLabel()"
+        (click)="retry.emit()"
+      >
+        {{ retryLabel() }}
+      </button>
+    }
+  </div>
+} @else {
+  <hy-empty-state
+    [heading]="heading()"
+    [headingLevel]="headingLevel()"
+    [description]="description()"
+  >
+    @if (retryLabel()) {
+      <button
+        hyButton
+        type="button"
+        variant="soft"
+        [loading]="retrying()"
+        [attr.aria-label]="retryLabel()"
+        (click)="retry.emit()"
+      >
+        {{ retryLabel() }}
+      </button>
+    }
+  </hy-empty-state>
+}
+
+<div class="projected-actions"><ng-content /></div>

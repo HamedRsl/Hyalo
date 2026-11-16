@@ -12,6 +12,11 @@ export const routes: Routes = [
   {
     path: 'components',
     children: [
+      { path: 'meter', loadComponent: () => import('./pages/meter') },
+      { path: 'state', loadComponent: () => import('./pages/state') },
+      { path: 'gauge', loadComponent: () => import('./pages/gauge') },
+      { path: 'date-time-picker', loadComponent: () => import('./pages/date-time-picker') },
+      { path: 'virtual-list', loadComponent: () => import('./pages/virtual-list') },
       { path: 'date-picker', loadComponent: () => import('./pages/date-picker') },
       { path: 'time-picker', loadComponent: () => import('./pages/time-picker') },
       { path: 'combobox', loadComponent: () => import('./pages/combobox') },

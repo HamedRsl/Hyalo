@@ -28,6 +28,7 @@ describe('Demo navigation', () => {
   });
 
   it('changes sidebar selection without hash navigation in either rail mode', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(SidebarPage);
     await fixture.whenStable();
     const demo: HTMLElement = fixture.nativeElement.querySelector('.phase3-demo');

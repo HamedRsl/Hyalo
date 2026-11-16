@@ -1,3 +1,8 @@
+import { HyMeter } from '@hyalo/angular/meter';
+import { HyGauge } from '@hyalo/angular/gauge';
+import { HyErrorState } from '@hyalo/angular/state';
+import { HyDateTimePicker } from '@hyalo/angular/date-time-picker';
+import { HY_VIRTUAL_LIST } from '@hyalo/angular/virtual-list';
 import { HyBorderBeam } from '@hyalo/angular/border-beam';
 import { HyDatePicker, HyDateRangePicker } from '@hyalo/angular/dates';
 import { HyTimePicker } from '@hyalo/angular/time-picker';
@@ -61,6 +66,12 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/meter': 'Bounded measurements with accessible units and threshold tones.',
+  '/components/state': 'Clear waiting and failure messages with application-owned retry actions.',
+  '/components/gauge': 'Radial and semicircular measurements without a chart engine.',
+  '/components/date-time-picker':
+    'Choose an instant using a date, local time, and explicit timezone.',
+  '/components/virtual-list': 'Fixed-height rows with native scrolling and keyboard access.',
   '/components/date-picker':
     'Date-only values, real calendar arithmetic, and keyboard access in Gregorian and Jalali calendars.',
   '/components/time-picker': 'Choose a wall time with a native input or visible appointment slots.',
@@ -167,6 +178,11 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyMeter,
+    HyGauge,
+    HyErrorState,
+    HyDateTimePicker,
+    HY_VIRTUAL_LIST,
     HyDatePicker,
     HyDateRangePicker,
     HyTimePicker,
@@ -235,6 +251,11 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
   styleUrls: ['./components.css', './phase3-previews.css'],
 })
 export default class ComponentsPage {
+  protected readonly previewEvents = Array.from({ length: 100 }, (_, id) => ({
+    id,
+    label: 'Event ' + (id + 1),
+  }));
+  protected readonly eventKey = (item: { readonly id: number }): number => item.id;
   protected readonly previewTrail = [{ label: 'Workspace', href: '/' }, { label: 'Overview' }];
   protected readonly previewData = [
     { id: 1, name: 'Website', status: 'Active' },

@@ -12,6 +12,65 @@ export interface TokenRow {
  * Keep this list in step with the component stylesheets.
  */
 export const COMPONENT_TOKENS = {
+  meter: [
+    {
+      name: '--hy-meter-radius',
+      default: 'var(--hy-radius-pill)',
+      description: 'Track and fill radius.',
+    },
+    { name: '--hy-meter-height', default: 'var(--hy-space-2)', description: 'Track height.' },
+    { name: '--hy-meter-track', default: 'var(--hy-surface-3)', description: 'Track color.' },
+    { name: '--hy-meter-fill', default: 'tone token', description: 'Reading fill override.' },
+  ],
+  state: [
+    {
+      name: '--hy-state-padding',
+      default: 'var(--hy-space-8)',
+      description: 'Full loading block padding.',
+    },
+  ],
+  status: [
+    { name: '--hy-status-dot-size', default: '0.5rem', description: 'Status dot size.' },
+    { name: '--hy-status-color', default: 'tone token', description: 'Dot color override.' },
+  ],
+  sidebar: [
+    { name: '--hy-sidebar-width', default: '16rem', description: 'Expanded sidebar width.' },
+    {
+      name: '--hy-sidebar-group-gap',
+      default: 'var(--hy-space-5)',
+      description: 'Configured group spacing.',
+    },
+  ],
+  gauge: [
+    { name: '--hy-gauge-size', default: '12rem', description: 'Maximum dial width.' },
+    {
+      name: '--hy-gauge-thickness',
+      default: '6',
+      description: 'SVG stroke width in viewBox units.',
+    },
+    { name: '--hy-gauge-track', default: 'var(--hy-surface-3)', description: 'Track stroke.' },
+    { name: '--hy-gauge-fill', default: 'tone token', description: 'Fill and needle color.' },
+  ],
+  dateTime: [
+    {
+      name: '--hy-date-time-radius',
+      default: 'var(--hy-radius-m)',
+      description: 'Fieldset radius.',
+    },
+    {
+      name: '--hy-date-time-padding',
+      default: 'var(--hy-space-4)',
+      description: 'Fieldset padding.',
+    },
+  ],
+  virtualList: [
+    {
+      name: '--hy-virtual-list-radius',
+      default: 'var(--hy-radius-m)',
+      description: 'Viewport radius.',
+    },
+    { name: '--hy-virtual-list-height', default: '20rem', description: 'Default viewport height.' },
+  ],
   button: [
     { name: '--hy-button-radius', default: 'var(--hy-radius-pill)', description: 'Corner radius.' },
     { name: '--hy-button-font-weight', default: '560', description: 'Label weight.' },
@@ -169,6 +228,13 @@ export type ComponentTokenGroup = keyof typeof COMPONENT_TOKENS;
 
 /** Where each group is documented. Groups that share a page share a path. */
 export const COMPONENT_TOKEN_PAGES: Record<ComponentTokenGroup, { title: string; path: string }> = {
+  meter: { title: 'Meter', path: '/components/meter' },
+  state: { title: 'Error and loading states', path: '/components/state' },
+  gauge: { title: 'Gauge', path: '/components/gauge' },
+  dateTime: { title: 'Date-time picker', path: '/components/date-time-picker' },
+  virtualList: { title: 'Virtual list', path: '/components/virtual-list' },
+  status: { title: 'Status indicator', path: '/components/badge' },
+  sidebar: { title: 'Sidebar', path: '/components/sidebar' },
   accordion: { title: 'Accordion', path: '/components/accordion' },
   button: { title: 'Button', path: '/components/button' },
   card: { title: 'Card', path: '/components/card' },

@@ -1,3 +1,4 @@
+import { HyStatus } from './status';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -44,4 +45,4 @@ export class HyChip {
   readonly selected = model(false);
   readonly disabled = input(false, { transform: booleanAttribute });
 }
-export const HY_BADGE = [HyBadge, HyChip] as const;
+export const HY_BADGE = [HyBadge, HyChip, HyStatus] as const;

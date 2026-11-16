@@ -4,6 +4,7 @@
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="demo-row">
+      <hy-status label="Online" tone="success" /><hy-status label="Maintenance" tone="warning" />
       <hy-badge tone="success">Available</hy-badge
       ><hy-badge tone="warning">Limited edition</hy-badge>
       @if (chipVisible()) {
@@ -26,7 +27,7 @@
     ><hy-chip disabled>Ceramic</hy-chip>
   </docs-example>
   <h2>Import</h2>
-  <docs-import code="import &#123; HyBadge, HyChip &#125; from '@hyalo/angular/badge';" />
+  <docs-import code="import &#123; HyBadge, HyChip, HyStatus &#125; from '@hyalo/angular/badge';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Use visible text to describe status rather than color alone. Removal emits an event and keeps
@@ -40,4 +41,5 @@
     Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
     tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
   </p>
+  <docs-tokens [groups]="['status']" />
 </docs-page>

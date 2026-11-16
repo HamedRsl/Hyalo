@@ -1,0 +1,18 @@
+@for (group of visibleGroups(); track group.id) {
+  <hy-sidebar-group [label]="group.label">
+    @for (item of group.items; track item.id) {
+      <!-- eslint-disable-next-line @angular-eslint/template/elements-content -- HySidebarItem renders the label in its component template. -->
+      <a
+        hySidebarItem
+        [href]="item.href"
+        [label]="item.label"
+        [icon]="item.icon ?? ''"
+        [description]="item.description ?? ''"
+        [count]="item.count ?? null"
+        [countLabel]="item.countLabel ?? ''"
+        [active]="item.id === activeId()"
+        (click)="selected.emit(item)"
+      ></a>
+    }
+  </hy-sidebar-group>
+}

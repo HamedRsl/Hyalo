@@ -22,3 +22,8 @@ export * from './appearance';
 export * from './digits';
 export * from './search';
 export * from './locale-number';
+
+/** @internal */
+export { normalizeMeasurement as ɵnormalizeMeasurement } from './measurement';
+/** @internal */
+export type { HyMeasurement as ɵHyMeasurement } from './measurement';

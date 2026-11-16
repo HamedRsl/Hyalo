@@ -1,0 +1,37 @@
+<docs-page
+  heading="Error and loading states"
+  lead="Clear waiting and failure messages with application-owned retry actions."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-stack">
+      <hy-error-state
+        heading="Report unavailable"
+        description="Check your connection and try again."
+        retryLabel="Try again"
+        (retry)="attempts.set(attempts() + 1)"
+      />
+      <p role="status">Retry attempts: {{ attempts() }}</p>
+      <hy-error-state
+        compact
+        heading="Sync interrupted"
+        retryLabel="Retry sync"
+        (retry)="attempts.set(attempts() + 1)"
+      /><hy-loading-state
+        label="Preparing report"
+        description="Your results will appear here."
+      /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_STATE &#125; from '@hyalo/angular/state';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Retry emits an event. The host owns requests, cancellation, and the retrying state. Errors
+    announce politely by default; choose assertive for urgent failures or off for repeated panels.
+  </p>
+  <p>
+    Loading text announces beside a decorative spinner. Put aria-busy on the changing content
+    region, keeping the status announcement outside it. Use a skeleton region when the expected
+    layout is known.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" /><docs-tokens [groups]="['state']"
+/></docs-page>

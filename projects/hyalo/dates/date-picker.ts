@@ -31,6 +31,7 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
   readonly value = model<HyDate | null>(null);
   readonly adapter = input<HyDateAdapter<HyDate>>(inject(HY_DATE_ADAPTER));
   readonly locale = input('en');
+  readonly calendarLabel = input('Calendar');
   readonly min = input<HyDate>();
   readonly max = input<HyDate>();
   readonly referenceDate = input<HyDate>('2026-01-01');

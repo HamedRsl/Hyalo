@@ -212,6 +212,11 @@ If you change direction at runtime, update the CDK `Directionality` as well, so 
 | Stat and KPI             | `@hyalo/angular/stat`             |
 | Charts                   | `@hyalo/angular/chart`            |
 | Sparkline                | `@hyalo/angular/sparkline`        |
+| Measurement meter        | `@hyalo/angular/meter`            |
+| Gauge                    | `@hyalo/angular/gauge`            |
+| Error and loading states | `@hyalo/angular/state`            |
+| Date-time picker         | `@hyalo/angular/date-time-picker` |
+| Virtual list             | `@hyalo/angular/virtual-list`     |
 | Progress and spinner     | `@hyalo/angular/progress`         |
 | Alert and inline message | `@hyalo/angular/alert`            |
 | Empty state              | `@hyalo/angular/empty-state`      |

@@ -1,0 +1,57 @@
+<docs-page
+  heading="Virtual list"
+  lead="Fixed-height rows with native scrolling and keyboard access."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-stack">
+      <hy-virtual-list
+        #list
+        label="Activity events"
+        [items]="events()"
+        [itemKey]="key"
+        [rowHeight]="48"
+        height="18rem"
+        ><ng-template [hyVirtualItem]="list" let-event let-index="index"
+          ><div class="event-row">
+            <strong>{{ index + 1 }}</strong
+            ><span>{{ event.label }}</span>
+          </div></ng-template
+        ></hy-virtual-list
+      >
+      <div class="demo-row">
+        <button
+          hyButton
+          type="button"
+          variant="ghost"
+          (click)="list.focusIndex(events().length - 1)"
+        >
+          Focus last event</button
+        ><button hyButton type="button" variant="ghost" (click)="events.set(events().slice(0, 10))">
+          Keep first ten</button
+        ><button hyButton type="button" variant="ghost" (click)="events.set(allEvents)">
+          Reset events
+        </button>
+      </div>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HY_VIRTUAL_LIST &#125; from '@hyalo/angular/virtual-list';
+import &#123; HyButton &#125; from '@hyalo/angular/button';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Rows have exact heights, including padding and borders. Taller content is clipped. Use ordinary
+    lists or pagination for variable-height content, full-document search, printing, or workflows
+    that need every row in the accessibility tree.
+  </p>
+  <p>
+    Tab reaches the viewport. Arrow keys move between rows, Home and End reach the ends, and Page Up
+    and Page Down move a viewport. Embedded controls retain their own keys.
+  </p>
+  <p>
+    Rows expose aria-posinset and aria-setsize. Focus moves to the viewport before scrolling evicts
+    a focused row or filtering removes it. Stable keys preserve identity. This primitive does not
+    add table virtualization.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" /><docs-tokens [groups]="['virtualList']"
+/></docs-page>

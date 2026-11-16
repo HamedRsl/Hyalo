@@ -1,0 +1,26 @@
+.demo-stack {
+  display: grid;
+  inline-size: 100%;
+  gap: var(--hy-space-4);
+}
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hy-space-4);
+}
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-3);
+  padding-inline: var(--hy-space-4);
+  block-size: 100%;
+  box-sizing: border-box;
+  border-block-end: 1px solid var(--hy-line);
+  color: var(--hy-ink-2);
+}
+.event-row strong {
+  min-inline-size: 3ch;
+  font-variant-numeric: tabular-nums;
+  color: var(--hy-ink);
+}

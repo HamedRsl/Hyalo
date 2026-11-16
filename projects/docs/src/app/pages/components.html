@@ -9,6 +9,54 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/meter') {
+                <div class="form-preview">
+                  <span>Storage: 6 of 16 GB</span
+                  ><hy-meter
+                    label="Storage"
+                    [value]="6"
+                    [max]="16"
+                    valueText="6 of 16 gigabytes"
+                    tone="success"
+                  />
+                </div>
+              }
+              @case ('/components/gauge') {
+                <hy-gauge label="Capacity" [value]="64" unit="%" />
+              }
+              @case ('/components/state') {
+                <hy-error-state
+                  compact
+                  heading="Report unavailable"
+                  retryLabel="Retry"
+                  live="off"
+                />
+              }
+              @case ('/components/date-time-picker') {
+                <div class="form-preview">
+                  <hy-date-time-picker
+                    label="Scheduled at"
+                    [value]="1794817800000"
+                    timeZone="Asia/Tehran"
+                  />
+                </div>
+              }
+              @case ('/components/virtual-list') {
+                <div class="form-preview">
+                  <hy-virtual-list
+                    #preview
+                    label="Events"
+                    [items]="previewEvents"
+                    [itemKey]="eventKey"
+                    [rowHeight]="32"
+                    height="8rem"
+                    ><ng-template [hyVirtualItem]="preview" let-event>{{
+                      event.label
+                    }}</ng-template></hy-virtual-list
+                  >
+                </div>
+              }
+
               @case ('/components/date-picker') {
                 <div class="form-preview">
                   <hy-date-picker label="Appointment date" value="2026-11-16" /><hy-date-range

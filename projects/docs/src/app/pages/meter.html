@@ -1,0 +1,31 @@
+<docs-page heading="Meter" lead="Bounded measurements with accessible units and threshold tones."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-stack">
+      <span>Storage: {{ used() }} of 16 GB</span
+      ><hy-meter
+        label="Storage"
+        [value]="used()"
+        [max]="16"
+        [valueText]="used() + ' of 16 gigabytes'"
+        [tone]="used() > 12 ? 'warning' : 'success'"
+      /><button hyButton type="button" variant="ghost" (click)="used.set((used() + 2) % 18)">
+        Change reading</button
+      ><hy-meter label="CPU" [value]="null" emptyLabel="Waiting for a reading" /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyMeter &#125; from '@hyalo/angular/meter';
+import &#123; HyButton &#125; from '@hyalo/angular/button';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Use a meter for capacity, temperature, or resource use. Use progress for a task that will
+    finish. Missing readings have a named image fallback with no numeric ARIA values. Zero remains a
+    real measurement.
+  </p>
+  <p>
+    Always communicate important thresholds in text as well as color. The fill follows writing
+    direction and works in forced colors.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" /><docs-tokens [groups]="['meter']"
+/></docs-page>

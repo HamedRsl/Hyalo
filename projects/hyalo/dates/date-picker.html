@@ -18,13 +18,13 @@
   />
   <button
     type="button"
-    aria-label="Choose date"
+    [attr.aria-label]="calendarLabel()"
     aria-haspopup="dialog"
     [attr.aria-expanded]="open()"
     [disabled]="blocked()"
     (click)="show()"
   >
-    Calendar
+    {{ calendarLabel() }}
   </button>
 </div>
 @if (display()) {

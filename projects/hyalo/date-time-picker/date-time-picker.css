@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--hy-ink);
+}
+fieldset {
+  margin: 0;
+  padding: var(--hy-date-time-padding, var(--hy-space-4));
+  min-inline-size: 0;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-date-time-radius, var(--hy-radius-m));
+  background: var(--hy-surface-2);
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--hy-space-3);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-2);
+  margin-block-start: var(--hy-space-3);
+}
+.zone,
+.error {
+  margin: var(--hy-space-2) 0 0;
+  font-size: var(--hy-step--1);
+  overflow-wrap: anywhere;
+}
+.zone {
+  color: var(--hy-ink-3);
+}
+.error {
+  color: var(--hy-danger);
+}

@@ -1,0 +1,25 @@
+<div
+  class="spacer"
+  role="presentation"
+  aria-hidden="true"
+  [style.block-size.px]="window().before"
+></div>
+@for (row of rows(); track row.key) {
+  <div
+    class="row"
+    role="listitem"
+    tabindex="-1"
+    [attr.data-hy-virtual-index]="row.index"
+    [attr.aria-posinset]="row.index + 1"
+    [attr.aria-setsize]="items().length"
+    [style.block-size.px]="safeRowHeight()"
+  >
+    <ng-container [ngTemplateOutlet]="item().template" [ngTemplateOutletContext]="row.context" />
+  </div>
+}
+<div
+  class="spacer"
+  role="presentation"
+  aria-hidden="true"
+  [style.block-size.px]="window().after"
+></div>

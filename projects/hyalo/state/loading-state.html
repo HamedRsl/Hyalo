@@ -1,0 +1,9 @@
+<div class="loading">
+  <hy-spinner [label]="label()" aria-hidden="true" />
+  <div class="copy">
+    <p class="label" [attr.aria-live]="live()" aria-atomic="true">{{ label() }}</p>
+    @if (description()) {
+      <p>{{ description() }}</p>
+    }
+  </div>
+</div>

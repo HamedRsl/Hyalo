@@ -1,7 +1,7 @@
 import { DocsImport } from '../shared/import';
 import { EXAMPLE } from './examples/skeleton';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HySkeleton, type HySkeletonAnimation } from '@hyalo/angular/skeleton';
+import { HySkeleton, HySkeletonRegion, type HySkeletonAnimation } from '@hyalo/angular/skeleton';
 import { HySegmented, type HySegmentedOption } from '@hyalo/angular/segmented';
 import { HyButton } from '@hyalo/angular/button';
 
@@ -10,7 +10,16 @@ import { DocsExample } from '../shared/example';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 @Component({
   selector: 'docs-skeleton-page',
-  imports: [DocsImport, DocsPage, DocsExample, DocsApiTable, HySkeleton, HySegmented, HyButton],
+  imports: [
+    DocsImport,
+    DocsPage,
+    DocsExample,
+    DocsApiTable,
+    HySkeleton,
+    HySkeletonRegion,
+    HySegmented,
+    HyButton,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './skeleton.html',
   styleUrl: './showcase.css',
@@ -18,6 +27,12 @@ import { DocsApiTable, type ApiRow } from '../shared/api-table';
 export default class ShowcasePage {
   protected readonly example = EXAMPLE;
   protected readonly rows: ApiRow[] = [
+    {
+      name: 'HySkeletonRegion.label',
+      type: 'string',
+      default: 'required',
+      description: 'One loading announcement around projected decorative skeletons.',
+    },
     {
       name: 'animation',
       type: "'shimmer' | 'pulse' | 'none'",

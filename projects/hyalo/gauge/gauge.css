@@ -1,0 +1,100 @@
+:host {
+  display: grid;
+  position: relative;
+  inline-size: var(--hy-gauge-size, 12rem);
+  max-inline-size: 100%;
+  color: var(--hy-ink);
+  --_tone: var(--hy-primary);
+}
+:host([data-tone='secondary']) {
+  --_tone: var(--hy-secondary, var(--hy-primary));
+}
+:host([data-tone='neutral']) {
+  --_tone: var(--hy-ink-3);
+}
+:host([data-tone='success']) {
+  --_tone: var(--hy-success);
+}
+:host([data-tone='warning']) {
+  --_tone: var(--hy-warning);
+}
+:host([data-tone='danger']) {
+  --_tone: var(--hy-danger);
+}
+svg {
+  display: block;
+  inline-size: 100%;
+  grid-area: 1 / 1;
+  overflow: visible;
+}
+path {
+  fill: none;
+  stroke-width: var(--hy-gauge-thickness, 6);
+  stroke-linecap: round;
+}
+.track {
+  stroke: var(--hy-gauge-track, var(--hy-surface-3));
+}
+.fill,
+.needle {
+  stroke: var(--hy-gauge-fill, var(--_tone));
+}
+.tick {
+  stroke: var(--hy-line-strong);
+  stroke-width: 1;
+}
+.needle {
+  stroke-width: 1.5;
+}
+.hub {
+  fill: var(--hy-gauge-fill, var(--_tone));
+}
+.reading {
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: center;
+  display: grid;
+  text-align: center;
+  gap: var(--hy-space-1);
+  padding-block-end: var(--hy-space-4);
+  max-inline-size: 80%;
+}
+strong {
+  font-size: var(--hy-step-2);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.reading span {
+  color: var(--hy-ink-2);
+  font-size: var(--hy-step--1);
+}
+.range {
+  /* Range labels follow the fixed SVG scale in either writing direction. */
+  direction: ltr;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--hy-space-2);
+  color: var(--hy-ink-3);
+  font-size: var(--hy-step--1);
+}
+:host([data-variant='semicircle']) svg {
+  margin-block-end: -30%;
+}
+:host([data-variant='semicircle']) .reading {
+  padding-block-end: 0;
+}
+@media (forced-colors: active) {
+  .track,
+  .tick {
+    stroke: GrayText;
+  }
+  .fill,
+  .needle {
+    stroke: Highlight;
+    forced-color-adjust: none;
+  }
+  .hub {
+    fill: Highlight;
+    forced-color-adjust: none;
+  }
+}

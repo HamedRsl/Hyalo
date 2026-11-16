@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  overflow: auto;
+  overflow-anchor: none;
+  min-inline-size: 0;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-virtual-list-radius, var(--hy-radius-m));
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+}
+.row {
+  box-sizing: border-box;
+  overflow: hidden;
+  min-inline-size: 0;
+}
+.spacer {
+  pointer-events: none;
+}
+:host(:focus-visible),
+.row:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -2px;
+}

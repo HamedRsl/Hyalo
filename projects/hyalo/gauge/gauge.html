@@ -1,0 +1,28 @@
+<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+  <path class="track" [attr.d]="track()" />
+  <path class="fill" [attr.d]="fill()" />
+  @for (mark of marks(); track $index) {
+    <line
+      class="tick"
+      [attr.x1]="mark.inner.x"
+      [attr.y1]="mark.inner.y"
+      [attr.x2]="mark.outer.x"
+      [attr.y2]="mark.outer.y"
+    />
+  }
+  @if (needle() && reading().value !== null) {
+    <line class="needle" x1="50" y1="50" [attr.x2]="tip().x" [attr.y2]="tip().y" />
+    <circle class="hub" cx="50" cy="50" r="3" />
+  }
+</svg>
+<div class="reading" aria-hidden="true">
+  <strong
+    ><bdi>{{ formatted() }}</bdi></strong
+  ><span>{{ label() }}</span>
+</div>
+@if (showRange()) {
+  <div class="range" aria-hidden="true">
+    <bdi>{{ minText() }}</bdi
+    ><bdi>{{ maxText() }}</bdi>
+  </div>
+}

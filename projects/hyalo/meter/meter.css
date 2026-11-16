@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  color: var(--hy-meter-fill, var(--_tone, var(--hy-primary)));
+}
+:host([data-tone='secondary']) {
+  --_tone: var(--hy-secondary, var(--hy-primary));
+}
+:host([data-tone='neutral']) {
+  --_tone: var(--hy-ink-2);
+}
+:host([data-tone='success']) {
+  --_tone: var(--hy-success);
+}
+:host([data-tone='warning']) {
+  --_tone: var(--hy-warning);
+}
+:host([data-tone='danger']) {
+  --_tone: var(--hy-danger);
+}
+.track,
+.fill {
+  display: block;
+  border-radius: var(--hy-meter-radius, var(--hy-radius-pill));
+}
+.track {
+  overflow: hidden;
+  block-size: var(--hy-meter-height, var(--hy-space-2));
+  background: var(--hy-meter-track, var(--hy-surface-3));
+}
+.fill {
+  block-size: 100%;
+  background: currentColor;
+}
+:host([data-empty='true']) .track {
+  border: 1px dashed var(--hy-line-strong);
+  box-sizing: border-box;
+}
+@media (forced-colors: active) {
+  :host {
+    color: Highlight;
+  }
+  .track {
+    border: 1px solid CanvasText;
+  }
+  .fill {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+}
