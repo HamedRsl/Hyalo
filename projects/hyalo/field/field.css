@@ -61,7 +61,7 @@
 }
 
 :host([data-disabled]) .hy-field__box,
-.hy-field__box:has(:disabled) {
+.hy-field__box:has(> :disabled) {
   opacity: 0.55;
   cursor: not-allowed;
 }
@@ -89,4 +89,11 @@
   .hy-field__box:focus-within {
     outline: 2px solid Highlight;
   }
+}
+:host([data-composite]) .hy-field__box {
+  padding-inline: 0;
+  min-block-size: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }

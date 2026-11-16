@@ -50,6 +50,26 @@
       </div></hy-sidebar
     >
     <section class="workspace-content" aria-label="Workspace overview">
+      <div class="advanced-filters">
+        <hy-field label="Project autocomplete"
+          ><hy-combobox
+            [options]="projectOptions()"
+            [value]="projectQuery()"
+            (valueChange)="changeQuery($event)"
+        /></hy-field>
+        <hy-field label="Statuses"
+          ><hy-multi-select
+            [options]="statusOptions"
+            [value]="statusValues()"
+            (valueChange)="changeStatuses($event)"
+        /></hy-field>
+        <hy-field label="Updated between" hint="UTC dates; end date includes the whole day."
+          ><hy-date-range
+            [value]="absoluteRange()"
+            (valueChange)="changeRange($event)"
+            referenceDate="2026-11-16"
+        /></hy-field>
+      </div>
       <div class="toolbar">
         <hy-breadcrumb [items]="trail()" (click)="followTrail($event)" /><button
           hyButton

@@ -6,6 +6,8 @@ import { InjectionToken, type Signal } from '@angular/core';
  * label them and show their errors.
  */
 export interface HyFieldControl {
+  /** Composite controls own their inner surfaces and focus outlines. */
+  readonly composite?: boolean;
   /** Id of the focusable element. */
   readonly id: Signal<string>;
   /** True when the field should show as invalid. */

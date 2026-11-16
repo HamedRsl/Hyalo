@@ -1,0 +1,9 @@
+<docs-page heading="Inline editable text" lead="Edit in place with a draft, validation, and explicit save and cancel actions.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Appointment title"><hy-inline-edit [(value)]="title" [validate]="validate" /></hy-field>
+<hy-field label="Notes"><hy-inline-edit [(value)]="notes" [multiline]="true" /></hy-field>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>Enter commits a single line, Escape discards the draft, and multiline values always use the Save button. Validation keeps an invalid draft open. Leaving focus does not silently commit.</p>
+<h2>API</h2><p><code>value: string, multiline, placeholder, validate: (draft) =&gt; string | undefined, saved: output&lt;string&gt;</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

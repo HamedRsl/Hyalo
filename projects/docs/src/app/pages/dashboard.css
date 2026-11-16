@@ -162,3 +162,9 @@ hy-progress {
 docs-page {
   max-inline-size: 76rem;
 }
+:host .advanced-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  margin-block-end: 1.5rem;
+}

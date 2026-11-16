@@ -1,0 +1,52 @@
+<div class="calendar" [attr.lang]="locale()">
+  <div class="calendar-heading">
+    <button
+      type="button"
+      aria-label="Previous month"
+      [disabled]="disabled() || previousDisabled()"
+      (click)="moveMonth(-1)"
+    >
+      ‹</button
+    ><strong aria-live="polite">{{ heading() }}</strong
+    ><button
+      type="button"
+      aria-label="Next month"
+      [disabled]="disabled() || nextDisabled()"
+      (click)="moveMonth(1)"
+    >
+      ›
+    </button>
+  </div>
+  <table role="grid" [attr.aria-label]="heading()">
+    <thead>
+      <tr>
+        @for (day of weekdays(); track day.key) {
+          <th scope="col">{{ day.label }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (week of weeks(); track $index) {
+        <tr>
+          @for (day of week; track day.date) {
+            <td role="gridcell" [attr.aria-selected]="day.selected">
+              <button
+                type="button"
+                [attr.data-date]="day.date"
+                [attr.data-outside]="day.outside || null"
+                [attr.tabindex]="day.active ? 0 : -1"
+                [attr.aria-disabled]="day.disabled"
+                [attr.aria-label]="day.label"
+                [attr.aria-pressed]="day.selected"
+                (click)="pick(day.date)"
+                (keydown)="keys($event, day.date)"
+              >
+                {{ day.text }}
+              </button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

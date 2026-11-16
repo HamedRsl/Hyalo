@@ -1,0 +1,29 @@
+<div
+  role="group"
+  [attr.aria-label]="label() || 'Range'"
+  [attr.aria-labelledby]="field?.labelId ?? null"
+>
+  <label [attr.for]="id()">Minimum: {{ value()[0] }}</label>
+  <input
+    type="range"
+    [id]="id()"
+    [disabled]="blocked()"
+    [min]="minValue()"
+    [max]="value()[1]"
+    [step]="step()"
+    [value]="value()[0]"
+    [attr.aria-describedby]="describedBy()"
+    (input)="change($event, 0)"
+  />
+  <label [attr.for]="id() + '-end'">Maximum: {{ value()[1] }}</label>
+  <input
+    type="range"
+    [id]="id() + '-end'"
+    [disabled]="blocked()"
+    [min]="value()[0]"
+    [max]="maxValue()"
+    [step]="step()"
+    [value]="value()[1]"
+    (input)="change($event, 1)"
+  />
+</div>

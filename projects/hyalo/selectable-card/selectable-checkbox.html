@@ -1,0 +1,12 @@
+<label class="card" [attr.for]="id()"
+  ><input
+    type="checkbox"
+    [id]="id()"
+    [name]="name()"
+    [checked]="checked()"
+    [disabled]="blocked()"
+    [required]="required()"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="showsError() || null"
+    (change)="change($event)" /><span><ng-content /></span
+></label>

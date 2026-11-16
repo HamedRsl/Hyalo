@@ -6,6 +6,21 @@ import { parseTemplate } from '@angular/compiler';
 import { format } from 'prettier';
 
 const singleExamplePages = new Set([
+  'advanced-forms',
+  'date-picker',
+  'time-picker',
+  'combobox',
+  'multi-select',
+  'search-field',
+  'number-input',
+  'password',
+  'otp',
+  'masked-input',
+  'slider',
+  'file-upload',
+  'rating',
+  'selectable-card',
+  'inline-edit',
   'sidebar',
   'breadcrumb',
   'menu',

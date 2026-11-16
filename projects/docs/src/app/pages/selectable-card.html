@@ -1,0 +1,9 @@
+<docs-page heading="Selectable cards" lead="Native radio and checkbox choices with a larger, descriptive surface.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Consultation"><hy-selectable-card [(value)]="plan" [options]="options" /></hy-field>
+<hy-selectable-checkbox [(checked)]="reminder">Send an appointment reminder</hy-selectable-checkbox>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>The entire card label activates its native input. Radio groups share a generated name, support arrow keys, and retain visible focus. Checkbox cards are independent boolean controls.</p>
+<h2>API</h2><p><code>HySelectableCard.value: string, options: HyCardOption[]; HySelectableCheckbox.checked: boolean</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

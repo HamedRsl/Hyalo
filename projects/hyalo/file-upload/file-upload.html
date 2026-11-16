@@ -1,0 +1,43 @@
+<div
+  class="dropzone"
+  [class.dragging]="dragging()"
+  (dragover)="drag($event, true)"
+  (dragleave)="drag($event, false)"
+  (drop)="drop($event)"
+>
+  <label [attr.for]="id()">{{ label() || 'Choose files or drop them here' }}</label>
+  <input
+    type="file"
+    [id]="id()"
+    [disabled]="blocked()"
+    [multiple]="multiple()"
+    [accept]="accept()"
+    [required]="required() && !value().length"
+    [attr.aria-describedby]="describedBy()"
+    (change)="browse($event)"
+  />
+  <p class="message">
+    Maximum {{ maxSize() / 1024 / 1024 }} MB per file. Files stay on this device until your
+    application uploads them.
+  </p>
+</div>
+<ul>
+  @for (file of value(); track $index) {
+    <li>
+      {{ file.name }} ({{ file.size }} bytes)
+      <button
+        type="button"
+        [disabled]="blocked()"
+        [attr.aria-label]="'Remove ' + file.name"
+        (click)="remove($index)"
+      >
+        Remove
+      </button>
+    </li>
+  }
+</ul>
+<div role="status">
+  @for (message of messages(); track $index) {
+    <p class="message error">{{ message }}</p>
+  }
+</div>

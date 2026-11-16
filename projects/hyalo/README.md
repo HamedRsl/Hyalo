@@ -4,6 +4,21 @@
 
 # @hyalo/angular
 
+Version 0.4 adds advanced forms, including Gregorian/Jalali dates, time slots,
+combobox and multi-select, localized numbers, password and OTP inputs, masks and
+Iranian phone entry, sliders, uploads, ratings, selectable cards, and inline edits.
+Import dates from `@hyalo/angular/dates`; other controls use their named entry points.
+Booking, authentication, and settings compositions are available in `/blocks`.
+Install the optional `jalaali-js` peer when using `/dates` or these form blocks:
+`npm install jalaali-js`.
+
+Bind with Angular Signal Forms. Existing typed Reactive Forms can use Angular's
+`compatForm` from `@angular/forms/signals/compat` and bind its resulting fields
+with `FormField`. New nullable scalar controls use `null` for an empty value:
+`undefined` removes a field from Angular's signal model. Strings use `''` and
+multiple selections use empty arrays. Applications own business validation and
+backend actions.
+
 Liquid glass components for Angular, built on Angular Aria and the CDK. Signal based, zoneless, server-render safe, accessible, and ready for RTL.
 
 ```sh

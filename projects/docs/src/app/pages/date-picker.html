@@ -1,0 +1,52 @@
+<docs-page
+  heading="Date picker and range"
+  lead="Date-only values, real calendar arithmetic, and keyboard access in Gregorian and Jalali calendars."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="Appointment date"
+      ><hy-date-picker [(value)]="date" referenceDate="2026-11-16"
+    /></hy-field>
+    <div dir="rtl" lang="fa">
+      <hy-field label="تاریخ ملاقات"
+        ><hy-date-picker
+          [(value)]="date"
+          [adapter]="jalali"
+          locale="fa-IR"
+          referenceDate="2026-11-16"
+      /></hy-field>
+    </div>
+    <hy-field label="Stay dates"
+      ><hy-date-range [(value)]="range" referenceDate="2026-11-16"
+    /></hy-field>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Type YYYY/MM/DD in the selected calendar, or open Calendar. Arrow keys move by day or week;
+    Home/End move within a week; Page Up/Down change month and Shift changes year. Escape returns
+    focus. Jalali years 1200 through 1600 are supported. Range endpoints are inclusive date-only
+    values; convert to timestamp boundaries in your application.
+  </p>
+  <h2>API</h2>
+  <p>
+    Install the optional jalaali-js peer when importing the dates entry point. Parsing and
+    availability errors expose validationError() and validationChange; connect the latter to an
+    Angular validate() rule in your host form. Native forms also receive custom validity.
+  </p>
+  <p>
+    <code
+      >value: HyDate | null, adapter: HyDateAdapter&lt;HyDate&gt;, locale, min, max, referenceDate,
+      isDateDisabled; range value: HyDateRange | null</code
+    >
+  </p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
+</docs-page>

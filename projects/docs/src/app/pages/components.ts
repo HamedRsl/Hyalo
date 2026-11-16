@@ -1,4 +1,20 @@
 import { HyBorderBeam } from '@hyalo/angular/border-beam';
+import { HyDatePicker, HyDateRangePicker } from '@hyalo/angular/dates';
+import { HyTimePicker } from '@hyalo/angular/time-picker';
+import { HyCombobox } from '@hyalo/angular/combobox';
+import { HyMultiSelect } from '@hyalo/angular/multi-select';
+import { HySearchField } from '@hyalo/angular/search-field';
+import { HyNumberInput } from '@hyalo/angular/number-input';
+import { HyPassword } from '@hyalo/angular/password';
+import { HyOtp } from '@hyalo/angular/otp';
+import { HyMaskedInput } from '@hyalo/angular/masked-input';
+import { HyPhoneInput } from '@hyalo/angular/phone-input';
+import { HySlider } from '@hyalo/angular/slider';
+import { HyRangeSlider } from '@hyalo/angular/range-slider';
+import { HyFileUpload } from '@hyalo/angular/file-upload';
+import { HyRating } from '@hyalo/angular/rating';
+import { HySelectableCard, HySelectableCheckbox } from '@hyalo/angular/selectable-card';
+import { HyInlineEdit } from '@hyalo/angular/inline-edit';
 import { HyNumberTicker } from '@hyalo/angular/number-ticker';
 import { HyCopy } from '@hyalo/angular/copy';
 import { HY_SIDEBAR } from '@hyalo/angular/sidebar';
@@ -45,6 +61,30 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/date-picker':
+    'Date-only values, real calendar arithmetic, and keyboard access in Gregorian and Jalali calendars.',
+  '/components/time-picker': 'Choose a wall time with a native input or visible appointment slots.',
+  '/components/combobox': 'Search and select one value, with Angular Aria keyboard behavior.',
+  '/components/multi-select':
+    'Search a list and collect an immutable selection with removable chips.',
+  '/components/search-field':
+    'A native search input with an accessible clear action and loading feedback.',
+  '/components/number-input':
+    'Localized amounts with strict parsing and native spinbutton keyboard access.',
+  '/components/password':
+    'Password entry with explicit reveal controls and an optional strength estimate.',
+  '/components/otp': 'One accessible input for autofill, paste, Persian digits, and leading zeros.',
+  '/components/masked-input':
+    'Readable numeric identifiers with canonical string values and preserved leading zeros.',
+  '/components/slider':
+    'Native range controls with immediate pointer tracking and keyboard alternatives.',
+  '/components/file-upload':
+    'A native file picker and dropzone with per-file validation and removable selections.',
+  '/components/rating': 'A clearly labeled score using native radio semantics.',
+  '/components/selectable-card':
+    'Native radio and checkbox choices with a larger, descriptive surface.',
+  '/components/inline-edit':
+    'Edit in place with a draft, validation, and explicit save and cancel actions.',
   '/components/border-beam':
     'A restrained border highlight, with movement only when explicitly enabled.',
   '/components/copy': 'Copy text with clear success or failure feedback and stable keyboard focus.',
@@ -127,6 +167,24 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyDatePicker,
+    HyDateRangePicker,
+    HyTimePicker,
+    HyCombobox,
+    HyMultiSelect,
+    HySearchField,
+    HyNumberInput,
+    HyPassword,
+    HyOtp,
+    HyMaskedInput,
+    HyPhoneInput,
+    HySlider,
+    HyRangeSlider,
+    HyFileUpload,
+    HyRating,
+    HySelectableCard,
+    HySelectableCheckbox,
+    HyInlineEdit,
     HyBorderBeam,
     HyNumberTicker,
     HyCopy,

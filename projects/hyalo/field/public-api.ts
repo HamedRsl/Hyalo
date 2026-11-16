@@ -4,3 +4,4 @@
 export * from './field-control';
 export * from './field';
 export * from './input';
+export * from './value-control';

@@ -1,0 +1,18 @@
+<form (submit)="send($event)">
+  <h2>{{ heading() }}</h2>
+  <hy-field label="Workspace name"><input hyInput type="text" [formField]="f.name" /></hy-field>
+  <hy-field label="Teams"><hy-multi-select [formField]="f.teams" [options]="teams()" /></hy-field>
+  <hy-selectable-checkbox [formField]="f.reminders"
+    >Send appointment reminders</hy-selectable-checkbox
+  >
+  <hy-field label="Workspace documents"
+    ><hy-file-upload [formField]="f.files" accept=".pdf,image/*" [multiple]="true"
+  /></hy-field>
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
+  <button hyButton type="submit" [disabled]="pending()">
+    {{ pending() ? 'Waiting' : 'Save settings' }}
+  </button>
+  <ng-content />
+</form>

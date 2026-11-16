@@ -1,0 +1,29 @@
+<docs-page
+  heading="OTP and PIN"
+  lead="One accessible input for autofill, paste, Persian digits, and leading zeros."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="Verification code"
+      ><hy-otp [(value)]="pin" (complete)="result.set('Code ready to verify')"
+    /></hy-field>
+    <p role="status">{{ result() }}</p>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The value remains a string. Completion means enough digits have been entered; it does not verify
+    identity. Use your backend to verify the code and enforce expiry and rate limits.
+  </p>
+  <h2>API</h2>
+  <p><code>value: string, length (1..12), complete: output&lt;string&gt;</code></p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
+</docs-page>

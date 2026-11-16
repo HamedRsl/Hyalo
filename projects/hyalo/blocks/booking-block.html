@@ -1,0 +1,47 @@
+<form class="split" (submit)="send($event)">
+  <section class="fields">
+    <h2>{{ heading() }}</h2>
+    <hy-field label="Date"
+      ><hy-date-picker
+        [value]="value().date"
+        (valueChange)="update('date', $event)"
+        [adapter]="adapter()"
+        [locale]="locale()"
+        [referenceDate]="referenceDate()"
+    /></hy-field>
+    <hy-field label="Time" [hint]="'Local time in ' + timeZone()"
+      ><hy-time-picker
+        [value]="value().time"
+        (valueChange)="update('time', $event)"
+        [slots]="slots()"
+    /></hy-field>
+    <hy-field label="Guests"
+      ><hy-number-input
+        [value]="value().guests"
+        (valueChange)="update('guests', $event)"
+        [min]="1"
+        [max]="12"
+    /></hy-field>
+    <hy-field label="Iranian mobile"
+      ><hy-phone-input [value]="value().phone" (valueChange)="update('phone', $event)"
+    /></hy-field>
+    @if (attempted() && !ready()) {
+      <p role="alert">
+        Choose a date and time, enter a guest count, and provide an Iranian mobile number.
+      </p>
+    }
+    @if (error()) {
+      <p role="alert">{{ error() }}</p>
+    }
+    <button hyButton type="submit" [disabled]="pending()">
+      {{ pending() ? 'Waiting' : 'Request booking' }}
+    </button>
+  </section>
+  <aside>
+    <h3>Booking summary</h3>
+    <p>{{ summary() }}</p>
+    <p>{{ value().date ?? 'Choose a date' }} · {{ value().time || 'Choose a time' }}</p>
+    <p>{{ timeZone() }}</p>
+    <ng-content />
+  </aside>
+</form>

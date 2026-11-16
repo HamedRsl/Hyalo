@@ -44,6 +44,7 @@ export class HySuffix {}
     '[attr.data-size]': 'size()',
     '[attr.data-invalid]': 'errorShown() || null',
     '[attr.data-disabled]': 'control()?.disabled() || null',
+    '[attr.data-composite]': 'control()?.composite || null',
   },
   templateUrl: './field.html',
   styleUrl: './field.css',

@@ -21,6 +21,15 @@ import { HY_MENU } from '@hyalo/angular/menu';
 import { HyProgress } from '@hyalo/angular/progress';
 import { HyEmptyState } from '@hyalo/angular/empty-state';
 import { DocsPage } from '../shared/page';
+import {
+  HyDateRangePicker,
+  dateEpoch,
+  type HyDateRange,
+  HyGregorianDateAdapter,
+} from '@hyalo/angular/dates';
+import { HyMultiSelect } from '@hyalo/angular/multi-select';
+import { HyCombobox } from '@hyalo/angular/combobox';
+import { HyField } from '@hyalo/angular/field';
 type DashboardFilter = HyFilterClause<{
   status:
     | { readonly operator: 'eq'; readonly value: 'Active' | 'Complete' }
@@ -32,6 +41,10 @@ type DashboardFilter = HyFilterClause<{
   selector: 'docs-dashboard',
   imports: [
     HyFilterBar,
+    HyDateRangePicker,
+    HyMultiSelect,
+    HyCombobox,
+    HyField,
     DocsPage,
     HY_SIDEBAR,
     HyBreadcrumb,
@@ -66,6 +79,74 @@ export default class DashboardPage {
   protected readonly page = signal(1);
   protected readonly selection = signal<readonly (string | number)[]>([]);
   protected readonly clauses = signal<readonly DashboardFilter[]>([]);
+  protected readonly absoluteRange = computed<HyDateRange | null>(() => {
+    const clause = this.clauses().find((clause) => clause.field === 'createdAt');
+    return clause?.field === 'createdAt' && clause.value.kind === 'absolute'
+      ? {
+          start: clause.value.start.slice(0, 10),
+          end: new HyGregorianDateAdapter().addDays(clause.value.end.slice(0, 10), -1),
+        }
+      : null;
+  });
+  protected readonly statusValues = computed<readonly string[]>(() => {
+    const clause = this.clauses().find((clause) => clause.field === 'status');
+    return clause?.field === 'status'
+      ? clause.operator === 'in'
+        ? clause.value
+        : [clause.value]
+      : [];
+  });
+  protected readonly statusOptions = [
+    { value: 'Active', label: 'Active' },
+    { value: 'Complete', label: 'Complete' },
+  ];
+  protected readonly projectOptions = computed(() =>
+    this.projects.map((row) => ({ value: row.name, label: row.name })),
+  );
+  protected readonly projectQuery = computed(() => {
+    const clause = this.clauses().find((clause) => clause.field === 'query');
+    return clause?.field === 'query' ? clause.value : null;
+  });
+  protected changeQuery(value: string | null): void {
+    this.updateFilters([
+      ...this.clauses().filter((clause) => clause.field !== 'query'),
+      ...(value
+        ? [{ id: 'filter-query', field: 'query', operator: 'contains', value } as const]
+        : []),
+    ]);
+  }
+  protected changeStatuses(values: readonly string[]): void {
+    const statuses = values.filter(
+      (value): value is 'Active' | 'Complete' => value === 'Active' || value === 'Complete',
+    );
+    this.updateFilters([
+      ...this.clauses().filter((clause) => clause.field !== 'status'),
+      ...(statuses.length
+        ? [{ id: 'filter-status', field: 'status', operator: 'in', value: statuses } as const]
+        : []),
+    ]);
+  }
+  protected changeRange(value: HyDateRange | null): void {
+    const adapter = new HyGregorianDateAdapter();
+    this.updateFilters([
+      ...this.clauses().filter((clause) => clause.field !== 'createdAt'),
+      ...(value
+        ? [
+            {
+              id: 'filter-createdAt',
+              field: 'createdAt',
+              operator: 'between',
+              value: {
+                kind: 'absolute',
+                start: new Date(dateEpoch(value.start)).toISOString(),
+                end: new Date(dateEpoch(adapter.addDays(value.end, 1))).toISOString(),
+                timeZone: 'UTC',
+              },
+            } as const,
+          ]
+        : []),
+    ]);
+  }
   protected readonly filterFields: readonly HyFilterField<DashboardFilter>[] = [
     {
       field: 'status',
@@ -142,7 +223,12 @@ export default class DashboardPage {
         if (clause.field === 'query')
           return row.name.toLocaleLowerCase().includes(clause.value.toLocaleLowerCase());
         const dayAge = [0, 2, 10, 20, 45, 200][index] ?? 0;
-        if (clause.value.kind !== 'preset') return false;
+        if (clause.value.kind === 'absolute') {
+          const timestamp = Date.parse('2026-11-16T12:00:00Z') - dayAge * 86400000;
+          return (
+            timestamp >= Date.parse(clause.value.start) && timestamp < Date.parse(clause.value.end)
+          );
+        }
         return dayAge < { '24H': 1, '7D': 7, '30D': 30, '1Y': 365 }[clause.value.preset];
       }),
     ),

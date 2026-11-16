@@ -1,0 +1,9 @@
+<docs-page heading="Slider and range" lead="Native range controls with immediate pointer tracking and keyboard alternatives.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Deposit percentage"><hy-slider [(value)]="amount" [min]="0" [max]="100" [step]="5" /></hy-field>
+<hy-field label="Budget range"><hy-range-slider [(value)]="range" [minValue]="0" [maxValue]="100" /></hy-field>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>Native sliders provide arrow, Home, and End behavior. The two range inputs have separate labels and cannot cross. Direct manipulation has no trailing animation.</p>
+<h2>API</h2><p><code>HySlider.value: number, min, max, step; HyRangeSlider.value: readonly [number, number], minValue, maxValue, step</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

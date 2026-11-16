@@ -2,6 +2,22 @@
 
 All notable changes to `@hyalo/angular` are listed here. The format follows [Keep a Changelog](https://keepachangelog.com), and versions follow [Semantic Versioning](https://semver.org). Until 1.0, a minor version can include breaking changes.
 
+## 0.4.0 (2026-11-16)
+
+### Advanced forms
+
+- Added all 14 phase 4 families with Signal Forms metadata and compatForm coverage.
+- Added Gregorian and Jalali date adapters, keyboard calendars, date ranges, and time slots.
+- Isolated the trusted Jalali conversion behind the optional jalaali-js peer and added
+  native validity plus explicit Signal Forms parse-validation hooks.
+- Added cancellable remote combobox and multi-select, localized number parsing, password
+  reveal, OTP paste/autofill, masks, Iranian phone entry, sliders, uploads, rating,
+  selectable radio/checkbox cards, and validated inline editing.
+- Added booking, authentication, and workspace settings blocks with host-owned actions.
+- Added component documentation, source examples, catalog previews, and advanced dashboard editors.
+- Kept new scalar fields registered on clear by using null, and separated composite
+  field surfaces so disabled descendants do not dim enabled sibling controls.
+
 ## 0.3.1 (2026-11-15)
 
 ### App shell and data

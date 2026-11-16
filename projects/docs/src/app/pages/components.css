@@ -321,3 +321,9 @@
   justify-items: center;
   gap: var(--hy-space-2);
 }
+.form-preview {
+  display: grid;
+  gap: 0.75rem;
+  inline-size: min(100%, 20rem);
+  padding: 0.5rem;
+}

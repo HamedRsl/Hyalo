@@ -1,0 +1,60 @@
+<docs-page
+  eyebrow="Phase 4 · Advanced forms"
+  heading="Forms that follow through"
+  lead="Booking, authentication, and workspace settings composed from the same public controls."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-booking-block
+      [(value)]="booking"
+      [slots]="slots"
+      referenceDate="2026-11-16"
+      timeZone="Asia/Tehran"
+      (requested)="notice.set('Booking details are ready for your application to confirm.')"
+    >
+      <p>
+        Wall times use Asia/Tehran. The host must reject unavailable or ambiguous times before
+        confirming.
+      </p>
+    </hy-booking-block>
+    <hy-settings-block
+      [(value)]="settings"
+      [teams]="teams"
+      (requested)="notice.set('Settings are ready for your application to save.')"
+    />
+    <hy-auth-block
+      (requested)="notice.set('Credentials are ready for your authentication provider.')"
+    >
+      <div authAside>
+        <h2>Your next chapter starts here.</h2>
+        <p>A focused sign-in surface for your own authentication flow.</p>
+      </div>
+      <p>This example does not authenticate or send credentials.</p>
+    </hy-auth-block>
+    <p role="status">{{ notice() }}</p>
+  </docs-example>
+  <h2>Host-owned actions</h2>
+  <p>
+    The blocks emit requested values and accept pending and error state. Applications own
+    authentication, availability, payment processing, file transfers, persistence, and server
+    validation. Never log passwords or OTP values.
+  </p>
+  <h2>Date and time contract</h2>
+  <p>
+    Dates are Gregorian ISO date-only strings. Calendar choice changes the editor, not stored
+    values. Booking times are local wall times with an explicit IANA timezone. The host resolves DST
+    gaps and overlaps. Dashboard timestamp filters use start-inclusive, end-exclusive instants, with
+    UTC midnight as the documented demo boundary.
+  </p>
+  <h2>Forms interoperability</h2>
+  <p>
+    Use FormField from Angular Signal Forms. For typed Reactive Forms, put existing FormControl
+    instances inside a signal model and create the field tree with compatForm from
+    @angular/forms/signals/compat. Reset, touched, disabled, and value state then flow through
+    Angular's native bridge.
+  </p>
+</docs-page>

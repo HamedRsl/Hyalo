@@ -1,0 +1,52 @@
+@if (editing()) {
+  <div class="control">
+    @if (multiline()) {
+      <textarea
+        [id]="id()"
+        [name]="name()"
+        [disabled]="disabled()"
+        [required]="required()"
+        [readOnly]="readonly()"
+        [attr.aria-label]="label() || null"
+        [attr.aria-labelledby]="field?.labelId ?? null"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-invalid]="showsError() || null"
+        [value]="draft()"
+        (input)="update($event)"
+        (keydown)="keys($event)"
+      ></textarea>
+    } @else {
+      <input
+        type="text"
+        [id]="id()"
+        [name]="name()"
+        [disabled]="disabled()"
+        [required]="required()"
+        [readOnly]="readonly()"
+        [attr.aria-label]="label() || null"
+        [attr.aria-labelledby]="field?.labelId ?? null"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-invalid]="showsError() || null"
+        [value]="draft()"
+        (input)="update($event)"
+        (keydown)="keys($event)"
+      />
+    }
+    <button type="button" [disabled]="blocked()" (click)="save()">Save</button
+    ><button type="button" (click)="cancel()">Cancel</button>
+  </div>
+  @if (error()) {
+    <p class="message error" role="alert">{{ error() }}</p>
+  }
+} @else {
+  <button
+    type="button"
+    [id]="id()"
+    [disabled]="blocked()"
+    [attr.aria-label]="'Edit ' + (label() || 'text')"
+    [attr.aria-describedby]="describedBy()"
+    (click)="begin()"
+  >
+    {{ value() || placeholder() }}
+  </button>
+}

@@ -1,0 +1,9 @@
+<docs-page heading="Search field" lead="A native search input with an accessible clear action and loading feedback.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Search projects"><hy-search-field [(value)]="query" placeholder="Project name" /></hy-field>
+<p role="status">{{ query() ? 'Searching for: ' + query() : 'All projects' }}</p>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>The value updates immediately. The application owns debounce, request cancellation, result announcements, and actual search. Composition remains intact.</p>
+<h2>API</h2><p><code>value: string, submitted: output&lt;string&gt;, loading, placeholder</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

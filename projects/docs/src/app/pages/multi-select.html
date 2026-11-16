@@ -1,0 +1,8 @@
+<docs-page heading="Multi-select" lead="Search a list and collect an immutable selection with removable chips.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Teams"><hy-multi-select [(value)]="values" [options]="options" /></hy-field>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>Selections stay in the host model while the query changes. Chip removal is a labeled button. An empty selection is an empty array. Disabled options cannot be newly selected.</p>
+<h2>API</h2><p><code>value: readonly T[], options, loadOptions, locale, placeholder</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

@@ -1,0 +1,33 @@
+<docs-page
+  heading="Combobox"
+  lead="Search and select one value, with Angular Aria keyboard behavior."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="City"><hy-combobox [(value)]="value" [options]="options" /></hy-field>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Arrow keys navigate results; Enter selects; Escape closes. Local matching normalizes Persian and
+    Arabic letter variants. Object values need stable keys. For remote search supply
+    loadOptions(query, signal), and pass the signal to your request. Obsolete requests are
+    cancelled; loading, retry, and empty states are separate from the selection.
+  </p>
+  <h2>API</h2>
+  <p>
+    <code
+      >value: T | undefined, options: HySelectOption&lt;T&gt;[], loadOptions: (query, AbortSignal)
+      =&gt; Promise&lt;options&gt;, locale, placeholder</code
+    >
+  </p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
+</docs-page>

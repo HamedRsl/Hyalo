@@ -21,3 +21,4 @@ export { trackIndicator as ɵtrackIndicator } from './lib/core/indicator';
 export * from './appearance';
 export * from './digits';
 export * from './search';
+export * from './locale-number';

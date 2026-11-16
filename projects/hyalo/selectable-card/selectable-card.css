@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--hy-ink);
+}
+.control {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  min-inline-size: 0;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+label:has(input:focus-visible) {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
+input:disabled,
+button:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  transition: background-color var(--hy-dur-quick) var(--hy-ease-out);
+  touch-action: manipulation;
+}
+button:active:not(:disabled) {
+  background: var(--hy-primary-wash);
+}
+button[aria-pressed='true'],
+label:has(input:checked) {
+  border-color: var(--hy-primary);
+  background: var(--hy-primary-wash);
+}
+.message {
+  font-size: var(--hy-step--1);
+  color: var(--hy-ink-3);
+  margin-block: 0.5rem 0;
+}
+.error {
+  color: var(--hy-danger);
+}
+.control > input,
+.control > select {
+  flex: 1;
+  inline-size: 6rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.5rem;
+}
+@media (forced-colors: active) {
+  button[aria-pressed='true'],
+  label:has(input:checked) {
+    outline: 2px solid Highlight;
+  }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  input,
+  textarea,
+  select,
+  button {
+    background: var(--hy-surface-1);
+  }
+}
+.cards {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  cursor: pointer;
+}
+.card input {
+  inline-size: 1.25rem;
+  min-block-size: 1.25rem;
+  flex: 0 0 auto;
+  accent-color: var(--hy-primary);
+}
+.description {
+  display: block;
+  margin-block-start: 0.25rem;
+  color: var(--hy-ink-3);
+}

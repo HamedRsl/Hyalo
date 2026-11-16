@@ -9,6 +9,90 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/date-picker') {
+                <div class="form-preview">
+                  <hy-date-picker label="Appointment date" value="2026-11-16" /><hy-date-range
+                    label="Stay dates"
+                  />
+                </div>
+              }
+              @case ('/components/time-picker') {
+                <div class="form-preview">
+                  <hy-time-picker
+                    label="Appointment time"
+                    value="10:30"
+                    [slots]="[{ value: '09:00' }, { value: '10:30' }]"
+                  />
+                </div>
+              }
+              @case ('/components/combobox') {
+                <div class="form-preview">
+                  <hy-combobox label="Choose a strap" [options]="straps" value="leather" />
+                </div>
+              }
+              @case ('/components/multi-select') {
+                <div class="form-preview">
+                  <hy-multi-select label="Straps" [options]="straps" [value]="['leather']" />
+                </div>
+              }
+              @case ('/components/search-field') {
+                <div class="form-preview">
+                  <hy-search-field label="Search projects" value="Design" />
+                </div>
+              }
+              @case ('/components/number-input') {
+                <div class="form-preview">
+                  <hy-number-input label="Amount" [value]="125000" currency="IRR" />
+                </div>
+              }
+              @case ('/components/password') {
+                <div class="form-preview">
+                  <hy-password label="Password" value="a private password" [showStrength]="false" />
+                </div>
+              }
+              @case ('/components/otp') {
+                <div class="form-preview"><hy-otp label="Verification code" value="001234" /></div>
+              }
+              @case ('/components/masked-input') {
+                <div class="form-preview">
+                  <hy-phone-input label="Phone" value="09123456789" /><hy-masked-input
+                    label="Reference"
+                    value="00123456"
+                    mask="####-####"
+                  />
+                </div>
+              }
+              @case ('/components/slider') {
+                <div class="form-preview">
+                  <hy-slider label="Deposit" [value]="40" /><hy-range-slider
+                    label="Budget"
+                    [value]="[20, 80]"
+                  />
+                </div>
+              }
+              @case ('/components/file-upload') {
+                <div class="form-preview"><hy-file-upload label="Choose documents" /></div>
+              }
+              @case ('/components/rating') {
+                <div class="form-preview"><hy-rating label="Rating" [value]="4" /></div>
+              }
+              @case ('/components/selectable-card') {
+                <div class="form-preview">
+                  <hy-selectable-card
+                    label="Plan"
+                    [options]="[
+                      { value: 'standard', label: 'Standard' },
+                      { value: 'extended', label: 'Extended' },
+                    ]"
+                    value="standard"
+                  /><hy-selectable-checkbox [checked]="true">Reminder</hy-selectable-checkbox>
+                </div>
+              }
+              @case ('/components/inline-edit') {
+                <div class="form-preview">
+                  <hy-inline-edit label="Title" value="Design consultation" />
+                </div>
+              }
               @case ('/components/border-beam') {
                 <div class="mini-beam">
                   <hy-border-beam [animated]="false" /><strong>A quiet highlight.</strong

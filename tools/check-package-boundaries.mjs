@@ -48,7 +48,7 @@ for (const file of files(root)) {
         if (entries.has(target) && target !== owner)
           problems.push(`${file}: relative import crosses into ${target}`);
       }
-      if (owner === 'core' && /^(gsap|chart\.js|highlight\.js)(\/|$)/.test(name))
+      if (owner === 'core' && /^(gsap|chart\.js|highlight\.js|jalaali-js)(\/|$)/.test(name))
         problems.push(`${file}: optional engine imported by core`);
     }
     ts.forEachChild(node, visit);
@@ -98,14 +98,14 @@ if (process.argv.includes('--built')) {
       for (const node of ast.statements)
         if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
           const name = node.moduleSpecifier.text;
-          if (/^(gsap|chart\.js|highlight\.js)(\/|$)/.test(name))
+          if (/^(gsap|chart\.js|highlight\.js|jalaali-js)(\/|$)/.test(name))
             problems.push(`${entry}: eagerly imports ${name}`);
           if (name.startsWith('@hyalo/angular/'))
             inspect(name.slice('@hyalo/angular/'.length), visited);
         }
     };
     for (const entry of ['core', 'button', 'select', 'sparkline']) inspect(entry);
-    for (const dependency of ['gsap', 'chart.js', 'highlight.js'])
+    for (const dependency of ['gsap', 'chart.js', 'highlight.js', 'jalaali-js'])
       if (!pkg.peerDependenciesMeta?.[dependency]?.optional)
         problems.push(`${dependency}: missing optional peer metadata`);
   }

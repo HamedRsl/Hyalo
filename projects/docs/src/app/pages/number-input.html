@@ -1,0 +1,41 @@
+<docs-page
+  heading="Number input"
+  lead="Localized amounts with strict parsing and native spinbutton keyboard access."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <div dir="rtl" lang="fa">
+      <hy-field label="مبلغ" hint="عدد فارسی یا لاتین وارد کنید"
+        ><hy-number-input
+          [formField]="f.amount"
+          (validationChange)="parseError.set($event)"
+          locale="fa-IR"
+          currency="IRR"
+          [step]="10000"
+      /></hy-field>
+    </div>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Persian and Eastern Arabic digits are accepted. Display separators follow the selected locale.
+    Arrow Up/Down and the step buttons change the number. Invalid or incomplete drafts never
+    silently become another amount; the host owns currency rounding and business validation.
+  </p>
+  <h2>API</h2>
+  <p>
+    validationChange reports parsing failures; the example connects it to Angular validate().
+    validationError() exposes the current message, and validationMessage customizes it. Native forms
+    also receive custom validity.
+  </p>
+  <p><code>value: number | null, locale, currency, min, max, step</code></p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
+</docs-page>

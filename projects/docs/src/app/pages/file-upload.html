@@ -1,0 +1,8 @@
+<docs-page heading="File upload" lead="A native file picker and dropzone with per-file validation and removable selections.">
+<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
+<hy-field label="Supporting documents"><hy-file-upload [(value)]="files" accept=".pdf,image/*" [multiple]="true" [maxSize]="5242880" [maxFiles]="3" /></hy-field>
+</docs-example>
+<h2>Behavior and accessibility</h2><p>Files stay in memory until the application uploads them. Client MIME and extension checks improve feedback and are not a security boundary. The server must validate contents, size, storage, and access. Rejected files are announced with their reason.</p>
+<h2>API</h2><p><code>value: readonly File[], accept, multiple, maxSize (bytes), maxFiles, rejected: output&lt;string[]&gt;</code></p>
+<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+</docs-page>

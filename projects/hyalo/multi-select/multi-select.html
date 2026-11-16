@@ -1,0 +1,93 @@
+<div class="chips">
+  @for (option of selected(); track option.key ?? option.label) {
+    <button
+      type="button"
+      [disabled]="blocked() || option.disabled || option.group?.disabled"
+      [attr.aria-label]="'Remove ' + option.label"
+      (click)="remove(option.value)"
+    >
+      {{ option.label }} <span aria-hidden="true">×</span>
+    </button>
+  }
+</div>
+<div class="control" cdkOverlayOrigin #origin="cdkOverlayOrigin">
+  <input
+    type="text"
+    ngCombobox
+    #combobox="ngCombobox"
+    autocomplete="off"
+    [id]="id()"
+    [disabled]="disabled()"
+    [readonly]="readonly()"
+    [required]="required() && !value().length"
+    [attr.aria-required]="required() || null"
+    [attr.aria-label]="label() || null"
+    [attr.aria-labelledby]="field?.labelId ?? null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="showsError() || null"
+    [placeholder]="placeholder()"
+    [value]="query()"
+    [expanded]="expanded()"
+    (expandedChange)="expand($event)"
+    (input)="type($event)"
+    (compositionend)="type($event)"
+  />
+  <button
+    type="button"
+    [disabled]="blocked()"
+    [attr.aria-expanded]="expanded()"
+    aria-label="Show options"
+    (click)="expand(!expanded()); focus()"
+  >
+    Options
+  </button>
+</div>
+
+<ng-template ngComboboxPopup [combobox]="combobox">
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="expanded()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
+    (overlayOutsideClick)="dismiss()"
+    (detach)="dismiss()"
+  >
+    <div class="options">
+      <!-- Aria forwards navigation from the input while focus stays on that input. -->
+      <div
+        ngComboboxWidget
+        ngListbox
+        #list="ngListbox"
+        focusMode="activedescendant"
+        selectionMode="explicit"
+        [multi]="true"
+        [disabled]="blocked()"
+        [value]="selection()"
+        (valueChange)="choose($event)"
+        [activeDescendant]="list.activeDescendant()"
+        [attr.aria-label]="label() || 'Options'"
+        [attr.aria-busy]="busy() || null"
+      >
+        @for (item of results(); track item.key) {
+          <div
+            ngOption
+            [value]="item.option.value"
+            [label]="item.option.label"
+            [disabled]="item.disabled"
+          >
+            {{ item.option.label }}
+          </div>
+        }
+      </div>
+      @if (busy()) {
+        <p class="message" role="status">{{ loadingLabel() }}</p>
+      } @else if (failed()) {
+        <p class="message error" role="status">{{ errorLabel() }}</p>
+        <button type="button" (click)="retry()">Retry</button>
+      } @else if (!results().length) {
+        <p class="message" role="status">{{ emptyLabel() }}</p>
+      }
+    </div>
+  </ng-template>
+</ng-template>
