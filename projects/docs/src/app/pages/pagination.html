@@ -1,0 +1,26 @@
+<docs-page
+  heading="Pagination"
+  lead="A compact, localized page window that stays bounded as result counts change."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-pagination [total]="248" [pageSize]="10" [(page)]="page" />
+      <p class="demo-note" role="status">Page {{ page() }} selected</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyPagination &#125; from '@hyalo/angular/pagination';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The current page has aria-current="page". Native buttons handle Enter and Space; previous and
+    next disable at the bounds. Pagination does not fetch or mutate your data. Pair it with a
+    computed slice or server query.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

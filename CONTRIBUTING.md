@@ -21,6 +21,12 @@ npm start
 - `projects/docs`: the documentation site. Each page is in `src/app/pages`.
 - `tools`: small checks run by `npm run lint`.
 
+The docs code tabs are generated from the live demo templates and component state.
+After editing examples during a running dev session, run `npm run docs:sources`.
+Start and build scripts run it automatically. Run `npm run docs:check-sources` to
+compile the copyable HTML and TypeScript together; edit the demo files rather than
+the generated files under `projects/docs/src/app/pages/examples`.
+
 ## Rules for code
 
 - Standalone components, `OnPush`, signal inputs and models. No `zone.js`.

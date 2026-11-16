@@ -1,0 +1,43 @@
+<docs-page
+  heading="Badge, tag and chip"
+  lead="A small status label, with optional removal for filter chips."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-row">
+      <hy-badge tone="success">Available</hy-badge
+      ><hy-badge tone="warning">Limited edition</hy-badge>
+      @if (chipVisible()) {
+        <hy-badge removable removeLabel="Remove steel filter" (removed)="chipVisible.set(false)"
+          >Steel</hy-badge
+        >
+      }
+      <button hyButton type="button" variant="ghost" (click)="chipVisible.set(true)">
+        Reset filter
+      </button>
+    </div></docs-example
+  >
+  <h2>Selectable filters</h2>
+  <docs-example
+    [code]="example.variants[0].html"
+    [tsCode]="example.variants[0].ts"
+    [cssCode]="example.variants[0].css"
+  >
+    <hy-chip [(selected)]="steel">Steel</hy-chip><hy-chip [(selected)]="gold">Gold</hy-chip
+    ><hy-chip disabled>Ceramic</hy-chip>
+  </docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyBadge, HyChip &#125; from '@hyalo/angular/badge';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Use visible text to describe status rather than color alone. Removal emits an event and keeps
+    ownership of the collection in your app. When removing the focused chip, move focus to the next
+    chip or its filter field.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

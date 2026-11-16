@@ -1,0 +1,4 @@
+<ng-content />
+@if (removable()) {
+  <button type="button" [attr.aria-label]="removeLabel()" (click)="removed.emit()">×</button>
+}

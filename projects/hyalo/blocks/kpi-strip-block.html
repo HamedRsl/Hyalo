@@ -1,0 +1,12 @@
+<div class="strip">
+  @for (item of items(); track item.id) {
+    <hy-stat
+      [label]="item.label"
+      [value]="item.value"
+      [trend]="item.trend ?? ''"
+      [prefix]="item.prefix ?? ''"
+      [suffix]="item.suffix ?? ''"
+      [locale]="locale()"
+    />
+  }
+</div>

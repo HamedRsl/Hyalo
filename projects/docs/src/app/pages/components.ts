@@ -1,3 +1,24 @@
+import { HyBorderBeam } from '@hyalo/angular/border-beam';
+import { HyNumberTicker } from '@hyalo/angular/number-ticker';
+import { HyCopy } from '@hyalo/angular/copy';
+import { HY_SIDEBAR } from '@hyalo/angular/sidebar';
+import { HyBreadcrumb } from '@hyalo/angular/breadcrumb';
+import { HY_MENU } from '@hyalo/angular/menu';
+import { HyNavigationMenu } from '@hyalo/angular/navigation-menu';
+import { HyPagination } from '@hyalo/angular/pagination';
+import { HyTable } from '@hyalo/angular/table';
+import { HyStat } from '@hyalo/angular/stat';
+import { HySparkline } from '@hyalo/angular/sparkline';
+import { HY_PROGRESS } from '@hyalo/angular/progress';
+import { HyAlert } from '@hyalo/angular/alert';
+import { HyEmptyState } from '@hyalo/angular/empty-state';
+import { HY_LIST } from '@hyalo/angular/list';
+import { HY_BENTO } from '@hyalo/angular/bento';
+import { HyScrollArea } from '@hyalo/angular/scroll-area';
+import { HyHoverCard } from '@hyalo/angular/hover-card';
+import { HyDescriptionList } from '@hyalo/angular/description-list';
+import { HyKbd } from '@hyalo/angular/kbd';
+import { HyCodeBlock } from '@hyalo/angular/code-block';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HY_ACCORDION } from '@hyalo/angular/accordion';
@@ -11,9 +32,80 @@ import { HySelect } from '@hyalo/angular/select';
 import { HY_TABS } from '@hyalo/angular/tabs';
 import { NAV } from '../nav';
 import { DocsPage } from '../shared/page';
+import { HyBadge, HyChip } from '@hyalo/angular/badge';
+import { HY_AVATAR } from '@hyalo/angular/avatar';
+import { HySkeleton } from '@hyalo/angular/skeleton';
+import { HyMesh } from '@hyalo/angular/mesh';
+import { HyHotspot } from '@hyalo/angular/hotspot';
+import { HY_TIMELINE } from '@hyalo/angular/timeline';
+import { HyDivider } from '@hyalo/angular/divider';
+import { HyAspectRatio } from '@hyalo/angular/aspect-ratio';
+import { HyButtonGroup } from '@hyalo/angular/button-group';
+import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+  '/components/border-beam':
+    'A restrained border highlight, with movement only when explicitly enabled.',
+  '/components/copy': 'Copy text with clear success or failure feedback and stable keyboard focus.',
+  '/components/filter': 'Compose typed filters for status, search, and date ranges in one bar.',
+  '/components/number-ticker':
+    'Localized numbers with optional, interruptible transitions between values.',
+  '/components/progressive-blur':
+    'A soft edge treatment that separates floating chrome from scrolling content.',
+  '/components/sidebar': 'An app rail that collapses to familiar icons without losing link names.',
+  '/components/breadcrumb': 'A quiet path back through the information hierarchy.',
+  '/components/menu':
+    'Keyboard-driven actions, checkable options, nested menus, and a split button.',
+  '/components/command':
+    'Find pages and actions immediately, without waiting for a search animation.',
+  '/components/navigation-menu':
+    'Native links with accessible disclosure panels for larger destinations.',
+  '/components/pagination':
+    'A compact, localized page window that stays bounded as result counts change.',
+  '/components/table':
+    'A semantic table with stable sorting, sticky headers, and controlled row selection.',
+  '/components/stat':
+    'Clear numbers with optional, interruptible updates and stable screen-reader text.',
+  '/components/chart':
+    'Theme-aware Chart.js line, bar, and doughnut charts with an accessible data fallback.',
+  '/components/sparkline':
+    'A small trend line for compact metric contexts, without loading a chart engine.',
+  '/components/progress':
+    'Determinate progress and quiet loading indicators that respect motion preferences.',
+  '/components/alert': 'Contextual feedback with explicit announcement and dismissal behavior.',
+  '/components/empty-state': 'Explain what happened and give people a useful next step.',
+  '/components/list': 'Readable rows with descriptions and application-owned actions.',
+  '/components/bento': 'Responsive dashboard tiles with a consistent spacing rhythm.',
+  '/components/scroll-area': 'Native scrolling, visible focus, and restrained scrollbar styling.',
+  '/components/hover-card': 'Rich optional context available through pointer, focus, and touch.',
+  '/components/description-list':
+    'Structured labels and values with native definition-list semantics.',
+  '/components/kbd': 'A small typographic cue for available keyboard shortcuts.',
+  '/components/code-block':
+    'Copyable code with safe text rendering and an independently focusable scroll area.',
+  '/components/carousel':
+    'Swipe with native touch inertia, drag with a mouse, or use the keyboard.',
+  '/components/lightbox':
+    'A thumbnail grid and a modal image viewer with captions and keyboard navigation.',
+  '/components/image-compare': 'A before-and-after frame with an accessible native range control.',
+  '/components/marquee': 'An uninterrupted logo strip with explicit pause controls.',
+  '/components/split-text': 'A headline reveal that measures actual wrapped lines after hydration.',
+  '/components/refraction': 'An image-backed glass surface with a shared WebGL rendering context.',
+  '/components/hotspot': 'A real button anchored to a projected point in a scene.',
+  '/components/mesh': 'An ambient backdrop that keeps content stationary.',
+  '/components/timeline': 'A chronological story with dates, headings and a hairline thread.',
+  '/components/stepper': 'A guided flow with completion gates and native navigation buttons.',
+  '/components/badge': 'A small status label, with optional removal for filter chips.',
+  '/components/avatar': 'People and teams, with initials when an image is unavailable.',
+  '/components/skeleton': 'A placeholder that follows the kit motion and fidelity settings.',
+  '/components/button-group': 'A named group of related native actions.',
+  '/components/link': 'A native link with an animated underline.',
+  '/components/divider': 'A quiet hairline between related content.',
+  '/components/aspect-ratio': 'A responsive frame for images and other media.',
+  '/components/chapter-nav': 'Native section links with a current-section thread.',
+  '/components/scroll-to-top':
+    'A return control that restores keyboard focus near the start of the page.',
   '/components/accordion': 'Sections that open in place, one or several at a time.',
   '/components/button': 'Solid, glass, soft and ghost buttons and link buttons.',
   '/components/card': 'Glass surfaces with media, header, footer and a whole-card link.',
@@ -28,9 +120,45 @@ const SUMMARIES: Record<string, string> = {
   '/components/tooltip-popover': 'Hints on hover or focus, and panels anchored to a trigger.',
 };
 
+export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.items ?? [])
+  .filter((item) => item.path in SUMMARIES)
+  .map((item) => ({ ...item, summary: SUMMARIES[item.path] }));
+
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyBorderBeam,
+    HyNumberTicker,
+    HyCopy,
+    HY_SIDEBAR,
+    HyBreadcrumb,
+    HY_MENU,
+    HyNavigationMenu,
+    HyPagination,
+    HyTable,
+    HyStat,
+    HySparkline,
+    HY_PROGRESS,
+    HyAlert,
+    HyEmptyState,
+    HY_LIST,
+    HY_BENTO,
+    HyScrollArea,
+    HyHoverCard,
+    HyDescriptionList,
+    HyKbd,
+    HyCodeBlock,
+    HyBadge,
+    HyChip,
+    HY_AVATAR,
+    HySkeleton,
+    HyMesh,
+    HyHotspot,
+    HY_TIMELINE,
+    HyDivider,
+    HyAspectRatio,
+    HyButtonGroup,
+    HyLink,
     DocsPage,
     RouterLink,
     HY_ACCORDION,
@@ -46,12 +174,30 @@ const SUMMARIES: Record<string, string> = {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './components.html',
-  styleUrl: './components.css',
+  styleUrls: ['./components.css', './phase3-previews.css'],
 })
 export default class ComponentsPage {
-  protected readonly items = (NAV.find((g) => g.title === 'Components')?.items ?? [])
-    .filter((item) => item.path in SUMMARIES)
-    .map((item) => ({ ...item, summary: SUMMARIES[item.path] }));
+  protected readonly previewTrail = [{ label: 'Workspace', href: '/' }, { label: 'Overview' }];
+  protected readonly previewData = [
+    { id: 1, name: 'Website', status: 'Active' },
+    { id: 2, name: 'Design system', status: 'Complete' },
+  ];
+  protected readonly previewColumns = [
+    { id: 'name', header: 'Project', cell: (row: { name: string }) => row.name },
+    { id: 'status', header: 'Status', cell: (row: { status: string }) => row.status },
+  ];
+  protected readonly previewKey = (row: { id: number }): number => row.id;
+  protected readonly previewNavigation = [
+    { id: 'product', label: 'Product', href: '/components' },
+    { id: 'learn', label: 'Learn', href: '/foundations' },
+  ];
+  protected readonly previewDetails = [
+    { term: 'Plan', detail: 'Team' },
+    { term: 'Region', detail: 'Europe' },
+  ];
+  protected readonly previewTrend = [10, 18, 15, 25, 24, 32, 38];
+  protected readonly previewSource = "import { HyTable } from '@hyalo/angular/table';";
+  protected readonly items = COMPONENT_CATALOG;
 
   protected readonly straps = [
     { value: 'leather', label: 'Leather' },

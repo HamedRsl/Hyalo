@@ -1,0 +1,6 @@
+[    7511ms] [WARNING] [hyalo] Unknown icon "search". Register it with provideHyaloIcons(). @ http://127.0.0.1:4183/@vite/client:368
+[    7517ms] [LOG] Angular is running in development mode. @ http://127.0.0.1:4183/@fs/C:/Users/Admin/Desktop/Todo/Hyalo/.angular/cache/22.2.5/docs/vite/deps/core-EFIweOet.js?v=431cc08b:12481
+[    7567ms] [WARNING] [hyalo] Unknown icon "home". Register it with provideHyaloIcons(). @ http://127.0.0.1:4183/@vite/client:368
+[    7567ms] [WARNING] [hyalo] Unknown icon "grid". Register it with provideHyaloIcons(). @ http://127.0.0.1:4183/@vite/client:368
+[    7567ms] [WARNING] [hyalo] Unknown icon "user". Register it with provideHyaloIcons(). @ http://127.0.0.1:4183/@vite/client:368
+[    7571ms] [LOG] Angular hydrated 37 component(s) and 1048 node(s), 0 component(s) were skipped. 0 defer block(s) were configured to use incremental hydration. Learn more at https://v22.angular.dev/guide/hydration. @ http://127.0.0.1:4183/@fs/C:/Users/Admin/Desktop/Todo/Hyalo/.angular/cache/22.2.5/docs/vite/deps/core-EFIweOet.js?v=431cc08b:12481

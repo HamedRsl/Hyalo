@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 12rem;
+  max-inline-size: min(24rem, calc(100vw - 2rem));
+  max-block-size: min(32rem, calc(100dvh - 2rem));
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 0.375rem;
+  border-radius: var(--hy-radius-m);
+  border: 1px solid var(--hy-line-strong);
+  outline: none;
+}

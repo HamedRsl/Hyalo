@@ -1,0 +1,17 @@
+:host {
+  color: var(--hy-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-underline-offset var(--hy-dur-quick) var(--hy-ease-out);
+}
+:host(:focus-visible) {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  :host(:hover) {
+    text-underline-offset: 0.35em;
+  }
+}

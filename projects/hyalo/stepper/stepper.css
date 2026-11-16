@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+ol {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin-block: 0 var(--hy-space-6);
+  gap: var(--hy-space-2);
+}
+li {
+  flex: 1;
+}
+button {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  inline-size: 100%;
+  padding: var(--hy-space-3);
+  background: var(--hy-surface-2);
+  color: var(--hy-ink-2);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+}
+button[aria-current] {
+  color: var(--hy-primary);
+  border-color: currentColor;
+  background: var(--hy-primary-wash);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+button span {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}

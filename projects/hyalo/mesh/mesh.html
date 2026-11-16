@@ -1,0 +1,11 @@
+<div class="content"><ng-content /></div>
+@if (animated()) {
+  <button
+    type="button"
+    [disabled]="!allowed()"
+    (click)="paused.set(!paused())"
+    [attr.aria-pressed]="paused()"
+  >
+    {{ !allowed() ? disabledLabel() : paused() ? playLabel() : pauseLabel() }}
+  </button>
+}

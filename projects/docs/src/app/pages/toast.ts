@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/toast';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HyToaster } from '@hyalo/angular/toast';
@@ -13,6 +14,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './toast.html',
 })
 export default class ToastPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly toaster = inject(HyToaster);
 
   protected saved(): void {

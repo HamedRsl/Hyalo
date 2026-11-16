@@ -5,39 +5,37 @@
 >
   <h2>Timing</h2>
   <p>
-    Three presets cover almost everything. <code>settle</code> is the default for things moving
-    into place. <code>pop</code> overshoots a little and is only for motion the user caused,
-    like a switch they just flipped. <code>quick</code> is for acknowledgements such as a press.
-    The same values exist as CSS tokens (<code>--hy-dur-settle</code>,
-    <code>--hy-ease-out</code> and so on) and as the <code>MOTION</code> constant for GSAP.
+    Three presets cover almost everything. <code>settle</code> is the default for things moving into
+    place. <code>pop</code> overshoots a little and is only for motion the user caused, like a
+    switch they just flipped. <code>quick</code> is for acknowledgements such as a press. The same
+    values exist as CSS tokens (<code>--hy-dur-settle</code>, <code>--hy-ease-out</code> and so on)
+    and as the <code>MOTION</code> constant for GSAP.
   </p>
 
   <h2>Fidelity tiers</h2>
   <p>
-    <code>HyFidelity</code> picks <code>high</code>, <code>medium</code> or
-    <code>low</code> from device memory, CPU cores, pointer type and data saver. Reduced motion
-    does not lower the tier: it turns off decorative motion and makes overlays cross-fade, but
-    the glass stays. The server and the first client render always use medium, so hydration sees
-    identical markup, and the real tier is set right after. This page is on
-    <strong>{{ fidelity.tier() }}</strong> right now, and motion is
-    <strong>{{ motion.reduced() ? 'reduced' : 'full' }}</strong
+    <code>HyFidelity</code> picks <code>high</code>, <code>medium</code> or <code>low</code> from
+    device memory, CPU cores, pointer type and data saver. Reduced motion does not lower the tier:
+    it turns off decorative motion and makes overlays cross-fade, but the glass stays. The server
+    and the first client render always use medium, so hydration sees identical markup, and the real
+    tier is set right after. This page is on <strong>{{ fidelity.tier() }}</strong> right now, and
+    motion is <strong>{{ motion.reduced() ? 'reduced' : 'full' }}</strong
     >.
   </p>
   <ul>
     <li><strong>High</strong>: everything, including cursor physics.</li>
     <li><strong>Medium</strong>: tilt, magnetic hover and reveals.</li>
     <li>
-      <strong>Low</strong>: CSS only. Glass is solid, cursor effects are off, the select is
-      native.
+      <strong>Low</strong>: CSS only. Glass is solid, cursor effects are off, the select is native.
     </li>
   </ul>
 
   <h2>Tilt and glow</h2>
   <p>
-    Move the pointer over the cards. Listeners are attached outside change detection and only
-    with a fine pointer.
+    Move the pointer over the cards. Listeners are attached outside change detection and only with a
+    fine pointer.
   </p>
-  <docs-example [code]="tiltCode">
+  <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <div class="docs-grid">
       <hy-card hyTilt
         ><h3 hyCardHeader>Tilt</h3>
@@ -51,7 +49,7 @@
   </docs-example>
 
   <h2>Magnetic</h2>
-  <docs-example [code]="magneticCode">
+  <docs-example [code]="examples[1].html" [tsCode]="examples[1].ts" [cssCode]="examples[1].css">
     <button hyButton size="lg" hyMagnetic>Pull me</button>
     <button hyButton size="lg" variant="glass" hyMagnetic [magneticStrength]="0.5">
       Stronger pull
@@ -60,11 +58,10 @@
 
   <h2>Reveal on scroll</h2>
   <p>
-    Content below the fold fades in when it scrolls into view. Nothing is hidden on the server,
-    on screen at load, or with reduced motion, so there is no state where content waits on a
-    script.
+    Content below the fold fades in when it scrolls into view. Nothing is hidden on the server, on
+    screen at load, or with reduced motion, so there is no state where content waits on a script.
   </p>
-  <docs-example [code]="revealCode">
+  <docs-example [code]="examples[2].html" [tsCode]="examples[2].ts" [cssCode]="examples[2].css">
     <div class="docs-grid">
       @for (n of [1, 2, 3, 4, 5, 6]; track n) {
         <hy-card hyReveal [revealDelay]="n * 70" [revealFrom]="n % 2 ? 'up' : 'scale'">

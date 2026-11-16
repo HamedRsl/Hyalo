@@ -80,3 +80,22 @@
     opacity: 0;
   }
 }
+
+:root:is([data-hy-motion='reduced'], [data-hy-fidelity='low']) .hy-tilt {
+  transform: none;
+  transition: none;
+}
+:root:is([data-hy-motion='reduced'], [data-hy-fidelity='low']) .hy-magnetic {
+  translate: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-hy-motion='full']) .hy-tilt {
+    transform: none;
+    transition: none;
+  }
+  :root:not([data-hy-motion='full']) .hy-magnetic {
+    translate: none;
+    transition: none;
+  }
+}

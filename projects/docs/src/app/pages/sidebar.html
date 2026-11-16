@@ -1,0 +1,55 @@
+<docs-page
+  heading="Sidebar"
+  lead="An app rail that collapses to familiar icons without losing link names."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-sidebar [(collapsed)]="collapsed"
+        ><strong hySidebarBrand>Workspace</strong
+        ><a
+          hySidebarItem
+          href="#overview"
+          label="Overview"
+          aria-label="Overview"
+          icon="home"
+          [active]="selected() === 'Overview'"
+          (click)="select($event, 'Overview')"
+        ></a
+        ><a
+          hySidebarItem
+          href="#projects"
+          label="Projects"
+          aria-label="Projects"
+          icon="grid"
+          [active]="selected() === 'Projects'"
+          (click)="select($event, 'Projects')"
+        ></a
+        ><a
+          hySidebarItem
+          href="#settings"
+          label="Settings"
+          aria-label="Settings"
+          icon="settings"
+          [active]="selected() === 'Settings'"
+          (click)="select($event, 'Settings')"
+        ></a
+        ><small hySidebarFooter>Personal workspace</small></hy-sidebar
+      >
+      <p role="status">Preview: {{ selected() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_SIDEBAR &#125; from '@hyalo/angular/sidebar';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Links remain native links in both modes. Use routerLink on each item in routed apps. Collapse
+    changes layout immediately; the rail never makes keyboard navigation wait for an animation.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

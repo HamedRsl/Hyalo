@@ -1,0 +1,29 @@
+<docs-page
+  heading="Image compare"
+  lead="A before-and-after frame with an accessible native range control."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-image-compare
+      before="showcase-steel.svg"
+      after="showcase-gold.svg"
+      beforeAlt="Steel case and blue dial"
+      afterAlt="Gold case and ivory dial"
+      label="Reveal steel finish"
+      [(value)]="comparison"
+  /></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyImageCompare &#125; from '@hyalo/angular/image-compare';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Tab to the native slider. Arrow keys, Home and End adjust the comparison. The image reveal is
+    spatial and stays left-to-right in both reading directions; the label follows the page
+    direction. There is no decorative motion.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

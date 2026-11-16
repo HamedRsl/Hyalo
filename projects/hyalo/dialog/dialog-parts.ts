@@ -1,5 +1,5 @@
 import { Directive, ElementRef, afterNextRender, inject, input } from '@angular/core';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 
 import { HyDialogRef } from './dialog-ref';
 

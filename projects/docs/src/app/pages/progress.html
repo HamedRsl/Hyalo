@@ -1,0 +1,34 @@
+<docs-page
+  heading="Progress and spinner"
+  lead="Determinate progress and quiet loading indicators that respect motion preferences."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="demo-stack">
+        <hy-progress label="Upload progress" [value]="progress()" />
+        <div class="demo-row">
+          <hy-progress variant="circle" label="Upload progress" [value]="progress()" /><hy-spinner
+            label="Synchronizing"
+          /><span>{{ progress() }}% uploaded</span>
+        </div>
+        <button hyButton variant="ghost" type="button" (click)="progress.update(advance)">
+          Advance upload</button
+        ><hy-progress label="Preparing export" />
+      </div></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_PROGRESS &#125; from '@hyalo/angular/progress';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Determinate progress exposes aria-valuenow. Indeterminate progress omits it. Continuous motion
+    uses transforms and stops under reduced motion or low fidelity. Keep an adjacent status message
+    when users need to know what is loading.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

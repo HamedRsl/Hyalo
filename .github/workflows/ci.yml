@@ -18,4 +18,6 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: npm run check:package
+      - run: npm run docs:check-sources
       - run: npm run size

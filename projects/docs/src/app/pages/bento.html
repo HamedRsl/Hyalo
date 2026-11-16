@@ -1,0 +1,35 @@
+<docs-page heading="Bento grid" lead="Responsive dashboard tiles with a consistent spacing rhythm.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-bento
+        ><hy-stat
+          hyBentoTile
+          [columns]="2"
+          label="Revenue"
+          [value]="48250"
+          prefix="$"
+          trend="Up 12.8%"
+        /><hy-stat hyBentoTile label="Active projects" [value]="24" trend="4 launched this month" />
+        <div hyBentoTile [columns]="3" class="demo-panel">
+          A full-width activity panel. Tile spans collapse to one column when the container gets
+          narrow.
+        </div></hy-bento
+      >
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_BENTO &#125; from '@hyalo/angular/bento';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The grid responds to its container, not the entire viewport. Source order and reading order stay
+    the same. Spans collapse on narrow containers. No layout animation, drag controls, or reordered
+    tab stops.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

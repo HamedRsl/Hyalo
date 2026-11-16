@@ -1,0 +1,18 @@
+.chart-demo {
+  inline-size: 100%;
+  min-inline-size: 0;
+  display: grid;
+  gap: var(--hy-space-5);
+}
+.chart-demo button[aria-pressed='true'] {
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
+  border-color: var(--hy-line-strong);
+}
+
+.demo-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--hy-space-3);
+}

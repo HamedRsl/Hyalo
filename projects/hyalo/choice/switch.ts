@@ -8,7 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
-import { injectId, rubberband } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
+import { rubberband } from '@hyalo/angular/motion';
 
 /** Movement before a press on the track turns into a drag, in px. */
 const SLOP = 4;

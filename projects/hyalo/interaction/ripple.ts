@@ -7,7 +7,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 
 /**
  * A soft light ripple from the press point. Purely decorative: it is

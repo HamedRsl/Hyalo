@@ -82,7 +82,15 @@ describe('HySelect', () => {
     const select = el.querySelector('select')!;
     expect(select).not.toBeNull();
     expect(el.querySelector('label')!.htmlFor).toBe(select.id);
-    select.value = '0';
+    select.value = [...select.options].find(
+      (option) => option.textContent?.trim() === 'Leather',
+    )!.value;
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.model().strap).toBe('leather');
+    select.value = [...select.options].find(
+      (option) => option.textContent?.trim() === 'Rubber',
+    )!.value;
     select.dispatchEvent(new Event('change'));
     await fixture.whenStable();
     expect(fixture.componentInstance.model().strap).toBe('leather');

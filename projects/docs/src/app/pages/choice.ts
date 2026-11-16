@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/choice';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import { HyCheckbox, HyRadio, HyRadioGroup, HySwitch } from '@hyalo/angular/choice';
@@ -28,6 +29,8 @@ import { DocsTokens } from '../shared/tokens-table';
   `,
 })
 export default class ChoicePage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly extras = [
     { id: 'box', label: 'Gift box' },
     { id: 'strap', label: 'Second strap' },
@@ -56,20 +59,6 @@ export default class ChoicePage {
     this.picked.set(new Set(on ? this.extras.map((e) => e.id) : []));
   }
 
-  protected readonly checkboxCode = `<hy-checkbox [checked]="all()" [indeterminate]="some()" (checkedChange)="toggleAll($event)">
-  All extras
-</hy-checkbox>
-<hy-checkbox description="You can read them first." [formField]="f.terms">
-  I accept the terms
-</hy-checkbox>`;
-  protected readonly radioCode = `<hy-radio-group label="Delivery" [formField]="f.delivery">
-  <hy-radio value="standard" description="3 to 5 days, free">Standard</hy-radio>
-  <hy-radio value="express" description="Next day, 12 EUR">Express</hy-radio>
-  <hy-radio value="pickup" disabled>Pick up</hy-radio>
-</hy-radio-group>`;
-  protected readonly switchCode = `<hy-switch [(checked)]="notify" description="One email a week, never more.">
-  Product news
-</hy-switch>`;
   protected readonly checkboxRows: ApiRow[] = [
     {
       name: 'checked',

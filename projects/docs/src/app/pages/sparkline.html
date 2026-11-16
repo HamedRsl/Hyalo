@@ -1,0 +1,31 @@
+<docs-page
+  heading="Sparkline"
+  lead="A small trend line for compact metric contexts, without loading a chart engine."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="spark-demo">
+        <strong>Weekly activity</strong
+        ><hy-sparkline
+          [data]="activity"
+          label="Activity rose through the week, with a small dip on Wednesday"
+        /><span class="demo-note">124 events this week</span>
+      </div>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HySparkline &#125; from '@hyalo/angular/sparkline';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The SVG has a named image role and no animation. Large inputs are reduced to at most 162 points
+    while retaining each bucket’s minimum and maximum. Use a full chart with a table when individual
+    values matter.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

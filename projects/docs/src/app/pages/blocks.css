@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+hy-pricing-block,
+hy-feature-block,
+hy-testimonials-block,
+hy-product-block,
+hy-activity-block {
+  display: block;
+  margin-block: 3rem;
+}
+.stage {
+  display: grid;
+  place-content: center;
+  min-block-size: 18rem;
+  border-radius: var(--hy-radius-l);
+  background: linear-gradient(135deg, var(--hy-primary-wash), var(--hy-surface-2));
+  color: var(--hy-ink-2);
+  padding: 2rem;
+  text-align: center;
+}

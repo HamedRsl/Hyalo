@@ -1,0 +1,32 @@
+<nav [attr.aria-label]="label()">
+  <button
+    type="button"
+    [attr.aria-label]="previousLabel()"
+    [disabled]="current() === 1"
+    (click)="go(current() - 1)"
+  >
+    <span aria-hidden="true" class="arrow">‹</span>
+  </button>
+  @for (item of pages(); track $index) {
+    @if (item) {
+      <button
+        type="button"
+        [attr.aria-label]="'Page ' + item.label"
+        [attr.aria-current]="item.value === current() ? 'page' : null"
+        (click)="go(item.value)"
+      >
+        {{ item.label }}
+      </button>
+    } @else {
+      <span aria-hidden="true">…</span>
+    }
+  }
+  <button
+    type="button"
+    [attr.aria-label]="nextLabel()"
+    [disabled]="current() === pageCount()"
+    (click)="go(current() + 1)"
+  >
+    <span aria-hidden="true" class="arrow">›</span>
+  </button>
+</nav>

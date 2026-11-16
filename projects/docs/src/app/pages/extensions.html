@@ -1,0 +1,90 @@
+<docs-page
+  eyebrow="Architecture and public APIs"
+  [heading]="heading()"
+  lead="Progressive enhancement with static fallbacks, localized data and optional rendering engines."
+>
+  @switch (feature()) {
+    @case ('number-ticker') {
+      <h2>Localized numbers</h2>
+      <hy-number-ticker [value]="value()" animate /><button
+        hyButton
+        (click)="value.set(value() + 125)"
+      >
+        Add 125
+      </button>
+      <p>
+        Static accessible text always exposes the final value. Animation pauses offscreen and
+        respects reduced motion.
+      </p>
+      <hy-code-block [code]="tickerCode" language="html" />
+    }
+    @case ('border-beam') {
+      <hy-card class="beam" material="tinted"
+        ><hy-border-beam animated />
+        <h2>A restrained highlight</h2>
+        <p>
+          The decorative beam is opt-in. The border remains usable with animation disabled.
+        </p></hy-card
+      ><hy-code-block [code]="beamCode" language="html" />
+    }
+    @case ('copy') {
+      <hy-copy text="npm install @hyalo/angular" label="Copy installation command"
+        ><code>npm install @hyalo/angular</code></hy-copy
+      >
+      <p>The status announcement distinguishes a successful copy from a clipboard failure.</p>
+      <hy-code-block [code]="copyCode" language="html" />
+    }
+    @case ('filter') {
+      <hy-filter-bar [fields]="fields" [(clauses)]="clauses" />
+      <section aria-label="Filtered projects" class="filter-results">
+        <p role="status">{{ filteredProjects().length }} matching projects</p>
+        <ul>
+          @for (project of filteredProjects(); track project) {
+            <li>{{ project }}</li>
+          } @empty {
+            <li>No projects match your search. Clear the filters to see every project.</li>
+          }
+        </ul>
+      </section>
+      <p>
+        Host-owned state, AND semantics, stable IDs and field/operator/value correlation. Empty
+        editors remove their clause.
+      </p>
+      <hy-code-block [code]="encoded()" language="json" /><hy-code-block
+        [code]="filterCode"
+        language="typescript"
+      />
+    }
+    @case ('progressive-blur') {
+      <div class="scroll-demo">
+        <hy-progressive-blur />
+        @for (line of lines; track line) {
+          <p>{{ line }}</p>
+        }
+        <hy-progressive-blur edge="bottom" />
+      </div>
+      <p>Only the high tier adds blur. Scrolling stays native at every tier.</p>
+      <hy-code-block [code]="blurCode" language="html" />
+    }
+    @default {
+      <h2>Shared scene light and layout</h2>
+      <div class="cards" hyStagger>
+        <hy-card hySceneLight material="tinted">One shared pointer source</hy-card
+        ><hy-card hySceneLight material="tinted">Host-local style writes</hy-card>
+      </div>
+      <div hyFlip #flip="hyFlip" class="layout" [class.expanded]="expanded()">
+        <button hyButton (click)="flip.run(toggle)">Change layout</button>
+        <p>Focus belongs to the caller. The host animation cancels safely on interruption.</p>
+      </div>
+      <label
+        >Canonical digit input
+        <input hyDigits inputmode="numeric" placeholder="Persian or Arabic digits"
+      /></label>
+      <p>
+        Digit normalization preserves leading zeros and composition; parsing numeric values is a
+        separate concern.
+      </p>
+      <hy-code-block [code]="motionCode" language="typescript" />
+    }
+  }
+</docs-page>

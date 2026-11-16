@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/card';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_CARD } from '@hyalo/angular/card';
@@ -19,6 +20,8 @@ import { DocsTokens } from '../shared/tokens-table';
   `,
 })
 export default class CardPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly code = `<hy-card hyTilt>
   <img hyCardMedia src="calibre.avif" alt="" />
   <h3 hyCardHeader><a hyCardLink routerLink="/watch/7">Calibre 7</a></h3>

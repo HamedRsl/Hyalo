@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/dialog';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_DIALOG_DATA, HY_DIALOG_PARTS, HyDialog, HyDialogRef } from '@hyalo/angular/dialog';
@@ -26,6 +27,8 @@ class RenameDialog {
   templateUrl: './dialog.html',
 })
 export default class DialogPage {
+  protected readonly examples = EXAMPLES;
+
   private readonly dialog = inject(HyDialog);
   protected readonly confirmResult = signal('');
   protected readonly collection = signal('Autumn picks');
@@ -49,21 +52,6 @@ export default class DialogPage {
     if (name?.trim()) this.collection.set(name.trim());
   }
 
-  protected readonly confirmCode = `const ok = await this.dialog.confirm({
-  title: 'Delete this draft?',
-  message: 'It will be gone for everyone on the team.',
-  confirmLabel: 'Delete',
-  tone: 'danger',
-});`;
-  protected readonly openCode = `const ref = this.dialog.open<string>(RenameDialog, {
-  data: { name: this.collection() },
-  size: 'sm',
-});
-const name = await ref.closed;
-
-// Inside RenameDialog
-data = inject(HY_DIALOG_DATA);
-ref = inject(HyDialogRef);`;
   protected readonly configRows: ApiRow[] = [
     {
       name: 'size',

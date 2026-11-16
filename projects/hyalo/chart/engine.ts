@@ -1,0 +1,30 @@
+import {
+  Chart,
+  LineController,
+  BarController,
+  DoughnutController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
+Chart.register(
+  LineController,
+  BarController,
+  DoughnutController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Filler,
+);
+export { Chart };

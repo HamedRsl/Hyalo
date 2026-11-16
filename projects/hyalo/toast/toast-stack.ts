@@ -7,15 +7,15 @@ import {
   inject,
 } from '@angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
+import { HyFidelity } from '@hyalo/angular/core';
 import {
-  HyFidelity,
   HyMotion,
   HySpring,
   HyVelocityTracker,
   MOTION,
   project,
   SPRINGS,
-} from '@hyalo/angular';
+} from '@hyalo/angular/motion';
 import { HyToaster, type HyToastItem } from './toaster';
 
 /** How far a swipe has to be headed before it dismisses, in px. */

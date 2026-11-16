@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  box-shadow: var(--hy-glass-shadow-thick);
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-block-end: 1px solid var(--hy-line);
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+/* Focus belongs to the rounded search row rather than its rectangular input. */
+.search:focus-within {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -3px;
+}
+input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+button {
+  font: 0.75rem var(--hy-font-mono);
+  color: var(--hy-ink-2);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  background: var(--hy-surface-2);
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  max-block-size: min(24rem, 55dvh);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-block-size: 44px;
+  padding: 0.75rem;
+  border-radius: var(--hy-radius-s);
+  cursor: pointer;
+}
+li[aria-selected='true'] {
+  background: var(--hy-primary-wash);
+}
+li[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
+strong {
+  font-size: 0.9375rem;
+}
+small,
+.description {
+  display: block;
+  color: var(--hy-ink-2);
+  font-size: 0.75rem;
+}
+small {
+  margin-block-end: 0.25rem;
+}
+kbd {
+  font: 0.75rem var(--hy-font-mono);
+  color: var(--hy-ink-2);
+}
+.status {
+  border-block-start: 1px solid var(--hy-line);
+  padding: 0.75rem 1rem;
+  color: var(--hy-ink-2);
+  font-size: 0.75rem;
+}
+:is(button, a):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

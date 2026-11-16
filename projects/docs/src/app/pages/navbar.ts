@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/navbar';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_NAVBAR } from '@hyalo/angular/navbar';
@@ -19,6 +20,8 @@ import { DocsTokens } from '../shared/tokens-table';
   `,
 })
 export default class NavbarPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly open = signal(false);
   protected readonly code = `<hy-navbar label="Main" hideOnScroll>
   <a hyNavbarBrand routerLink="/">Atelier</a>

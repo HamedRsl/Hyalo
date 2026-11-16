@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--hy-radius-s);
+  background: transparent;
+  color: var(--hy-ink);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+button:hover:enabled {
+  background: var(--hy-surface-3);
+}
+button[aria-current] {
+  background: var(--hy-primary);
+  color: var(--hy-primary-ink);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.arrow {
+  display: block;
+  font-size: 1.5rem;
+}
+:host-context([dir='rtl']) .arrow {
+  transform: scaleX(-1);
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

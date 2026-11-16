@@ -3,7 +3,12 @@
   lead="A label, a glass input, a hint and an error, wired together for you."
 >
   <h2>With Signal Forms</h2>
-  <docs-example [code]="formCode" column>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
     <form class="docs-stack" novalidate (submit)="submit($event)">
       <hy-field label="Email" hint="We only use it for the receipt.">
         <input hyInput type="email" autocomplete="email" [formField]="f.email" />
@@ -19,13 +24,17 @@
     </form>
   </docs-example>
   <p>
-    Required, invalid, touched and the error messages come from the bound field. Errors show
-    after the user leaves the field or tries to submit, never while they are still typing the
-    first time.
+    Required, invalid, touched and the error messages come from the bound field. Errors show after
+    the user leaves the field or tries to submit, never while they are still typing the first time.
   </p>
 
   <h2>Without forms</h2>
-  <docs-example [code]="plainCode" column>
+  <docs-example
+    [code]="examples[1].html"
+    [tsCode]="examples[1].ts"
+    [cssCode]="examples[1].css"
+    column
+  >
     <hy-field label="Search" size="sm">
       <input hyInput type="search" placeholder="Calibre, strap, size" />
     </hy-field>
@@ -37,8 +46,7 @@
   <h2>Accessibility</h2>
   <ul>
     <li>
-      The label, hint and error are linked with <code>for</code> and
-      <code>aria-describedby</code>.
+      The label, hint and error are linked with <code>for</code> and <code>aria-describedby</code>.
     </li>
     <li>The error region is polite, so a new message is read without stealing focus.</li>
     <li>
@@ -52,9 +60,9 @@
   <p><code>hy-field</code></p>
   <docs-api-table [rows]="fieldRows" />
   <p>
-    <code>input[hyInput]</code>, <code>textarea[hyInput]</code>, plus
-    <code>[hyPrefix]</code> and <code>[hySuffix]</code> for content inside the box. Everything
-    comes in <code>HY_TEXT_FIELD</code>.
+    <code>input[hyInput]</code>, <code>textarea[hyInput]</code>, plus <code>[hyPrefix]</code> and
+    <code>[hySuffix]</code> for content inside the box. Everything comes in
+    <code>HY_TEXT_FIELD</code>.
   </p>
 
   <docs-tokens [groups]="['field']" />

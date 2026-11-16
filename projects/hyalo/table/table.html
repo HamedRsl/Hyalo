@@ -1,0 +1,94 @@
+<div
+  class="viewport"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="caption()"
+  [attr.aria-busy]="loading()"
+  [class.sticky]="stickyHeader()"
+>
+  <table>
+    <caption>
+      {{
+        caption()
+      }}
+    </caption>
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th scope="col" class="selection">
+            <label class="check"
+              ><input
+                type="checkbox"
+                [attr.aria-label]="selectionLabel()"
+                [checked]="allSelected()"
+                [indeterminate]="someSelected()"
+                [disabled]="!view().length"
+                (change)="toggleAll()"
+            /></label>
+          </th>
+        }
+        @for (column of columns(); track column.id) {
+          <th
+            scope="col"
+            [style.text-align]="column.align ?? 'start'"
+            [attr.aria-sort]="
+              column.sortable
+                ? sort()?.column === column.id
+                  ? sort()?.direction === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : 'none'
+                : null
+            "
+          >
+            @if (column.sortable) {
+              <button type="button" (click)="toggleSort(column)">
+                {{ column.header
+                }}<span aria-hidden="true">{{
+                  sort()?.column === column.id ? (sort()?.direction === 'asc' ? '↑' : '↓') : '↑↓'
+                }}</span>
+              </button>
+            } @else {
+              {{ column.header }}
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of view(); track item.key) {
+        <tr [class.selected]="item.selected">
+          @if (selectable()) {
+            <td class="selection">
+              <label class="check"
+                ><input
+                  type="checkbox"
+                  [attr.aria-label]="item.label"
+                  [checked]="item.selected"
+                  (change)="toggleRow(item.key)"
+              /></label>
+            </td>
+          }
+          @for (cell of item.cells; track cell.column.id) {
+            <td [style.text-align]="cell.column.align ?? 'start'">
+              @if (cell.column.template) {
+                <ng-container
+                  [ngTemplateOutlet]="cell.column.template"
+                  [ngTemplateOutletContext]="{ $implicit: item.row, value: cell.value }"
+                />
+              } @else {
+                {{ cell.value }}
+              }
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td [attr.colspan]="columns().length + (selectable() ? 1 : 0)">
+            {{ loading() ? 'Loading' : emptyLabel() }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

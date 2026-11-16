@@ -9,6 +9,318 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/border-beam') {
+                <div class="mini-beam">
+                  <hy-border-beam [animated]="false" /><strong>A quiet highlight.</strong
+                  ><span>Craft, at the edges.</span>
+                </div>
+              }
+              @case ('/components/copy') {
+                <div class="mini-copy">
+                  <code>npm install @hyalo/angular</code
+                  ><hy-copy text="npm install @hyalo/angular" />
+                </div>
+              }
+              @case ('/components/filter') {
+                <div class="mini-filters">
+                  <span class="mini-filter-label">Projects</span
+                  ><hy-chip [selected]="true">Status: Active</hy-chip
+                  ><hy-chip>Updated: 7 days</hy-chip>
+                </div>
+              }
+              @case ('/components/number-ticker') {
+                <div class="mini-number">
+                  <span>Total revenue</span
+                  ><hy-number-ticker [value]="48250" prefix="$" [animate]="false" /><small
+                    >Up 12.8% this month</small
+                  >
+                </div>
+              }
+              @case ('/components/progressive-blur') {
+                <div class="mini-blur">
+                  <div class="mini-blur-edge"></div>
+                  <span>Activity</span><strong>Website refresh</strong><span>Design system</span
+                  ><span>Mobile launch</span>
+                </div>
+              }
+              @case ('/components/sidebar') {
+                <div class="phase3-preview">
+                  <hy-sidebar [collapsed]="true" label="Preview navigation"
+                    ><a hySidebarItem label="Home" aria-label="Home" icon="home" active></a
+                    ><a hySidebarItem label="Settings" aria-label="Settings" icon="settings"></a
+                  ></hy-sidebar>
+                </div>
+              }
+              @case ('/components/breadcrumb') {
+                <div class="phase3-preview"><hy-breadcrumb [items]="previewTrail" /></div>
+              }
+              @case ('/components/menu') {
+                <div class="phase3-preview">
+                  <hy-menu aria-label="Preview actions"
+                    ><button hyMenuItem>Open project</button
+                    ><button hyMenuItem>Export report</button></hy-menu
+                  >
+                </div>
+              }
+              @case ('/components/command') {
+                <div class="phase3-preview">
+                  <div class="mini-command">
+                    <span>Search pages and actions…</span><kbd hyKbd>Ctrl K</kbd>
+                    <hr />
+                    <strong>Overview</strong><span class="demo-muted">Revenue and activity</span>
+                  </div>
+                </div>
+              }
+              @case ('/components/navigation-menu') {
+                <div class="phase3-preview"><hy-navigation-menu [items]="previewNavigation" /></div>
+              }
+              @case ('/components/pagination') {
+                <div class="phase3-preview"><hy-pagination [total]="80" [page]="3" /></div>
+              }
+              @case ('/components/table') {
+                <div class="phase3-preview">
+                  <hy-table
+                    caption="Projects"
+                    [data]="previewData"
+                    [columns]="previewColumns"
+                    [rowKey]="previewKey"
+                  />
+                </div>
+              }
+              @case ('/components/stat') {
+                <div class="phase3-preview">
+                  <hy-stat label="Monthly revenue" [value]="48250" prefix="$" trend="Up 12.8%" />
+                </div>
+              }
+              @case ('/components/chart') {
+                <div class="phase3-preview">
+                  <div class="mini-chart">
+                    <strong>Revenue overview</strong
+                    ><hy-sparkline [data]="previewTrend" label="Revenue trending up" /><small
+                      >Jan · Feb · Mar · Apr · May · Jun</small
+                    >
+                  </div>
+                </div>
+              }
+              @case ('/components/sparkline') {
+                <div class="phase3-preview">
+                  <div class="mini-chart">
+                    <strong>Weekly activity</strong
+                    ><hy-sparkline [data]="previewTrend" label="Activity trending up" />
+                  </div>
+                </div>
+              }
+              @case ('/components/progress') {
+                <div class="phase3-preview">
+                  <div class="mini-progress">
+                    <hy-progress label="Upload" [value]="64" />
+                    <div class="demo-row">
+                      <hy-progress variant="circle" label="Upload" [value]="64" /><hy-spinner
+                        label="Loading"
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+              @case ('/components/alert') {
+                <div class="phase3-preview">
+                  <hy-alert heading="Changes saved" tone="success"
+                    >Your workspace is up to date.</hy-alert
+                  >
+                </div>
+              }
+              @case ('/components/empty-state') {
+                <div class="phase3-preview">
+                  <hy-empty-state
+                    heading="No projects yet"
+                    description="Start with your first idea."
+                    icon="grid"
+                    ><button hyButton>Create project</button></hy-empty-state
+                  >
+                </div>
+              }
+              @case ('/components/list') {
+                <div class="phase3-preview">
+                  <hy-list label="Members"
+                    ><li hyListItem heading="Mina Rahimi" description="Workspace owner"></li>
+                    <li hyListItem heading="Arman Nouri" description="Editor"></li
+                  ></hy-list>
+                </div>
+              }
+              @case ('/components/bento') {
+                <div class="phase3-preview">
+                  <hy-bento
+                    ><div hyBentoTile [columns]="2" class="mini-bento">
+                      Revenue<br /><strong>$48,250</strong>
+                    </div>
+                    <div hyBentoTile class="mini-bento">24<br />Projects</div>
+                    <div hyBentoTile [columns]="3" class="mini-bento">
+                      Workspace activity
+                    </div></hy-bento
+                  >
+                </div>
+              }
+              @case ('/components/scroll-area') {
+                <div class="phase3-preview">
+                  <hy-scroll-area label="Activity preview" maxHeight="9rem"
+                    ><hy-list label="Activity"
+                      ><li hyListItem heading="Project created"></li>
+                      <li hyListItem heading="Design approved"></li>
+                      <li hyListItem heading="Report exported"></li></hy-list
+                  ></hy-scroll-area>
+                </div>
+              }
+              @case ('/components/hover-card') {
+                <div class="phase3-preview">
+                  <div class="mini-command">
+                    <button hyButton [hyHoverCard]="hoverPreview" hoverCardLabel="Profile">
+                      Mina Rahimi
+                    </button>
+                    <p>Product designer</p>
+                  </div>
+                  <ng-template #hoverPreview>Product designer at Atelier</ng-template>
+                </div>
+              }
+              @case ('/components/description-list') {
+                <div class="phase3-preview"><hy-description-list [items]="previewDetails" /></div>
+              }
+              @case ('/components/kbd') {
+                <div class="phase3-preview">
+                  <p>Search with <kbd hyKbd>Ctrl</kbd> + <kbd hyKbd>K</kbd></p>
+                </div>
+              }
+              @case ('/components/code-block') {
+                <div class="phase3-preview">
+                  <hy-code-block
+                    label="Import"
+                    language="TypeScript"
+                    [code]="previewSource"
+                    [copyable]="false"
+                  />
+                </div>
+              }
+              @case ('/components/carousel') {
+                <div class="preview-media">
+                  <img src="showcase-steel.svg" alt="" loading="eager" fetchpriority="high" />
+                  <div class="preview-dots"><i></i><i class="active"></i><i></i></div>
+                </div>
+              }
+              @case ('/components/lightbox') {
+                <div class="preview-gallery">
+                  <img src="showcase-steel.svg" alt="" loading="lazy" /><img
+                    src="showcase-gold.svg"
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+              }
+              @case ('/components/image-compare') {
+                <div class="preview-compare">
+                  <img src="showcase-steel.svg" alt="" loading="lazy" /><img
+                    src="showcase-gold.svg"
+                    alt=""
+                    loading="lazy"
+                  /><span></span>
+                </div>
+              }
+              @case ('/components/marquee') {
+                <div class="preview-marquee">
+                  <strong>ATELIER</strong><strong>FORMA</strong><strong>MONO</strong>
+                </div>
+              }
+              @case ('/components/split-text') {
+                <strong class="preview-headline"
+                  >Objects with presence.<br /><span>Interfaces with purpose.</span></strong
+                >
+              }
+              @case ('/components/refraction') {
+                <div class="preview-refraction">
+                  <img src="showcase-steel.svg" alt="" loading="lazy" />
+                  <div class="hy-glass" data-material="frosted">Glass with depth.</div>
+                </div>
+              }
+              @case ('/components/hotspot') {
+                <div class="preview-scene">
+                  <img src="showcase-steel.svg" alt="" loading="lazy" /><hy-hotspot
+                    label="Sapphire"
+                    [position]="{ x: 50, y: 42 }"
+                  />
+                </div>
+              }
+              @case ('/components/mesh') {
+                <hy-mesh class="preview-mesh"
+                  ><strong>Room to create.</strong>
+                  <p>Color, light and space.</p></hy-mesh
+                >
+              }
+              @case ('/components/timeline') {
+                <hy-timeline class="preview-timeline"
+                  ><hy-timeline-item heading="Discover" date="01">Listen first.</hy-timeline-item
+                  ><hy-timeline-item heading="Deliver" date="02"
+                    >Refine every detail.</hy-timeline-item
+                  ></hy-timeline
+                >
+              }
+              @case ('/components/stepper') {
+                <div class="preview-steps">
+                  <span class="done">✓</span><i></i><span class="current">2</span><i></i
+                  ><span>3</span><small>Details</small><small>Your matter</small
+                  ><small>Review</small>
+                </div>
+              }
+              @case ('/components/badge') {
+                <div class="row">
+                  <hy-badge tone="success">Available</hy-badge
+                  ><hy-badge tone="warning">Limited</hy-badge
+                  ><hy-chip [selected]="true">Steel</hy-chip>
+                </div>
+              }
+              @case ('/components/avatar') {
+                <hy-avatar-group label="Team preview"
+                  ><hy-avatar name="Ada Lovelace" size="lg" /><hy-avatar
+                    name="Hamed Rasouli" /><hy-avatar name="سارا احمدی"
+                /></hy-avatar-group>
+              }
+              @case ('/components/skeleton') {
+                <div class="stack">
+                  <hy-skeleton
+                    shape="circle"
+                    width="2.5rem"
+                    height="2.5rem"
+                    animation="none"
+                  /><hy-skeleton width="60%" animation="none" /><hy-skeleton
+                    width="85%"
+                    animation="none"
+                  /><hy-skeleton height="2rem" shape="rect" animation="none" />
+                </div>
+              }
+              @case ('/components/button-group') {
+                <hy-button-group label="Preview"
+                  ><button hyButton size="sm">Save</button
+                  ><button hyButton size="sm" variant="ghost">Preview</button></hy-button-group
+                >
+              }
+              @case ('/components/link') {
+                <a hyLink href="#">Explore the collection →</a>
+              }
+              @case ('/components/divider') {
+                <div class="stack">
+                  <strong>Hand-finished.</strong><hy-divider /><span>Made to last.</span>
+                </div>
+              }
+              @case ('/components/aspect-ratio') {
+                <hy-aspect-ratio class="preview-ratio" [ratio]="16 / 9"
+                  ><img src="showcase-gold.svg" alt="" loading="lazy"
+                /></hy-aspect-ratio>
+              }
+              @case ('/components/chapter-nav') {
+                <div class="preview-chapters">
+                  <span>● Material</span><strong>● Craft</strong><span>● Care</span>
+                </div>
+              }
+              @case ('/components/scroll-to-top') {
+                <button hyButton size="sm" variant="glass">↑ Back to top</button>
+              }
               @case ('/components/accordion') {
                 <hy-accordion class="preview-accordion">
                   <hy-accordion-item heading="Delivery" [expanded]="true">
@@ -38,11 +350,7 @@
               }
               @case ('/components/dialog') {
                 <div class="scrim">
-                  <div
-                    class="mock-dialog hy-glass"
-                    data-material="frosted"
-                    data-thickness="thick"
-                  >
+                  <div class="mock-dialog hy-glass" data-material="frosted" data-thickness="thick">
                     <p class="hy-dialog__title">Delete draft?</p>
                     <div class="hy-dialog__actions">
                       <button hyButton size="sm" variant="ghost" tone="neutral">Cancel</button>
@@ -53,11 +361,7 @@
               }
               @case ('/components/drawer') {
                 <div class="scrim scrim--edge">
-                  <div
-                    class="mock-sheet hy-glass"
-                    data-material="frosted"
-                    data-thickness="thick"
-                  >
+                  <div class="mock-sheet hy-glass" data-material="frosted" data-thickness="thick">
                     <span class="mock-sheet__grabber"></span>
                     <span class="line"></span>
                     <span class="line line--short"></span>

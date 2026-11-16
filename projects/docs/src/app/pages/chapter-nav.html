@@ -1,0 +1,75 @@
+<docs-page
+  heading="Chapter navigation"
+  lead="Section navigation with stable selection and controlled scrolling."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="demo-toolbar">
+      <hy-switch [(checked)]="sticky">Sticky links</hy-switch
+      ><hy-segmented
+        label="Chapter scrolling"
+        [options]="behaviors"
+        [(value)]="behavior"
+        size="sm"
+      />
+    </div>
+    <div class="chapter-layout">
+      <hy-chapter-nav
+        [chapters]="chapters"
+        [scrollRoot]="readingPane"
+        [offset]="16"
+        [sticky]="sticky()"
+        stickyTop="5rem"
+        [scrollBehavior]="behavior() ?? 'smooth'"
+      />
+      <div
+        #readingPane
+        class="chapter-viewport"
+        role="region"
+        aria-label="Atelier story"
+        tabindex="0"
+      >
+        <section id="chapter-material" class="demo-panel">
+          <span class="chapter-kicker">01 / The foundation</span>
+          <h3>Material</h3>
+          <p>
+            Steel, sapphire and carefully finished details. Each material is chosen for how it feels
+            in the hand and how it changes with time.
+          </p>
+        </section>
+        <section id="chapter-craft" class="demo-panel">
+          <span class="chapter-kicker">02 / The process</span>
+          <h3>Craft</h3>
+          <p>
+            Every edge considered. Brushed surfaces meet polished edges in a case that takes shape
+            through repeated rounds of finishing and inspection.
+          </p>
+        </section>
+        <section id="chapter-care" class="demo-panel">
+          <span class="chapter-kicker">03 / Made to last</span>
+          <h3>Care</h3>
+          <p>
+            Designed to be serviced for years. Regular care protects the movement and preserves the
+            details that make each piece its own.
+          </p>
+        </section>
+      </div>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyChapterNav &#125; from '@hyalo/angular/chapter-nav';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Chapter activation scrolls and focuses its target without routing away from the page. Selection
+    stays on the requested chapter while scrolling settles; manual scrolling resumes section
+    tracking. Use scrollRoot for a reading pane or leave it unset to scroll the page. The offset
+    input reserves space for sticky headers. Native links remain available for modified clicks and
+    before hydration.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

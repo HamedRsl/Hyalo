@@ -23,3 +23,8 @@ code {
   font-size: 0.8125rem;
   white-space: nowrap;
 }
+
+.wrap:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

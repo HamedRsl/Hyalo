@@ -65,6 +65,8 @@
 }
 
 .hy-glass[data-material='tinted'] {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   --_fill: linear-gradient(
     160deg,
     color-mix(in srgb, var(--hy-primary) 22%, transparent),

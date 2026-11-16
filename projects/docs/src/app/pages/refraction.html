@@ -1,0 +1,29 @@
+<docs-page
+  heading="Refraction surface"
+  lead="An image-backed glass surface with a shared WebGL rendering context."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-refraction src="showcase-steel.svg" [strength]="0.18">
+      <h3 class="display">Glass with depth.</h3>
+      <p>A quiet layer between the object and its story.</p>
+      <button hyButton type="button" variant="glass">Discover Atelier</button>
+    </hy-refraction></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyRefraction &#125; from '@hyalo/angular/refraction';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    WebGL runs only on high fidelity. One shared WebGL canvas renders all surfaces and copies into
+    their presentation canvases. It renders on image load, input changes and resize, with no
+    continuous animation. Context loss, CORS failure and unavailable WebGL retain CSS glass. It
+    refracts the supplied image, not arbitrary DOM content. Medium and low tiers use CSS; reduced
+    transparency hides decorative image layers.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

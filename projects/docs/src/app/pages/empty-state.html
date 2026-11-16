@@ -1,0 +1,31 @@
+<docs-page heading="Empty state" lead="Explain what happened and give people a useful next step.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-empty-state
+        heading="Your first project starts here"
+        description="Keep plans, activity, and team updates in one place."
+        icon="grid"
+        ><button hyButton type="button" (click)="created.set(true)">Create project</button
+        ><a hyButton variant="ghost" href="/dashboard">Explore the demo</a></hy-empty-state
+      >
+      @if (created()) {
+        <p role="status">Project created. Connect this action to your app.</p>
+      }
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyEmptyState &#125; from '@hyalo/angular/empty-state';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The heading uses a native heading (h2 by default, configurable with headingLevel) and the CTA
+    stays a native control. Use specific copy for first use, no matching results, and errors; each
+    state needs a different next step.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

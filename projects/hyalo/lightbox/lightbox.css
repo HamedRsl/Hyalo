@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+figure {
+  margin: var(--hy-space-4) 0;
+  text-align: center;
+}
+img {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: 65dvh;
+  margin-inline: auto;
+  object-fit: contain;
+}
+figcaption {
+  padding-block: var(--hy-space-3);
+  color: var(--hy-ink-2);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hy-space-3);
+}

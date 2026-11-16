@@ -7,7 +7,7 @@ import {
   output,
 } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
-import { injectId } from '@hyalo/angular';
+import { injectId } from '@hyalo/angular/core';
 
 import { HyIcon } from '@hyalo/angular/icon';
 

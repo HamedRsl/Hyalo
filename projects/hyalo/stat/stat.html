@@ -1,0 +1,17 @@
+<dl>
+  <dt>{{ label() }}</dt>
+  <dd>
+    <hy-number-ticker
+      [value]="value()"
+      [locale]="locale()"
+      [format]="format()"
+      [animate]="animate()"
+      [prefix]="prefix()"
+      [suffix]="suffix()"
+    />
+  </dd>
+</dl>
+@if (trend()) {
+  <p>{{ trend() }}</p>
+}
+<ng-content />

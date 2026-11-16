@@ -1,0 +1,59 @@
+<nav cdkOverlayOrigin #origin="cdkOverlayOrigin" [attr.aria-label]="label()">
+  <ul>
+    @for (item of items(); track item.id) {
+      <li>
+        @if (item.sections?.length) {
+          <button
+            type="button"
+            [id]="id + '-' + item.id + '-trigger'"
+            [attr.aria-expanded]="open() === item.id"
+            [attr.aria-controls]="id + '-' + item.id"
+            (click)="toggle(item.id, $event)"
+            (keydown)="enterPanel($event)"
+          >
+            {{ item.label }}<hy-icon class="chevron" name="chevron-down" size="1rem" />
+          </button>
+          <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="origin"
+            [cdkConnectedOverlayOpen]="open() === item.id"
+            [cdkConnectedOverlayPositions]="positions"
+            [cdkConnectedOverlayPush]="true"
+            [cdkConnectedOverlayViewportMargin]="16"
+            (overlayOutsideClick)="outside($event)"
+          >
+            <div
+              class="panel"
+              tabindex="-1"
+              role="region"
+              (keydown)="panelKeydown($event)"
+              (focusout)="focusOut($event)"
+              [id]="id + '-' + item.id"
+              [attr.aria-labelledby]="id + '-' + item.id + '-trigger'"
+            >
+              @for (section of item.sections; track $index) {
+                <section>
+                  <h3>{{ section.label }}</h3>
+                  <ul>
+                    @for (link of section.links; track $index) {
+                      <li>
+                        <a [href]="link.href" (click)="open.set(null)"
+                          ><strong>{{ link.label }}</strong>
+                          @if (link.description) {
+                            <span>{{ link.description }}</span>
+                          }
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </section>
+              }
+            </div>
+          </ng-template>
+        } @else {
+          <a [href]="item.href">{{ item.label }}</a>
+        }
+      </li>
+    }
+  </ul>
+</nav>

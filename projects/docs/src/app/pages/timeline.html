@@ -1,0 +1,33 @@
+<docs-page
+  heading="Timeline"
+  lead="A chronological story with dates, headings and a hairline thread."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-timeline label="Our process">
+      <hy-timeline-item heading="Discover" date="November 2026" dateTime="2026-11"
+        ><p>Listen first. Understand the brief.</p></hy-timeline-item
+      >
+      <hy-timeline-item heading="Shape" date="December 2026" dateTime="2026-12"
+        ><p>Turn a clear direction into a working prototype.</p></hy-timeline-item
+      >
+      <hy-timeline-item heading="Deliver" date="January 2027" dateTime="2027-01"
+        ><p>Refine the details and hand over the system.</p></hy-timeline-item
+      >
+    </hy-timeline></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_TIMELINE &#125; from '@hyalo/angular/timeline';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Events are exposed as a list and use native time elements. Date formatting belongs to the
+    application, so Persian and Jalali display dates are supported without conversion. Logical
+    borders mirror the thread in RTL.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--hy-space-3);
+}
+button {
+  padding: 0;
+  overflow: clip;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+  cursor: zoom-in;
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
+img {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}

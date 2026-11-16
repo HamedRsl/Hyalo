@@ -1,6 +1,13 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
-import { HyFidelity, HyMotion, type HyFidelityTier } from '@hyalo/angular';
+import {
+  HyAppearance,
+  HyLocale,
+  HyFidelity,
+  type HyMaterial,
+  type HyFidelityTier,
+} from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 import { HyPalette, type HyPaletteName } from '@hyalo/angular/theme';
 
 export type ThemeChoice = 'system' | 'light' | 'dark';
@@ -20,9 +27,15 @@ export class DocsSettings {
   private readonly document = inject(DOCUMENT);
   private readonly motion = inject(HyMotion);
   private readonly fidelity = inject(HyFidelity);
+  private readonly appearance = inject(HyAppearance);
+  private readonly localeService = inject(HyLocale);
   private readonly dir = inject(Directionality);
   private readonly palettes = inject(HyPalette);
 
+  readonly locale = this.localeService.locale;
+  readonly material = this.appearance.material;
+  readonly detectedTier = this.fidelity.detected;
+  readonly tierChoice = computed(() => this.fidelity.override() ?? 'auto');
   readonly theme = signal<ThemeChoice>('system');
   readonly direction = signal<DirChoice>('ltr');
   readonly motionChoice = signal<MotionChoice>('system');
@@ -38,7 +51,7 @@ export class DocsSettings {
       const dir = this.direction();
       const root = this.document.documentElement;
       root.setAttribute('dir', dir);
-      root.setAttribute('lang', dir === 'rtl' ? 'fa' : 'en');
+      root.setAttribute('lang', this.locale());
       this.dir.valueSignal.set(dir);
     });
     effect(() => {
@@ -53,8 +66,19 @@ export class DocsSettings {
   readonly palette = this.palettes.selected;
   readonly paletteLoading = computed(() => this.palettes.selected() !== this.palettes.current());
 
-  setTier(tier: HyFidelityTier): void {
-    this.fidelity.setTier(tier);
+  setTier(tier: string): void {
+    if (tier === 'auto') this.fidelity.setTier(null);
+    else if (['high', 'medium', 'low'].includes(tier))
+      this.fidelity.setTier(tier as HyFidelityTier);
+  }
+
+  setLocale(value: string): void {
+    if (value === 'en' || value === 'fa') this.localeService.setLocale(value);
+  }
+  setMaterial(value: string): void {
+    this.appearance.material.set(
+      ['clear', 'frosted', 'tinted', 'solid'].includes(value) ? (value as HyMaterial) : null,
+    );
   }
 
   setPalette(name: HyPaletteName | null): void {

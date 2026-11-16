@@ -1,4 +1,4 @@
-import { HySpring, HyVelocityTracker, project, rubberband, SPRINGS } from '@hyalo/angular';
+import { HySpring, HyVelocityTracker, project, rubberband, SPRINGS } from '@hyalo/angular/motion';
 import type { HyDrawerSide } from './drawer';
 
 /** Movement before a press turns into a drag, in px. */
@@ -25,14 +25,18 @@ export interface HySheetHost {
  *   whichever end the projection lands nearer, carrying the finger's speed.
  * - The backdrop dims in step with how open the panel is.
  *
- * Returns the exit for `HyDialogRef.exit`.
+ * Returns the exit animation and its lifecycle cleanup.
  */
 export function driveSheet(
   panel: HTMLElement,
   backdrop: HTMLElement | null,
   side: HyDrawerSide,
   host: HySheetHost,
-): (finish: () => void) => void {
+): { exit: (finish: () => void) => void; destroy: () => void } {
+  const lifetime = new (panel.ownerDocument.defaultView?.AbortController ?? AbortController)();
+  let disposed = false;
+  let resize: ResizeObserver | undefined;
+  let clickTimer: ReturnType<typeof setTimeout> | undefined;
   const vertical = side === 'bottom';
   const rtl = getComputedStyle(panel).direction === 'rtl';
   // +1 when closing moves toward larger x or y.
@@ -59,16 +63,19 @@ export function driveSheet(
   // Start out of view without measuring yet; the content has not rendered.
   panel.style.translate = vertical ? '0 100%' : `${sign * 100}% 0`;
   if (backdrop) backdrop.style.opacity = '0';
-  requestAnimationFrame(() => {
+  let enterFrame = requestAnimationFrame(() => {
+    enterFrame = 0;
     spring.set(size());
     spring.to(0, SPRINGS.settle);
   });
 
   let closing = false;
   const exit = (finish: () => void): void => {
+    cancelAnimationFrame(enterFrame);
+    enterFrame = 0;
     // A hidden page runs no animation frames, so the spring would never
     // arrive and `closed` would never resolve.
-    if (panel.ownerDocument.hidden) {
+    if (disposed || panel.ownerDocument.hidden) {
       spring.stop();
       finish();
       return;
@@ -86,9 +93,10 @@ export function driveSheet(
     grabber.setAttribute('aria-hidden', 'true');
     panel.prepend(grabber);
     if (typeof ResizeObserver === 'function') {
-      new ResizeObserver(() => {
+      resize = new ResizeObserver(() => {
         panel.style.touchAction = panel.scrollHeight > panel.clientHeight + 1 ? '' : 'none';
-      }).observe(panel);
+      });
+      resize.observe(panel);
     }
   }
 
@@ -125,42 +133,54 @@ export function driveSheet(
     panel.ownerDocument.getSelection()?.removeAllRanges();
   };
 
-  panel.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || !e.isPrimary) return;
-    const target = e.target as Element;
-    const onGrabber = !!target.closest('.hy-drawer__grabber');
-    if (!onGrabber && target.closest(INTERACTIVE)) return;
-    if (vertical && !onGrabber && panel.scrollTop > 0) return;
-    const p: Press = {
-      id: e.pointerId,
-      x: along(e),
-      y: across(e),
-      from: spring.value,
-      dragging: false,
-    };
-    press = p;
-    // A panel already in motion is caught right away, with no slop.
-    if (spring.running) grab(p, e);
-  });
+  panel.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.button !== 0 || !e.isPrimary) return;
+      const target = e.target as Element;
+      const onGrabber = !!target.closest('.hy-drawer__grabber');
+      if (!onGrabber && target.closest(INTERACTIVE)) return;
+      if (vertical && !onGrabber && panel.scrollTop > 0) return;
+      const p: Press = {
+        id: e.pointerId,
+        x: along(e),
+        y: across(e),
+        from: spring.value,
+        dragging: false,
+      };
+      press = p;
+      // A panel already in motion is caught right away, with no slop.
+      if (spring.running) grab(p, e);
+    },
+    { signal: lifetime.signal },
+  );
 
-  panel.addEventListener('pointermove', (e) => {
-    if (!press || e.pointerId !== press.id) return;
-    const moved = along(e) - press.x;
-    if (!press.dragging) {
-      const cross = Math.abs(across(e) - press.y);
-      if (cross > SLOP && cross > Math.abs(moved)) {
-        press = null;
+  panel.addEventListener(
+    'pointermove',
+    (e) => {
+      if (!press || e.pointerId !== press.id) return;
+      const moved = along(e) - press.x;
+      if (!press.dragging) {
+        const cross = Math.abs(across(e) - press.y);
+        if (cross > SLOP && cross > Math.abs(moved)) {
+          press = null;
+          return;
+        }
+        if (Math.abs(moved) < SLOP) return;
+        grab(press, e);
         return;
       }
-      if (Math.abs(moved) < SLOP) return;
-      grab(press, e);
-      return;
-    }
-    const offset = press.from + moved;
-    tracker.add(offset);
-    spring.set(offset);
-  });
+      const offset = press.from + moved;
+      tracker.add(offset);
+      spring.set(offset);
+    },
+    { signal: lifetime.signal },
+  );
 
+  const swallow = (click: Event): void => {
+    click.stopPropagation();
+    click.preventDefault();
+  };
   const release = (e: PointerEvent): void => {
     if (!press || e.pointerId !== press.id) return;
     const wasDragging = press.dragging;
@@ -168,12 +188,13 @@ export function driveSheet(
     if (!wasDragging) return;
     delete panel.dataset['dragging'];
     // A drag must not end in a click on whatever is under the pointer.
-    const swallow = (click: Event): void => {
-      click.stopPropagation();
-      click.preventDefault();
-    };
-    panel.addEventListener('click', swallow, { capture: true, once: true });
-    setTimeout(() => panel.removeEventListener('click', swallow, { capture: true }));
+    panel.addEventListener('click', swallow, {
+      capture: true,
+      once: true,
+      signal: lifetime.signal,
+    });
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => panel.removeEventListener('click', swallow, { capture: true }));
 
     const velocity = e.type === 'pointercancel' ? 0 : tracker.velocity();
     const full = size();
@@ -184,8 +205,20 @@ export function driveSheet(
     if (out && host.dismissible) host.close();
     else spring.to(0, SPRINGS.settle);
   };
-  panel.addEventListener('pointerup', release);
-  panel.addEventListener('pointercancel', release);
+  panel.addEventListener('pointerup', release, { signal: lifetime.signal });
+  panel.addEventListener('pointercancel', release, { signal: lifetime.signal });
 
-  return exit;
+  return {
+    exit,
+    destroy: () => {
+      if (disposed) return;
+      disposed = true;
+      cancelAnimationFrame(enterFrame);
+      spring.stop();
+      resize?.disconnect();
+      lifetime.abort();
+      clearTimeout(clickTimer);
+      press = null;
+    },
+  };
 }

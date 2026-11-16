@@ -2,11 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   Injector,
+  DestroyRef,
+  afterNextRender,
   TemplateRef,
   computed,
   inject,
   viewChild,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
+import type { DialogRef } from '@angular/cdk/dialog';
+import type { HyCommandItem } from '@hyalo/angular/command';
+import { HyKbd } from '@hyalo/angular/kbd';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { HyButton } from '@hyalo/angular/button';
@@ -15,7 +22,7 @@ import { HyIcon } from '@hyalo/angular/icon';
 import { HY_NAVBAR } from '@hyalo/angular/navbar';
 import { HyPopover } from '@hyalo/angular/popover';
 import { HySegmented } from '@hyalo/angular/segmented';
-import type { HyFidelityTier } from '@hyalo/angular';
+import type { HyFidelityTier } from '@hyalo/angular/core';
 import type { HyPaletteName } from '@hyalo/angular/theme';
 import { NAV } from './nav';
 import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } from './settings';
@@ -24,6 +31,7 @@ import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } fro
   selector: 'docs-root',
   imports: [
     NgTemplateOutlet,
+    HyKbd,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
@@ -44,6 +52,61 @@ export class App {
   private readonly pagesTemplate = viewChild.required<TemplateRef<unknown>>('pages');
   private pagesRef: HyDialogRef | null = null;
 
+  private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
+  private commandRef: DialogRef<HyCommandItem<string>> | null = null;
+  private commandLoading = false;
+  private destroyed = false;
+  constructor() {
+    const abort = new AbortController();
+    afterNextRender(() =>
+      this.document.addEventListener(
+        'keydown',
+        (event) => {
+          if (
+            (event.ctrlKey || event.metaKey) &&
+            event.key.toLowerCase() === 'k' &&
+            !event.isComposing &&
+            !event.repeat
+          ) {
+            event.preventDefault();
+            void this.openSearch();
+          }
+        },
+        { signal: abort.signal },
+      ),
+    );
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      abort.abort();
+      this.commandRef?.close();
+    });
+  }
+  protected async openSearch(): Promise<void> {
+    if (this.commandLoading || this.commandRef) return;
+    this.commandLoading = true;
+    try {
+      const { HyCommand } = await import('@hyalo/angular/command');
+      if (this.destroyed) return;
+      this.commandRef = this.injector.get(HyCommand).open({
+        label: 'Search documentation',
+        items: NAV.flatMap((group) =>
+          group.items.map((item) => ({
+            id: item.path,
+            label: item.label,
+            group: group.title,
+            value: item.path,
+          })),
+        ),
+      });
+      this.commandRef.closed.subscribe((item) => {
+        this.commandRef = null;
+        if (item) void this.router.navigateByUrl(item.value);
+      });
+    } finally {
+      this.commandLoading = false;
+    }
+  }
   protected readonly nav = NAV;
   protected readonly themes = [
     { value: 'system' as ThemeChoice, label: 'System' },
@@ -81,6 +144,7 @@ export class App {
     () => this.palettes.find((p) => p.value === this.settings.palette())?.label ?? 'Hyalo',
   );
   protected readonly tiers = [
+    { value: 'auto' as const, label: 'Auto' },
     { value: 'high' as HyFidelityTier, label: 'High' },
     { value: 'medium' as HyFidelityTier, label: 'Medium' },
     { value: 'low' as HyFidelityTier, label: 'Low' },

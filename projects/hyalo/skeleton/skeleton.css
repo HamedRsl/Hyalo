@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: clip;
+  border-radius: var(--hy-radius-s);
+  background: var(--hy-surface-3);
+}
+:host([data-shape='circle']) {
+  border-radius: 50%;
+}
+:host([data-animate='true'][data-animation='shimmer'])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--hy-surface-1), transparent);
+  animation: hy-shimmer 1.8s linear infinite;
+}
+:host([data-animate='true'][data-animation='pulse']) {
+  animation: hy-pulse 1.8s var(--hy-ease-inout) infinite;
+}
+@keyframes hy-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes hy-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  :host::after {
+    animation: none !important;
+  }
+}

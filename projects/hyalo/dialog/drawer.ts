@@ -2,7 +2,8 @@ import { Dialog } from '@angular/cdk/dialog';
 import { createGlobalPositionStrategy } from '@angular/cdk/overlay';
 import type { ComponentType } from '@angular/cdk/portal';
 import { Injectable, Injector, TemplateRef, inject } from '@angular/core';
-import { HyFidelity, HyMotion } from '@hyalo/angular';
+import { HyFidelity } from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 import type { HyDialogRef } from './dialog-ref';
 import { openSurface, type HySurfaceConfig } from './open-surface';
 

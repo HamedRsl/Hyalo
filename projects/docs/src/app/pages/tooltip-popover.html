@@ -3,7 +3,7 @@
   lead="A tooltip labels a control. A popover holds content people interact with."
 >
   <h2>Tooltip</h2>
-  <docs-example [code]="tooltipCode">
+  <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton variant="glass" iconOnly aria-label="Close" hyTooltip="Close">
       <hy-icon name="x" />
     </button>
@@ -21,7 +21,7 @@
   </docs-example>
 
   <h2>Popover</h2>
-  <docs-example [code]="popoverCode">
+  <docs-example [code]="examples[1].html" [tsCode]="examples[1].ts" [cssCode]="examples[1].css">
     <button
       hyButton
       variant="glass"
@@ -43,9 +43,9 @@
 
   <h2>Which one</h2>
   <p>
-    Tooltips are for a few words that name or explain a control. They never hold links or
-    buttons, and they do not show on touch. If the content is interactive, or longer than a
-    sentence, use a popover.
+    Tooltips are for a few words that name or explain a control. They never hold links or buttons,
+    and they do not show on touch. If the content is interactive, or longer than a sentence, use a
+    popover.
   </p>
 
   <h2>Accessibility</h2>
@@ -55,12 +55,11 @@
       hear it right away.
     </li>
     <li>
-      Tooltips show on hover after a short delay and on keyboard focus at once. Escape hides
-      them.
+      Tooltips show on hover after a short delay and on keyboard focus at once. Escape hides them.
     </li>
     <li>
-      A popover is a non-modal dialog. Focus moves to its first control and returns to the
-      trigger on close.
+      A popover is a non-modal dialog. Focus moves to its first control and returns to the trigger
+      on close.
     </li>
     <li>Escape, a click outside, or tabbing out closes the popover.</li>
   </ul>

@@ -1,0 +1,23 @@
+<docs-page heading="Aspect ratio" lead="A responsive frame for images and other media.">
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-aspect-ratio [ratio]="4 / 3"
+      ><img
+        class="showcase"
+        src="showcase-gold.svg"
+        alt="Gold watch with an ivory dial" /></hy-aspect-ratio
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyAspectRatio &#125; from '@hyalo/angular/aspect-ratio';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Supply alternative text on the media itself. Set the child to fill the frame and use object-fit
+    for the desired crop.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

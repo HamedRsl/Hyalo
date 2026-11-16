@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+}
+:host([hidden]) {
+  display: none;
+}
+button {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  min-block-size: 2.75rem;
+  padding: var(--hy-space-2) var(--hy-space-4);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-pill);
+  color: var(--hy-ink);
+  background: var(--hy-surface-1);
+  box-shadow: var(--hy-glass-shadow);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform var(--hy-hotspot-duration) var(--hy-ease-out),
+    border-color var(--hy-hotspot-duration) ease;
+}
+button[aria-expanded='true'] {
+  border-color: var(--hy-primary);
+}
+:host([data-motion='true']) button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  :host([data-motion='true']) button:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+}
+:host([data-mode='pin']) button {
+  inline-size: 2.75rem;
+  padding: 0;
+  justify-content: center;
+}
+:host([data-mode='pin']) .label {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+strong {
+  display: block;
+  color: var(--hy-ink);
+}
+.details {
+  display: block;
+  min-inline-size: 12rem;
+  max-inline-size: 18rem;
+}
+p {
+  max-inline-size: 28ch;
+  margin-block: var(--hy-space-2) var(--hy-space-4);
+  color: var(--hy-ink-2);
+  line-height: var(--hy-leading);
+}
+.close {
+  min-block-size: 2rem;
+  padding: var(--hy-space-1) var(--hy-space-3);
+  border-radius: var(--hy-radius-s);
+  box-shadow: none;
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
+}
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 4px;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--hy-primary);
+}
+:host:dir(rtl) {
+  transform: translate(50%, -50%);
+}

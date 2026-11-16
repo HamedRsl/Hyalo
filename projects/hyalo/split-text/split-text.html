@@ -1,0 +1,15 @@
+<span class="accessible">{{ text() }}</span>
+<span #measure class="measure" aria-hidden="true">
+  @for (word of words(); track $index) {
+    <span>{{ word }}</span>
+  }
+</span>
+<span class="visual" aria-hidden="true">
+  @for (line of lines(); track $index; let i = $index) {
+    <span class="line"
+      ><span [style.transition-delay.ms]="i * 60">{{ line }}</span></span
+    >
+  } @empty {
+    {{ text() }}
+  }
+</span>

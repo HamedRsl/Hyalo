@@ -1,8 +1,10 @@
+import { EXAMPLES } from './examples/motion';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_CARD } from '@hyalo/angular/card';
 import { HyMagnetic, HyReveal, HyTilt } from '@hyalo/angular/interaction';
-import { HyFidelity, HyMotion } from '@hyalo/angular';
+import { HyFidelity } from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
@@ -14,16 +16,11 @@ import { DocsPage } from '../shared/page';
   templateUrl: './motion.html',
 })
 export default class MotionPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly fidelity = inject(HyFidelity);
   protected readonly motion = inject(HyMotion);
 
-  protected readonly tiltCode = `<hy-card hyTilt>...</hy-card>
-<hy-card hyTilt [tiltMax]="12" [tiltGlow]="false">...</hy-card>`;
-  protected readonly magneticCode = `<button hyButton hyMagnetic>Pull me</button>
-<button hyButton hyMagnetic [magneticStrength]="0.5" [magneticMax]="14">...</button>`;
-  protected readonly revealCode = `@for (item of items; track item.id; let i = $index) {
-  <hy-card hyReveal [revealDelay]="i * 70">...</hy-card>
-}`;
   protected readonly rows: ApiRow[] = [
     {
       name: 'hyTilt',

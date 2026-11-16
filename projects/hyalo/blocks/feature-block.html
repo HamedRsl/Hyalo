@@ -1,0 +1,12 @@
+<section>
+  <h2>{{ heading() }}</h2>
+  <div class="grid">
+    @for (feature of features(); track feature.id) {
+      <hy-card material="tinted"
+        ><h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p></hy-card
+      >
+    }
+    <ng-content />
+  </div>
+</section>

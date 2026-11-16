@@ -1,79 +1,51 @@
 import { DestroyRef, ElementRef, afterNextRender, inject } from '@angular/core';
-import { HyMotion, ɵmatchesMedia as matchesMedia } from '@hyalo/angular';
+import { HyMotion, HySceneLight, type HyPointerHandlers } from '@hyalo/angular/motion';
+export type PointerHandlers = HyPointerHandlers;
 
-/** Handlers that run outside change detection. */
-export interface PointerHandlers {
-  enter?(event: PointerEvent, rect: DOMRect): void;
-  move(event: PointerEvent, rect: DOMRect): void;
-  leave?(): void;
-}
-
-/**
- * Wires pointer listeners straight to the DOM, so high-frequency
- * `pointermove` events never schedule change detection. Listeners are only
- * attached on devices with a fine pointer, and they do nothing while motion
- * is disabled.
- */
 export function bindPointer(handlers: () => PointerHandlers): void {
   const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-  const motion = inject(HyMotion);
-  const destroyRef = inject(DestroyRef);
-
+  const scene = inject(HySceneLight),
+    destroy = inject(DestroyRef);
   afterNextRender(() => {
-    if (!matchesMedia('(hover: hover) and (pointer: fine)')) return;
-    const h = handlers();
-    let rect: DOMRect | null = null;
-    let active = false;
-
-    const enter = (event: PointerEvent): void => {
-      if (!motion.enabled() || event.pointerType === 'touch') return;
-      active = true;
-      rect = host.getBoundingClientRect();
-      h.enter?.(event, rect);
-    };
-    const move = (event: PointerEvent): void => {
-      if (!active) return enter(event);
-      if (!rect) return;
-      h.move(event, rect);
-    };
-    const leave = (): void => {
-      if (!active) return;
-      active = false;
-      rect = null;
-      h.leave?.();
-    };
-
-    host.addEventListener('pointerenter', enter, { passive: true });
-    host.addEventListener('pointermove', move, { passive: true });
-    host.addEventListener('pointerleave', leave, { passive: true });
-    destroyRef.onDestroy(() => {
-      host.removeEventListener('pointerenter', enter);
-      host.removeEventListener('pointermove', move);
-      host.removeEventListener('pointerleave', leave);
-    });
+    const unregister = scene.register(host, handlers());
+    destroy.onDestroy(unregister);
   });
 }
 
-/**
- * Returns a setter for one CSS custom property. Uses GSAP `quickTo` when GSAP
- * is available, so values glide, and a plain `style.setProperty` otherwise,
- * where a CSS transition does the smoothing.
- */
+export interface HyCssSetter {
+  (value: number): void;
+  destroy(): void;
+}
 export function cssVarSetter(
   el: HTMLElement,
   name: string,
   unit: string,
   motion: HyMotion,
   vars: Record<string, unknown>,
-): (value: number) => void {
-  let quick: ((value: number) => unknown) | null = null;
+): HyCssSetter {
+  let quick: ((value: number) => unknown) | undefined;
+  let engine: Awaited<ReturnType<HyMotion['gsap']>>;
+  let disposed = false;
   void motion.gsap().then((gsap) => {
-    if (!gsap) return;
+    if (!gsap || disposed) return;
+    engine = gsap;
     el.classList.add('hy-gsap');
-    quick = gsap.quickTo(el, name, { ...vars, unit });
+    // quickTo preserves a custom property's existing unit instead of appending one.
+    if (!el.style.getPropertyValue(name)) el.style.setProperty(name, `0${unit}`);
+    quick = gsap.quickTo(el, name, vars);
   });
-  return (value) => {
-    if (quick) quick(value);
-    else el.style.setProperty(name, `${value}${unit}`);
+  const set = ((value: number): void => {
+    if (disposed) return;
+    if (quick && motion.enabled()) quick(value);
+    else {
+      engine?.killTweensOf(el);
+      el.style.setProperty(name, `${value}${unit}`);
+    }
+  }) as HyCssSetter;
+  set.destroy = () => {
+    disposed = true;
+    engine?.killTweensOf(el);
+    quick = undefined;
   };
+  return set;
 }

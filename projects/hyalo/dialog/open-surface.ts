@@ -3,7 +3,8 @@ import type { ComponentType } from '@angular/cdk/portal';
 import type { PositionStrategy } from '@angular/cdk/overlay';
 import type { TemplateRef } from '@angular/core';
 import { filter } from 'rxjs';
-import type { HyFidelity, HyMaterial, HyMotion } from '@hyalo/angular';
+import type { HyFidelity, HyMaterial } from '@hyalo/angular/core';
+import type { HyMotion } from '@hyalo/angular/motion';
 import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
 import type { HyDrawerSide } from './drawer';
 import { driveSheet } from './sheet';
@@ -79,11 +80,13 @@ export function openSurface<R, D>(
     container.dataset['thickness'] = 'thick';
     // With reduced motion the CSS cross-fade runs instead of the spring.
     if (extra.sheet && !motion.reduced()) {
-      hyRef.exit = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
+      const driver = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
         dismissible,
         close: () => hyRef.close(),
         cancelClose: () => hyRef.cancelClose(),
       });
+      hyRef.exit = driver.exit;
+      cdkRef.closed.subscribe(() => driver.destroy());
     }
   }
   if (dismissible) {

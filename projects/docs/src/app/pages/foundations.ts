@@ -1,6 +1,7 @@
+import { EXAMPLES } from './examples/foundations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HyMaterialDirective, type HyMaterial } from '@hyalo/angular';
+import { HyMaterialDirective, type HyMaterial } from '@hyalo/angular/core';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
@@ -13,6 +14,8 @@ import { DocsPage } from '../shared/page';
   styleUrl: './foundations.css',
 })
 export default class FoundationsPage {
+  protected readonly examples = EXAMPLES;
+
   protected readonly swatches = [
     '--hy-bg',
     '--hy-surface-1',
@@ -28,9 +31,7 @@ export default class FoundationsPage {
     '--hy-line-strong',
   ];
   protected readonly materials: HyMaterial[] = ['clear', 'frosted', 'tinted', 'solid'];
-  protected readonly materialCode = `<div hyMaterial="clear">...</div>
-<div hyMaterial>...</div>           <!-- the configured default -->
-<hy-card material="tinted">...</hy-card>`;
+
   protected readonly paletteCode = `// angular.json, once per palette: built and minified, but not injected
 { "input": "node_modules/@hyalo/angular/styles/palettes/ocean.css",
   "bundleName": "palette-ocean", "inject": false }

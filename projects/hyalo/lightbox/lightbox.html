@@ -1,0 +1,28 @@
+<div class="controls">
+  <button hyButton type="button" variant="ghost" (click)="ref.close()">
+    {{ data.closeLabel ?? 'Close gallery' }}
+  </button>
+</div>
+@if (image(); as image) {
+  <figure>
+    <img [src]="image.src" [alt]="image.alt" />
+    @if (image.caption) {
+      <figcaption>{{ image.caption }}</figcaption>
+    }
+  </figure>
+}
+<div class="controls">
+  <button hyButton type="button" variant="glass" [disabled]="index() === 0" (click)="move(-1)">
+    {{ data.previousLabel ?? 'Previous image' }}
+  </button>
+  <span aria-live="polite" aria-atomic="true">{{ index() + 1 }} / {{ data.images.length }}</span>
+  <button
+    hyButton
+    type="button"
+    variant="glass"
+    [disabled]="index() === data.images.length - 1"
+    (click)="move(1)"
+  >
+    {{ data.nextLabel ?? 'Next image' }}
+  </button>
+</div>

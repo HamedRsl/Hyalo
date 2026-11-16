@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  position: relative;
+  color: var(--hy-ink);
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav > ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+a,
+button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  min-block-size: 44px;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--hy-radius-s);
+  text-decoration: none;
+  cursor: pointer;
+}
+a:hover,
+button:hover,
+button[aria-expanded='true'] {
+  background: var(--hy-primary-wash);
+}
+.panel {
+  inline-size: min(40rem, calc(100vw - 2rem));
+  box-sizing: border-box;
+  color: var(--hy-ink);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+  box-shadow: var(--hy-glass-shadow);
+  max-block-size: 65dvh;
+  overflow: auto;
+}
+.panel h3 {
+  font-size: 0.75rem;
+  color: var(--hy-ink-3);
+  margin: 0 0 0.5rem;
+  padding-inline: 1rem;
+}
+.panel a {
+  display: block;
+}
+.panel strong {
+  font-size: 0.875rem;
+}
+.panel span {
+  display: block;
+  color: var(--hy-ink-2);
+  font-size: 0.8125rem;
+  margin-block-start: 0.25rem;
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
+
+.chevron {
+  color: var(--hy-ink-3);
+  transition: rotate var(--hy-dur-quick) var(--hy-ease-out);
+}
+button[aria-expanded='true'] .chevron {
+  rotate: 180deg;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}

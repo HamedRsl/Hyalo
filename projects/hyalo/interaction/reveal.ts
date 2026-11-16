@@ -8,7 +8,7 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import { HyMotion } from '@hyalo/angular';
+import { HyMotion } from '@hyalo/angular/motion';
 
 /** Where a revealed element comes from. */
 export type HyRevealFrom = 'up' | 'fade' | 'scale';

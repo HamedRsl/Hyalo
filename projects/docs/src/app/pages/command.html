@@ -1,0 +1,29 @@
+<docs-page
+  heading="Command palette"
+  lead="Find pages and actions immediately, without waiting for a search animation."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <div class="demo-row">
+        <button hyButton type="button" (click)="search()">Search workspace</button
+        ><span role="status">{{ chosen() }}</span>
+      </div>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyCommand &#125; from '@hyalo/angular/command';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Focus stays in the search field while the active option is announced. Arrow keys, Home, End,
+    Enter, and Escape work without delays. Search normalizes accents and common Persian/Arabic
+    letter variants. Only 50 results render at once; fetching and authorization remain the
+    application’s responsibility.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

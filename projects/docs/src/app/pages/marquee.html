@@ -1,0 +1,28 @@
+<docs-page
+  heading="Marquee and logo wall"
+  lead="An uninterrupted logo strip with explicit pause controls."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><hy-marquee label="Selected partners">
+      <ng-template hyMarqueeItem><strong class="wordmark">ATELIER</strong></ng-template>
+      <ng-template hyMarqueeItem><strong class="wordmark">FORMA</strong></ng-template>
+      <ng-template hyMarqueeItem><strong class="wordmark">MONO</strong></ng-template>
+      <ng-template hyMarqueeItem><strong class="wordmark">NORTH</strong></ng-template>
+    </hy-marquee></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_MARQUEE &#125; from '@hyalo/angular/marquee';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Hover and keyboard focus pause the strip. The explicit pause control supports touch users.
+    Repeated items are inert and hidden from assistive technology. Reduced motion and low fidelity
+    present a stationary logo wall.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Use the toolbar to check light and dark themes, RTL, reduced motion and the three fidelity
+    tiers. Surfaces, text, borders and spacing read the shared Hyalo tokens.
+  </p>
+</docs-page>

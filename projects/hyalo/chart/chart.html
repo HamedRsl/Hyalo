@@ -1,0 +1,69 @@
+<figure>
+  <figcaption>
+    <strong>{{ label() }}</strong>
+    @if (summary()) {
+      <p>{{ summary() }}</p>
+    }
+  </figcaption>
+  <div #palette class="palette" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="plot" cdkOverlayOrigin #origin="cdkOverlayOrigin">
+    <canvas #canvas role="img" [attr.aria-label]="label()">{{ summary() }}</canvas>
+    @if (error()) {
+      <div class="fallback">
+        <p>Chart unavailable. The data is available below.</p>
+        <button type="button" (click)="retry()">Retry chart</button>
+      </div>
+    }
+  </div>
+  <details>
+    <summary>{{ tableLabel() }}</summary>
+    <div class="table" tabindex="0" role="region" [attr.aria-label]="label() + ' data'">
+      <table>
+        <caption>
+          {{
+            label()
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Label</th>
+            @for (series of data().series; track $index) {
+              <th scope="col">{{ series.label }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track $index) {
+            <tr>
+              <th scope="row">{{ row.label }}</th>
+              @for (value of row.values; track $index) {
+                <td>{{ value }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="!!tooltip()"
+    [cdkConnectedOverlayPositions]="tooltipPositions"
+    [cdkConnectedOverlayOffsetX]="tooltip()?.x ?? 0"
+    [cdkConnectedOverlayOffsetY]="tooltip()?.y ?? 0"
+  >
+    @if (tooltip(); as tip) {
+      <div
+        class="chart-tooltip hy-glass"
+        [attr.data-material]="fidelityTier() === 'low' ? 'solid' : 'frosted'"
+        role="tooltip"
+      >
+        <strong>{{ tip.title }}</strong>
+        @for (line of tip.lines; track $index) {
+          <div>{{ line }}</div>
+        }
+      </div>
+    }
+  </ng-template>
+</figure>

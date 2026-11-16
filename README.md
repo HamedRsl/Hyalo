@@ -8,12 +8,14 @@ Liquid glass components for Angular.
 
 Hyalo is a small, open source UI kit built on Angular Aria and the Angular CDK. It is signal based, zoneless, safe to render on the server, and works with a keyboard and a screen reader in both reading directions. The glass is a material you choose per surface, and it steps down by itself on devices or settings where blur would hurt.
 
-Status: 0.1, phase 1 of the roadmap. The API can still change before 1.0.
+Status: 0.3, phase 3 of the roadmap. The API can still change before 1.0.
+
+Phase 3 adds the app shell and data collection: collapsible sidebar, breadcrumb, dropdown and split menus, command palette, mega navigation, pagination, sortable/selectable table, KPI tile, lazy Chart.js wrapper, sparkline, progress, spinner, alerts, empty states, lists, and layout helpers. Run the docs and open `/dashboard` for the composed workspace demo.
 
 ## Install
 
 ```sh
-npm install @hyalo/angular @angular/cdk @angular/aria
+npm install @hyalo/angular
 ```
 
 Requires Angular 22.2 or later. GSAP is optional (see [Motion](#motion)).
@@ -89,6 +91,32 @@ Form controls work with Signal Forms through `[formField]`, and with plain `[(va
 | `hyConnectedPositions`, `hyDropdownPositions` for CDK overlays | `@hyalo/angular/overlay`     |
 
 Run the docs site locally for live examples and the full API of each one (see [Development](#development)).
+
+Phase 2 adds the showcase and marketing collection:
+
+| What you get                                   | Import from                    |
+| ---------------------------------------------- | ------------------------------ |
+| `HY_CAROUSEL` (`HyCarousel`, `HySlide`)        | `@hyalo/angular/carousel`      |
+| `HyGallery`, `HyLightbox` service              | `@hyalo/angular/lightbox`      |
+| `HyImageCompare`                               | `@hyalo/angular/image-compare` |
+| `HY_MARQUEE` (`HyMarquee`, `HyMarqueeItem`)    | `@hyalo/angular/marquee`       |
+| `HySplitText`                                  | `@hyalo/angular/split-text`    |
+| `HyRefraction`                                 | `@hyalo/angular/refraction`    |
+| `HyHotspot`                                    | `@hyalo/angular/hotspot`       |
+| `HyMesh`                                       | `@hyalo/angular/mesh`          |
+| `HY_TIMELINE` (`HyTimeline`, `HyTimelineItem`) | `@hyalo/angular/timeline`      |
+| `HY_STEPPER` (`HyStepper`, `HyStep`)           | `@hyalo/angular/stepper`       |
+| `HyBadge`, selectable `HyChip`                 | `@hyalo/angular/badge`         |
+| `HY_AVATAR` (`HyAvatar`, `HyAvatarGroup`)      | `@hyalo/angular/avatar`        |
+| `HySkeleton`                                   | `@hyalo/angular/skeleton`      |
+| `HyButtonGroup`                                | `@hyalo/angular/button-group`  |
+| `HyLink` (`a[hyLink]`)                         | `@hyalo/angular/link`          |
+| `HyDivider`                                    | `@hyalo/angular/divider`       |
+| `HyAspectRatio`                                | `@hyalo/angular/aspect-ratio`  |
+| `HyChapterNav`                                 | `@hyalo/angular/chapter-nav`   |
+| `HyScrollToTop`                                | `@hyalo/angular/scroll-to-top` |
+
+Each addition has a lazy docs page under `/components/<entry-point>`. See [Phase 2 implementation notes](docs/phase-2.md) for behavior and integration details.
 
 ## Configuration
 
@@ -167,6 +195,35 @@ Serve the files from somewhere else with ``provideHyalo({ paletteHref: (name) =>
 Every style uses logical properties, so `dir="rtl"` on the page is enough. Placements are `start` and `end` instead of left and right, drawers slide from the correct edge, arrow keys are mirrored in tabs and radio groups, and icons that point somewhere (like `chevron-end`) flip on their own. `lang="fa"` switches to a Persian friendly font stack and line height.
 
 If you change direction at runtime, update the CDK `Directionality` as well, so overlays follow.
+
+## App shell and data
+
+| What you get             | Import from                       |
+| ------------------------ | --------------------------------- |
+| Sidebar                  | `@hyalo/angular/sidebar`          |
+| Breadcrumb               | `@hyalo/angular/breadcrumb`       |
+| Dropdown menu            | `@hyalo/angular/menu`             |
+| Command palette          | `@hyalo/angular/command`          |
+| Navigation and mega menu | `@hyalo/angular/navigation-menu`  |
+| Pagination               | `@hyalo/angular/pagination`       |
+| Table                    | `@hyalo/angular/table`            |
+| Stat and KPI             | `@hyalo/angular/stat`             |
+| Charts                   | `@hyalo/angular/chart`            |
+| Sparkline                | `@hyalo/angular/sparkline`        |
+| Progress and spinner     | `@hyalo/angular/progress`         |
+| Alert and inline message | `@hyalo/angular/alert`            |
+| Empty state              | `@hyalo/angular/empty-state`      |
+| List and list item       | `@hyalo/angular/list`             |
+| Bento grid               | `@hyalo/angular/bento`            |
+| Scroll area              | `@hyalo/angular/scroll-area`      |
+| Hover card               | `@hyalo/angular/hover-card`       |
+| Description list         | `@hyalo/angular/description-list` |
+| Keyboard key             | `@hyalo/angular/kbd`              |
+| Code block               | `@hyalo/angular/code-block`       |
+
+Charts use an optional peer. Install `chart.js` only when importing `@hyalo/angular/chart`. The engine is loaded near the viewport, and every chart includes a server-rendered data table. Sparklines have no chart-engine dependency.
+
+The command palette uses CDK dialog focus management and returns typed selections through its dialog reference. Sorting and row selection do not mutate caller-owned data.
 
 ## Motion
 

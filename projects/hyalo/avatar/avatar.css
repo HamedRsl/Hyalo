@@ -1,0 +1,25 @@
+:host {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--hy-avatar-size, 2.5rem);
+  block-size: var(--hy-avatar-size, 2.5rem);
+  flex-shrink: 0;
+  overflow: clip;
+  border-radius: 50%;
+  background: var(--hy-primary-wash);
+  color: var(--hy-primary);
+  border: 1px solid var(--hy-line);
+  font-weight: 600;
+}
+:host([data-size='sm']) {
+  --hy-avatar-size: 2rem;
+  font-size: var(--hy-step--1);
+}
+:host([data-size='lg']) {
+  --hy-avatar-size: 3.5rem;
+}
+img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}

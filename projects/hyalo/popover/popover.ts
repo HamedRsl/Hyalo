@@ -1,4 +1,5 @@
 import { FocusTrapFactory } from '@angular/cdk/a11y';
+import { take } from 'rxjs';
 import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import {
   DestroyRef,
@@ -13,7 +14,7 @@ import {
   effect,
   untracked,
 } from '@angular/core';
-import { HyFidelity, injectId } from '@hyalo/angular';
+import { HyFidelity, injectId, type HyMaterial } from '@hyalo/angular/core';
 import {
   hyConnectedPositions,
   type HyPlacement,
@@ -60,11 +61,14 @@ export class HyPopover {
   private position: FlexibleConnectedPositionStrategy | null = null;
   private readonly presence = new HyPresence();
   private destroyed = false;
+  private positioned = false;
 
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
   /** Accessible name of the panel. */
   readonly popoverLabel = input<string>();
+  /** Use solid over image content when the background would reduce text contrast. */
+  readonly popoverMaterial = input<HyMaterial>('frosted');
   /** Preferred side. Flips when there is no room. */
   readonly popoverPlacement = input<HyPlacement>('bottom');
   /** Whether the panel is open. Two-way bindable as `[(popoverOpen)]`. */
@@ -135,13 +139,11 @@ export class HyPopover {
     }
     if (this.overlayRef.hasAttached()) {
       // Reopened while fading out: turn the exit around.
-      if (this.presence.leaving) this.presence.enter(this.overlayRef.overlayElement);
+      if (this.presence.leaving && this.positioned) this.reveal(this.overlayRef.overlayElement);
       return;
     }
     // Read on every open, so a changed placement applies next time.
     this.position?.withPositions(hyConnectedPositions(this.popoverPlacement(), 10));
-    this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
-
     const pane = this.overlayRef.overlayElement;
     pane.id = this.panelId;
     pane.setAttribute('role', 'dialog');
@@ -149,13 +151,26 @@ export class HyPopover {
     if (label) pane.setAttribute('aria-label', label);
     else pane.removeAttribute('aria-label');
     pane.classList.add('hy-glass', 'hy-popover');
-    pane.dataset['material'] = this.fidelity.tier() === 'low' ? 'solid' : 'frosted';
+    pane.dataset['material'] = this.fidelity.tier() === 'low' ? 'solid' : this.popoverMaterial();
+    pane.dataset['state'] = 'closed';
+    pane.style.visibility = 'hidden';
+    this.positioned = false;
     pane.addEventListener('focusout', this.onFocusOut);
-    this.presence.enter(pane);
+    // CDK positions after rendering the portal. Do not expose its unpositioned first frame.
+    this.position?.positionChanges.pipe(take(1)).subscribe(() => {
+      this.positioned = true;
+      if (this.destroyed || !this.open() || !this.overlayRef?.hasAttached()) return;
+      this.reveal(pane);
+    });
+    this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
+  }
 
+  private reveal(pane: HTMLElement): void {
+    pane.style.removeProperty('visibility');
+    this.presence.enter(pane);
     const trap = this.focusTraps.create(pane);
     void trap.focusFirstTabbableElementWhenReady().then((found) => {
-      if (!found) {
+      if (!found && this.open() && !this.destroyed) {
         pane.tabIndex = -1;
         pane.focus();
       }

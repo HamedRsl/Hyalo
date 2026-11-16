@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 2rem;
+}
+.media {
+  min-inline-size: 0;
+}
+h2 {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+}
+p {
+  color: var(--hy-ink-2);
+  line-height: 1.8;
+}
+.choices {
+  margin-block: 1.5rem;
+}
+strong {
+  font-size: 1.5rem;
+}
+@media (max-width: 48rem) {
+  section {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,3 +1,4 @@
+import { EXAMPLES } from './examples/drawer';
 import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HyCheckbox } from '@hyalo/angular/choice';
@@ -14,6 +15,8 @@ import { DocsTokens } from '../shared/tokens-table';
   templateUrl: './drawer.html',
 })
 export default class DrawerPage {
+  protected readonly examples = EXAMPLES;
+
   private readonly drawer = inject(HyDrawer);
   private readonly filters = viewChild.required<TemplateRef<unknown>>('filters');
 

@@ -1,0 +1,105 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  color: var(--hy-ink);
+}
+figure {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+}
+figcaption p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--hy-ink-2);
+}
+.plot {
+  position: relative;
+  block-size: var(--hy-chart-height, 17rem);
+  margin-block: 1rem;
+}
+canvas {
+  display: block;
+  max-inline-size: 100%;
+}
+.palette {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+  color: var(--hy-ink-2);
+  border-block-start: 1px solid var(--hy-line);
+}
+i:nth-child(1) {
+  color: var(--hy-primary);
+}
+i:nth-child(2) {
+  color: var(--hy-success);
+}
+i:nth-child(3) {
+  color: var(--hy-warning);
+}
+i:nth-child(4) {
+  color: var(--hy-danger);
+}
+i:nth-child(5) {
+  color: var(--hy-ink-3);
+}
+summary {
+  min-block-size: 44px;
+  align-content: center;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--hy-ink-2);
+}
+.table {
+  overflow: auto;
+}
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  text-align: start;
+}
+caption {
+  text-align: start;
+  padding-block: 1rem;
+}
+td,
+th {
+  padding: 0.75rem;
+  border-block-end: 1px solid var(--hy-line);
+}
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: var(--hy-surface-1);
+  padding: 1rem;
+}
+button {
+  min-block-size: 44px;
+  background: var(--hy-surface-2);
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-s);
+  cursor: pointer;
+}
+summary:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
+
+.chart-tooltip {
+  pointer-events: none;
+  padding: 0.75rem 1rem;
+  border-radius: var(--hy-radius-m);
+  color: var(--hy-ink);
+  font-family: var(--hy-font);
+  max-inline-size: 22rem;
+}

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  container-type: inline-size;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hy-space-4);
+}
+@container (max-width:38rem) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    --hy-bento-span: 1;
+  }
+}

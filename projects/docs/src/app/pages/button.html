@@ -3,7 +3,7 @@
   lead="Buttons and link buttons. The element stays a native button or anchor."
 >
   <h2>Variants</h2>
-  <docs-example [code]="variantsCode">
+  <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton>Solid</button>
     <button hyButton variant="glass">Glass</button>
     <button hyButton variant="soft">Soft</button>
@@ -11,7 +11,7 @@
   </docs-example>
 
   <h2>Tones and sizes</h2>
-  <docs-example [code]="tonesCode">
+  <docs-example [code]="examples[1].html" [tsCode]="examples[1].ts" [cssCode]="examples[1].css">
     <button hyButton tone="secondary">Secondary</button>
     <button hyButton size="sm" tone="neutral">Neutral</button>
     <button hyButton tone="success">Success</button>
@@ -19,7 +19,7 @@
   </docs-example>
 
   <h2>Icons, loading and links</h2>
-  <docs-example [code]="stateCode">
+  <docs-example [code]="examples[2].html" [tsCode]="examples[2].ts" [cssCode]="examples[2].css">
     <button hyButton variant="glass" iconOnly aria-label="Close"><hy-icon name="x" /></button>
     <button hyButton [loading]="saving()" (click)="save()">Save changes</button>
     <a hyButton variant="ghost" href="#api">Read the API <hy-icon name="arrow-end" /></a>

@@ -1,0 +1,33 @@
+<docs-page
+  heading="Scroll area"
+  lead="Native scrolling, visible focus, and restrained scrollbar styling."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="phase3-demo">
+      <hy-scroll-area label="Recent activity" maxHeight="14rem"
+        ><ol class="activity-list">
+          @for (event of events; track event) {
+            <li>
+              <strong>{{ event }}</strong
+              ><span>Workspace activity · Today</span>
+            </li>
+          }
+        </ol></hy-scroll-area
+      >
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyScrollArea &#125; from '@hyalo/angular/scroll-area';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The region is keyboard focusable so arrow keys and Page Up/Down work natively. Touch keeps
+    native inertia. Overscroll is contained. Avoid nesting multiple scroll areas on a small screen.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="rows" />
+  <h2>Themes and fidelity</h2>
+  <p>
+    Try light and dark themes, every palette, RTL, reduced motion, and low fidelity using Display
+    settings. Colors, spacing, and focus rings follow the existing Hyalo tokens.
+  </p>
+</docs-page>

@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+.viewport {
+  overflow: auto;
+  max-block-size: var(--hy-table-max-height, 32rem);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+}
+table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: start;
+  font-size: 0.875rem;
+}
+caption {
+  text-align: start;
+  font-weight: 600;
+  padding: 1rem;
+}
+th {
+  font-weight: 600;
+  background: var(--hy-surface-2);
+  white-space: nowrap;
+}
+th,
+td {
+  padding: 0.75rem 1rem;
+  border-block-end: 1px solid var(--hy-line);
+}
+.sticky th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+}
+th button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: inherit;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.selection {
+  inline-size: 44px;
+  padding: 0.25rem;
+}
+.check {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  cursor: pointer;
+}
+.check input {
+  inline-size: 18px;
+  block-size: 18px;
+  margin: 0;
+  accent-color: var(--hy-primary);
+  cursor: pointer;
+}
+tr.selected {
+  background: var(--hy-primary-wash);
+}
+tbody tr:last-child td {
+  border-block-end: 0;
+}
+.viewport:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}
+:is(button, a, input):focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 3px;
+}

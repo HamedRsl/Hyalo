@@ -1,0 +1,56 @@
+<div class="search">
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    type="search"
+    autocomplete="off"
+    spellcheck="false"
+    [alwaysExpanded]="true"
+    (keydown.escape)="dismiss($event)"
+    [attr.aria-label]="data.label ?? 'Command search'"
+    [placeholder]="data.placeholder ?? 'Search pages and actions'"
+    [value]="query()"
+    (input)="search($event)"
+  />
+  <button type="button" aria-label="Close command palette" (click)="close()">Esc</button>
+</div>
+<ng-template ngComboboxPopup [combobox]="combobox">
+  <ul
+    ngComboboxWidget
+    ngListbox
+    #listbox="ngListbox"
+    focusMode="activedescendant"
+    selectionMode="explicit"
+    [activeDescendant]="listbox.activeDescendant()"
+    [value]="selected()"
+    (valueChange)="pick($event)"
+    [attr.aria-label]="data.label ?? 'Commands'"
+  >
+    @for (item of results(); track item.id) {
+      <li ngOption [value]="item" [label]="item.label" [disabled]="!!item.disabled">
+        <span>
+          @if (item.group) {
+            <small>{{ item.group }}</small>
+          }
+          <strong>{{ item.label }}</strong>
+          @if (item.description) {
+            <span class="description">{{ item.description }}</span>
+          }
+        </span>
+        @if (item.shortcut) {
+          <kbd>{{ item.shortcut }}</kbd>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>
+<div class="status" role="status">
+  @if (!results().length) {
+    {{ data.emptyLabel ?? 'No matching commands' }}
+  } @else {
+    {{ matches().length }} results
+    @if (matches().length > 50) {
+      · showing the first 50
+    }
+  }
+</div>

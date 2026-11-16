@@ -5,10 +5,18 @@
   align-self: stretch;
   padding: 0;
   border: 0;
+  border-radius: inherit;
   outline: 0;
+  appearance: none;
   background: transparent;
   color: var(--hy-ink);
   font: inherit;
+}
+
+/* The enclosing field owns the rounded focus ring, including search inputs. */
+.hy-field__box .hy-input:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .hy-input::placeholder {

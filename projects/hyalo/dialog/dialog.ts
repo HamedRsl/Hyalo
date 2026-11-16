@@ -3,7 +3,8 @@ import type { ComponentType } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, Component, Injectable, TemplateRef, inject } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 
-import { HyFidelity, HyMotion, type HyTone } from '@hyalo/angular';
+import { HyFidelity, type HyTone } from '@hyalo/angular/core';
+import { HyMotion } from '@hyalo/angular/motion';
 
 import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
 import { HY_DIALOG_PARTS } from './dialog-parts';
