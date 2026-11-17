@@ -9,6 +9,102 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+              @case ('/components/bottom-sheet') {
+                <div class="mobile-preview">
+                  <span class="handle-preview"></span><strong>Delivery details</strong>
+                  <p>Resize or expand the sheet</p>
+                  <button hyButton variant="ghost" type="button">Expand</button>
+                </div>
+              }
+              @case ('/components/action-sheet') {
+                <div class="mobile-preview">
+                  <strong>Message actions</strong
+                  ><button hyButton variant="ghost" type="button">Save conversation</button
+                  ><button hyButton variant="ghost" tone="danger" type="button">Delete</button>
+                </div>
+              }
+              @case ('/components/tab-bar') {
+                <hy-tab-bar label="App navigation" [items]="mobileNavigation" activeId="home" />
+              }
+              @case ('/components/fab') {
+                <hy-fab label="Create" />
+              }
+              @case ('/components/slide-confirm') {
+                <div class="form-preview"><hy-slide-confirm label="Confirm reservation" /></div>
+              }
+              @case ('/components/keypad') {
+                <hy-numeric-keypad
+                  label="Amount"
+                  value="1250"
+                  style="--hy-keypad-key-height: 44px; --hy-keypad-width: 14rem"
+                />
+              }
+              @case ('/components/pull-refresh') {
+                <hy-pull-refresh label="Activity" height="10rem"
+                  ><p>Recent activity</p>
+                  <p>New order received</p></hy-pull-refresh
+                >
+              }
+              @case ('/components/swipe-actions') {
+                <hy-swipe-actions
+                  label="Appointment"
+                  [endActions]="[{ id: 'archive', label: 'Archive' }]"
+                  >Annual checkup</hy-swipe-actions
+                >
+              }
+              @case ('/components/swipe-deck') {
+                <hy-swipe-deck
+                  #mobileDeck
+                  label="Discover"
+                  [items]="mobileCards"
+                  [itemKey]="mobileKey"
+                  ><ng-template [hySwipeItem]="mobileDeck" let-item
+                    ><strong>{{ item.label }}</strong></ng-template
+                  ></hy-swipe-deck
+                >
+              }
+              @case ('/components/card-stack') {
+                <hy-card-stack
+                  #mobileStack
+                  label="Accounts"
+                  [items]="mobileCards"
+                  [itemKey]="mobileKey"
+                  ><ng-template [hyStackItem]="mobileStack" let-item
+                    ><strong>{{ item.label }}</strong>
+                    <p>Available balance</p></ng-template
+                  ></hy-card-stack
+                >
+              }
+              @case ('/components/notification-center') {
+                <hy-notification-card
+                  [notification]="{
+                    id: 'order',
+                    title: 'Order confirmed',
+                    body: 'Your order is being prepared.',
+                    read: false,
+                  }"
+                />
+              }
+              @case ('/components/chat') {
+                <hy-chat-bubble
+                  [message]="{
+                    id: 'support',
+                    sender: 'Support',
+                    text: 'How can we help?',
+                    direction: 'incoming',
+                    status: 'delivered',
+                  }"
+                />
+              }
+              @case ('/components/dock') {
+                <hy-dock label="Workspace" [items]="mobileNavigation" activeId="home" />
+              }
+              @case ('/components/status-island') {
+                <hy-status-island
+                  [items]="[{ id: 'order', label: 'Order arriving', priority: 10, progress: 90 }]"
+                  live="off"
+                />
+              }
               @case ('/components/meter') {
                 <div class="form-preview">
                   <span>Storage: 6 of 16 GB</span

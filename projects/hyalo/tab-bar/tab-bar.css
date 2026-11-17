@@ -1,0 +1,96 @@
+:host {
+  display: block;
+  border-radius: var(--hy-tab-bar-radius, var(--hy-radius-l));
+  color: var(--hy-ink);
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  gap: var(--hy-space-1);
+  padding: var(--hy-space-2);
+}
+a {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hy-space-1);
+  min-inline-size: 44px;
+  min-block-size: 52px;
+  padding: var(--hy-space-2);
+  border-radius: var(--hy-radius-m);
+  color: var(--hy-ink-2-glass);
+  text-decoration: none;
+  font-size: var(--hy-step--1);
+  text-align: center;
+}
+a[aria-current] {
+  color: var(--hy-primary);
+  background: var(--hy-primary-wash);
+}
+a[aria-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+a:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: -2px;
+}
+.icon {
+  display: inline-grid;
+  place-items: center;
+}
+hy-icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+.badge {
+  font-size: 0.75rem;
+  padding-inline: var(--hy-space-1);
+  border-radius: var(--hy-radius-pill);
+  color: var(--hy-ink);
+  background: var(--hy-surface-3);
+}
+:host([data-orientation='vertical']) nav {
+  flex-direction: column;
+}
+:host([data-fixed='true']) {
+  position: fixed;
+  inset-inline: max(var(--hy-space-3), env(safe-area-inset-left))
+    max(var(--hy-space-3), env(safe-area-inset-right));
+  inset-block-end: max(var(--hy-space-3), env(safe-area-inset-bottom));
+  z-index: var(--hy-z-sticky);
+}
+@media (forced-colors: active) {
+  a[aria-current] {
+    outline: 2px solid Highlight;
+  }
+}
+
+nav {
+  position: relative;
+  isolation: isolate;
+}
+a {
+  z-index: 1;
+  transition: color var(--hy-dur-quick) var(--hy-ease-out);
+}
+.active-indicator {
+  position: absolute;
+  inset: 0 auto auto 0;
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-primary-wash);
+  pointer-events: none;
+  transition: translate var(--hy-dur-quick) var(--hy-ease-out);
+}
+.has-indicator a[aria-current] {
+  background: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .active-indicator,
+  a {
+    transition: none;
+  }
+}

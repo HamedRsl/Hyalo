@@ -1,0 +1,40 @@
+<section [attr.aria-label]="label()">
+  <div class="cards" [style.perspective]="perspective()">
+    @for (card of cards(); track card.key) {
+      <div
+        class="card"
+        [attr.data-stack-key]="card.identity"
+        [class.active]="card.depth === 0"
+        [inert]="card.depth !== 0"
+        [attr.aria-hidden]="card.depth !== 0"
+        [style.transform]="card.transform"
+        [style.z-index]="5 - card.depth"
+      >
+        <ng-container
+          [ngTemplateOutlet]="template().template"
+          [ngTemplateOutletContext]="card.context"
+        />
+      </div>
+    }
+  </div>
+  <div class="actions">
+    <button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || !items().length || (!loop() && current() === 0)"
+      (click)="move(-1)"
+    >
+      {{ previousLabel() }}</button
+    ><span role="status">{{ items().length ? current() + 1 : 0 }} / {{ items().length }}</span
+    ><button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || !items().length || (!loop() && current() >= items().length - 1)"
+      (click)="move(1)"
+    >
+      {{ nextLabel() }}
+    </button>
+  </div>
+</section>

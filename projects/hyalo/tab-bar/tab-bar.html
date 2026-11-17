@@ -1,0 +1,35 @@
+<nav [attr.aria-label]="label()">
+  <span class="active-indicator" aria-hidden="true" hidden></span>
+  @for (item of entries(); track item.id; let index = $index) {
+    <a
+      [attr.href]="item.disabled ? null : item.href"
+      [attr.target]="item.target ?? null"
+      [attr.rel]="item.rel ?? (item.target === '_blank' ? 'noopener noreferrer' : null)"
+      [attr.aria-label]="item.ariaLabel ?? (!showLabels() ? item.label : null)"
+      [attr.role]="item.disabled ? 'link' : null"
+      [attr.aria-disabled]="item.disabled || null"
+      [attr.tabindex]="item.disabled ? -1 : null"
+      [attr.aria-current]="item.current ? 'page' : null"
+      (click)="choose($event, item)"
+    >
+      @if (itemTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: item, active: item.current, index }"
+        />
+      } @else {
+        <span class="icon">
+          @if (item.icon) {
+            <hy-icon [name]="item.icon" />
+          }
+        </span>
+        @if (showLabels()) {
+          <span>{{ item.label }}</span>
+        }
+        @if (item.badge !== undefined) {
+          <span class="badge" [attr.aria-label]="item.badgeLabel ?? null">{{ item.badge }}</span>
+        }
+      }
+    </a>
+  }
+</nav>

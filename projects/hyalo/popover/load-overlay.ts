@@ -17,3 +17,15 @@ export function loadOverlay(): Promise<HyOverlayKit> {
   });
   return kit;
 }
+
+/** @internal Popovers need focus transfer; tooltips do not. */
+export type HyPopoverKit = typeof import('./popover-kit');
+let popoverKit: Promise<HyPopoverKit> | undefined;
+/** @internal */
+export function loadPopoverOverlay(): Promise<HyPopoverKit> {
+  popoverKit ??= import('./popover-kit').catch((error: unknown) => {
+    popoverKit = undefined;
+    throw error;
+  });
+  return popoverKit;
+}

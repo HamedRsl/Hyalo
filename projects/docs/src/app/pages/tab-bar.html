@@ -1,0 +1,36 @@
+<docs-page
+  heading="Mobile tab bar"
+  lead="Persistent app navigation with native links, badges, logical layout, and safe-area spacing."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-tab-bar
+        label="Patient app"
+        [items]="items"
+        [activeId]="active()"
+        (selected)="active.set($event.id)"
+        (click)="$event.preventDefault()"
+      />
+      <p>
+        Use arrows, Home, or End to focus a destination. Native links preserve browser navigation.
+      </p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyTabBar &#125; from '@hyalo/angular/tab-bar';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Use the tab bar for app destinations and HyTabs for panels on the same page. The active link has
+    aria-current page. Every enabled destination remains in native Tab order; arrow keys add spatial
+    navigation, including RTL. Fixed mode reserves safe-area offsets; the application must reserve
+    space for fixed chrome.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['tabBar']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

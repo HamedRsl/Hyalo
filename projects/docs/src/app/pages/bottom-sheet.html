@@ -1,0 +1,43 @@
+<docs-page
+  heading="Bottom sheet"
+  lead="Snap-point sheets with focus trapping, scrollable content, and a keyboard resize handle."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <button hyButton type="button" (click)="open.set(true)">Open sheet</button
+      ><hy-bottom-sheet
+        #sheet
+        label="Delivery details"
+        [(open)]="open"
+        [options]="{ breakpoints: [0.35, 0.65, 1], initialBreakpoint: 0.35 }"
+        (breakpointChange)="point.set($event)"
+        ><h2>Delivery details</h2>
+        <p>Current breakpoint: {{ point() }}</p>
+        <p>
+          The resize handle cycles through configured heights. Arrow keys resize without dragging.
+        </p>
+        <button hyButton type="button" (click)="sheet.snapTo(1)">Expand fully</button>
+        @for (row of rowsOfContent; track row) {
+          <p>Delivery update {{ row }}</p>
+        }
+      </hy-bottom-sheet>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyBottomSheetHost &#125; from '@hyalo/angular/bottom-sheet';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Breakpoints are fractions of the sheet height, with a full-height stop always available. Zero
+    enables gesture dismissal; dismissible false removes it. Content scrolls at each stop. Escape
+    and backdrop follow the existing drawer contract, and closing restores trigger focus. Configure
+    autoFocus, label, material, side-independent size, role and data through options.
+    HyBottomSheet.open returns a typed ref with closed, breakpoint, snapTo and close.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

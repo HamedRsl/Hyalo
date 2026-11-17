@@ -1,0 +1,54 @@
+<button
+  hyButton
+  type="button"
+  variant="glass"
+  [disabled]="disabled()"
+  [tone]="current()?.tone ?? 'neutral'"
+  [hyPopover]="details"
+  [popoverLabel]="label()"
+  [(popoverOpen)]="expanded"
+  #popover="hyPopover"
+>
+  {{ current()?.label ?? emptyLabel() }}
+</button>
+<span class="sr" [attr.aria-live]="live()" aria-atomic="true">{{ current()?.label ?? '' }}</span>
+<ng-template #details
+  ><div class="details">
+    @if (current(); as item) {
+      @if (detailTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        />
+      } @else {
+        <strong>{{ item.label }}</strong>
+        @if (item.detail) {
+          <p>{{ item.detail }}</p>
+        }
+        @if (item.progress !== undefined) {
+          <hy-progress [label]="item.label" [value]="item.progress" />
+        }
+      }
+      @if (item.action; as action) {
+        <button
+          hyButton
+          type="button"
+          [disabled]="disabled() || (action.disabled ?? false)"
+          (click)="activate()"
+        >
+          {{ action.label }}
+        </button>
+      }
+      @if (item.dismissible !== false) {
+        <button hyButton type="button" variant="ghost" [disabled]="disabled()" (click)="dismiss()">
+          {{ dismissLabel() }}
+        </button>
+      }
+    } @else {
+      <p>{{ emptyLabel() }}</p>
+    }
+    <button hyButton type="button" variant="ghost" (click)="popover.close()">
+      {{ closeLabel() }}
+    </button>
+  </div></ng-template
+>

@@ -1,0 +1,58 @@
+<form
+  class="composer"
+  [attr.aria-label]="label()"
+  [attr.aria-busy]="pending()"
+  (submit)="send($event)"
+>
+  <textarea
+    cdkTextareaAutosize
+    [cdkAutosizeMinRows]="1"
+    [cdkAutosizeMaxRows]="5"
+    rows="1"
+    [attr.aria-label]="label()"
+    [placeholder]="placeholder()"
+    [value]="message()"
+    [disabled]="disabled() || pending()"
+    (input)="edit($event)"
+    (keydown)="keys($event)"
+  ></textarea>
+  @if (allowAttachments()) {
+    <label
+      >{{ attachLabel()
+      }}<input
+        type="file"
+        multiple
+        [accept]="accept()"
+        [disabled]="disabled() || pending()"
+        (change)="attach($event)"
+    /></label>
+  }
+  @if (files().length) {
+    <ul>
+      @for (file of files(); track $index; let index = $index) {
+        <li>
+          {{ file.name }}
+          <button
+            hyButton
+            variant="ghost"
+            type="button"
+            [disabled]="disabled() || pending()"
+            [attr.aria-label]="removeLabel() + ': ' + file.name"
+            (click)="removeFile(index)"
+          >
+            {{ removeLabel() }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+  <button
+    hyButton
+    type="submit"
+    [disabled]="!canSend()"
+    [loading]="pending()"
+    [attr.aria-label]="sendLabel()"
+  >
+    {{ sendLabel() }}
+  </button>
+</form>

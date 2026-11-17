@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+header {
+  display: flex;
+  gap: var(--hy-space-2);
+  align-items: center;
+}
+button {
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  border: 0;
+  border-radius: var(--hy-radius-s);
+  color: var(--hy-ink);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+[data-hy-sheet-handle] {
+  flex: 1;
+  touch-action: none;
+  cursor: grab;
+}
+[data-hy-sheet-handle] > span:first-child {
+  display: block;
+  margin-inline: auto;
+  inline-size: 3rem;
+  block-size: 0.3rem;
+  border-radius: var(--hy-radius-pill);
+  background: var(--hy-ink-3);
+}
+button:focus-visible,
+.body:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+.body {
+  overflow: auto;
+  overscroll-behavior: contain;
+  min-block-size: 0;
+}
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}

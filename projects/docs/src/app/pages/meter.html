@@ -10,11 +10,14 @@
         [tone]="used() > 12 ? 'warning' : 'success'"
       /><button hyButton type="button" variant="ghost" (click)="used.set((used() + 2) % 18)">
         Change reading</button
-      ><hy-meter label="CPU" [value]="null" emptyLabel="Waiting for a reading" /></div
+      ><hy-meter label="CPU" [value]="null" emptyLabel="Waiting for a reading" /><hy-meter-group
+        label="Storage allocation"
+        [values]="segments"
+      /><hy-segmented-progress label="Order delivery" [steps]="steps" /></div
   ></docs-example>
   <h2>Import</h2>
   <docs-import
-    code="import &#123; HyMeter &#125; from '@hyalo/angular/meter';
+    code="import &#123; HyMeter, HyMeterGroup, HySegmentedProgress &#125; from '@hyalo/angular/meter';
 import &#123; HyButton &#125; from '@hyalo/angular/button';" />
   <h2>Behavior and accessibility</h2>
   <p>

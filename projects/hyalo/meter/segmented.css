@@ -1,0 +1,120 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hy-space-3);
+  color: var(--hy-ink);
+}
+.track {
+  display: flex;
+  flex: none;
+  block-size: var(--hy-meter-height, 0.75rem);
+  background: var(--hy-meter-track, var(--hy-surface-3));
+  border-radius: var(--hy-radius-pill);
+  overflow: hidden;
+}
+.segment {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: var(--_tone, var(--hy-primary));
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--hy-step--1);
+}
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+}
+.swatch {
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: var(--hy-radius-pill);
+  background: var(--_tone, var(--hy-primary));
+}
+[data-tone='secondary'] {
+  --_tone: var(--hy-secondary, var(--hy-primary));
+}
+[data-tone='neutral'] {
+  --_tone: var(--hy-ink-3);
+}
+[data-tone='success'] {
+  --_tone: var(--hy-success);
+}
+[data-tone='warning'] {
+  --_tone: var(--hy-warning);
+}
+[data-tone='danger'] {
+  --_tone: var(--hy-danger);
+}
+:host([data-orientation='vertical']) .track {
+  flex-direction: column-reverse;
+  block-size: 10rem;
+  inline-size: var(--hy-meter-height, 0.75rem);
+}
+:host([data-label-position='start']) .legend {
+  order: -1;
+}
+.steps {
+  display: flex;
+  gap: var(--hy-space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.steps li {
+  display: grid;
+  flex: 1;
+  gap: var(--hy-space-1);
+  font-size: var(--hy-step--1);
+}
+.step-track {
+  block-size: 0.4rem;
+  background: var(--hy-surface-3);
+  border-radius: var(--hy-radius-pill);
+}
+[data-state='complete'] .step-track {
+  background: var(--hy-success);
+}
+[data-state='active'] .step-track {
+  background: var(--hy-primary);
+}
+[data-state='error'] .step-track {
+  background: var(--hy-danger);
+}
+@media (forced-colors: active) {
+  .segment,
+  .swatch {
+    background: Highlight;
+    forced-color-adjust: none;
+  }
+  .step-track {
+    border: 1px solid CanvasText;
+  }
+}
+
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:host([data-label-orientation='vertical']) .legend {
+  flex-direction: column;
+}
+
+:host([data-orientation='vertical']) .steps {
+  flex-direction: column;
+}

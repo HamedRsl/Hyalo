@@ -1,0 +1,34 @@
+<article>
+  @if (showAvatar() && message().avatar) {
+    <img class="avatar" [src]="message().avatar" alt="" width="32" height="32" loading="lazy" />
+  }
+  @if (showSender()) {
+    <strong>{{ message().sender }}</strong>
+  }
+  @if (message().quote) {
+    <blockquote>{{ message().quote }}</blockquote>
+  }
+  <p>{{ message().text }}</p>
+  @if (message().attachments?.length) {
+    <ul>
+      @for (file of message().attachments; track file.id) {
+        <li>
+          <a [href]="file.url" (click)="attachmentActivated.emit(file)">{{ file.name }}</a>
+        </li>
+      }
+    </ul>
+  }
+  <footer>
+    @if (time()) {
+      <time [attr.datetime]="message().timestamp">{{ time() }}</time>
+    }
+    @if (statusText()) {
+      <span>{{ statusText() }}</span>
+    }
+    @if (message().status === 'error') {
+      <button hyButton type="button" variant="ghost" (click)="retry.emit(message().id)">
+        {{ retryLabel() }}
+      </button>
+    }
+  </footer>
+</article>

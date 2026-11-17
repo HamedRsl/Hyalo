@@ -1,0 +1,44 @@
+<article>
+  @if (notification().image; as image) {
+    <img [src]="image" alt="" width="40" height="40" loading="lazy" />
+  }
+  <div class="heading">
+    <strong>{{ notification().title }}</strong>
+    @if (notification().createdAt && time()) {
+      <time [attr.datetime]="notification().createdAt">{{ time() }}</time>
+    }
+  </div>
+  @if (notification().body) {
+    <p>{{ notification().body }}</p>
+  }
+  <div class="actions">
+    @if (notification().actionLabel) {
+      @if (notification().href) {
+        <a
+          hyButton
+          variant="ghost"
+          [attr.href]="disabled() ? null : notification().href"
+          [attr.role]="disabled() ? 'link' : null"
+          [attr.aria-disabled]="disabled() || null"
+          [attr.tabindex]="disabled() ? -1 : null"
+          (click)="activate($event)"
+          >{{ notification().actionLabel }}</a
+        >
+      } @else {
+        <button hyButton type="button" variant="ghost" [disabled]="disabled()" (click)="activate()">
+          {{ notification().actionLabel }}
+        </button>
+      }
+    }
+    @if (!notification().read) {
+      <button hyButton type="button" variant="ghost" [disabled]="disabled()" (click)="markRead()">
+        {{ readLabel() }}
+      </button>
+    }
+    @if (notification().dismissible !== false) {
+      <button hyButton type="button" variant="ghost" [disabled]="disabled()" (click)="dismiss()">
+        {{ dismissLabel() }}
+      </button>
+    }
+  </div>
+</article>

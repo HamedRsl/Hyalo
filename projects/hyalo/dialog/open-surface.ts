@@ -40,6 +40,7 @@ export function openSurface<R, D>(
     height?: string;
     /** Drawers and sheets run on a spring and can be dragged closed. */
     sheet?: HyDrawerSide;
+    draggable?: boolean;
   },
 ): HyDialogRef<R> {
   let ref: HyDialogRef<R> | undefined;
@@ -79,7 +80,7 @@ export function openSurface<R, D>(
     // Dialogs and sheets are the largest glass on the page, so the thickest.
     container.dataset['thickness'] = 'thick';
     // With reduced motion the CSS cross-fade runs instead of the spring.
-    if (extra.sheet && !motion.reduced()) {
+    if (extra.sheet && extra.draggable !== false && !motion.reduced()) {
       const driver = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
         dismissible,
         close: () => hyRef.close(),

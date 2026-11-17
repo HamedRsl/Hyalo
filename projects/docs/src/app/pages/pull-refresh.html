@@ -1,0 +1,47 @@
+<docs-page
+  heading="Pull to refresh"
+  lead="Refresh intent from a deliberate downward pull or a visible button."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-pull-refresh
+        #refresh
+        label="Recent activity"
+        height="16rem"
+        [(refreshing)]="refreshing"
+        (refresh)="requests.update(addOne)"
+        ><p class="refresh-count">Refresh requests: {{ requests() }}</p>
+        <ul class="activity-list">
+          @for (row of rowsOfContent; track row) {
+            <li>Activity {{ row }}</li>
+          }
+        </ul></hy-pull-refresh
+      ><button
+        hyButton
+        type="button"
+        variant="ghost"
+        [disabled]="!refreshing()"
+        (click)="refresh.complete()"
+      >
+        Complete request
+      </button>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyPullRefresh &#125; from '@hyalo/angular/pull-refresh';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    A pull can start only at the top of this native scroll region. Interactive descendants and
+    nested scrollers retain their own input. Cancellation never requests refresh. One request
+    remains active until refreshing becomes false or complete() is called. The visible button
+    supports keyboard and assistive technology. Loading work and error recovery belong to the
+    application.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

@@ -27,3 +27,4 @@ export * from './locale-number';
 export { normalizeMeasurement as ɵnormalizeMeasurement } from './measurement';
 /** @internal */
 export type { HyMeasurement as ɵHyMeasurement } from './measurement';
+export * from './mobile';

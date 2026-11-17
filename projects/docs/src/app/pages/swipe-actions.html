@@ -1,0 +1,35 @@
+<docs-page
+  heading="Swipe actions"
+  lead="Logical start and end actions behind a row, with an always-available disclosure button."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-swipe-actions
+        label="Appointment"
+        [startActions]="start"
+        [endActions]="end"
+        (selected)="selection.set($event.action.label)"
+        ><strong>Annual checkup</strong>
+        <p>Monday, 10:30</p></hy-swipe-actions
+      >
+      <p role="status">{{ selection() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HySwipeActions &#125; from '@hyalo/angular/swipe-actions';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Start and end follow writing direction. Revealed actions alone are interactive; closed action
+    rails are inert. Escape and outside clicks close the row, and focus returns to the disclosure
+    when necessary. Full swipe is opt-in and emits the first enabled action on that side. Content
+    buttons and links retain normal interactions. Cancellation restores the previously open side.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['swipeActions']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

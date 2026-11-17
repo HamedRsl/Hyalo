@@ -1,0 +1,21 @@
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+.details {
+  display: grid;
+  gap: var(--hy-space-3);
+  inline-size: min(var(--hy-island-width, 20rem), calc(100vw - 4rem));
+  color: var(--hy-ink);
+}
+p {
+  margin: 0;
+  color: var(--hy-ink-2);
+}
+.sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

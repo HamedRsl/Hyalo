@@ -1,0 +1,70 @@
+<docs-page
+  heading="Mobile app blocks"
+  lead="Wallet, transfer, and order-tracking compositions using the public mobile primitives."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-wallet-block
+        [accounts]="accounts"
+        [actions]="actions"
+        (selected)="transferState.set('idle')"
+      />
+      <hy-transfer-block
+        currency="USD"
+        [state]="transferState()"
+        [error]="transferError()"
+        (submitted)="submit($event)"
+        ><p hyTransferDetails>
+          Demo only. Review the recipient, currency and fees before authorizing a real payment.
+        </p></hy-transfer-block
+      >
+      @if (request()) {
+        <p>Reviewing {{ request()?.amount }} USD for {{ request()?.recipient }}</p>
+      }
+      <div class="composer">
+        <button
+          hyButton
+          type="button"
+          variant="ghost"
+          [disabled]="transferState() !== 'loading'"
+          (click)="transferState.set('success')"
+        >
+          Simulate success</button
+        ><button
+          hyButton
+          type="button"
+          variant="ghost"
+          [disabled]="transferState() !== 'loading'"
+          (click)="fail()"
+        >
+          Simulate failure
+        </button>
+      </div>
+      <button hyButton type="button" (click)="orderOpen.set(true)">Track order</button>
+      <hy-order-tracker-block
+        [(open)]="orderOpen"
+        detail="Order 1042: estimated delivery 12:45"
+        [steps]="steps"
+        [action]="{ id: 'contact', label: 'Contact restaurant' }"
+        ><p hyOrderRoute>
+          Route summary: the courier will leave the restaurant after preparation.
+        </p></hy-order-tracker-block
+      >
+    </div></docs-example
+  >
+  <h2>Data, states, and integration</h2>
+  <p>
+    Blocks use existing design tokens, logical CSS and mobile primitives. Loading, error, empty and
+    success states are application-controlled. Translate every visible label through inputs, and use
+    locale for number formatting. Use the theme direction control to inspect Persian and RTL
+    layouts. Applications supply validation, payment authorization, persistence, transport and route
+    content.
+  </p>
+  <h2>Import</h2>
+  <p>
+    Import HyWalletBlock, HyTransferBlock, and HyOrderTrackerBlock from @hyalo/angular/blocks. The
+    copyable example contains the complete public imports.
+  </p>
+  <h2>API and slots</h2>
+  <docs-api-table [rows]="rows"
+/></docs-page>

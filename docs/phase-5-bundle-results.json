@@ -1,0 +1,4149 @@
+{
+  "measuredAt": "2026-11-17T12:28:19.451Z",
+  "snapshot": {
+    "version": "0.5.0",
+    "integrity": "sha512-iR6S+RSrvWkxlGL6ppBead3+hMgwFwdfp2VPlXb9JmHoZ4VknROKHZm7BAHlfZGVuolIZqVy+ow9zOba5pONHQ==",
+    "size": 506585,
+    "unpackedSize": 2780050
+  },
+  "environment": {
+    "date": "2026-11-17T12:22:24.067Z",
+    "node": "v26.3.1",
+    "versions": {
+      "@angular/core": "22.2.3",
+      "@angular/platform-browser": "22.2.3",
+      "@angular/compiler": "22.2.3",
+      "@angular/cli": "22.2.5",
+      "@angular/build": "22.2.5",
+      "@angular/cdk": "22.2.7",
+      "@hyalo/angular": "0.5.0",
+      "@angular/material": "22.2.7",
+      "primeng": "22.1.5",
+      "ng-zorro-antd": "22.2.0",
+      "@nebular/theme": "17.0.0",
+      "@ionic/angular": "9.0.11",
+      "@ionic/core": "9.0.11",
+      "@taiga-ui/core": "5.33.0",
+      "@taiga-ui/kit": "5.33.0",
+      "@taiga-ui/addon-mobile": "5.33.0",
+      "@taiga-ui/layout": "5.33.0"
+    }
+  },
+  "baseline": {
+    "raw": 91532,
+    "gzip": 30442,
+    "brotli": 27519
+  },
+  "results": [
+    {
+      "id": "baseline-empty",
+      "kit": "baseline",
+      "family": "baseline",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 91532,
+        "gzip": 30442,
+        "brotli": 27519
+      },
+      "total": {
+        "raw": 91532,
+        "gzip": 30442,
+        "brotli": 27519
+      },
+      "addedInitial": {
+        "raw": 0,
+        "gzip": 0,
+        "brotli": 0
+      },
+      "addedTotal": {
+        "raw": 0,
+        "gzip": 0,
+        "brotli": 0
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 91532,
+          "gzip": 30442,
+          "brotli": 27519
+        }
+      ],
+      "contributions": {
+        "@angular/common": 378,
+        "@angular/core": 69262,
+        "rxjs": 8568,
+        "app": 235,
+        "@angular/platform-browser": 11888
+      }
+    },
+    {
+      "id": "hyalo-bottom-sheet",
+      "kit": "Hyalo",
+      "family": "bottom-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 229563,
+        "gzip": 70928,
+        "brotli": 61408
+      },
+      "total": {
+        "raw": 229563,
+        "gzip": 70928,
+        "brotli": 61408
+      },
+      "addedInitial": {
+        "raw": 138031,
+        "gzip": 40486,
+        "brotli": 33889
+      },
+      "addedTotal": {
+        "raw": 138031,
+        "gzip": 40486,
+        "brotli": 33889
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 229563,
+          "gzip": 70928,
+          "brotli": 61408
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 107588,
+        "rxjs": 24630,
+        "app": 625,
+        "@angular/cdk": 53969,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 18310,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-bottom-sheet-host",
+      "kit": "Hyalo",
+      "family": "bottom-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 234276,
+        "gzip": 72517,
+        "brotli": 62645
+      },
+      "total": {
+        "raw": 234276,
+        "gzip": 72517,
+        "brotli": 62645
+      },
+      "addedInitial": {
+        "raw": 142744,
+        "gzip": 42075,
+        "brotli": 35126
+      },
+      "addedTotal": {
+        "raw": 142744,
+        "gzip": 42075,
+        "brotli": 35126
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 234276,
+          "gzip": 72517,
+          "brotli": 62645
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 110787,
+        "rxjs": 24630,
+        "app": 372,
+        "@angular/cdk": 53969,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 20077,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-action-sheet",
+      "kit": "Hyalo",
+      "family": "action-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 258591,
+        "gzip": 80208,
+        "brotli": 68892
+      },
+      "total": {
+        "raw": 258591,
+        "gzip": 80208,
+        "brotli": 68892
+      },
+      "addedInitial": {
+        "raw": 167059,
+        "gzip": 49766,
+        "brotli": 41373
+      },
+      "addedTotal": {
+        "raw": 167059,
+        "gzip": 49766,
+        "brotli": 41373
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 258591,
+          "gzip": 80208,
+          "brotli": 68892
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 118731,
+        "rxjs": 24652,
+        "app": 496,
+        "@angular/cdk": 53975,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 36296,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-tab-bar",
+      "kit": "Hyalo",
+      "family": "tab-bar",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 146812,
+        "gzip": 48985,
+        "brotli": 43852
+      },
+      "total": {
+        "raw": 146812,
+        "gzip": 48985,
+        "brotli": 43852
+      },
+      "addedInitial": {
+        "raw": 55280,
+        "gzip": 18543,
+        "brotli": 16333
+      },
+      "addedTotal": {
+        "raw": 55280,
+        "gzip": 18543,
+        "brotli": 16333
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 146812,
+          "gzip": 48985,
+          "brotli": 43852
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 107584,
+        "rxjs": 8585,
+        "app": 486,
+        "@angular/cdk": 755,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 14574
+      }
+    },
+    {
+      "id": "hyalo-fab",
+      "kit": "Hyalo",
+      "family": "fab",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 182648,
+        "gzip": 59470,
+        "brotli": 51165
+      },
+      "total": {
+        "raw": 182648,
+        "gzip": 59470,
+        "brotli": 51165
+      },
+      "addedInitial": {
+        "raw": 91116,
+        "gzip": 29028,
+        "brotli": 23646
+      },
+      "addedTotal": {
+        "raw": 91116,
+        "gzip": 29028,
+        "brotli": 23646
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 182648,
+          "gzip": 59470,
+          "brotli": 51165
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 115898,
+        "rxjs": 20784,
+        "app": 302,
+        "@angular/cdk": 8341,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 20590,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-speed-dial",
+      "kit": "Hyalo",
+      "family": "speed-dial",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 182889,
+        "gzip": 59586,
+        "brotli": 51238
+      },
+      "total": {
+        "raw": 182889,
+        "gzip": 59586,
+        "brotli": 51238
+      },
+      "addedInitial": {
+        "raw": 91357,
+        "gzip": 29144,
+        "brotli": 23719
+      },
+      "addedTotal": {
+        "raw": 91357,
+        "gzip": 29144,
+        "brotli": 23719
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 182889,
+          "gzip": 59586,
+          "brotli": 51238
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 116000,
+        "rxjs": 20784,
+        "app": 441,
+        "@angular/cdk": 8341,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 20590,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-slide-confirm",
+      "kit": "Hyalo",
+      "family": "slide-confirm",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 155382,
+        "gzip": 51698,
+        "brotli": 46147
+      },
+      "total": {
+        "raw": 155382,
+        "gzip": 51698,
+        "brotli": 46147
+      },
+      "addedInitial": {
+        "raw": 63850,
+        "gzip": 21256,
+        "brotli": 18628
+      },
+      "addedTotal": {
+        "raw": 63850,
+        "gzip": 21256,
+        "brotli": 18628
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 155382,
+          "gzip": 51698,
+          "brotli": 46147
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 112436,
+        "rxjs": 8585,
+        "app": 321,
+        "@angular/cdk": 336,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 20162
+      }
+    },
+    {
+      "id": "hyalo-keypad",
+      "kit": "Hyalo",
+      "family": "keypad",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 123829,
+        "gzip": 41341,
+        "brotli": 37196
+      },
+      "total": {
+        "raw": 123829,
+        "gzip": 41341,
+        "brotli": 37196
+      },
+      "addedInitial": {
+        "raw": 32297,
+        "gzip": 10899,
+        "brotli": 9677
+      },
+      "addedTotal": {
+        "raw": 32297,
+        "gzip": 10899,
+        "brotli": 9677
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 123829,
+          "gzip": 41341,
+          "brotli": 37196
+        }
+      ],
+      "contributions": {
+        "@angular/common": 378,
+        "@angular/core": 92744,
+        "rxjs": 8585,
+        "app": 372,
+        "@angular/cdk": 336,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 8279
+      }
+    },
+    {
+      "id": "hyalo-pull-refresh",
+      "kit": "Hyalo",
+      "family": "pull-refresh",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 173369,
+        "gzip": 56463,
+        "brotli": 48494
+      },
+      "total": {
+        "raw": 173369,
+        "gzip": 56463,
+        "brotli": 48494
+      },
+      "addedInitial": {
+        "raw": 81837,
+        "gzip": 26021,
+        "brotli": 20975
+      },
+      "addedTotal": {
+        "raw": 81837,
+        "gzip": 26021,
+        "brotli": 20975
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 173369,
+          "gzip": 56463,
+          "brotli": 48494
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 108937,
+        "rxjs": 20773,
+        "app": 341,
+        "@angular/cdk": 8005,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 19864,
+        "tslib": 1907
+      }
+    },
+    {
+      "id": "hyalo-swipe-actions",
+      "kit": "Hyalo",
+      "family": "swipe-actions",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 181842,
+        "gzip": 58878,
+        "brotli": 50697
+      },
+      "total": {
+        "raw": 181842,
+        "gzip": 58878,
+        "brotli": 50697
+      },
+      "addedInitial": {
+        "raw": 90310,
+        "gzip": 28436,
+        "brotli": 23178
+      },
+      "addedTotal": {
+        "raw": 90310,
+        "gzip": 28436,
+        "brotli": 23178
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 181842,
+          "gzip": 58878,
+          "brotli": 50697
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 114403,
+        "rxjs": 20773,
+        "app": 535,
+        "@angular/cdk": 8005,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 22679,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-swipe-deck",
+      "kit": "Hyalo",
+      "family": "swipe-deck",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 178229,
+        "gzip": 58113,
+        "brotli": 49993
+      },
+      "total": {
+        "raw": 178229,
+        "gzip": 58113,
+        "brotli": 49993
+      },
+      "addedInitial": {
+        "raw": 86697,
+        "gzip": 27671,
+        "brotli": 22474
+      },
+      "addedTotal": {
+        "raw": 86697,
+        "gzip": 27671,
+        "brotli": 22474
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 178229,
+          "gzip": 58113,
+          "brotli": 49993
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 111715,
+        "rxjs": 20773,
+        "app": 574,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 20426,
+        "tslib": 1907
+      }
+    },
+    {
+      "id": "hyalo-card-stack",
+      "kit": "Hyalo",
+      "family": "card-stack",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 179128,
+        "gzip": 58524,
+        "brotli": 50274
+      },
+      "total": {
+        "raw": 179128,
+        "gzip": 58524,
+        "brotli": 50274
+      },
+      "addedInitial": {
+        "raw": 87596,
+        "gzip": 28082,
+        "brotli": 22755
+      },
+      "addedTotal": {
+        "raw": 87596,
+        "gzip": 28082,
+        "brotli": 22755
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 179128,
+          "gzip": 58524,
+          "brotli": 50274
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 116273,
+        "rxjs": 20784,
+        "app": 572,
+        "@angular/cdk": 8005,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 16761,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-notification-card",
+      "kit": "Hyalo",
+      "family": "notification-card",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 156021,
+        "gzip": 50917,
+        "brotli": 43778
+      },
+      "total": {
+        "raw": 156021,
+        "gzip": 50917,
+        "brotli": 43778
+      },
+      "addedInitial": {
+        "raw": 64489,
+        "gzip": 20475,
+        "brotli": 16259
+      },
+      "addedTotal": {
+        "raw": 64489,
+        "gzip": 20475,
+        "brotli": 16259
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 156021,
+          "gzip": 50917,
+          "brotli": 43778
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 97933,
+        "rxjs": 20773,
+        "app": 402,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 13458,
+        "tslib": 1907
+      }
+    },
+    {
+      "id": "hyalo-notification-center",
+      "kit": "Hyalo",
+      "family": "notification-center",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 184500,
+        "gzip": 58997,
+        "brotli": 50743
+      },
+      "total": {
+        "raw": 184500,
+        "gzip": 58997,
+        "brotli": 50743
+      },
+      "addedInitial": {
+        "raw": 92968,
+        "gzip": 28555,
+        "brotli": 23224
+      },
+      "addedTotal": {
+        "raw": 92968,
+        "gzip": 28555,
+        "brotli": 23224
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 184500,
+          "gzip": 58997,
+          "brotli": 50743
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1643,
+        "@angular/core": 109774,
+        "rxjs": 20791,
+        "app": 424,
+        "@angular/cdk": 8008,
+        "@angular/platform-browser": 11895,
+        "@hyalo/angular": 28764,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-chat-bubble",
+      "kit": "Hyalo",
+      "family": "chat-bubble",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 161473,
+        "gzip": 52810,
+        "brotli": 45423
+      },
+      "total": {
+        "raw": 161473,
+        "gzip": 52810,
+        "brotli": 45423
+      },
+      "addedInitial": {
+        "raw": 69941,
+        "gzip": 22368,
+        "brotli": 17904
+      },
+      "addedTotal": {
+        "raw": 69941,
+        "gzip": 22368,
+        "brotli": 17904
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 161473,
+          "gzip": 52810,
+          "brotli": 45423
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 102725,
+        "rxjs": 20773,
+        "app": 385,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 14137,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-message-list",
+      "kit": "Hyalo",
+      "family": "message-list",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 184891,
+        "gzip": 59227,
+        "brotli": 50774
+      },
+      "total": {
+        "raw": 184891,
+        "gzip": 59227,
+        "brotli": 50774
+      },
+      "addedInitial": {
+        "raw": 93359,
+        "gzip": 28785,
+        "brotli": 23255
+      },
+      "addedTotal": {
+        "raw": 93359,
+        "gzip": 28785,
+        "brotli": 23255
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 184891,
+          "gzip": 59227,
+          "brotli": 50774
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 116588,
+        "rxjs": 20784,
+        "app": 430,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 22350,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-chat-composer",
+      "kit": "Hyalo",
+      "family": "chat-composer",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 161379,
+        "gzip": 52582,
+        "brotli": 45227
+      },
+      "total": {
+        "raw": 161379,
+        "gzip": 52582,
+        "brotli": 45227
+      },
+      "addedInitial": {
+        "raw": 69847,
+        "gzip": 22140,
+        "brotli": 17708
+      },
+      "addedTotal": {
+        "raw": 69847,
+        "gzip": 22140,
+        "brotli": 17708
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 161379,
+          "gzip": 52582,
+          "brotli": 45227
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 102129,
+        "rxjs": 20773,
+        "app": 347,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 14677,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-chat",
+      "kit": "Hyalo",
+      "family": "chat",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 191879,
+        "gzip": 60531,
+        "brotli": 51897
+      },
+      "total": {
+        "raw": 191879,
+        "gzip": 60531,
+        "brotli": 51897
+      },
+      "addedInitial": {
+        "raw": 100347,
+        "gzip": 30089,
+        "brotli": 24378
+      },
+      "addedTotal": {
+        "raw": 100347,
+        "gzip": 30089,
+        "brotli": 24378
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 191879,
+          "gzip": 60531,
+          "brotli": 51897
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1643,
+        "@angular/core": 117068,
+        "rxjs": 20791,
+        "app": 520,
+        "@angular/cdk": 8006,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 28760,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-meter",
+      "kit": "Hyalo",
+      "family": "meter",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 107874,
+        "gzip": 36086,
+        "brotli": 32499
+      },
+      "total": {
+        "raw": 107874,
+        "gzip": 36086,
+        "brotli": 32499
+      },
+      "addedInitial": {
+        "raw": 16342,
+        "gzip": 5644,
+        "brotli": 4980
+      },
+      "addedTotal": {
+        "raw": 16342,
+        "gzip": 5644,
+        "brotli": 4980
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 107874,
+          "gzip": 36086,
+          "brotli": 32499
+        }
+      ],
+      "contributions": {
+        "@angular/common": 378,
+        "@angular/core": 82888,
+        "rxjs": 8568,
+        "app": 336,
+        "@angular/platform-browser": 11887,
+        "@hyalo/angular": 2572
+      }
+    },
+    {
+      "id": "hyalo-meter-group",
+      "kit": "Hyalo",
+      "family": "meter-group",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 127561,
+        "gzip": 42523,
+        "brotli": 38216
+      },
+      "total": {
+        "raw": 127561,
+        "gzip": 42523,
+        "brotli": 38216
+      },
+      "addedInitial": {
+        "raw": 36029,
+        "gzip": 12081,
+        "brotli": 10697
+      },
+      "addedTotal": {
+        "raw": 36029,
+        "gzip": 12081,
+        "brotli": 10697
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 127561,
+          "gzip": 42523,
+          "brotli": 38216
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1614,
+        "@angular/core": 97383,
+        "rxjs": 8585,
+        "app": 471,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 6322
+      }
+    },
+    {
+      "id": "hyalo-segmented-progress",
+      "kit": "Hyalo",
+      "family": "segmented-progress",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 119262,
+        "gzip": 39560,
+        "brotli": 35643
+      },
+      "total": {
+        "raw": 119262,
+        "gzip": 39560,
+        "brotli": 35643
+      },
+      "addedInitial": {
+        "raw": 27730,
+        "gzip": 9118,
+        "brotli": 8124
+      },
+      "addedTotal": {
+        "raw": 27730,
+        "gzip": 9118,
+        "brotli": 8124
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 119262,
+          "gzip": 39560,
+          "brotli": 35643
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1614,
+        "@angular/core": 90890,
+        "rxjs": 8573,
+        "app": 489,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 4510
+      }
+    },
+    {
+      "id": "hyalo-dock",
+      "kit": "Hyalo",
+      "family": "dock",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 158219,
+        "gzip": 52261,
+        "brotli": 46667
+      },
+      "total": {
+        "raw": 158219,
+        "gzip": 52261,
+        "brotli": 46667
+      },
+      "addedInitial": {
+        "raw": 66687,
+        "gzip": 21819,
+        "brotli": 19148
+      },
+      "addedTotal": {
+        "raw": 66687,
+        "gzip": 21819,
+        "brotli": 19148
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 158219,
+          "gzip": 52261,
+          "brotli": 46667
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 114837,
+        "rxjs": 8585,
+        "app": 467,
+        "@angular/cdk": 754,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 18748
+      }
+    },
+    {
+      "id": "hyalo-status-island",
+      "kit": "Hyalo",
+      "family": "status-island",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 189547,
+        "gzip": 61409,
+        "brotli": 53204
+      },
+      "total": {
+        "raw": 228143,
+        "gzip": 71908,
+        "brotli": 62710
+      },
+      "addedInitial": {
+        "raw": 98015,
+        "gzip": 30967,
+        "brotli": 25685
+      },
+      "addedTotal": {
+        "raw": 136611,
+        "gzip": 41466,
+        "brotli": 35191
+      },
+      "files": [
+        {
+          "file": "chunk-QU2T7M7B.js",
+          "initial": true,
+          "raw": 140440,
+          "gzip": 46198,
+          "brotli": 39540
+        },
+        {
+          "file": "chunk-SKI6B2PV.js",
+          "initial": false,
+          "raw": 38596,
+          "gzip": 10499,
+          "brotli": 9506
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 49107,
+          "gzip": 15211,
+          "brotli": 13664
+        }
+      ],
+      "contributions": {
+        "@angular/common": 6958,
+        "@angular/core": 103743,
+        "rxjs": 23490,
+        "@angular/cdk": 53430,
+        "tslib": 1907,
+        "@hyalo/angular": 22647,
+        "app": 405,
+        "@angular/platform-browser": 11888
+      }
+    },
+    {
+      "id": "hyalo-wallet-block",
+      "kit": "Hyalo",
+      "family": "wallet-block",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 184674,
+        "gzip": 60025,
+        "brotli": 51574
+      },
+      "total": {
+        "raw": 184674,
+        "gzip": 60025,
+        "brotli": 51574
+      },
+      "addedInitial": {
+        "raw": 93142,
+        "gzip": 29583,
+        "brotli": 24055
+      },
+      "addedTotal": {
+        "raw": 93142,
+        "gzip": 29583,
+        "brotli": 24055
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 184674,
+          "gzip": 60025,
+          "brotli": 51574
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1642,
+        "@angular/core": 116999,
+        "rxjs": 20791,
+        "app": 490,
+        "@angular/cdk": 8005,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 21656,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-transfer-block",
+      "kit": "Hyalo",
+      "family": "transfer-block",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 169609,
+        "gzip": 55456,
+        "brotli": 49504
+      },
+      "total": {
+        "raw": 169609,
+        "gzip": 55456,
+        "brotli": 49504
+      },
+      "addedInitial": {
+        "raw": 78077,
+        "gzip": 25014,
+        "brotli": 21985
+      },
+      "addedTotal": {
+        "raw": 78077,
+        "gzip": 25014,
+        "brotli": 21985
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 169609,
+          "gzip": 55456,
+          "brotli": 49504
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 115273,
+        "rxjs": 8603,
+        "app": 327,
+        "@angular/cdk": 336,
+        "@angular/platform-browser": 11892,
+        "@hyalo/angular": 31526
+      }
+    },
+    {
+      "id": "hyalo-order-tracker-block",
+      "kit": "Hyalo",
+      "family": "order-tracker-block",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 257696,
+        "gzip": 79482,
+        "brotli": 68337
+      },
+      "total": {
+        "raw": 257696,
+        "gzip": 79482,
+        "brotli": 68337
+      },
+      "addedInitial": {
+        "raw": 166164,
+        "gzip": 49040,
+        "brotli": 40818
+      },
+      "addedTotal": {
+        "raw": 166164,
+        "gzip": 49040,
+        "brotli": 40818
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 257696,
+          "gzip": 79482,
+          "brotli": 68337
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 118684,
+        "rxjs": 24652,
+        "app": 492,
+        "@angular/cdk": 53975,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 35452,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "material-bottom-sheet",
+      "kit": "Material",
+      "family": "bottom-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 203910,
+        "gzip": 61986,
+        "brotli": 55512
+      },
+      "total": {
+        "raw": 203910,
+        "gzip": 61986,
+        "brotli": 55512
+      },
+      "addedInitial": {
+        "raw": 112378,
+        "gzip": 31544,
+        "brotli": 27993
+      },
+      "addedTotal": {
+        "raw": 112378,
+        "gzip": 31544,
+        "brotli": 27993
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 203910,
+          "gzip": 61986,
+          "brotli": 55512
+        }
+      ],
+      "contributions": {
+        "@angular/common": 5721,
+        "@angular/core": 100088,
+        "rxjs": 17134,
+        "tslib": 1905,
+        "@angular/cdk": 56868,
+        "@angular/material": 8358,
+        "app": 610,
+        "@angular/platform-browser": 11890
+      }
+    },
+    {
+      "id": "material-tab-bar",
+      "kit": "Material",
+      "family": "tab-bar",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 200891,
+        "gzip": 61222,
+        "brotli": 54932
+      },
+      "total": {
+        "raw": 200891,
+        "gzip": 61222,
+        "brotli": 54932
+      },
+      "addedInitial": {
+        "raw": 109359,
+        "gzip": 30780,
+        "brotli": 27413
+      },
+      "addedTotal": {
+        "raw": 109359,
+        "gzip": 30780,
+        "brotli": 27413
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 200891,
+          "gzip": 61222,
+          "brotli": 54932
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 105399,
+        "rxjs": 18529,
+        "tslib": 1905,
+        "@angular/cdk": 21990,
+        "@angular/material": 38948,
+        "app": 578,
+        "@angular/platform-browser": 11890
+      }
+    },
+    {
+      "id": "material-fab",
+      "kit": "Material",
+      "family": "fab",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 155445,
+        "gzip": 48289,
+        "brotli": 43365
+      },
+      "total": {
+        "raw": 155445,
+        "gzip": 48289,
+        "brotli": 43365
+      },
+      "addedInitial": {
+        "raw": 63913,
+        "gzip": 17847,
+        "brotli": 15846
+      },
+      "addedTotal": {
+        "raw": 63913,
+        "gzip": 17847,
+        "brotli": 15846
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 155445,
+          "gzip": 48289,
+          "brotli": 43365
+        }
+      ],
+      "contributions": {
+        "@angular/common": 407,
+        "@angular/core": 89826,
+        "rxjs": 12270,
+        "tslib": 1905,
+        "@angular/cdk": 9431,
+        "@angular/material": 28174,
+        "app": 340,
+        "@angular/platform-browser": 11890
+      }
+    },
+    {
+      "id": "primeng-speed-dial",
+      "kit": "PrimeNG",
+      "family": "speed-dial",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 426972,
+        "gzip": 124664,
+        "brotli": 108343
+      },
+      "total": {
+        "raw": 426972,
+        "gzip": 124664,
+        "brotli": 108343
+      },
+      "addedInitial": {
+        "raw": 335440,
+        "gzip": 94222,
+        "brotli": 80824
+      },
+      "addedTotal": {
+        "raw": 335440,
+        "gzip": 94222,
+        "brotli": 80824
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 426972,
+          "gzip": 124664,
+          "brotli": 108343
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9496,
+        "@angular/core": 138723,
+        "@angular/platform-browser": 13113,
+        "@angular/router": 78033,
+        "rxjs": 18922,
+        "tslib": 1905,
+        "@primeicons/angular": 3443,
+        "@primeicons/core": 650,
+        "@primeuix/styled": 23287,
+        "@primeuix/styles": 34366,
+        "@primeuix/utils": 16098,
+        "primeng": 86948,
+        "app": 412
+      }
+    },
+    {
+      "id": "primeng-dock",
+      "kit": "PrimeNG",
+      "family": "dock",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 393148,
+        "gzip": 118653,
+        "brotli": 103507
+      },
+      "total": {
+        "raw": 393148,
+        "gzip": 118653,
+        "brotli": 103507
+      },
+      "addedInitial": {
+        "raw": 301616,
+        "gzip": 88211,
+        "brotli": 75988
+      },
+      "addedTotal": {
+        "raw": 301616,
+        "gzip": 88211,
+        "brotli": 75988
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 393148,
+          "gzip": 118653,
+          "brotli": 103507
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9495,
+        "@angular/core": 132976,
+        "@angular/platform-browser": 13107,
+        "@angular/router": 85669,
+        "rxjs": 15755,
+        "tslib": 1905,
+        "@primeuix/styled": 23293,
+        "@primeuix/styles": 15863,
+        "@primeuix/utils": 16053,
+        "primeng": 77019,
+        "app": 437
+      }
+    },
+    {
+      "id": "primeng-meter-group",
+      "kit": "PrimeNG",
+      "family": "meter-group",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 231865,
+        "gzip": 75181,
+        "brotli": 66539
+      },
+      "total": {
+        "raw": 231865,
+        "gzip": 75181,
+        "brotli": 66539
+      },
+      "addedInitial": {
+        "raw": 140333,
+        "gzip": 44739,
+        "brotli": 39020
+      },
+      "addedTotal": {
+        "raw": 140333,
+        "gzip": 44739,
+        "brotli": 39020
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 231865,
+          "gzip": 75181,
+          "brotli": 66539
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1790,
+        "@angular/core": 122375,
+        "@angular/platform-browser": 12857,
+        "rxjs": 8603,
+        "@primeuix/styled": 23272,
+        "@primeuix/styles": 11539,
+        "@primeuix/utils": 11358,
+        "primeng": 38239,
+        "app": 434
+      }
+    },
+    {
+      "id": "primeng-aura-theme",
+      "kit": "PrimeNG",
+      "family": "shared-theme",
+      "note": "shared setup only",
+      "status": "built",
+      "initial": {
+        "raw": 286784,
+        "gzip": 74437,
+        "brotli": 64139
+      },
+      "total": {
+        "raw": 286784,
+        "gzip": 74437,
+        "brotli": 64139
+      },
+      "addedInitial": {
+        "raw": 195252,
+        "gzip": 43995,
+        "brotli": 36620
+      },
+      "addedTotal": {
+        "raw": 195252,
+        "gzip": 43995,
+        "brotli": 36620
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 286784,
+          "gzip": 74437,
+          "brotli": 64139
+        }
+      ],
+      "contributions": {
+        "@angular/common": 419,
+        "@angular/core": 73799,
+        "rxjs": 8603,
+        "@primeui/license-manager": 17416,
+        "@primeuix/styled": 22890,
+        "@primeuix/styles": 8905,
+        "@primeuix/themes": 116354,
+        "@primeuix/utils": 7267,
+        "primeng": 17691,
+        "app": 258,
+        "@angular/platform-browser": 11892
+      }
+    },
+    {
+      "id": "ngzorro-fab",
+      "kit": "NG-ZORRO",
+      "family": "fab",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 298508,
+        "gzip": 97201,
+        "brotli": 84147
+      },
+      "total": {
+        "raw": 298508,
+        "gzip": 97201,
+        "brotli": 84147
+      },
+      "addedInitial": {
+        "raw": 206976,
+        "gzip": 66759,
+        "brotli": 56628
+      },
+      "addedTotal": {
+        "raw": 206976,
+        "gzip": 66759,
+        "brotli": 56628
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 298508,
+          "gzip": 97201,
+          "brotli": 84147
+        }
+      ],
+      "contributions": {
+        "@angular/common": 21629,
+        "@angular/core": 137965,
+        "@angular/platform-browser": 12855,
+        "rxjs": 19960,
+        "tslib": 2899,
+        "@angular/cdk": 1896,
+        "@ant-design/colors": 4470,
+        "@ant-design/fast-color": 5611,
+        "@ant-design/icons-angular": 27028,
+        "@babel/runtime": 728,
+        "@ctrl/tinycolor": 14277,
+        "ng-zorro-antd": 47350,
+        "app": 322
+      }
+    },
+    {
+      "id": "ngzorro-notification-service",
+      "kit": "NG-ZORRO",
+      "family": "notification-card",
+      "note": "transient notification service, not persistent inbox",
+      "status": "built",
+      "initial": {
+        "raw": 289708,
+        "gzip": 92830,
+        "brotli": 80722
+      },
+      "total": {
+        "raw": 289708,
+        "gzip": 92830,
+        "brotli": 80722
+      },
+      "addedInitial": {
+        "raw": 198176,
+        "gzip": 62388,
+        "brotli": 53203
+      },
+      "addedTotal": {
+        "raw": 198176,
+        "gzip": 62388,
+        "brotli": 53203
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 289708,
+          "gzip": 92830,
+          "brotli": 80722
+        }
+      ],
+      "contributions": {
+        "@angular/common": 25533,
+        "@angular/core": 125088,
+        "@angular/platform-browser": 12848,
+        "rxjs": 19019,
+        "tslib": 1905,
+        "@angular/cdk": 24590,
+        "@ant-design/colors": 4470,
+        "@ant-design/fast-color": 5611,
+        "@ant-design/icons-angular": 27026,
+        "@babel/runtime": 728,
+        "@ctrl/tinycolor": 14277,
+        "ng-zorro-antd": 26671,
+        "app": 378
+      }
+    },
+    {
+      "id": "ionic-setup",
+      "kit": "Ionic",
+      "family": "shared-setup",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 353564,
+        "gzip": 108892,
+        "brotli": 93588
+      },
+      "total": {
+        "raw": 353777,
+        "gzip": 109104,
+        "brotli": 93799
+      },
+      "addedInitial": {
+        "raw": 262032,
+        "gzip": 78450,
+        "brotli": 66069
+      },
+      "addedTotal": {
+        "raw": 262245,
+        "gzip": 78662,
+        "brotli": 66280
+      },
+      "files": [
+        {
+          "file": "chunk-2LFQ7WIL.js",
+          "initial": true,
+          "raw": 45716,
+          "gzip": 17590,
+          "brotli": 15890
+        },
+        {
+          "file": "chunk-2TDJQYWD.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 98
+        },
+        {
+          "file": "chunk-IULNGGGG.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 113
+        },
+        {
+          "file": "chunk-RXFMWPBF.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 564,
+          "brotli": 476
+        },
+        {
+          "file": "chunk-TX4GX547.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 2999,
+          "brotli": 2663
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 296727,
+          "gzip": 87739,
+          "brotli": 74559
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 143892,
+        "@angular/common": 5695,
+        "@angular/core": 83617,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 26433,
+        "tslib": 3810,
+        "app": 239,
+        "@ionic/angular": 4716
+      }
+    },
+    {
+      "id": "ionic-bottom-sheet",
+      "kit": "Ionic",
+      "family": "bottom-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 373534,
+        "gzip": 115351,
+        "brotli": 98877
+      },
+      "total": {
+        "raw": 373747,
+        "gzip": 115563,
+        "brotli": 99088
+      },
+      "addedInitial": {
+        "raw": 282002,
+        "gzip": 84909,
+        "brotli": 71358
+      },
+      "addedTotal": {
+        "raw": 282215,
+        "gzip": 85121,
+        "brotli": 71569
+      },
+      "files": [
+        {
+          "file": "chunk-2LFQ7WIL.js",
+          "initial": true,
+          "raw": 45716,
+          "gzip": 17590,
+          "brotli": 15890
+        },
+        {
+          "file": "chunk-2TDJQYWD.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 98
+        },
+        {
+          "file": "chunk-IULNGGGG.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 113
+        },
+        {
+          "file": "chunk-RXFMWPBF.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 564,
+          "brotli": 476
+        },
+        {
+          "file": "chunk-TX4GX547.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 2999,
+          "brotli": 2663
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 316697,
+          "gzip": 94198,
+          "brotli": 79848
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 143892,
+        "@angular/common": 8331,
+        "@angular/core": 96217,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 27600,
+        "tslib": 4136,
+        "app": 515,
+        "@ionic/angular": 7630
+      }
+    },
+    {
+      "id": "ionic-action-sheet",
+      "kit": "Ionic",
+      "family": "action-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 407019,
+        "gzip": 121242,
+        "brotli": 103618
+      },
+      "total": {
+        "raw": 407232,
+        "gzip": 121454,
+        "brotli": 103816
+      },
+      "addedInitial": {
+        "raw": 315487,
+        "gzip": 90800,
+        "brotli": 76099
+      },
+      "addedTotal": {
+        "raw": 315700,
+        "gzip": 91012,
+        "brotli": 76297
+      },
+      "files": [
+        {
+          "file": "chunk-5YTRU2YI.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 565,
+          "brotli": 484
+        },
+        {
+          "file": "chunk-GSKF5XCC.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 90
+        },
+        {
+          "file": "chunk-I3IHQVQN.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 3000,
+          "brotli": 2656
+        },
+        {
+          "file": "chunk-U3WTGABY.js",
+          "initial": true,
+          "raw": 45815,
+          "gzip": 17637,
+          "brotli": 15907
+        },
+        {
+          "file": "chunk-YYFHDY6X.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 108
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 350083,
+          "gzip": 100040,
+          "brotli": 84571
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 190572,
+        "@angular/common": 5695,
+        "@angular/core": 87520,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 26433,
+        "tslib": 4136,
+        "app": 480,
+        "@ionic/angular": 6680
+      }
+    },
+    {
+      "id": "ionic-tab-bar",
+      "kit": "Ionic",
+      "family": "tab-bar",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 383540,
+        "gzip": 115358,
+        "brotli": 99048
+      },
+      "total": {
+        "raw": 383753,
+        "gzip": 115570,
+        "brotli": 99243
+      },
+      "addedInitial": {
+        "raw": 292008,
+        "gzip": 84916,
+        "brotli": 71529
+      },
+      "addedTotal": {
+        "raw": 292221,
+        "gzip": 85128,
+        "brotli": 71724
+      },
+      "files": [
+        {
+          "file": "chunk-FVQEM7R2.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 96
+        },
+        {
+          "file": "chunk-TNNVJDYK.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 99
+        },
+        {
+          "file": "chunk-UALLOTE6.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 3000,
+          "brotli": 2662
+        },
+        {
+          "file": "chunk-VBXSJNJI.js",
+          "initial": true,
+          "raw": 45839,
+          "gzip": 17642,
+          "brotli": 15909
+        },
+        {
+          "file": "chunk-ZIIQRK6X.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 565,
+          "brotli": 483
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 326580,
+          "gzip": 94151,
+          "brotli": 79994
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 168972,
+        "@angular/common": 5695,
+        "@angular/core": 86092,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 26433,
+        "tslib": 4136,
+        "app": 449,
+        "@ionic/angular": 6338
+      }
+    },
+    {
+      "id": "ionic-fab",
+      "kit": "Ionic",
+      "family": "fab",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 392734,
+        "gzip": 118355,
+        "brotli": 101585
+      },
+      "total": {
+        "raw": 392947,
+        "gzip": 118567,
+        "brotli": 101773
+      },
+      "addedInitial": {
+        "raw": 301202,
+        "gzip": 87913,
+        "brotli": 74066
+      },
+      "addedTotal": {
+        "raw": 301415,
+        "gzip": 88125,
+        "brotli": 74254
+      },
+      "files": [
+        {
+          "file": "chunk-BXPS6YH2.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 90
+        },
+        {
+          "file": "chunk-JPNFDMB3.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 565,
+          "brotli": 476
+        },
+        {
+          "file": "chunk-RHY3FNEZ.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 3000,
+          "brotli": 2663
+        },
+        {
+          "file": "chunk-U6QEDTX5.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 98
+        },
+        {
+          "file": "chunk-YAXO2XJK.js",
+          "initial": true,
+          "raw": 46844,
+          "gzip": 18024,
+          "brotli": 16262
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 334769,
+          "gzip": 96766,
+          "brotli": 82184
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 177911,
+        "@angular/common": 5695,
+        "@angular/core": 86066,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 26433,
+        "tslib": 4136,
+        "app": 354,
+        "@ionic/angular": 6669
+      }
+    },
+    {
+      "id": "ionic-speed-dial",
+      "kit": "Ionic",
+      "family": "speed-dial",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 396199,
+        "gzip": 118951,
+        "brotli": 102097
+      },
+      "total": {
+        "raw": 396412,
+        "gzip": 119163,
+        "brotli": 102285
+      },
+      "addedInitial": {
+        "raw": 304667,
+        "gzip": 88509,
+        "brotli": 74578
+      },
+      "addedTotal": {
+        "raw": 304880,
+        "gzip": 88721,
+        "brotli": 74766
+      },
+      "files": [
+        {
+          "file": "chunk-BXPS6YH2.js",
+          "initial": false,
+          "raw": 99,
+          "gzip": 99,
+          "brotli": 90
+        },
+        {
+          "file": "chunk-JPNFDMB3.js",
+          "initial": true,
+          "raw": 994,
+          "gzip": 565,
+          "brotli": 476
+        },
+        {
+          "file": "chunk-RHY3FNEZ.js",
+          "initial": true,
+          "raw": 10127,
+          "gzip": 3000,
+          "brotli": 2663
+        },
+        {
+          "file": "chunk-U6QEDTX5.js",
+          "initial": false,
+          "raw": 114,
+          "gzip": 113,
+          "brotli": 98
+        },
+        {
+          "file": "chunk-YAXO2XJK.js",
+          "initial": true,
+          "raw": 46844,
+          "gzip": 18024,
+          "brotli": 16262
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 338234,
+          "gzip": 97362,
+          "brotli": 82696
+        }
+      ],
+      "contributions": {
+        "@ionic/core": 180741,
+        "@angular/common": 5695,
+        "@angular/core": 86066,
+        "@angular/platform-browser": 12154,
+        "@angular/router": 69136,
+        "rxjs": 26433,
+        "tslib": 4136,
+        "app": 476,
+        "@ionic/angular": 7142
+      }
+    },
+    {
+      "id": "ionic-pull-refresh",
+      "kit": "Ionic",
+      "family": "pull-refresh",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 405307,
+        "gzip": 119857,
+        "brotli": 101890
+      },
+      "total": {
+        "raw": 405642,
+        "gzip": 120166,
+        "brotli": 102187
+      },
+      "addedInitial": {
+        "raw": 313775,
+        "gzip": 89415,
+        "brotli": 74371
+      },
+      "addedTotal": {
+        "raw": 314110,
+        "gzip": 89724,
+        "brotli": 74668
+      },
+      "files": [
+        {
+          "file": "chunk-3SB7AP4Q.js",
+          "initial": false,
+          "raw": 127,
+          "gzip": 109,
+          "brotli": 109
+        },
+        {
+          "file": "chunk-DN4KR5ST.js",
+          "initial": false,
+          "raw": 142,
+          "gzip": 123,
+          "brotli": 118
+        },
+        {
+          "file": "chunk-Na7qdU2G.js",
+          "initial": false,
+          "raw": 66,
+          "gzip": 77,
+          "brotli": 70
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 405307,
+          "gzip": 119857,
+          "brotli": 101890
+        }
+      ],
+      "contributions": {
+        "@angular/common": 7070,
+        "@angular/core": 106865,
+        "@angular/platform-browser": 15090,
+        "@angular/router": 85846,
+        "rxjs": 32762,
+        "tslib": 5135,
+        "app": 501,
+        "@ionic/angular": 9477,
+        "@ionic/core": 238402
+      }
+    },
+    {
+      "id": "ionic-swipe-actions",
+      "kit": "Ionic",
+      "family": "swipe-actions",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 411631,
+        "gzip": 118773,
+        "brotli": 100803
+      },
+      "total": {
+        "raw": 411966,
+        "gzip": 119082,
+        "brotli": 101087
+      },
+      "addedInitial": {
+        "raw": 320099,
+        "gzip": 88331,
+        "brotli": 73284
+      },
+      "addedTotal": {
+        "raw": 320434,
+        "gzip": 88640,
+        "brotli": 73568
+      },
+      "files": [
+        {
+          "file": "chunk-5S45YT7X.js",
+          "initial": false,
+          "raw": 127,
+          "gzip": 109,
+          "brotli": 103
+        },
+        {
+          "file": "chunk-JQA5UZIY.js",
+          "initial": false,
+          "raw": 142,
+          "gzip": 123,
+          "brotli": 111
+        },
+        {
+          "file": "chunk-Na7qdU2G.js",
+          "initial": false,
+          "raw": 66,
+          "gzip": 77,
+          "brotli": 70
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 411631,
+          "gzip": 118773,
+          "brotli": 100803
+        }
+      ],
+      "contributions": {
+        "@angular/common": 7002,
+        "@angular/core": 105847,
+        "@angular/platform-browser": 14947,
+        "@angular/router": 85028,
+        "rxjs": 32450,
+        "tslib": 5085,
+        "app": 630,
+        "@ionic/angular": 9434,
+        "@ionic/core": 244612
+      }
+    },
+    {
+      "id": "taiga-setup",
+      "kit": "Taiga",
+      "family": "shared-setup",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 201388,
+        "gzip": 67486,
+        "brotli": 57076
+      },
+      "total": {
+        "raw": 201388,
+        "gzip": 67486,
+        "brotli": 57076
+      },
+      "addedInitial": {
+        "raw": 109856,
+        "gzip": 37044,
+        "brotli": 29557
+      },
+      "addedTotal": {
+        "raw": 109856,
+        "gzip": 37044,
+        "brotli": 29557
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 201388,
+          "gzip": 67486,
+          "brotli": 57076
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 109175,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 278,
+        "@angular/cdk": 6092,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/cdk": 5745,
+        "@taiga-ui/core": 13757,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7752,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-bottom-sheet",
+      "kit": "Taiga",
+      "family": "bottom-sheet",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 348000,
+        "gzip": 107945,
+        "brotli": 90601
+      },
+      "total": {
+        "raw": 348000,
+        "gzip": 107945,
+        "brotli": 90601
+      },
+      "addedInitial": {
+        "raw": 256468,
+        "gzip": 77503,
+        "brotli": 63082
+      },
+      "addedTotal": {
+        "raw": 256468,
+        "gzip": 77503,
+        "brotli": 63082
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 348000,
+          "gzip": 107945,
+          "brotli": 90601
+        }
+      ],
+      "contributions": {
+        "@angular/common": 7119,
+        "@angular/core": 129409,
+        "@angular/platform-browser": 13644,
+        "@angular/router": 69132,
+        "rxjs": 37474,
+        "tslib": 3810,
+        "app": 565,
+        "@angular/cdk": 6088,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/resize-observer": 781,
+        "@ng-web-apis/screen-orientation": 468,
+        "@taiga-ui/addon-mobile": 9877,
+        "@taiga-ui/cdk": 12276,
+        "@taiga-ui/core": 36225,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/polymorpheus": 2344
+      }
+    },
+    {
+      "id": "taiga-bottom-sheet-container",
+      "kit": "Taiga",
+      "family": "bottom-sheet-container",
+      "note": "scroll-based sheet container, not a modal",
+      "status": "built",
+      "initial": {
+        "raw": 211963,
+        "gzip": 70881,
+        "brotli": 59971
+      },
+      "total": {
+        "raw": 211963,
+        "gzip": 70881,
+        "brotli": 59971
+      },
+      "addedInitial": {
+        "raw": 120431,
+        "gzip": 40439,
+        "brotli": 32452
+      },
+      "addedTotal": {
+        "raw": 120431,
+        "gzip": 40439,
+        "brotli": 32452
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 211963,
+          "gzip": 70881,
+          "brotli": 59971
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 115664,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 419,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/addon-mobile": 3915,
+        "@taiga-ui/cdk": 5745,
+        "@taiga-ui/core": 13758,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/layout": 27,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-tab-bar",
+      "kit": "Taiga",
+      "family": "tab-bar",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 224341,
+        "gzip": 74043,
+        "brotli": 62748
+      },
+      "total": {
+        "raw": 224341,
+        "gzip": 74043,
+        "brotli": 62748
+      },
+      "addedInitial": {
+        "raw": 132809,
+        "gzip": 43601,
+        "brotli": 35229
+      },
+      "addedTotal": {
+        "raw": 132809,
+        "gzip": 43601,
+        "brotli": 35229
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 224341,
+          "gzip": 74043,
+          "brotli": 62748
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 119677,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 462,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/addon-mobile": 5790,
+        "@taiga-ui/cdk": 5930,
+        "@taiga-ui/core": 20048,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7752,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-keypad",
+      "kit": "Taiga",
+      "family": "keypad",
+      "note": "layout with application-owned editing, not Hyalo numeric form control",
+      "status": "built",
+      "initial": {
+        "raw": 209590,
+        "gzip": 70133,
+        "brotli": 59338
+      },
+      "total": {
+        "raw": 209590,
+        "gzip": 70133,
+        "brotli": 59338
+      },
+      "addedInitial": {
+        "raw": 118058,
+        "gzip": 39691,
+        "brotli": 31819
+      },
+      "addedTotal": {
+        "raw": 118058,
+        "gzip": 39691,
+        "brotli": 31819
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 209590,
+          "gzip": 70133,
+          "brotli": 59338
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 114728,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 684,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/addon-mobile": 2240,
+        "@taiga-ui/cdk": 5745,
+        "@taiga-ui/core": 13758,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-pull-refresh",
+      "kit": "Taiga",
+      "family": "pull-refresh",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 226702,
+        "gzip": 75366,
+        "brotli": 63927
+      },
+      "total": {
+        "raw": 226702,
+        "gzip": 75366,
+        "brotli": 63927
+      },
+      "addedInitial": {
+        "raw": 135170,
+        "gzip": 44924,
+        "brotli": 36408
+      },
+      "addedTotal": {
+        "raw": 135170,
+        "gzip": 44924,
+        "brotli": 36408
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 226702,
+          "gzip": 75366,
+          "brotli": 63927
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 119591,
+        "rxjs": 30774,
+        "tslib": 3810,
+        "app": 363,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2450,
+        "@ng-web-apis/screen-orientation": 468,
+        "@taiga-ui/addon-mobile": 7067,
+        "@taiga-ui/cdk": 5744,
+        "@taiga-ui/core": 17857,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/polymorpheus": 2344
+      }
+    },
+    {
+      "id": "taiga-swipe-actions",
+      "kit": "Taiga",
+      "family": "swipe-actions",
+      "note": "single action rail",
+      "status": "built",
+      "initial": {
+        "raw": 207200,
+        "gzip": 68631,
+        "brotli": 58198
+      },
+      "total": {
+        "raw": 207200,
+        "gzip": 68631,
+        "brotli": 58198
+      },
+      "addedInitial": {
+        "raw": 115668,
+        "gzip": 38189,
+        "brotli": 30679
+      },
+      "addedTotal": {
+        "raw": 115668,
+        "gzip": 38189,
+        "brotli": 30679
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 207200,
+          "gzip": 68631,
+          "brotli": 58198
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 110288,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 422,
+        "@angular/cdk": 6092,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/addon-mobile": 4555,
+        "@taiga-ui/cdk": 5745,
+        "@taiga-ui/core": 13757,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7752,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-notification-card",
+      "kit": "Taiga",
+      "family": "notification-card",
+      "note": "direct",
+      "status": "built",
+      "initial": {
+        "raw": 238343,
+        "gzip": 76723,
+        "brotli": 65222
+      },
+      "total": {
+        "raw": 238343,
+        "gzip": 76723,
+        "brotli": 65222
+      },
+      "addedInitial": {
+        "raw": 146811,
+        "gzip": 46281,
+        "brotli": 37703
+      },
+      "addedTotal": {
+        "raw": 146811,
+        "gzip": 46281,
+        "brotli": 37703
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 238343,
+          "gzip": 76723,
+          "brotli": 65222
+        }
+      ],
+      "contributions": {
+        "@angular/common": 11345,
+        "@angular/core": 113930,
+        "rxjs": 29570,
+        "tslib": 3810,
+        "app": 351,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/cdk": 6260,
+        "@taiga-ui/core": 32059,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/kit": 3756,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-meter-group",
+      "kit": "Taiga",
+      "family": "meter-group",
+      "note": "colored progress bar, not independently allocated labeled meter values",
+      "status": "built",
+      "initial": {
+        "raw": 206527,
+        "gzip": 68720,
+        "brotli": 58286
+      },
+      "total": {
+        "raw": 206527,
+        "gzip": 68720,
+        "brotli": 58286
+      },
+      "addedInitial": {
+        "raw": 114995,
+        "gzip": 38278,
+        "brotli": 30767
+      },
+      "addedTotal": {
+        "raw": 114995,
+        "gzip": 38278,
+        "brotli": 30767
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 206527,
+          "gzip": 68720,
+          "brotli": 58286
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 109914,
+        "rxjs": 29556,
+        "tslib": 3810,
+        "app": 508,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/resize-observer": 415,
+        "@ng-web-apis/screen-orientation": 468,
+        "@taiga-ui/cdk": 5744,
+        "@taiga-ui/core": 13753,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/kit": 3762,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "taiga-segmented-progress",
+      "kit": "Taiga",
+      "family": "segmented-progress",
+      "note": "numeric segmented progress, no step labels or per-step state",
+      "status": "built",
+      "initial": {
+        "raw": 207683,
+        "gzip": 68821,
+        "brotli": 58343
+      },
+      "total": {
+        "raw": 207683,
+        "gzip": 68821,
+        "brotli": 58343
+      },
+      "addedInitial": {
+        "raw": 116151,
+        "gzip": 38379,
+        "brotli": 30824
+      },
+      "addedTotal": {
+        "raw": 116151,
+        "gzip": 38379,
+        "brotli": 30824
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 207683,
+          "gzip": 68821,
+          "brotli": 58343
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1804,
+        "@angular/core": 110015,
+        "rxjs": 29559,
+        "tslib": 3810,
+        "app": 438,
+        "@angular/cdk": 6093,
+        "@angular/platform-browser": 11890,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2157,
+        "@ng-web-apis/screen-orientation": 469,
+        "@taiga-ui/cdk": 5930,
+        "@taiga-ui/core": 13758,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/kit": 5107,
+        "@taiga-ui/polymorpheus": 206
+      }
+    },
+    {
+      "id": "nebular-setup",
+      "kit": "Nebular",
+      "family": "shared-setup",
+      "note": "OFF-PEER Angular 21 package on Angular 22; build-only reference",
+      "status": "blocked",
+      "error": "> Building...\r\n√ Building...\r\nApplication bundle generation failed. [0.846 seconds] - 2026-11-17T11:59:07.186Z\n\n\nX [ERROR] No matching export in \"node_modules/@angular/cdk/fesm2022/collections.mjs\" for import \"_VIEW_REPEATER_STRATEGY\"\n\n    node_modules/@nebular/theme/fesm2022/nebular-theme.mjs:22:9:\n      22 │ import { _VIEW_REPEATER_STRATEGY, _DisposeViewRepeaterStrategy } f...\n         ╵          ~~~~~~~~~~~~~~~~~~~~~~~\n\n\n"
+    },
+    {
+      "id": "nebular-chat-bubble",
+      "kit": "Nebular",
+      "family": "chat-bubble",
+      "note": "OFF-PEER Angular 21 package on Angular 22; build-only reference",
+      "status": "blocked",
+      "error": "> Building...\r\n√ Building...\r\nApplication bundle generation failed. [0.850 seconds] - 2026-11-17T11:59:08.628Z\n\n\nX [ERROR] No matching export in \"node_modules/@angular/cdk/fesm2022/collections.mjs\" for import \"_VIEW_REPEATER_STRATEGY\"\n\n    node_modules/@nebular/theme/fesm2022/nebular-theme.mjs:22:9:\n      22 │ import { _VIEW_REPEATER_STRATEGY, _DisposeViewRepeaterStrategy } f...\n         ╵          ~~~~~~~~~~~~~~~~~~~~~~~\n\n\n"
+    },
+    {
+      "id": "nebular-chat-composer",
+      "kit": "Nebular",
+      "family": "chat-composer",
+      "note": "OFF-PEER Angular 21 package on Angular 22; build-only reference",
+      "status": "blocked",
+      "error": "> Building...\r\n√ Building...\r\nApplication bundle generation failed. [0.852 seconds] - 2026-11-17T11:59:10.079Z\n\n\nX [ERROR] No matching export in \"node_modules/@angular/cdk/fesm2022/collections.mjs\" for import \"_VIEW_REPEATER_STRATEGY\"\n\n    node_modules/@nebular/theme/fesm2022/nebular-theme.mjs:22:9:\n      22 │ import { _VIEW_REPEATER_STRATEGY, _DisposeViewRepeaterStrategy } f...\n         ╵          ~~~~~~~~~~~~~~~~~~~~~~~\n\n\n"
+    },
+    {
+      "id": "nebular-chat",
+      "kit": "Nebular",
+      "family": "chat",
+      "note": "OFF-PEER Angular 21 package on Angular 22; build-only reference",
+      "status": "blocked",
+      "error": "> Building...\r\n√ Building...\r\nApplication bundle generation failed. [0.839 seconds] - 2026-11-17T11:59:11.508Z\n\n\nX [ERROR] No matching export in \"node_modules/@angular/cdk/fesm2022/collections.mjs\" for import \"_VIEW_REPEATER_STRATEGY\"\n\n    node_modules/@nebular/theme/fesm2022/nebular-theme.mjs:22:9:\n      22 │ import { _VIEW_REPEATER_STRATEGY, _DisposeViewRepeaterStrategy } f...\n         ╵          ~~~~~~~~~~~~~~~~~~~~~~~\n\n\n"
+    },
+    {
+      "id": "hyalo-phase5-all",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": [
+        "hyalo-bottom-sheet",
+        "hyalo-action-sheet",
+        "hyalo-tab-bar",
+        "hyalo-speed-dial",
+        "hyalo-slide-confirm",
+        "hyalo-keypad",
+        "hyalo-pull-refresh",
+        "hyalo-swipe-actions",
+        "hyalo-swipe-deck",
+        "hyalo-card-stack",
+        "hyalo-notification-center",
+        "hyalo-chat",
+        "hyalo-meter-group",
+        "hyalo-segmented-progress",
+        "hyalo-dock",
+        "hyalo-status-island"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 399826,
+        "gzip": 114879,
+        "brotli": 98300
+      },
+      "total": {
+        "raw": 400052,
+        "gzip": 115052,
+        "brotli": 98439
+      },
+      "addedInitial": {
+        "raw": 308294,
+        "gzip": 84437,
+        "brotli": 70781
+      },
+      "addedTotal": {
+        "raw": 308520,
+        "gzip": 84610,
+        "brotli": 70920
+      },
+      "files": [
+        {
+          "file": "chunk-73D37MEW.js",
+          "initial": true,
+          "raw": 207664,
+          "gzip": 64823,
+          "brotli": 55651
+        },
+        {
+          "file": "chunk-ZWRAS33X.js",
+          "initial": false,
+          "raw": 226,
+          "gzip": 173,
+          "brotli": 139
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 192162,
+          "gzip": 50056,
+          "brotli": 42649
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 122703,
+        "rxjs": 24634,
+        "@angular/cdk": 70417,
+        "tslib": 1905,
+        "@hyalo/angular": 151765,
+        "app": 3320,
+        "@angular/platform-browser": 11918
+      }
+    },
+    {
+      "id": "hyalo-phase5-plus-blocks",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": [
+        "hyalo-bottom-sheet",
+        "hyalo-action-sheet",
+        "hyalo-tab-bar",
+        "hyalo-speed-dial",
+        "hyalo-slide-confirm",
+        "hyalo-keypad",
+        "hyalo-pull-refresh",
+        "hyalo-swipe-actions",
+        "hyalo-swipe-deck",
+        "hyalo-card-stack",
+        "hyalo-notification-center",
+        "hyalo-chat",
+        "hyalo-meter-group",
+        "hyalo-segmented-progress",
+        "hyalo-dock",
+        "hyalo-status-island",
+        "hyalo-wallet-block",
+        "hyalo-transfer-block",
+        "hyalo-order-tracker-block"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 412915,
+        "gzip": 117410,
+        "brotli": 100196
+      },
+      "total": {
+        "raw": 413141,
+        "gzip": 117583,
+        "brotli": 100335
+      },
+      "addedInitial": {
+        "raw": 321383,
+        "gzip": 86968,
+        "brotli": 72677
+      },
+      "addedTotal": {
+        "raw": 321609,
+        "gzip": 87141,
+        "brotli": 72816
+      },
+      "files": [
+        {
+          "file": "chunk-73D37MEW.js",
+          "initial": true,
+          "raw": 207664,
+          "gzip": 64823,
+          "brotli": 55651
+        },
+        {
+          "file": "chunk-ZWRAS33X.js",
+          "initial": false,
+          "raw": 226,
+          "gzip": 173,
+          "brotli": 139
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 205251,
+          "gzip": 52587,
+          "brotli": 44545
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 122703,
+        "rxjs": 24634,
+        "@angular/cdk": 70422,
+        "tslib": 1905,
+        "@hyalo/angular": 164485,
+        "app": 3686,
+        "@angular/platform-browser": 11921
+      }
+    },
+    {
+      "id": "material-phase5-available",
+      "kit": "Material",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": ["material-bottom-sheet", "material-tab-bar", "material-fab"],
+      "status": "built",
+      "initial": {
+        "raw": 285158,
+        "gzip": 80649,
+        "brotli": 71356
+      },
+      "total": {
+        "raw": 285158,
+        "gzip": 80649,
+        "brotli": 71356
+      },
+      "addedInitial": {
+        "raw": 193626,
+        "gzip": 50207,
+        "brotli": 43837
+      },
+      "addedTotal": {
+        "raw": 193626,
+        "gzip": 50207,
+        "brotli": 43837
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 285158,
+          "gzip": 80649,
+          "brotli": 71356
+        }
+      ],
+      "contributions": {
+        "@angular/common": 5721,
+        "@angular/core": 109537,
+        "rxjs": 19617,
+        "tslib": 1905,
+        "@angular/cdk": 66854,
+        "@angular/material": 67279,
+        "app": 1019,
+        "@angular/platform-browser": 11890
+      }
+    },
+    {
+      "id": "primeng-phase5-available",
+      "kit": "PrimeNG",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": ["primeng-speed-dial", "primeng-dock", "primeng-meter-group"],
+      "status": "built",
+      "initial": {
+        "raw": 467689,
+        "gzip": 134042,
+        "brotli": 116071
+      },
+      "total": {
+        "raw": 467689,
+        "gzip": 134042,
+        "brotli": 116071
+      },
+      "addedInitial": {
+        "raw": 376157,
+        "gzip": 103600,
+        "brotli": 88552
+      },
+      "addedTotal": {
+        "raw": 376157,
+        "gzip": 103600,
+        "brotli": 88552
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 467689,
+          "gzip": 134042,
+          "brotli": 116071
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9499,
+        "@angular/core": 144234,
+        "@angular/platform-browser": 13114,
+        "@angular/router": 85716,
+        "rxjs": 18954,
+        "tslib": 1905,
+        "@primeicons/angular": 3434,
+        "@primeicons/core": 650,
+        "@primeuix/styled": 23266,
+        "@primeuix/styles": 41617,
+        "@primeuix/utils": 16098,
+        "primeng": 106924,
+        "app": 702
+      }
+    },
+    {
+      "id": "primeng-phase5-themed",
+      "kit": "PrimeNG",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": [
+        "primeng-speed-dial",
+        "primeng-dock",
+        "primeng-meter-group",
+        "primeng-aura-theme"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 602114,
+        "gzip": 158300,
+        "brotli": 135064
+      },
+      "total": {
+        "raw": 602114,
+        "gzip": 158300,
+        "brotli": 135064
+      },
+      "addedInitial": {
+        "raw": 510582,
+        "gzip": 127858,
+        "brotli": 107545
+      },
+      "addedTotal": {
+        "raw": 510582,
+        "gzip": 127858,
+        "brotli": 107545
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 602114,
+          "gzip": 158300,
+          "brotli": 135064
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9499,
+        "@angular/core": 144254,
+        "@angular/platform-browser": 13120,
+        "@angular/router": 85736,
+        "rxjs": 18954,
+        "tslib": 1905,
+        "@primeicons/angular": 3442,
+        "@primeicons/core": 650,
+        "@primeui/license-manager": 17510,
+        "@primeuix/styled": 23250,
+        "@primeuix/styles": 41617,
+        "@primeuix/themes": 116354,
+        "@primeuix/utils": 16098,
+        "primeng": 107424,
+        "app": 725
+      }
+    },
+    {
+      "id": "ngzorro-phase5-available",
+      "kit": "NG-ZORRO",
+      "family": "aggregate",
+      "note": "union of listed cases; do not sum individual deltas",
+      "members": ["ngzorro-fab", "ngzorro-notification-service"],
+      "status": "built",
+      "initial": {
+        "raw": 343891,
+        "gzip": 108754,
+        "brotli": 93961
+      },
+      "total": {
+        "raw": 343891,
+        "gzip": 108754,
+        "brotli": 93961
+      },
+      "addedInitial": {
+        "raw": 252359,
+        "gzip": 78312,
+        "brotli": 66442
+      },
+      "addedTotal": {
+        "raw": 252359,
+        "gzip": 78312,
+        "brotli": 66442
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 343891,
+          "gzip": 108754,
+          "brotli": 93961
+        }
+      ],
+      "contributions": {
+        "@angular/common": 25535,
+        "@angular/core": 141162,
+        "@angular/platform-browser": 12855,
+        "rxjs": 19969,
+        "tslib": 2899,
+        "@angular/cdk": 24813,
+        "@ant-design/colors": 4470,
+        "@ant-design/fast-color": 5611,
+        "@ant-design/icons-angular": 27028,
+        "@babel/runtime": 728,
+        "@ctrl/tinycolor": 14277,
+        "ng-zorro-antd": 62530,
+        "app": 450
+      }
+    },
+    {
+      "id": "primeng-speed-dial-themed",
+      "kit": "PrimeNG",
+      "family": "speed-dial-themed",
+      "note": "Aura preset included in JS; not additive to bare component",
+      "status": "built",
+      "initial": {
+        "raw": 561393,
+        "gzip": 149028,
+        "brotli": 127241
+      },
+      "total": {
+        "raw": 561393,
+        "gzip": 149028,
+        "brotli": 127241
+      },
+      "addedInitial": {
+        "raw": 469861,
+        "gzip": 118586,
+        "brotli": 99722
+      },
+      "addedTotal": {
+        "raw": 469861,
+        "gzip": 118586,
+        "brotli": 99722
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 561393,
+          "gzip": 149028,
+          "brotli": 127241
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9496,
+        "@angular/core": 138779,
+        "@angular/platform-browser": 13113,
+        "@angular/router": 78062,
+        "rxjs": 18938,
+        "tslib": 1905,
+        "@primeicons/angular": 3443,
+        "@primeicons/core": 650,
+        "@primeui/license-manager": 17510,
+        "@primeuix/styled": 23250,
+        "@primeuix/styles": 34366,
+        "@primeuix/themes": 116354,
+        "@primeuix/utils": 16098,
+        "primeng": 87418,
+        "app": 435
+      }
+    },
+    {
+      "id": "primeng-dock-themed",
+      "kit": "PrimeNG",
+      "family": "dock-themed",
+      "note": "Aura preset included in JS; not additive to bare component",
+      "status": "built",
+      "initial": {
+        "raw": 527604,
+        "gzip": 142976,
+        "brotli": 122653
+      },
+      "total": {
+        "raw": 527604,
+        "gzip": 142976,
+        "brotli": 122653
+      },
+      "addedInitial": {
+        "raw": 436072,
+        "gzip": 112534,
+        "brotli": 95134
+      },
+      "addedTotal": {
+        "raw": 436072,
+        "gzip": 112534,
+        "brotli": 95134
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 527604,
+          "gzip": 142976,
+          "brotli": 122653
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9496,
+        "@angular/core": 133031,
+        "@angular/platform-browser": 13107,
+        "@angular/router": 85717,
+        "rxjs": 15780,
+        "tslib": 1905,
+        "@primeui/license-manager": 17510,
+        "@primeuix/styled": 23250,
+        "@primeuix/styles": 15863,
+        "@primeuix/themes": 116354,
+        "@primeuix/utils": 16056,
+        "primeng": 77499,
+        "app": 460
+      }
+    },
+    {
+      "id": "primeng-meter-group-themed",
+      "kit": "PrimeNG",
+      "family": "meter-group-themed",
+      "note": "Aura preset included in JS; not additive to bare component",
+      "status": "built",
+      "initial": {
+        "raw": 366388,
+        "gzip": 99699,
+        "brotli": 85661
+      },
+      "total": {
+        "raw": 366388,
+        "gzip": 99699,
+        "brotli": 85661
+      },
+      "addedInitial": {
+        "raw": 274856,
+        "gzip": 69257,
+        "brotli": 58142
+      },
+      "addedTotal": {
+        "raw": 274856,
+        "gzip": 69257,
+        "brotli": 58142
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 366388,
+          "gzip": 99699,
+          "brotli": 85661
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1790,
+        "@angular/core": 122548,
+        "@angular/platform-browser": 12857,
+        "rxjs": 8603,
+        "@primeui/license-manager": 17487,
+        "@primeuix/styled": 23237,
+        "@primeuix/styles": 11539,
+        "@primeuix/themes": 116354,
+        "@primeuix/utils": 11361,
+        "primeng": 38757,
+        "app": 457
+      }
+    },
+    {
+      "id": "ionic-phase5-available",
+      "kit": "Ionic",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": [
+        "ionic-bottom-sheet",
+        "ionic-action-sheet",
+        "ionic-tab-bar",
+        "ionic-speed-dial",
+        "ionic-pull-refresh",
+        "ionic-swipe-actions"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 566575,
+        "gzip": 150604,
+        "brotli": 124972
+      },
+      "total": {
+        "raw": 566910,
+        "gzip": 150912,
+        "brotli": 125261
+      },
+      "addedInitial": {
+        "raw": 475043,
+        "gzip": 120162,
+        "brotli": 97453
+      },
+      "addedTotal": {
+        "raw": 475378,
+        "gzip": 120470,
+        "brotli": 97742
+      },
+      "files": [
+        {
+          "file": "chunk-B7HVDKJM.js",
+          "initial": false,
+          "raw": 127,
+          "gzip": 108,
+          "brotli": 108
+        },
+        {
+          "file": "chunk-Na7qdU2G.js",
+          "initial": false,
+          "raw": 66,
+          "gzip": 77,
+          "brotli": 70
+        },
+        {
+          "file": "chunk-PNP7T7B5.js",
+          "initial": false,
+          "raw": 142,
+          "gzip": 123,
+          "brotli": 111
+        },
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 566575,
+          "gzip": 150604,
+          "brotli": 124972
+        }
+      ],
+      "contributions": {
+        "@angular/common": 10025,
+        "@angular/core": 117972,
+        "@angular/platform-browser": 14629,
+        "@angular/router": 83266,
+        "rxjs": 33205,
+        "tslib": 4979,
+        "app": 1822,
+        "@ionic/angular": 21200,
+        "@ionic/core": 393419
+      }
+    },
+    {
+      "id": "taiga-phase5-available",
+      "kit": "Taiga",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": [
+        "taiga-bottom-sheet",
+        "taiga-tab-bar",
+        "taiga-keypad",
+        "taiga-pull-refresh",
+        "taiga-swipe-actions",
+        "taiga-notification-card",
+        "taiga-meter-group",
+        "taiga-segmented-progress"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 403479,
+        "gzip": 122416,
+        "brotli": 102675
+      },
+      "total": {
+        "raw": 403479,
+        "gzip": 122416,
+        "brotli": 102675
+      },
+      "addedInitial": {
+        "raw": 311947,
+        "gzip": 91974,
+        "brotli": 75156
+      },
+      "addedTotal": {
+        "raw": 311947,
+        "gzip": 91974,
+        "brotli": 75156
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 403479,
+          "gzip": 122416,
+          "brotli": 102675
+        }
+      ],
+      "contributions": {
+        "@angular/common": 16715,
+        "@angular/core": 136177,
+        "@angular/platform-browser": 13647,
+        "@angular/router": 69141,
+        "rxjs": 38545,
+        "tslib": 3810,
+        "app": 1735,
+        "@angular/cdk": 6095,
+        "@ng-web-apis/common": 464,
+        "@ng-web-apis/platform": 2450,
+        "@ng-web-apis/resize-observer": 783,
+        "@ng-web-apis/screen-orientation": 468,
+        "@taiga-ui/addon-mobile": 29498,
+        "@taiga-ui/cdk": 12280,
+        "@taiga-ui/core": 43587,
+        "@taiga-ui/event-plugins": 5777,
+        "@taiga-ui/font-watcher": 904,
+        "@taiga-ui/i18n": 7753,
+        "@taiga-ui/kit": 9573,
+        "@taiga-ui/polymorpheus": 2344
+      }
+    },
+    {
+      "id": "hyalo-material-matched",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": ["hyalo-bottom-sheet", "hyalo-tab-bar", "hyalo-fab"],
+      "status": "built",
+      "initial": {
+        "raw": 270005,
+        "gzip": 82939,
+        "brotli": 71641
+      },
+      "total": {
+        "raw": 270005,
+        "gzip": 82939,
+        "brotli": 71641
+      },
+      "addedInitial": {
+        "raw": 178473,
+        "gzip": 52497,
+        "brotli": 44122
+      },
+      "addedTotal": {
+        "raw": 178473,
+        "gzip": 52497,
+        "brotli": 44122
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 270005,
+          "gzip": 82939,
+          "brotli": 71641
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 121031,
+        "rxjs": 24652,
+        "app": 901,
+        "@angular/cdk": 53974,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 45006,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-primeng-matched",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": ["hyalo-speed-dial", "hyalo-dock", "hyalo-meter-group"],
+      "status": "built",
+      "initial": {
+        "raw": 204080,
+        "gzip": 65015,
+        "brotli": 55947
+      },
+      "total": {
+        "raw": 204080,
+        "gzip": 65015,
+        "brotli": 55947
+      },
+      "addedInitial": {
+        "raw": 112548,
+        "gzip": 34573,
+        "brotli": 28428
+      },
+      "addedTotal": {
+        "raw": 112548,
+        "gzip": 34573,
+        "brotli": 28428
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 204080,
+          "gzip": 65015,
+          "brotli": 55947
+        }
+      ],
+      "contributions": {
+        "@angular/common": 1643,
+        "@angular/core": 117584,
+        "rxjs": 20791,
+        "app": 811,
+        "@angular/cdk": 9097,
+        "@angular/platform-browser": 11892,
+        "@hyalo/angular": 39061,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-ionic-matched",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": [
+        "hyalo-bottom-sheet-host",
+        "hyalo-action-sheet",
+        "hyalo-tab-bar",
+        "hyalo-speed-dial",
+        "hyalo-pull-refresh",
+        "hyalo-swipe-actions"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 288985,
+        "gzip": 87344,
+        "brotli": 75489
+      },
+      "total": {
+        "raw": 288985,
+        "gzip": 87344,
+        "brotli": 75489
+      },
+      "addedInitial": {
+        "raw": 197453,
+        "gzip": 56902,
+        "brotli": 47970
+      },
+      "addedTotal": {
+        "raw": 197453,
+        "gzip": 56902,
+        "brotli": 47970
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 288985,
+          "gzip": 87344,
+          "brotli": 75489
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 121798,
+        "rxjs": 24656,
+        "app": 1304,
+        "@angular/cdk": 53983,
+        "@angular/platform-browser": 11890,
+        "@hyalo/angular": 62803,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "hyalo-taiga-matched",
+      "kit": "Hyalo",
+      "family": "aggregate",
+      "note": "matched subset aggregate; shared setup included once",
+      "members": [
+        "hyalo-bottom-sheet-host",
+        "hyalo-tab-bar",
+        "hyalo-keypad",
+        "hyalo-pull-refresh",
+        "hyalo-swipe-actions",
+        "hyalo-notification-card",
+        "hyalo-meter-group",
+        "hyalo-segmented-progress"
+      ],
+      "status": "built",
+      "initial": {
+        "raw": 302220,
+        "gzip": 90173,
+        "brotli": 77789
+      },
+      "total": {
+        "raw": 302220,
+        "gzip": 90173,
+        "brotli": 77789
+      },
+      "addedInitial": {
+        "raw": 210688,
+        "gzip": 59731,
+        "brotli": 50270
+      },
+      "addedTotal": {
+        "raw": 210688,
+        "gzip": 59731,
+        "brotli": 50270
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 302220,
+          "gzip": 90173,
+          "brotli": 77789
+        }
+      ],
+      "contributions": {
+        "@angular/common": 9259,
+        "@angular/core": 122000,
+        "rxjs": 24673,
+        "app": 1568,
+        "@angular/cdk": 53991,
+        "@angular/platform-browser": 11892,
+        "@hyalo/angular": 75545,
+        "tslib": 1905
+      }
+    },
+    {
+      "id": "ngzorro-speed-dial",
+      "kit": "NG-ZORRO",
+      "family": "speed-dial",
+      "note": "direct expandable float-button group",
+      "status": "built",
+      "initial": {
+        "raw": 298641,
+        "gzip": 97239,
+        "brotli": 84220
+      },
+      "total": {
+        "raw": 298641,
+        "gzip": 97239,
+        "brotli": 84220
+      },
+      "addedInitial": {
+        "raw": 207109,
+        "gzip": 66797,
+        "brotli": 56701
+      },
+      "addedTotal": {
+        "raw": 207109,
+        "gzip": 66797,
+        "brotli": 56701
+      },
+      "files": [
+        {
+          "file": "main.js",
+          "initial": true,
+          "raw": 298641,
+          "gzip": 97239,
+          "brotli": 84220
+        }
+      ],
+      "contributions": {
+        "@angular/common": 21629,
+        "@angular/core": 137965,
+        "@angular/platform-browser": 12855,
+        "rxjs": 19960,
+        "tslib": 2899,
+        "@angular/cdk": 1896,
+        "@ant-design/colors": 4470,
+        "@ant-design/fast-color": 5611,
+        "@ant-design/icons-angular": 27028,
+        "@babel/runtime": 728,
+        "@ctrl/tinycolor": 14277,
+        "ng-zorro-antd": 47350,
+        "app": 455
+      }
+    }
+  ],
+  "styles": {
+    "hyaloCore": {
+      "file": "node_modules/@hyalo/angular/styles/hyalo-core.css",
+      "raw": 14768,
+      "gzip": 3994,
+      "brotli": 3500
+    },
+    "hyaloFull": {
+      "file": "node_modules/@hyalo/angular/styles/hyalo.css",
+      "raw": 23676,
+      "gzip": 5539,
+      "brotli": 4877
+    },
+    "hyaloDialogOverlay": {
+      "file": "node_modules/@hyalo/angular/styles/overlays/dialog.css",
+      "raw": 4166,
+      "gzip": 1094,
+      "brotli": 964
+    },
+    "hyaloPopoverOverlay": {
+      "file": "node_modules/@hyalo/angular/styles/overlays/popover.css",
+      "raw": 1871,
+      "gzip": 595,
+      "brotli": 505
+    },
+    "materialTheme": {
+      "file": "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
+      "raw": 6853,
+      "gzip": 1275,
+      "brotli": 1076
+    },
+    "zorroFull": {
+      "file": "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+      "raw": 557101,
+      "gzip": 68335,
+      "brotli": 51092
+    },
+    "ionicCore": {
+      "file": "node_modules/@ionic/angular/css/core.css",
+      "raw": 11060,
+      "gzip": 2480,
+      "brotli": 2085
+    },
+    "ionicFull": {
+      "file": "node_modules/@ionic/angular/css/ionic.bundle.css",
+      "raw": 38612,
+      "gzip": 6095,
+      "brotli": 4584
+    },
+    "taigaTheme": {
+      "file": "node_modules/@taiga-ui/styles/taiga-ui-theme.css",
+      "raw": 87848,
+      "gzip": 5662,
+      "brotli": 4834
+    },
+    "nebularDefaultTheme": {
+      "file": "node_modules/@nebular/theme/styles/prebuilt/default.css",
+      "raw": 321515,
+      "gzip": 26857,
+      "brotli": 20270
+    }
+  },
+  "modules": [
+    {
+      "entry": "bottom-sheet",
+      "source": {
+        "raw": 21923,
+        "gzip": 5712,
+        "brotli": 4957
+      },
+      "minified": {
+        "raw": 15701,
+        "gzip": 4927,
+        "brotli": 4311
+      }
+    },
+    {
+      "entry": "action-sheet",
+      "source": {
+        "raw": 9756,
+        "gzip": 2283,
+        "brotli": 1959
+      },
+      "minified": {
+        "raw": 7341,
+        "gzip": 2002,
+        "brotli": 1742
+      }
+    },
+    {
+      "entry": "tab-bar",
+      "source": {
+        "raw": 14774,
+        "gzip": 3422,
+        "brotli": 2946
+      },
+      "minified": {
+        "raw": 11961,
+        "gzip": 3043,
+        "brotli": 2636
+      }
+    },
+    {
+      "entry": "fab",
+      "source": {
+        "raw": 18175,
+        "gzip": 3861,
+        "brotli": 3308
+      },
+      "minified": {
+        "raw": 13726,
+        "gzip": 3410,
+        "brotli": 2953
+      }
+    },
+    {
+      "entry": "slide-confirm",
+      "source": {
+        "raw": 12705,
+        "gzip": 3084,
+        "brotli": 2641
+      },
+      "minified": {
+        "raw": 10502,
+        "gzip": 2770,
+        "brotli": 2361
+      }
+    },
+    {
+      "entry": "keypad",
+      "source": {
+        "raw": 15492,
+        "gzip": 3190,
+        "brotli": 2724
+      },
+      "minified": {
+        "raw": 12071,
+        "gzip": 2856,
+        "brotli": 2464
+      }
+    },
+    {
+      "entry": "pull-refresh",
+      "source": {
+        "raw": 12924,
+        "gzip": 3114,
+        "brotli": 2650
+      },
+      "minified": {
+        "raw": 9640,
+        "gzip": 2716,
+        "brotli": 2315
+      }
+    },
+    {
+      "entry": "swipe-actions",
+      "source": {
+        "raw": 17177,
+        "gzip": 3650,
+        "brotli": 3123
+      },
+      "minified": {
+        "raw": 13612,
+        "gzip": 3252,
+        "brotli": 2804
+      }
+    },
+    {
+      "entry": "swipe-deck",
+      "source": {
+        "raw": 14925,
+        "gzip": 3514,
+        "brotli": 3031
+      },
+      "minified": {
+        "raw": 11102,
+        "gzip": 3083,
+        "brotli": 2686
+      }
+    },
+    {
+      "entry": "card-stack",
+      "source": {
+        "raw": 17426,
+        "gzip": 4131,
+        "brotli": 3600
+      },
+      "minified": {
+        "raw": 12701,
+        "gzip": 3537,
+        "brotli": 3104
+      }
+    },
+    {
+      "entry": "notification-center",
+      "source": {
+        "raw": 33333,
+        "gzip": 4766,
+        "brotli": 4009
+      },
+      "minified": {
+        "raw": 26326,
+        "gzip": 4262,
+        "brotli": 3620
+      }
+    },
+    {
+      "entry": "chat",
+      "source": {
+        "raw": 48107,
+        "gzip": 6393,
+        "brotli": 5354
+      },
+      "minified": {
+        "raw": 38898,
+        "gzip": 5724,
+        "brotli": 4826
+      }
+    },
+    {
+      "entry": "meter",
+      "source": {
+        "raw": 31115,
+        "gzip": 3980,
+        "brotli": 3362
+      },
+      "minified": {
+        "raw": 25790,
+        "gzip": 3607,
+        "brotli": 3049
+      }
+    },
+    {
+      "entry": "dock",
+      "source": {
+        "raw": 12385,
+        "gzip": 2768,
+        "brotli": 2381
+      },
+      "minified": {
+        "raw": 9090,
+        "gzip": 2417,
+        "brotli": 2086
+      }
+    },
+    {
+      "entry": "status-island",
+      "source": {
+        "raw": 12128,
+        "gzip": 2704,
+        "brotli": 2303
+      },
+      "minified": {
+        "raw": 9266,
+        "gzip": 2373,
+        "brotli": 2047
+      }
+    },
+    {
+      "entry": "blocks",
+      "source": {
+        "raw": 95469,
+        "gzip": 10982,
+        "brotli": 9058
+      },
+      "minified": {
+        "raw": 75068,
+        "gzip": 9955,
+        "brotli": 8309
+      }
+    },
+    {
+      "entry": "motion",
+      "source": {
+        "raw": 23686,
+        "gzip": 6395,
+        "brotli": 5631
+      },
+      "minified": {
+        "raw": 16389,
+        "gzip": 5279,
+        "brotli": 4778
+      }
+    },
+    {
+      "entry": "core",
+      "source": {
+        "raw": 13973,
+        "gzip": 3774,
+        "brotli": 3298
+      },
+      "minified": {
+        "raw": 9822,
+        "gzip": 3173,
+        "brotli": 2846
+      }
+    }
+  ]
+}

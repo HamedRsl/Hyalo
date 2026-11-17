@@ -1,0 +1,42 @@
+import { TestBed } from '@angular/core/testing';
+import { HyPullRefresh } from './pull-refresh';
+import { pointer } from '../src/testing/pointer';
+import { expectNoAxeViolations } from '../src/testing/axe';
+describe('HyPullRefresh', () => {
+  it('requests once until complete and keeps its loading button named', async () => {
+    const f = TestBed.createComponent(HyPullRefresh);
+    f.componentRef.setInput('label', 'Activity');
+    const requested = vi.fn();
+    f.componentInstance.refresh.subscribe(requested);
+    await f.whenStable();
+    const button = f.nativeElement.querySelector('button') as HTMLButtonElement;
+    button.click();
+    button.click();
+    await f.whenStable();
+    expect(requested).toHaveBeenCalledTimes(1);
+    expect(f.componentInstance.refreshing()).toBe(true);
+    await expectNoAxeViolations(f.nativeElement);
+    f.componentInstance.complete();
+    await f.whenStable();
+    button.click();
+    expect(requested).toHaveBeenCalledTimes(2);
+  });
+  it('leaves scrolling and cancellation without a refresh request', async () => {
+    const f = TestBed.createComponent(HyPullRefresh);
+    f.componentRef.setInput('label', 'Activity');
+    const requested = vi.fn();
+    f.componentInstance.refresh.subscribe(requested);
+    await f.whenStable();
+    const host = f.nativeElement as HTMLElement;
+    host.scrollTop = 40;
+    pointer(host, 'pointerdown', 0, 0);
+    pointer(host, 'pointermove', 0, 200);
+    pointer(host, 'pointerup', 0, 200);
+    expect(requested).not.toHaveBeenCalled();
+    host.scrollTop = 0;
+    pointer(host, 'pointerdown', 0, 0);
+    pointer(host, 'pointermove', 0, 200);
+    pointer(host, 'pointercancel', 0, 200);
+    expect(requested).not.toHaveBeenCalled();
+  });
+});

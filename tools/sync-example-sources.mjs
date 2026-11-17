@@ -6,6 +6,21 @@ import { parseTemplate } from '@angular/compiler';
 import { format } from 'prettier';
 
 const singleExamplePages = new Set([
+  'mobile-patterns',
+  'bottom-sheet',
+  'action-sheet',
+  'tab-bar',
+  'fab',
+  'slide-confirm',
+  'keypad',
+  'pull-refresh',
+  'swipe-actions',
+  'swipe-deck',
+  'card-stack',
+  'notification-center',
+  'chat',
+  'dock',
+  'status-island',
   'meter',
   'state',
   'gauge',

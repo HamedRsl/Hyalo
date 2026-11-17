@@ -1,0 +1,75 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+.row {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-swipe-actions-radius, var(--hy-radius-l));
+  background: var(--hy-surface-2);
+  isolation: isolate;
+}
+.surface {
+  position: relative;
+  z-index: 1;
+  background: var(--hy-surface-1);
+  padding: var(--hy-space-4);
+  touch-action: pan-y;
+  min-block-size: 44px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 1px var(--hy-line);
+}
+.action-side {
+  position: absolute;
+  inset-block: 0;
+  display: flex;
+  align-items: stretch;
+  background: var(--hy-surface-2);
+  visibility: hidden;
+}
+.action-side.start {
+  inset-inline-start: 0;
+}
+.action-side.end {
+  inset-inline-end: 0;
+}
+.action-side button {
+  border-radius: 0;
+  min-inline-size: var(--hy-swipe-action-width, 88px);
+  block-size: 100%;
+}
+.action-side.start button:first-child {
+  border-start-start-radius: var(--hy-swipe-actions-radius, var(--hy-radius-l));
+  border-end-start-radius: var(--hy-swipe-actions-radius, var(--hy-radius-l));
+}
+.action-side.end button:last-child {
+  border-start-end-radius: var(--hy-swipe-actions-radius, var(--hy-radius-l));
+  border-end-end-radius: var(--hy-swipe-actions-radius, var(--hy-radius-l));
+}
+:host([data-reveal='start']) .start,
+:host([data-reveal='end']) .end {
+  visibility: visible;
+}
+.toggle {
+  margin-block-start: var(--hy-space-2);
+  min-block-size: 44px;
+  padding-inline: var(--hy-space-3);
+  background: transparent;
+  color: var(--hy-primary);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-s);
+  font: inherit;
+  cursor: pointer;
+}
+.toggle:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+.row:focus {
+  outline: none;
+}
+.row:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}

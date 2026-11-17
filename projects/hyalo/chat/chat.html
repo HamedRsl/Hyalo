@@ -1,0 +1,59 @@
+<section [attr.aria-label]="label()">
+  <div
+    #viewport
+    class="viewport"
+    tabindex="0"
+    role="log"
+    [attr.aria-label]="label()"
+    [attr.aria-live]="live()"
+    aria-relevant="additions text"
+    [style.block-size]="height()"
+  >
+    @if (canLoadOlder()) {
+      <button
+        hyButton
+        variant="ghost"
+        type="button"
+        [loading]="loadingOlder()"
+        [attr.aria-label]="loadOlderLabel()"
+        (click)="olderRequested.emit()"
+      >
+        {{ loadOlderLabel() }}
+      </button>
+    }
+    @if (!messages().length) {
+      <p>{{ emptyLabel() }}</p>
+    }
+    <ol>
+      @for (message of messages(); track message.id; let index = $index) {
+        <li>
+          @if (messageTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template"
+              [ngTemplateOutletContext]="{ $implicit: message, index }"
+            />
+          } @else {
+            <hy-chat-bubble
+              [message]="message"
+              [showSender]="showSender()"
+              [showAvatar]="showAvatar()"
+              [dateFormat]="dateFormat()"
+              (attachmentActivated)="attachmentActivated.emit({ message, attachment: $event })"
+              [locale]="locale()"
+              [timeZone]="timeZone()"
+              [retryLabel]="retryLabel()"
+              [statusLabels]="statusLabels()"
+              (retry)="retry.emit($event)"
+            />
+          }
+        </li>
+      }
+    </ol>
+  </div>
+  @if (unseen()) {
+    <button hyButton type="button" variant="soft" (click)="scrollToEnd()">
+      {{ newMessagesLabel() }} ({{ unseen() }})
+    </button>
+  }
+  <ng-content select="[hyChatComposer], hy-chat-composer" />
+</section>

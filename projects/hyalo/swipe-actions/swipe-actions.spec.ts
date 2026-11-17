@@ -1,0 +1,42 @@
+import { TestBed } from '@angular/core/testing';
+import { HySwipeActions } from './swipe-actions';
+import { pointer } from '../src/testing/pointer';
+import { expectNoAxeViolations } from '../src/testing/axe';
+describe('HySwipeActions', () => {
+  it('discloses actions without a gesture and restores focus before closing the rail', async () => {
+    const f = TestBed.createComponent(HySwipeActions);
+    f.componentRef.setInput('label', 'Message');
+    f.componentRef.setInput('endActions', [{ id: 'archive', label: 'Archive' }]);
+    const selected = vi.fn();
+    f.componentInstance.selected.subscribe(selected);
+    await f.whenStable();
+    const toggle = f.nativeElement.querySelector('.toggle') as HTMLButtonElement;
+    toggle.click();
+    await f.whenStable();
+    expect(f.componentInstance.open()).toBe('end');
+    const action = f.nativeElement.querySelector('.end button') as HTMLButtonElement;
+    action.focus();
+    await expectNoAxeViolations(f.nativeElement);
+    action.click();
+    await f.whenStable();
+    expect(selected.mock.calls[0]?.[0].side).toBe('end');
+    expect(document.activeElement).toBe(toggle);
+  });
+  it('does not execute a cancelled full swipe and follows the configured action width', async () => {
+    const f = TestBed.createComponent(HySwipeActions);
+    f.componentRef.setInput('label', 'Message');
+    f.componentRef.setInput('startActions', [{ id: 'read', label: 'Read' }]);
+    f.componentRef.setInput('fullSwipe', true);
+    f.componentRef.setInput('actionWidth', 100);
+    const selected = vi.fn();
+    f.componentInstance.selected.subscribe(selected);
+    await f.whenStable();
+    const surface = f.nativeElement.querySelector('.surface');
+    pointer(surface, 'pointerdown', 0, 0);
+    pointer(surface, 'pointermove', 300, 0);
+    pointer(surface, 'pointercancel', 300, 0);
+    expect(selected).not.toHaveBeenCalled();
+    expect(f.componentInstance.open()).toBeNull();
+    expect(f.nativeElement.style.getPropertyValue('--hy-swipe-action-width')).toBe('100px');
+  });
+});

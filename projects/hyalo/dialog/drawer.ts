@@ -17,6 +17,7 @@ export type HyDrawerSide = 'start' | 'end' | 'bottom';
 /** Options for {@link HyDrawer.open}. */
 export interface HyDrawerConfig<D = unknown> extends HySurfaceConfig<D> {
   readonly side?: HyDrawerSide;
+  readonly draggable?: boolean;
   /** Any CSS length. Width for side drawers, height for the bottom sheet. */
   readonly size?: string;
 }
@@ -58,6 +59,7 @@ export class HyDrawer {
       width: side === 'bottom' ? '100%' : (config.size ?? 'min(24rem, 100vw - 2.5rem)'),
       height: side === 'bottom' ? (config.size ?? 'auto') : '100%',
       sheet: side,
+      draggable: config.draggable,
     });
   }
 }

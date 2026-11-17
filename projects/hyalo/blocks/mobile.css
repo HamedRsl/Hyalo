@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+section {
+  display: grid;
+  gap: var(--hy-space-4);
+  min-inline-size: 0;
+}
+h2,
+h3,
+p {
+  margin: 0;
+}
+.wallet-card {
+  display: grid;
+  gap: var(--hy-space-3);
+  padding: var(--hy-space-6);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-2);
+  border: 1px solid var(--hy-line);
+  min-block-size: 10rem;
+}
+.balance {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-2);
+}
+.recipient {
+  display: grid;
+  gap: var(--hy-space-2);
+}
+.recipient input {
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  padding: var(--hy-space-3);
+  min-block-size: 44px;
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  font: inherit;
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+.recipient input:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}

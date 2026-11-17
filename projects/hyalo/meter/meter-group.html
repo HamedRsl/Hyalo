@@ -1,0 +1,59 @@
+<ng-content select="[hyMeterStart]" />
+<div
+  class="track"
+  role="meter"
+  [attr.aria-label]="label()"
+  [attr.aria-valuemin]="range().min"
+  [attr.aria-valuemax]="range().max"
+  [attr.aria-valuenow]="total()"
+  [attr.aria-valuetext]="valueText() || null"
+>
+  @for (segment of segments(); track segment.id; let index = $index) {
+    <span
+      class="segment"
+      [attr.data-tone]="segment.tone ?? 'primary'"
+      [style.flex-basis.%]="segment.percent"
+      [style.background]="segment.color ?? null"
+    >
+      @if (meterTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{
+            $implicit: segment,
+            index,
+            percent: segment.percent,
+            total: total(),
+          }"
+        />
+      }
+    </span>
+  }
+</div>
+@if (showLabels()) {
+  <ul class="legend">
+    @for (segment of segments(); track segment.id; let index = $index) {
+      <li>
+        @if (labelTemplate(); as template) {
+          <ng-container
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{
+              $implicit: segment,
+              index,
+              percent: segment.percent,
+              total: total(),
+            }"
+          />
+        } @else {
+          <span
+            class="swatch"
+            [style.background]="segment.color ?? null"
+            aria-hidden="true"
+            [attr.data-tone]="segment.tone ?? 'primary'"
+          ></span
+          >{{ segment.label }}: {{ segment.text }}
+        }
+      </li>
+    }
+  </ul>
+}
+<ng-content select="[hyMeterEnd]" />

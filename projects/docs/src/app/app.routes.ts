@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: 'mobile-patterns', loadComponent: () => import('./pages/mobile-patterns') },
   { path: '', loadComponent: () => import('./pages/home') },
   { path: 'foundations', loadComponent: () => import('./pages/foundations') },
   { path: 'theming', loadComponent: () => import('./pages/theming') },
@@ -12,6 +13,20 @@ export const routes: Routes = [
   {
     path: 'components',
     children: [
+      { path: 'bottom-sheet', loadComponent: () => import('./pages/bottom-sheet') },
+      { path: 'action-sheet', loadComponent: () => import('./pages/action-sheet') },
+      { path: 'tab-bar', loadComponent: () => import('./pages/tab-bar') },
+      { path: 'fab', loadComponent: () => import('./pages/fab') },
+      { path: 'slide-confirm', loadComponent: () => import('./pages/slide-confirm') },
+      { path: 'keypad', loadComponent: () => import('./pages/keypad') },
+      { path: 'pull-refresh', loadComponent: () => import('./pages/pull-refresh') },
+      { path: 'swipe-actions', loadComponent: () => import('./pages/swipe-actions') },
+      { path: 'swipe-deck', loadComponent: () => import('./pages/swipe-deck') },
+      { path: 'card-stack', loadComponent: () => import('./pages/card-stack') },
+      { path: 'notification-center', loadComponent: () => import('./pages/notification-center') },
+      { path: 'chat', loadComponent: () => import('./pages/chat') },
+      { path: 'dock', loadComponent: () => import('./pages/dock') },
+      { path: 'status-island', loadComponent: () => import('./pages/status-island') },
       { path: 'meter', loadComponent: () => import('./pages/meter') },
       { path: 'state', loadComponent: () => import('./pages/state') },
       { path: 'gauge', loadComponent: () => import('./pages/gauge') },
