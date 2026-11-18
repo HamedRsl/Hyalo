@@ -1,0 +1,9 @@
+
+<div class="toolbar"><label>Search hierarchy <input type="search" [value]="search()" [disabled]="disabled()" (input)="search.set($any($event.target).value)" /></label><button type="button" [disabled]="disabled()" (click)="expandAll()">Expand all</button><button type="button" [disabled]="disabled()" (click)="collapseAll()">Collapse all</button><button type="button" (click)="exportCsv({download:true})">Export CSV</button></div>
+<hy-data-grid [data]="rows()" [columns]="gridColumns()" [rowKey]="key" [rowLabel]="rowLabel" [rowDisabled]="rowDisabled" [rowMetadata]="metadata" [treeGrid]="true" [caption]="caption()" [config]="options()" [disabled]="disabled()" [loading]="loading()" [error]="error()" [locale]="locale()" [lazy]="true" [(sorts)]="sorts" [(selected)]="selected" [canCommit]="canCommit()" (editCommitted)="committed($event)" (rowActivated)="rowActivated.emit($event)" (retryRequested)="retryRequested.emit()" (cellKeydown)="keys($event)" />
+<ng-template #hierarchy let-node let-value="value" let-column="column" let-rowIndex="rowIndex">
+<div class="hierarchy" [style.padding-inline-start.px]="((metadata(node).level??1)-1)*indent()">
+@if(expandable(node)){<button type="button" [disabled]="disabled()||node.disabled||loadingKeys().includes(node.key)" [attr.aria-label]="(metadata(node).expanded?'Collapse ':'Expand ')+node.label" [attr.aria-expanded]="metadata(node).expanded" (click)="toggle(node.key)">{{loadingKeys().includes(node.key)?'Loading':metadata(node).expanded?'−':'+'}}</button>}@else{<span class="spacer"></span>}
+@if(firstColumn()?.template;as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{$implicit:node,value,column:column,rowIndex}" />}@else{<span>{{column.format?column.format(value,node):value}}</span>}
+</div>
+</ng-template>

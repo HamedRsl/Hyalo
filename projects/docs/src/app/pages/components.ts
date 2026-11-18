@@ -78,6 +78,16 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+"/components/data-grid":"Editable data with stable keys, explicit query state, grouping, and native scrolling.",
+"/components/tree":"Hierarchical navigation, lazy expansion, cascading checks, and stable-key selection.",
+"/components/tree-table":"A data grid that preserves parent-child structure while filtering, sorting, and editing.",
+"/components/virtual-scroller":"Bounded DOM rendering for long lists with a stable server-rendered fallback.",
+"/components/kanban":"Move work between columns and swimlanes with WIP limits and asynchronous approval.",
+"/components/splitter":"Resizable panes with bounded percentages, collapse controls, and pointer cancellation.",
+"/components/dashboard-layout":"A saved grid of movable and resizable tiles with explicit collision rules.",
+"/components/context-menu":"Contextual actions with CDK focus, keyboard navigation, and nested menus.",
+"/components/scheduler":"Month, week, day, and agenda views through a lazy FullCalendar adapter.",
+"/components/rich-text":"A JSON-valued Signal Forms control with a lazy TipTap engine and complete extension hooks.",
   '/components/bottom-sheet':
     'Snap-point sheets with focus trapping, scrollable content, and a keyboard resize handle.',
   '/components/action-sheet':

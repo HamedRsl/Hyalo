@@ -9,6 +9,18 @@
           <!-- The preview is a picture of the component; the card's link is the way in. -->
           <div class="tile__stage hy-mesh" inert aria-hidden="true">
             @switch (item.path) {
+
+              @case ('/components/data-grid') {<div class="heavy-preview"><div class="preview-toolbar">Projects <span>120 rows</span></div><table><thead><tr><th>Project</th><th>Team</th><th>Capacity</th></tr></thead><tbody><tr><td>Aster</td><td>Design</td><td>72%</td></tr><tr><td>Cedar</td><td>Engineering</td><td>46%</td></tr><tr><td>Juniper</td><td>Support</td><td>64%</td></tr></tbody></table><div class="preview-footer">Previous · Page 1 of 5 · Next</div></div>}
+              @case ('/components/tree') {<div class="heavy-preview"><strong>Workspace</strong><ul><li>Design<ul><li>Tokens</li><li>Components</li></ul></li><li>Engineering</li></ul></div>}
+              @case ('/components/tree-table') {<div class="heavy-preview"><table><thead><tr><th>Folder</th><th>Size</th></tr></thead><tbody><tr><td>− Product</td><td>140 MB</td></tr><tr><td>　Design</td><td>48 MB</td></tr><tr><td>　− Application</td><td>92 MB</td></tr><tr><td>　　Core</td><td>44 MB</td></tr></tbody></table></div>}
+              @case ('/components/virtual-scroller') {<div class="heavy-preview preview-scroll"><div>Activity 5001 <small>Just now</small></div><div>Activity 5002 <small>1 minute ago</small></div><div>Activity 5003 <small>2 minutes ago</small></div><div>Activity 5004 <small>3 minutes ago</small></div><div>Activity 5005 <small>4 minutes ago</small></div></div>}
+              @case ('/components/kanban') {<div class="preview-board"><section><strong>Planned</strong><p>Design tokens</p><p>Integration guide</p></section><section><strong>Active · 1/3</strong><p>Data grid</p></section><section><strong>Done</strong><p>Core primitives</p></section></div>}
+              @case ('/components/scheduler') {<div class="heavy-preview"><div class="preview-toolbar">November 2026 <span>Month</span></div><div class="preview-calendar">@for(day of [15,16,17,18,19,20,21,22,23,24,25,26,27,28];track day){<span [class.today]="day===18">{{day}}@if(day===18){<small>Review</small>}</span>}</div></div>}
+              @case ('/components/splitter') {<div class="preview-splitter"><section>Folders<p>Workspace</p><p>Design</p></section><span></span><section>Editor<p>Release notes</p></section><span></span><section>Details</section></div>}
+              @case ('/components/dashboard-layout') {<div class="preview-tiles"><section><strong>Capacity</strong><b>72%</b><small>Move · Resize</small></section><section><strong>Activity</strong><b>128</b><small>Move · Resize</small></section><section>Release overview</section></div>}
+              @case ('/components/context-menu') {<div class="heavy-preview preview-context"><div>Open details <small>Enter</small></div><div>Assign to <small>›</small></div><div>Watch changes <small>Selected</small></div><hr /><div>Delete</div></div>}
+              @case ('/components/rich-text') {<div class="heavy-preview"><div class="preview-toolbar"><b>B</b><i>I</i><u>U</u><span>Heading · List</span></div><div class="preview-editor"><strong>Release notes</strong><p>Write the decisions your team needs next.</p></div><div class="preview-footer">49 characters</div></div>}
+
               @case ('/components/bottom-sheet') {
                 <div class="mobile-preview">
                   <span class="handle-preview"></span><strong>Delivery details</strong>

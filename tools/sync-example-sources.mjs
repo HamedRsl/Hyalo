@@ -6,6 +6,16 @@ import { parseTemplate } from '@angular/compiler';
 import { format } from 'prettier';
 
 const singleExamplePages = new Set([
+  'data-grid',
+  'tree',
+  'tree-table',
+  'virtual-scroller',
+  'kanban',
+  'splitter',
+  'dashboard-layout',
+  'context-menu',
+  'scheduler',
+  'rich-text',
   'mobile-patterns',
   'bottom-sheet',
   'action-sheet',
@@ -197,7 +207,7 @@ for (const name of readdirSync(root).filter((name) => name.endsWith('.html'))) {
   const importsText = source.statements
     .filter(
       (node) =>
-        ts.isImportDeclaration(node) && /^(@angular\/|@hyalo\/)/.test(node.moduleSpecifier.text),
+        ts.isImportDeclaration(node) && /^(@angular\/|@hyalo\/|@tiptap\/|@fullcalendar\/)/.test(node.moduleSpecifier.text),
     )
     .map((node) => node.getText(source))
     .join('\n');

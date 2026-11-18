@@ -8,7 +8,9 @@ Liquid glass components for Angular.
 
 Hyalo is a small, open source UI kit built on Angular Aria and the Angular CDK. It is signal based, zoneless, safe to render on the server, and works with a keyboard and a screen reader in both reading directions. The glass is a material you choose per surface, and it steps down by itself on devices or settings where blur would hurt.
 
-Status: 0.5, phase 5 of the roadmap. The API can still change before 1.0.
+Status: phase 6 implemented on develop, unreleased. The package version is unchanged. The API can still change before 1.0.
+
+Phase 6 covers all 11 heavy-data families: data grid, tree, tree table, virtual scroller, Kanban, calendar/scheduler, splitter, dashboard layout, context menu, rich text editor, and the existing gauge. Every family has a live docs route and a generated public API inventory. FullCalendar and TipTap are optional lazy engines. See [phase 6](docs/phase-6.md), [API comparison](docs/phase-6-api-review.md), and [complete API reference](docs/phase-6-api.md).
 
 Phase 5 adds all 15 mobile/app families, snap-point sheets, action sheets, app navigation, FABs, keypad and confirmation controls, pull/swipe patterns, card stacks, notifications, chat, segmented meters/progress, glass dock and status island. Open `/mobile-patterns` for wallet, transfer and order-tracker compositions. See [phase 5](docs/phase-5.md) for the API comparison, integration boundaries and verification.
 

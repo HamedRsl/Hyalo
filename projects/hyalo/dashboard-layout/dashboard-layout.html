@@ -1,0 +1,10 @@
+
+<div class="layout" [style.grid-template-columns]="'repeat('+columns()+',minmax(0,1fr))'" [style.grid-auto-rows.px]="rowHeight()" [style.gap.px]="gap()" [attr.aria-label]="label()" role="group">
+@for(tile of view();track tile.id){
+<section class="tile surface" [style.grid-column]="(tile.x+1)+' / span '+tile.width" [style.grid-row]="(tile.y+1)+' / span '+tile.height" cdkDrag [cdkDragDisabled]="blocked()||tile.locked||!draggable()" (cdkDragStarted)="dragStarted(tile)" (cdkDragEnded)="dragEnd($event,tile)" [attr.aria-label]="tile.label">
+<header>@if(headerTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(tile)" />}@else{<h3>{{tile.label}}</h3>}
+@if(draggable()){<button type="button" cdkDragHandle [disabled]="blocked()||tile.locked" [attr.aria-label]="'Move '+tile.label+'; use arrow keys'" (keydown)="keys($event,tile)">Move</button>}</header>
+<div class="content">@if(tile.template??tileTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(tile)" />}@else{<ng-content />}</div>
+@if(resizable()){<button type="button" class="resize" [disabled]="blocked()||tile.locked" [attr.aria-label]="'Resize '+tile.label+'; use arrow keys'" (keydown)="keys($event,tile,true)" (pointerdown)="startResize($event,tile)" (pointermove)="resizeMove($event)" (pointerup)="finishResize($event)" (pointercancel)="cancelResize()" (lostpointercapture)="cancelResize()">Resize</button>}
+</section>}
+</div><p class="sr-only" role="status" aria-live="polite">{{announcement()}}</p>
