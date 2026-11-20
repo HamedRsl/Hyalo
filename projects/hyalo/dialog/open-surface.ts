@@ -141,7 +141,13 @@ export function openSurface<R, D>(
   }
   const view = container?.ownerDocument.defaultView;
   const navigation = (): void => hyRef.close(undefined, 'navigation');
-  const scroll = (event: Event): void => { if (!container?.contains(event.target as Node)) hyRef.close(undefined, 'scroll'); };
+  const scroll = (event: Event): void => {
+    const target = event.target;
+    const NodeType = container?.ownerDocument.defaultView?.Node;
+    if (!NodeType || !(target instanceof NodeType) || !container?.contains(target)) {
+      hyRef.close(undefined, 'scroll');
+    }
+  };
   if (config.closeOnNavigation) view?.addEventListener('popstate', navigation);
   if (config.closeOnScroll) view?.addEventListener('scroll', scroll, true);
   const opened = (): void => { hyRef.opened.next(); container?.removeEventListener('animationend', onEnter); };

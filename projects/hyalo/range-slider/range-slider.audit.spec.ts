@@ -1,0 +1,50 @@
+import { TestBed } from '@angular/core/testing';
+import { describe, expect, it, vi } from 'vitest';
+import { HyRangeSlider } from './range-slider';
+
+describe('range handle policy', () => {
+  it('maps nonlinear handles while keeping distance constraints in value units', async () => {
+    const f = TestBed.createComponent(HyRangeSlider);
+    f.componentRef.setInput('minValue', 1); f.componentRef.setInput('maxValue', 100);
+    f.componentRef.setInput('value', [10, 100]); f.componentRef.setInput('minDistance', 10);
+    f.componentRef.setInput('scale', { toPosition: (v: number) => Math.log10(v) / 2, fromPosition: (p: number) => 100 ** p });
+    f.componentRef.setInput('orientation', 'vertical'); f.componentRef.setInput('reversed', true);
+    f.componentRef.setInput('marks', [{ value: 10, label: 'Ten' }]);
+    f.componentRef.setInput('valueFormatter', (v: number) => '$' + v);
+    await f.whenStable();
+    const input: HTMLInputElement = f.nativeElement.querySelector('input');
+    expect(Number(input.value)).toBeCloseTo(0.5);
+    expect(input.style.writingMode).toBe('vertical-lr');
+    expect(input.getAttribute('title')).toBe('$10');
+    expect(f.nativeElement.querySelector('option').label).toBe('Ten');
+    input.value = '1'; input.dispatchEvent(new Event('input'));
+    expect(f.componentInstance.value()[0]).toBeCloseTo(90);
+    expect(f.componentInstance.value()[1]).toBe(100);
+  });
+  it('enforces minimum and maximum distance in native bounds and emitted values', async () => {
+    const fixture = TestBed.createComponent(HyRangeSlider);
+    fixture.componentRef.setInput('value', [20, 60]);
+    fixture.componentRef.setInput('minDistance', 10);
+    fixture.componentRef.setInput('maxDistance', 50);
+    await fixture.whenStable();
+    const inputs: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll('input');
+    expect(inputs[0]!.min).toBe('10');
+    expect(inputs[0]!.max).toBe('50');
+    inputs[0]!.value = '55';
+    inputs[0]!.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toEqual([50, 60]);
+    fixture.componentRef.setInput('endDisabled', true);
+    await fixture.whenStable();
+    expect(inputs[1]!.disabled).toBe(true);
+    const committed = vi.fn();
+    fixture.componentInstance.committed.subscribe(committed);
+    inputs[0]!.dispatchEvent(new Event('change'));
+    expect(committed).toHaveBeenCalledWith([50, 60]);
+    inputs[1]!.value = '90';
+    inputs[1]!.dispatchEvent(new Event('input'));
+    inputs[1]!.dispatchEvent(new Event('change'));
+    expect(fixture.componentInstance.value()).toEqual([50, 60]);
+    expect(committed).toHaveBeenCalledTimes(1);
+  });
+});

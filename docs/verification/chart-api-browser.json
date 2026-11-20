@@ -1,0 +1,109 @@
+[
+  {
+    "name": "partial merge",
+    "passed": true
+  },
+  {
+    "name": "plugin registration and draw",
+    "passed": true
+  },
+  {
+    "name": "real point activation and composed callback",
+    "passed": true,
+    "detail": {
+      "selected": 1,
+      "clicks": 1
+    }
+  },
+  {
+    "name": "empty activation suppressed but consumer called",
+    "passed": true
+  },
+  {
+    "name": "PNG decodes",
+    "passed": true,
+    "detail": {
+      "width": 740,
+      "height": 272
+    }
+  },
+  {
+    "name": "canvas access",
+    "passed": true
+  },
+  {
+    "name": "refresh retains live instance",
+    "passed": true
+  },
+  {
+    "name": "plugin replacement teardown",
+    "passed": true
+  },
+  {
+    "name": "option replacement drops old max",
+    "passed": true
+  },
+  {
+    "name": "callback replacement",
+    "passed": true
+  },
+  {
+    "name": "pie real controller",
+    "passed": true,
+    "detail": "pie"
+  },
+  {
+    "name": "radar real controller",
+    "passed": true,
+    "detail": "radar"
+  },
+  {
+    "name": "polarArea real controller",
+    "passed": true,
+    "detail": "polarArea"
+  },
+  {
+    "name": "scatter real controller",
+    "passed": true,
+    "detail": "scatter"
+  },
+  {
+    "name": "scatter coordinates",
+    "passed": true
+  },
+  {
+    "name": "bubble real controller",
+    "passed": true,
+    "detail": "bubble"
+  },
+  {
+    "name": "bubble coordinates",
+    "passed": true
+  },
+  {
+    "name": "area real controller",
+    "passed": true,
+    "detail": "line"
+  },
+  {
+    "name": "area gradient",
+    "passed": true
+  },
+  {
+    "name": "bar real controller",
+    "passed": true,
+    "detail": "bar"
+  },
+  {
+    "name": "accessible fallback remains",
+    "passed": true
+  },
+  {
+    "name": "public reinitialize destroys and recreates",
+    "passed": true
+  },
+  {
+    "name": "route destroy clears public access",
+    "passed": true
+  }
+]

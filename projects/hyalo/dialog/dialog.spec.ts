@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -29,6 +30,59 @@ class EditAddress {
 const flush = () => new Promise((r) => setTimeout(r));
 
 describe('HyDialog', () => {
+  it('vetoes every event route without losing the surface or focus', async () => {
+    const attempts: string[] = [];
+    const ref = TestBed.inject(HyDialog).open(EditAddress, {
+      data: { street: '' }, closeOnNavigation: true, closeOnScroll: true,
+      closeGuard: attempt => { attempts.push(attempt.reason); return false; },
+    });
+    TestBed.tick();
+    await flush();
+    const panel = ref.containerElement!;
+    const input = panel.querySelector('input')!;
+    input.focus();
+    ref.close();
+    panel.querySelector('button')!.click();
+    panel.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+    document.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.dispatchEvent(new Event('scroll'));
+    await flush();
+    expect(attempts).toEqual(['programmatic', 'action', 'escape', 'backdrop', 'navigation', 'scroll']);
+    expect(ref.containerElement).toBe(panel);
+    expect(document.activeElement).toBe(input);
+    expect(panel.isConnected).toBe(true);
+  });
+
+  it('serializes pending guards and ignores approval after external disposal', async () => {
+    let resolve!: (allowed: boolean) => void;
+    const guard = vi.fn(() => new Promise<boolean>(done => resolve = done));
+    const ref = TestBed.inject(HyDialog).open(EditAddress, {data: {street: ''}, closeGuard: guard});
+    TestBed.tick();
+    const pending = ref.requestClose(undefined, 'gesture');
+    expect(await ref.requestClose()).toBe(false);
+    expect(guard).toHaveBeenCalledOnce();
+    TestBed.inject(Dialog).closeAll();
+    resolve(true);
+    expect(await pending).toBe(false);
+    expect(await ref.closed).toBeUndefined();
+  });
+
+  it('keeps the surface open when guards reject and permits a later approved attempt', async () => {
+    let allow = false;
+    const ref = TestBed.inject(HyDialog).open(EditAddress, {
+      data: {street: ''}, closeGuard: async () => { if (!allow) throw new Error('offline'); return true; },
+    });
+    TestBed.tick();
+    const errors: unknown[] = [];
+    ref.guardError.subscribe(error => errors.push(error));
+    expect(await ref.requestClose()).toBe(false);
+    expect(errors).toEqual([new Error('offline')]);
+    expect(ref.containerElement?.isConnected).toBe(true);
+    allow = true;
+    expect(await ref.requestClose('saved')).toBe(true);
+    expect(await ref.closed).toBe('saved');
+  });
   beforeEach(() => TestBed.inject(HyMotion).setReduced(true));
   afterEach(() => {
     TestBed.inject(HyMotion).setReduced(null);

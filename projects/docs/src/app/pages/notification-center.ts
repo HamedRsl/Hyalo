@@ -1,21 +1,128 @@
 import { DocsTokens } from '../shared/tokens-table';
 import { EXAMPLE } from './examples/notification-center';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HyNotificationCenter } from '@hyalo/angular/notification-center';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { HyPopover } from '@hyalo/angular/popover';
+import { HyList, HyListItem } from '@hyalo/angular/list';
+import { HyBadge } from '@hyalo/angular/badge';
+import { HyTabs, HyTab, HyTabHeader } from '@hyalo/angular/tabs';
+import { TabContent } from '@angular/aria/tabs';
+import { HyEmptyState } from '@hyalo/angular/empty-state';
+import { HyButton } from '@hyalo/angular/button';
 
 import { DocsPage } from '../shared/page';
 import { DocsExample } from '../shared/example';
 import { DocsImport } from '../shared/import';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
+
+/** Application-owned state: replace these records with data from your API. */
+export class NotificationBlockStore {
+  private readonly seed = [
+    {
+      id: 'order',
+      title: 'Order confirmed',
+      body: 'Your order is being prepared. We will let you know when it is ready.',
+      createdAt: '2026-11-17T09:00:00Z',
+      timeLabel: 'Nov 17, 09:00 UTC',
+      read: false,
+    },
+    {
+      id: 'message',
+      title: 'A new message for you',
+      body: 'Your care team shared an update to your appointment.',
+      createdAt: '2026-11-17T08:00:00Z',
+      timeLabel: 'Nov 17, 08:00 UTC',
+      read: false,
+    },
+    {
+      id: 'welcome',
+      title: 'You are all set',
+      body: 'Your notification preferences have been saved.',
+      createdAt: '2026-11-16T14:00:00Z',
+      timeLabel: 'Nov 16, 14:00 UTC',
+      read: true,
+    },
+  ];
+  readonly notifications = signal(this.seed.map((item) => ({ ...item })));
+  readonly status = signal<'ready' | 'loading' | 'error'>('ready');
+  readonly busy = computed(() => this.status() !== 'ready');
+  readonly filter = signal<'all' | 'unread'>('all');
+  readonly unreadCount = computed(() => this.notifications().filter((item) => !item.read).length);
+  readonly visible = computed(() =>
+    this.notifications().filter((item) => this.filter() === 'all' || !item.read),
+  );
+  readonly push = computed(() => this.notifications().find((item) => !item.read));
+
+  setFilter(value: string | undefined): void {
+    if (value === 'all' || value === 'unread') this.filter.set(value);
+  }
+
+  read(id: string): void {
+    if (this.busy()) return;
+    this.notifications.update((items) =>
+      items.map((item) => (item.id === id ? { ...item, read: true } : item)),
+    );
+  }
+
+  dismiss(id: string): void {
+    if (this.busy()) return;
+    this.notifications.update((items) => items.filter((item) => item.id !== id));
+  }
+
+  readAll(): void {
+    if (this.busy()) return;
+    this.notifications.update((items) => items.map((item) => ({ ...item, read: true })));
+  }
+
+  clear(): void {
+    if (this.busy()) return;
+    this.notifications.set([]);
+  }
+
+  /** Demo-only state switch. In production, set status around the host's API request. */
+  preview(value: string): void {
+    if (value === 'loading' || value === 'error') this.status.set(value);
+    else if (value === 'empty') {
+      this.status.set('ready');
+      this.clear();
+    } else if (value === 'ready') this.retry();
+  }
+
+  retry(): void {
+    // The demo has no backend: restore fixtures rather than simulate a network success.
+    this.notifications.set(this.seed.map((item) => ({ ...item })));
+    this.filter.set('all');
+    this.status.set('ready');
+  }
+}
+
 @Component({
   selector: 'docs-notification-center-page',
-  imports: [DocsTokens, DocsPage, DocsExample, DocsImport, DocsApiTable, HyNotificationCenter],
+  imports: [
+    DocsTokens,
+    DocsPage,
+    DocsExample,
+    DocsImport,
+    DocsApiTable,
+    NgTemplateOutlet,
+    HyPopover,
+    HyList,
+    HyListItem,
+    HyBadge,
+    HyTabs,
+    HyTab,
+    TabContent,
+    HyTabHeader,
+    HyEmptyState,
+    HyButton,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './notification-center.html',
-  styleUrl: './mobile-demos.css',
+  styleUrl: './notification-block.css',
 })
 export default class Page {
   protected readonly example = EXAMPLE;
+  protected readonly store = new NotificationBlockStore();
   protected readonly apiRows: ApiRow[] = [
     {
       name: 'HyNotification.image',
@@ -327,31 +434,4 @@ export default class Page {
         'notification, locale, timeZone, announce, readLabel, dismissLabel; readRequested, dismissed and action outputs.',
     },
   ];
-  protected readonly notifications = signal([
-    {
-      id: 'order',
-      title: 'Order confirmed',
-      body: 'Your order is being prepared.',
-      createdAt: '2026-11-17T09:00:00Z',
-      read: false,
-    },
-    {
-      id: 'message',
-      title: 'New message',
-      body: 'Your clinician sent an update.',
-      createdAt: '2026-11-17T08:00:00Z',
-      read: false,
-    },
-  ]);
-  protected read(id: string): void {
-    this.notifications.update((items) =>
-      items.map((item) => (item.id === id ? { ...item, read: true } : item)),
-    );
-  }
-  protected dismiss(id: string): void {
-    this.notifications.update((items) => items.filter((item) => item.id !== id));
-  }
-  protected readAll(): void {
-    this.notifications.update((items) => items.map((item) => ({ ...item, read: true })));
-  }
 }

@@ -17,7 +17,7 @@
   inline-size: 0.65rem;
   block-size: 0.65rem;
   border-radius: 50%;
-  background: var(--hy-primary);
+  background: var(--hy-timeline-dot, var(--hy-primary));
   box-shadow: 0 0 0 4px var(--hy-bg);
 }
 time,
@@ -31,6 +31,27 @@ time {
 strong {
   color: var(--hy-ink);
   margin-block-end: var(--hy-space-2);
+}
+.opposite {
+  color: var(--hy-ink-3);
+  margin-block-end: var(--hy-space-2);
+}
+:host([data-side='end']),
+:host-context(hy-timeline[data-alignment='alternate']):host(
+  :nth-child(even):not([data-side='start'])
+) {
+  text-align: end;
+  padding-inline: 0 var(--hy-space-8);
+  margin-inline: 0 0.5rem;
+  border-inline-start: 0;
+  border-inline-end: 1px solid var(--hy-line-strong);
+}
+:host([data-side='end']) .dot,
+:host-context(hy-timeline[data-alignment='alternate']):host(
+    :nth-child(even):not([data-side='start'])
+  )
+  .dot {
+  inset-inline: auto -0.35rem;
 }
 :host-context(hy-timeline[data-orientation='vertical'][data-alignment='end']) {
   padding-inline: 0 var(--hy-space-8);

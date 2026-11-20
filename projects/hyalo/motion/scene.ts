@@ -20,6 +20,7 @@ interface Participant {
   host: HTMLElement;
   handlers: HyPointerHandlers;
   scene: boolean;
+  root: Element | null;
   intersecting: boolean;
   active: boolean;
   rect?: DOMRect;
@@ -60,7 +61,7 @@ export class HySceneLight {
     )
       return () => handlers.destroy?.();
     this.start();
-    const entry: Participant = { host, handlers, scene, active: false, intersecting: false };
+    const entry: Participant = { host, handlers, scene, root, active: false, intersecting: false };
     const group = this.entries.get(host) ?? [];
     group.push(entry);
     this.entries.set(host, group);
@@ -70,6 +71,7 @@ export class HySceneLight {
         (changes) => {
           for (const change of changes)
             for (const item of this.entries.get(change.target as HTMLElement) ?? []) {
+              if (item.root !== root) continue;
               item.intersecting = change.isIntersecting;
               item.rect = undefined;
               if (!item.intersecting) this.leave(item);
@@ -86,10 +88,10 @@ export class HySceneLight {
       this.leave(entry);
       handlers.destroy?.();
       const remaining = (this.entries.get(host) ?? []).filter((item) => item !== entry);
+      if (!remaining.some((item) => item.root === root)) observer.unobserve(host);
       if (remaining.length) this.entries.set(host, remaining);
       else {
         this.entries.delete(host);
-        this.observers.forEach((o) => o.unobserve(host));
         this.resize?.unobserve(host);
       }
       if (!this.entries.size) {

@@ -8,7 +8,17 @@ dl {
   grid-template-columns: repeat(var(--hy-description-columns), minmax(0, 1fr));
   margin: 0;
 }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+header:empty {
+  display: none;
+}
 dl > div {
+  grid-column: span var(--hy-description-span-wide, 1);
   display: grid;
   grid-template-columns: minmax(7rem, 1fr) minmax(0, 2fr);
   gap: 1rem;
@@ -32,6 +42,7 @@ dl.stacked > div {
     --hy-description-columns: var(--hy-description-columns-compact);
   }
   dl > div {
+    grid-column: span var(--hy-description-span-compact, 1);
     grid-template-columns: minmax(0, 1fr);
     gap: 0.25rem;
   }

@@ -23,6 +23,8 @@ import { injectId } from '@hyalo/angular/core';
 export interface HyStepControl {
   readonly valid: boolean;
   readonly pending?: boolean;
+  /** Classic Angular controls emit when validity changes without replacing the control. */
+  readonly statusChanges?: { subscribe(next: () => void): { unsubscribe(): void } };
   reset?(): void;
 }
 @Directive({ selector: 'ng-template[hyStepContent]' })
@@ -64,7 +66,9 @@ export class HyStep {
   readonly indicatorTemplate = contentChild(HyStepIndicator);
   protected readonly lazy = contentChild(HyStepContent);
   protected readonly created = signal(false);
+  private readonly controlRevision = signal(0);
   readonly isComplete = computed(() => {
+    this.controlRevision();
     const control = this.control();
     return this.completionOverride() ?? (control ? control.valid && !control.pending : this.completed());
   });
@@ -73,6 +77,14 @@ export class HyStep {
     () => this.stepper.steps()[this.stepper.activeIndex()] === this,
   );
   constructor() {
+    effect((onCleanup) => {
+      const control = this.control();
+      this.controlRevision.update((revision) => revision + 1);
+      const subscription = control?.statusChanges?.subscribe(() =>
+        this.controlRevision.update((revision) => revision + 1),
+      );
+      onCleanup(() => subscription?.unsubscribe());
+    });
     effect(() => {
       if (this.active()) this.created.set(true);
       else if (this.destroyOnHide()) this.created.set(false);

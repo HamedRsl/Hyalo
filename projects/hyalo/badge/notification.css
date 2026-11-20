@@ -1,0 +1,14 @@
+:host {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  min-inline-size: 1.25em;
+  min-block-size: 1.25em;
+  border-radius: 999px;
+  background: var(--hy-danger);
+  color: var(--hy-danger-ink);
+  font-size: 0.75rem;
+  padding-inline: 0.25em;
+}
+:host([hidden]) { display: none; }
+:host([data-dot]) { min-inline-size: 0.5rem; min-block-size: 0.5rem; padding: 0; }

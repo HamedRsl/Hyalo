@@ -69,7 +69,7 @@
       [cellTemplate]="calendarOptions().cellTemplate"
       [headerTemplate]="calendarOptions().headerTemplate"
       [comparisonRange]="calendarOptions().comparisonRange"
-      [value]="value() ?? undefined"
+      [value]="(confirmation() ? pendingDate() : value()) ?? undefined"
       (selected)="pick($event)"
       [adapter]="adapter()"
       [locale]="locale()"
@@ -78,6 +78,13 @@
       [referenceDate]="referenceDate()"
       [isDateDisabled]="isDateDisabled()"
     />
-    <button type="button" (click)="close()">{{ closeLabel() }}</button>
+    @if (confirmation()) {
+      <button type="button" data-date-apply [disabled]="!canApply()" (click)="apply()">
+        {{ applyLabel() }}
+      </button>
+      <button type="button" data-date-cancel (click)="cancel()">{{ cancelLabel() }}</button>
+    } @else {
+      <button type="button" (click)="close()">{{ closeLabel() }}</button>
+    }
   </div>
 </ng-template>

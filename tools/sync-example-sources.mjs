@@ -121,6 +121,32 @@ function stylesOf(metadata) {
 
 // Preserve conditional wrappers when selecting CSS needed by the demo.
 function relevantCss(source, html) {
+  // Commas inside :is(), :where(), :not() and attribute strings are not
+  // selector-list separators. Keep each functional selector intact.
+  const splitSelectors = (text) => {
+    const selectors = [];
+    let start = 0,
+      depth = 0,
+      quote = '';
+    for (let index = 0; index < text.length; index++) {
+      const character = text[index];
+      if (character === '\\') {
+        index++;
+        continue;
+      }
+      if (quote) {
+        if (character === quote) quote = '';
+      } else if (character === '"' || character === "'") quote = character;
+      else if (character === '(' || character === '[') depth++;
+      else if (character === ')' || character === ']') depth--;
+      else if (character === ',' && depth === 0) {
+        selectors.push(text.slice(start, index));
+        start = index + 1;
+      }
+    }
+    selectors.push(text.slice(start));
+    return selectors;
+  };
   const classes = new Set(
     [...html.matchAll(/class="([^"]+)"/g)].flatMap((match) => match[1].split(/\s+/)),
   );
@@ -150,8 +176,7 @@ function relevantCss(source, html) {
         const inner = parse(body);
         if (inner) rules.push(`${selector} {\n${inner}\n}`);
       } else if (!selector.startsWith('@')) {
-        const selected = selector
-          .split(',')
+        const selected = splitSelectors(selector)
           .map((value) => value.trim())
           .filter(matches);
         if (selected.length) rules.push(`${selected.join(',\n')} {${body}}`);
@@ -207,11 +232,25 @@ for (const name of readdirSync(root).filter((name) => name.endsWith('.html'))) {
   const importsText = source.statements
     .filter(
       (node) =>
-        ts.isImportDeclaration(node) && /^(@angular\/|@hyalo\/|@tiptap\/|@fullcalendar\/)/.test(node.moduleSpecifier.text),
+        ts.isImportDeclaration(node) &&
+        /^(@angular\/|@hyalo\/|@tiptap\/|@fullcalendar\/)/.test(node.moduleSpecifier.text),
     )
     .map((node) => node.getText(source))
     .join('\n');
   let helperHtml = '';
+  // Copy local data contracts alongside the demo so source does not depend on
+  // declarations that only exist in the documentation page.
+  const declarations = source.statements
+    .filter(
+      (node) =>
+        ts.isInterfaceDeclaration(node) ||
+        ts.isTypeAliasDeclaration(node) ||
+        ts.isFunctionDeclaration(node) ||
+        ts.isEnumDeclaration(node) ||
+        ts.isVariableStatement(node),
+    )
+    .map((node) => print(node, source))
+    .join('\n\n');
   const helpers = source.statements
     .filter((node) => ts.isClassDeclaration(node) && node !== component)
     .map((node) => {
@@ -249,7 +288,7 @@ for (const name of readdirSync(root).filter((name) => name.endsWith('.html'))) {
       stylesOf(metadata) + '\n' + readFileSync('projects/docs/src/styles.css', 'utf8'),
       html + helperHtml,
     );
-    const code = `${importsText}\n\n${helpers ? helpers + '\n\n' : ''}@Component({\n  selector: 'app-${slug}-example',\n  imports: [${imports.join(', ')}],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  templateUrl: './example.html',${css ? "\n  styleUrl: './example.css'," : ''}\n})\nexport class ${namePart}Example${index || ''} {\n${body}\n}\n`;
+    const code = `${importsText}\n\n${declarations ? declarations + '\n\n' : ''}${helpers ? helpers + '\n\n' : ''}@Component({\n  selector: 'app-${slug}-example',\n  imports: [${imports.join(', ')}],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  templateUrl: './example.html',${css ? "\n  styleUrl: './example.css'," : ''}\n})\nexport class ${namePart}Example${index || ''} {\n${body}\n}\n`;
     return { html, ts: code, css };
   });
   for (const snippet of snippets) {

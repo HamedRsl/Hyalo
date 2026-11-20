@@ -19,6 +19,10 @@ import {
   type HyDateAdapter,
   type HyDateRange,
 } from './date-adapter';
+export interface HyDateRangePreset {
+  readonly label: string;
+  readonly range: HyDateRange;
+}
 @Component({
   selector: 'hy-date-range',
   imports: [HyField, HyDatePicker, HyCalendar],
@@ -40,6 +44,25 @@ export class HyDateRangePicker
   readonly endLabel = input('End date');
   readonly referenceDate = input<HyDate>('2026-01-01');
   readonly isDateDisabled = input<(date: HyDate) => boolean>(() => false);
+  readonly presets = input<readonly HyDateRangePreset[]>([]);
+  protected presetDisabled(range: HyDateRange): boolean {
+    return (
+      this.blocked() ||
+      !this.validRange(range) ||
+      !this.adapter().deserialize(range.start) ||
+      !this.adapter().deserialize(range.end) ||
+      range.start < (this.minDate() ?? this.adapter().min) ||
+      range.end > (this.maxDate() ?? this.adapter().max) ||
+      this.isDateDisabled()(range.start) ||
+      this.isDateDisabled()(range.end)
+    );
+  }
+  protected applyPreset(range: HyDateRange): void {
+    if (!this.presetDisabled(range)) {
+      this.value.set(range);
+      this.touch.emit();
+    }
+  }
   readonly sharedCalendar = input(false);
   readonly calendarOptions = input<HyCalendarOptions>({});
   protected readonly defaultCellClass = (): string => '';

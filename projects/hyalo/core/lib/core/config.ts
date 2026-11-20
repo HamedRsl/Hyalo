@@ -2,8 +2,23 @@ import { InjectionToken, Provider, inject } from '@angular/core';
 import type { HyFidelityTier, HyMaterial, HySize, HyTone } from './axes';
 import type { HyGsapLoader } from './gsap';
 
+/** Behavioral defaults for supported component families. Explicit inputs win. */
+export interface HyComponentPolicies {
+  readonly select?: {
+    readonly wrap?: boolean;
+    readonly typeaheadDelay?: number;
+    readonly canSelectNullable?: boolean;
+  };
+  readonly tooltip?: {
+    readonly showDelay?: number;
+    readonly hideDelay?: number;
+    readonly touch?: 'ignore' | 'show';
+  };
+}
+
 /** Global defaults read by every Hyalo component. */
 export interface HyConfig {
+  readonly components?: HyComponentPolicies;
   readonly locale?: string;
   /** Default material for glass surfaces. */
   readonly material: HyMaterial;
@@ -55,7 +70,14 @@ export function provideHyalo(config: Partial<HyConfig> = {}): Provider {
     provide: HY_CONFIG,
     useFactory: (): HyConfig => {
       const parent = inject(HY_CONFIG, { skipSelf: true, optional: true }) ?? DEFAULTS;
-      return { ...parent, ...config };
+      return {
+        ...parent,
+        ...config,
+        components: {
+          select: { ...parent.components?.select, ...config.components?.select },
+          tooltip: { ...parent.components?.tooltip, ...config.components?.tooltip },
+        },
+      };
     },
   };
 }

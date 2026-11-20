@@ -6,6 +6,9 @@
       [attr.data-material]="material()"
       [attr.data-tone]="toast.tone"
       [attr.data-leaving]="toast.leaving || null"
+      (click)="contentClick($event, toast)"
+      [attr.tabindex]="toast.dismissOnClick ? 0 : null"
+      (keydown.enter)="contentClick($event, toast)"
       (pointerdown)="onDown($event)"
       (pointermove)="onMove($event)"
       (pointerup)="onUp($event, toast)"
@@ -14,18 +17,18 @@
       @if (toast.tone !== 'neutral') {
         <hy-icon class="hy-toast__icon" [name]="toast.tone" />
       }
-      <div class="hy-toast__text">
-        @if (toast.title) {
-          <p class="hy-toast__title">{{ toast.title }}</p>
+      <div class="hy-toast__text" [class]="toast.contentClass ?? ''">
+        @if (toast.template; as template) {
+          <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(toast)" />
+        } @else {
+          @if (toast.title) {
+            <p class="hy-toast__title">{{ toast.title }}</p>
+          }
+          <p class="hy-toast__message">{{ toast.message }}</p>
         }
-        <p class="hy-toast__message">{{ toast.message }}</p>
       </div>
       @if (toast.action; as action) {
-        <button
-          type="button"
-          class="hy-toast__action"
-          (click)="action.run(); toaster.dismiss(toast.id)"
-        >
+        <button type="button" class="hy-toast__action" (click)="act(toast)">
           {{ action.label }}
         </button>
       }

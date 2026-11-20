@@ -19,6 +19,7 @@ export class RefractionRenderer {
   private readonly surfaces = new Set<Surface>();
   private frame = 0;
   private lost = false;
+  private destroyed = false;
   private readonly onLost = (event: Event): void => {
     event.preventDefault();
     this.lost = true;
@@ -34,13 +35,18 @@ export class RefractionRenderer {
     const gl = this.canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
     if (!gl) throw new Error('WebGL unavailable');
     this.gl = gl;
-    const vertex = this.shader(
-      gl.VERTEX_SHADER,
-      'attribute vec2 p; varying vec2 uv; void main(){ uv=(p+1.0)*0.5; gl_Position=vec4(p,0.0,1.0); }',
-    );
-    const fragment = this.shader(
-      gl.FRAGMENT_SHADER,
-      `
+    let vertex: WebGLShader | undefined;
+    let fragment: WebGLShader | undefined;
+    let program: WebGLProgram | null = null;
+    let buffer: WebGLBuffer | null = null;
+    try {
+      vertex = this.shader(
+        gl.VERTEX_SHADER,
+        'attribute vec2 p; varying vec2 uv; void main(){ uv=(p+1.0)*0.5; gl_Position=vec4(p,0.0,1.0); }',
+      );
+      fragment = this.shader(
+        gl.FRAGMENT_SHADER,
+        `
       precision mediump float;
       varying vec2 uv;
       uniform sampler2D image;
@@ -56,32 +62,48 @@ export class RefractionRenderer {
         vec4 color=texture2D(image,clamp(q,0.001,0.999));
         gl_FragColor=vec4(color.rgb+edge*0.07,color.a);
       }`,
-    );
-    const program = gl.createProgram();
-    if (!program) throw new Error('WebGL program unavailable');
-    this.program = program;
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('WebGL link failed');
-    gl.useProgram(program);
-    const buffer = gl.createBuffer();
-    this.buffer = buffer;
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    const position = gl.getAttribLocation(program, 'p');
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    this.uniforms = Object.fromEntries(
-      ['image', 'strength', 'aspect', 'imageAspect'].map((name) => [
-        name,
-        gl.getUniformLocation(program, name),
-      ]),
-    );
-    this.canvas.addEventListener('webglcontextlost', this.onLost);
-    // Keep CSS fallback after a context loss. A new renderer is created on the next registration.
+      );
+      program = gl.createProgram();
+      if (!program) throw new Error('WebGL program unavailable');
+      this.program = program;
+      gl.attachShader(program, vertex);
+      gl.attachShader(program, fragment);
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('WebGL link failed');
+      gl.useProgram(program);
+      buffer = gl.createBuffer();
+      if (!buffer) throw new Error('WebGL buffer unavailable');
+      this.buffer = buffer;
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+        gl.STATIC_DRAW,
+      );
+      const position = gl.getAttribLocation(program, 'p');
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      this.uniforms = Object.fromEntries(
+        ['image', 'strength', 'aspect', 'imageAspect'].map((name) => [
+          name,
+          gl.getUniformLocation(this.program, name),
+        ]),
+      );
+      this.canvas.addEventListener('webglcontextlost', this.onLost);
+      // Existing surfaces retain CSS fallback; the service can replace this renderer later.
+    } catch (error) {
+      if (buffer) gl.deleteBuffer(buffer);
+      if (program) gl.deleteProgram(program);
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      throw error;
+    } finally {
+      if (vertex) gl.deleteShader(vertex);
+      if (fragment) gl.deleteShader(fragment);
+    }
+  }
+  get available(): boolean {
+    return !this.lost;
   }
   private shader(kind: number, source: string): WebGLShader {
     const shader = this.gl.createShader(kind);
@@ -95,6 +117,7 @@ export class RefractionRenderer {
     return shader;
   }
   register(target: RefractionTarget): () => void {
+    if (!this.available) return () => undefined;
     const image = this.document.createElement('img');
     image.crossOrigin = 'anonymous';
     const surface: Surface = { target, image, texture: null, ready: false };
@@ -120,7 +143,7 @@ export class RefractionRenderer {
     };
     image.src = target.src;
     return (): void => {
-      this.surfaces.delete(surface);
+      if (!this.surfaces.delete(surface)) return;
       image.onload = null;
       if (surface.texture) this.gl.deleteTexture(surface.texture);
       target.canvas.width = 0;
@@ -177,11 +200,15 @@ export class RefractionRenderer {
     this.frame = 0;
   }
   destroy(): void {
+    if (this.destroyed) return;
+    this.destroyed = true;
     this.lost = true;
     this.stop();
     for (const surface of this.surfaces) {
       surface.image.onload = null;
       if (surface.texture) this.gl.deleteTexture(surface.texture);
+      surface.target.canvas.width = 0;
+      surface.target.canvas.removeAttribute('data-rendered');
     }
     this.surfaces.clear();
     this.canvas.removeEventListener('webglcontextlost', this.onLost);

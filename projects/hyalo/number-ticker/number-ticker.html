@@ -1,0 +1,17 @@
+<span aria-hidden="true">
+  @if (loading()) {
+    @if (loadingTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template" />
+    } @else {
+      {{ loadingLabel() }}
+    }
+  } @else if (valueTemplate(); as template) {
+    <ng-container
+      [ngTemplateOutlet]="template"
+      [ngTemplateOutletContext]="{ $implicit: live() ?? target(), formatted: formatted() }"
+    />
+  } @else {
+    <ng-container [ngTemplateOutlet]="defaultValue" />
+  }</span
+><span class="sr">{{ loading() ? loadingLabel() : accessible() }}</span>
+<ng-template #defaultValue>{{ formatted() }}</ng-template>

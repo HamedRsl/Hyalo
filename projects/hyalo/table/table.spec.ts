@@ -27,6 +27,70 @@ async function setup() {
   return fixture;
 }
 describe('HyTable', () => {
+  it('preserves multi-sort priority when changing an existing direction', async () => {
+    const fixture = await setup();
+    fixture.componentRef.setInput('sortMode', 'multiple');
+    const rows = [
+      { id: 'a', name: 'Alpha', cost: 1 },
+      { id: 'b', name: 'Beta', cost: 2 },
+      { id: 'c', name: 'Beta', cost: 1 },
+    ];
+    fixture.componentRef.setInput('data', rows);
+    const table = fixture.componentInstance;
+    table.toggleSort(columns[0]!);
+    table.toggleSort(columns[1]!);
+    table.toggleSort(columns[0]!);
+    await fixture.whenStable();
+    expect(table.query().sorts).toEqual([
+      { column: 'name', direction: 'desc' },
+      { column: 'cost', direction: 'asc' },
+    ]);
+    expect(table.pageRows().map(row => row.id)).toEqual(['c', 'b', 'a']);
+    expect(rows.map(row => row.id)).toEqual(['a', 'b', 'c']);
+  });
+  it('emits server queries without re-filtering, sorting or paging the supplied page', async () => {
+    const fixture = await setup();
+    fixture.componentRef.setInput('mode', 'server');
+    fixture.componentRef.setInput('page', 3);
+    fixture.componentRef.setInput('pageSize', 2);
+    fixture.componentRef.setInput('total', 100);
+    fixture.componentRef.setInput('search', 'no local match');
+    fixture.componentRef.setInput('filters', {cost: 999});
+    fixture.componentRef.setInput('sort', {column: 'cost', direction: 'asc'});
+    const queries: unknown[] = [];
+    const table = fixture.componentInstance;
+    table.queryChange.subscribe(query => queries.push(query));
+    table.selected.set(['a']);
+    await fixture.whenStable();
+    expect(table.pageRows()).toEqual(data);
+    expect(table.resultCount()).toBe(100);
+    expect(fixture.nativeElement.querySelector('tbody tr[aria-rowindex]').getAttribute('aria-rowindex')).toBe('6');
+    expect(queries.at(-1)).toMatchObject({page: 3, pageSize: 2, search: 'no local match', filters: {cost: 999}});
+    table.setSearch('new');
+    await fixture.whenStable();
+    expect(queries.at(-1)).toMatchObject({page: 1, search: 'new'});
+    fixture.componentRef.setInput('data', [{id: 'new', name: 'Next page', cost: 9}]);
+    await fixture.whenStable();
+    expect(table.selected()).toEqual(['a']);
+  });
+
+  it('combines global and custom column filters and resets the local page', async () => {
+    const fixture = await setup();
+    fixture.componentRef.setInput('columns', [columns[0]!, {...columns[1]!, filter: (value: unknown, row: Project) => row.cost >= Number(value)}]);
+    fixture.componentRef.setInput('page', 3);
+    fixture.componentRef.setInput('pageSize', 1);
+    const table = fixture.componentInstance;
+    table.setFilter('cost', 10);
+    table.setSearch('ZEB');
+    await fixture.whenStable();
+    expect(table.page()).toBe(1);
+    expect(table.pageRows().map(row => row.id)).toEqual(['a']);
+    table.setSearch('missing');
+    await fixture.whenStable();
+    expect(table.resultCount()).toBe(0);
+    expect(fixture.nativeElement.textContent).toContain('No results');
+  });
+
   it('cycles stable sorting without mutating caller rows', async () => {
     const fixture = await setup();
     const instance = fixture.componentInstance;
@@ -62,7 +126,7 @@ describe('HyTable', () => {
     const instance = fixture.componentInstance;
     fixture.componentRef.setInput('data', [
       ...data,
-      ...Array.from({ length: 30 }, (_, i) => ({ id: `extra-${i}`, name: 'Other', cost: i })),
+      ...Array.from({ length: 10000 }, (_, i) => ({ id: `extra-${i}`, name: 'Other', cost: i })),
     ]);
     fixture.componentRef.setInput('virtual', true);
     fixture.componentRef.setInput('overscan', 0);
@@ -74,6 +138,8 @@ describe('HyTable', () => {
     viewport.dispatchEvent(new Event('scroll'));
     await fixture.whenStable();
     expect(instance.view().map((row) => row.key)).toEqual(['extra-18', 'extra-19']);
+    expect(viewport.querySelectorAll('tbody tr[aria-rowindex]')).toHaveLength(2);
+    expect(viewport.querySelector('tbody tr[aria-rowindex]')?.getAttribute('aria-rowindex')).toBe('22');
 
     instance.setFilter('name', 'alpha');
     await fixture.whenStable();

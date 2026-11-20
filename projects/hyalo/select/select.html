@@ -10,7 +10,12 @@
   (change)="pickNative($event)"
   (blur)="touch.emit()"
 >
-  <option value="" [disabled]="required()" [selected]="!selectedOption()">
+  <option
+    value=""
+    [disabled]="required()"
+    [selected]="!selectedOption()"
+    [attr.selected]="!selectedOption() ? '' : null"
+  >
     {{ placeholder() }}
   </option>
   @for (group of groups(); track group.key) {
@@ -20,6 +25,7 @@
           <option
             [value]="item.key"
             [selected]="isSelected(item.option.value)"
+            [attr.selected]="isSelected(item.option.value) ? '' : null"
             [disabled]="item.disabled"
           >
             {{ optionLabel(item.option) }}
@@ -31,6 +37,7 @@
         <option
           [value]="item.key"
           [selected]="isSelected(item.option.value)"
+          [attr.selected]="isSelected(item.option.value) ? '' : null"
           [disabled]="item.disabled"
         >
           {{ optionLabel(item.option) }}

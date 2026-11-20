@@ -1,14 +1,21 @@
 <dl>
   <dt>{{ label() }}</dt>
   <dd>
-    <hy-number-ticker
-      [value]="value()"
-      [locale]="locale()"
-      [format]="format()"
-      [animate]="animate()"
-      [prefix]="prefix()"
-      [suffix]="suffix()"
-    />
+    @if (valueTemplate(); as template) {
+      <ng-container
+        [ngTemplateOutlet]="template"
+        [ngTemplateOutletContext]="{ $implicit: value(), formatted: formatted() }"
+      />
+    } @else {
+      <hy-number-ticker
+        [value]="value()"
+        [locale]="locale()"
+        [format]="format()"
+        [animate]="animate()"
+        [prefix]="prefix()"
+        [suffix]="suffix()"
+      />
+    }
   </dd>
 </dl>
 @if (trend()) {

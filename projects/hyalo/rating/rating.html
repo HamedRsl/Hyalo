@@ -1,5 +1,7 @@
 <div
   class="chips"
+  [style.flex-direction]="orientation() === 'vertical' ? 'column' : null"
+  [attr.aria-orientation]="orientation()"
   role="radiogroup"
   [attr.aria-label]="label() || 'Rating'"
   [attr.aria-labelledby]="field?.labelId ?? null"
@@ -8,7 +10,7 @@
   [attr.aria-required]="required() || null"
 >
   @for (choice of choices(); track choice.value; let first = $first) {
-    <label class="score"
+    <label class="score" [title]="tooltipFormatter()(choice.value)" (pointerenter)="preview(choice.value)" (pointerleave)="preview(null)"
       ><input
         type="radio"
         [id]="first ? id() : id() + '-' + choice.value"
@@ -20,7 +22,7 @@
         [attr.aria-label]="choice.text + ' out of ' + maximumText()"
         (click)="clearChoice($event, choice.value)"
         (change)="choose($event)"
-      /><span aria-hidden="true">{{ choice.text }}</span></label
+      /><span aria-hidden="true">@if (iconTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: choice.value, selected: value() >= choice.value, preview: previewValue() === choice.value }" /> } @else { {{ glyph() ?? choice.text }} }</span></label
     >
   }
 </div>

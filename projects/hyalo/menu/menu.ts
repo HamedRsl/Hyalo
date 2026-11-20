@@ -9,7 +9,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  DestroyRef,
   TemplateRef,
+  inject,
   input,
   output,
 } from '@angular/core';
@@ -26,6 +28,7 @@ import { HyIcon } from '@hyalo/angular/icon';
 export class HyMenu {}
 @Directive({
   selector: '[hyMenuTriggerFor]',
+  exportAs: 'hyMenuTrigger',
   hostDirectives: [
     {
       directive: CdkMenuTrigger,
@@ -38,7 +41,22 @@ export class HyMenu {}
     },
   ],
 })
-export class HyMenuTrigger {}
+export class HyMenuTrigger {
+  private readonly trigger = inject(CdkMenuTrigger);
+  private readonly destroyRef = inject(DestroyRef);
+  open(): void {
+    if (!this.destroyRef.destroyed) this.trigger.open();
+  }
+  close(): void {
+    if (!this.destroyRef.destroyed) this.trigger.close();
+  }
+  toggle(): void {
+    if (!this.destroyRef.destroyed) this.trigger.toggle();
+  }
+  isOpen(): boolean {
+    return !this.destroyRef.destroyed && this.trigger.isOpen();
+  }
+}
 const itemStyles =
   ':host{display:flex;align-items:center;gap:.75rem;inline-size:100%;min-block-size:44px;padding:.5rem .75rem;border:0;border-radius:var(--hy-radius-s);background:transparent;color:var(--hy-ink);font:inherit;text-align:start;text-decoration:none;cursor:pointer;box-sizing:border-box}:host(:focus){outline:2px solid var(--hy-primary);outline-offset:-2px;background:var(--hy-primary-wash)}:host(:hover){background:var(--hy-surface-3)}:host([aria-disabled=true]){opacity:.45;cursor:default}:host([aria-checked=true]){background:var(--hy-primary-wash)}:host([aria-checked=true])::after{content:"";inline-size:.4rem;block-size:.7rem;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg);margin-inline-start:auto}';
 @Component({

@@ -1,436 +1,198 @@
-import { DocsTokens } from '../shared/tokens-table';
-import { EXAMPLE } from './examples/chat';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import {
-  HyChatComposer,
-  HyMessageList,
-  type HyChatMessage,
-  type HyChatSubmission,
-} from '@hyalo/angular/chat';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { HyAvatar } from '@hyalo/angular/avatar';
+import { HyButton } from '@hyalo/angular/button';
+import { HyCard } from '@hyalo/angular/card';
+import { HY_TEXT_FIELD } from '@hyalo/angular/field';
+import { HyScrollArea } from '@hyalo/angular/scroll-area';
 import { DocsPage } from '../shared/page';
 import { DocsExample } from '../shared/example';
 import { DocsImport } from '../shared/import';
-import { DocsApiTable, type ApiRow } from '../shared/api-table';
+import { EXAMPLE } from './examples/chat';
+
+// These records belong to this example. Extend them to match your marketplace.
+type Delivery = 'received' | 'read' | 'local' | 'pending' | 'failed';
+interface MarketplaceMessage {
+  readonly id: string;
+  readonly sender: string;
+  readonly own: boolean;
+  readonly text: string;
+  readonly instant: string;
+  readonly delivery: Delivery;
+  readonly attachments: readonly { readonly name: string; readonly url: string }[];
+}
+
 @Component({
   selector: 'docs-chat-page',
   imports: [
-    DocsTokens,
     DocsPage,
     DocsExample,
     DocsImport,
-    DocsApiTable,
-    HyMessageList,
-    HyChatComposer,
+    HyAvatar,
+    HyButton,
+    HyCard,
+    HY_TEXT_FIELD,
+    HyScrollArea,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chat.html',
-  styleUrl: './mobile-demos.css',
+  styleUrl: './marketplace-chat.css',
 })
 export default class Page {
   protected readonly example = EXAMPLE;
-  protected readonly apiRows: ApiRow[] = [
+  // Application-owned records, not a library conversation schema.
+  readonly messages = signal<readonly MarketplaceMessage[]>([
     {
-      name: 'HyChatAttachment.mimeType',
-      type: 'string',
-      default: 'data',
-      description: 'Optional attachment MIME metadata.',
+      id: 'seller-1',
+      sender: 'Maya Chen',
+      own: false,
+      text: 'Hi! The chair is still available. It has the original oak finish.',
+      instant: '2026-11-17T09:00:00Z',
+      delivery: 'received',
+      attachments: [
+        {
+          name: 'Sample attachment (PDF · demo)',
+          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        },
+      ],
     },
     {
-      name: 'HyChatAttachment.size',
-      type: 'number',
-      default: 'data',
-      description: 'Optional attachment size in bytes.',
+      id: 'buyer-1',
+      sender: 'You',
+      own: true,
+      text: 'It looks lovely. Could I collect it on Saturday?',
+      instant: '2026-11-17T09:02:00Z',
+      delivery: 'read',
+      attachments: [],
     },
     {
-      name: 'HyChatBubble.attachmentActivated',
-      type: 'HyChatAttachment',
-      default: 'output',
-      description: 'Attachment activation data; the native link remains usable.',
-    },
-    {
-      name: 'HyChatBubble.showSender',
-      type: 'boolean',
-      default: 'true',
-      description: 'Shows the sender name.',
-    },
-    {
-      name: 'HyChatBubble.showAvatar',
-      type: 'boolean',
-      default: 'true',
-      description: 'Shows the optional sender avatar.',
-    },
-    {
-      name: 'HyChatBubble.dateFormat',
-      type: 'Intl.DateTimeFormatOptions',
-      default: "{ timeStyle: 'short' }",
-      description: 'Intl date/time formatting options; timeZone remains explicit.',
-    },
-    {
-      name: 'HyMessageList.messageTemplate',
-      type: 'TemplateRef<{\n    $implicit: HyChatMessage;\n    index: number;\n  }> | undefined',
-      default: 'undefined',
-      description: 'Custom message content with message and index context.',
-    },
-    {
-      name: 'HyMessageList.showSender',
-      type: 'boolean',
-      default: 'true',
-      description: 'Shows the sender name.',
-    },
-    {
-      name: 'HyMessageList.showAvatar',
-      type: 'boolean',
-      default: 'true',
-      description: 'Shows the optional sender avatar.',
-    },
-    {
-      name: 'HyMessageList.dateFormat',
-      type: 'Intl.DateTimeFormatOptions',
-      default: "{ timeStyle: 'short' }",
-      description: 'Intl date/time formatting options; timeZone remains explicit.',
-    },
-    {
-      name: 'HyMessageList.nearBottomThreshold',
-      type: 'number',
-      default: '80',
-      description: 'Distance from the bottom that permits near-bottom autoscrolling.',
-    },
-    {
-      name: 'HyMessageList.attachmentActivated',
-      type: '{\n    readonly message: HyChatMessage;\n    readonly attachment: HyChatAttachment;\n  }',
-      default: 'output',
-      description: 'Attachment activation data; the native link remains usable.',
-    },
-    {
-      name: 'HyMessageList.scrollToMessage()',
-      type: '(id: string) => boolean',
-      default: 'method',
-      description: 'Scrolls to an existing message ID and reports whether it exists.',
-    },
-    {
-      name: 'HyChatSubmission.text',
-      type: 'string',
-      default: 'data',
-      description: 'Message text preserved as plain text.',
-    },
-    {
-      name: 'HyChatSubmission.files',
-      type: 'readonly File[]',
-      default: 'data',
-      description: 'Controlled attachment selection; uploads remain application-owned.',
-    },
-    {
-      name: 'HyChatFileRejection.file',
-      type: 'File',
-      default: 'data',
-      description: 'Rejected file.',
-    },
-    {
-      name: 'HyChatFileRejection.reason',
-      type: "'count' | 'size'",
-      default: 'data',
-      description: 'Dismissal source; programmatic, backdrop, Escape, gesture, or close button.',
-    },
-    {
-      name: 'HyChatComposer.message',
-      type: 'string',
-      default: "''",
-      description: 'Controlled composer draft.',
-    },
-    {
-      name: 'HyChatComposer.files',
-      type: 'readonly File[]',
-      default: '[]',
-      description: 'Controlled attachment selection; uploads remain application-owned.',
-    },
-    {
-      name: 'HyChatComposer.disabled',
-      type: 'boolean',
-      default: 'false',
-      description: 'Prevents new user and programmatic actions.',
-    },
-    {
-      name: 'HyChatComposer.pending',
-      type: 'boolean',
-      default: 'false',
-      description: 'Pending execution state; prevents further interaction.',
-    },
-    {
-      name: 'HyChatComposer.label',
-      type: 'string',
-      default: "'Message'",
-      description: 'Accessible name for the composer.',
-    },
-    {
-      name: 'HyChatComposer.placeholder',
-      type: 'string',
-      default: "'Write a message'",
-      description: 'Localized draft prompt.',
-    },
-    {
-      name: 'HyChatComposer.sendLabel',
-      type: 'string',
-      default: "'Send'",
-      description: 'Localized submit text.',
-    },
-    {
-      name: 'HyChatComposer.attachLabel',
-      type: 'string',
-      default: "'Attach files'",
-      description: 'Localized file-picker label.',
-    },
-    {
-      name: 'HyChatComposer.removeLabel',
-      type: 'string',
-      default: "'Remove attachment'",
-      description: 'Localized attachment removal label.',
-    },
-    {
-      name: 'HyChatComposer.allowAttachments',
-      type: 'boolean',
-      default: 'false',
-      description: 'Enables the native attachment picker and addFiles API.',
-    },
-    {
-      name: 'HyChatComposer.accept',
-      type: 'string',
-      default: "''",
-      description: 'Native file-picker MIME/extension hint; hosts still validate uploaded content.',
-    },
-    {
-      name: 'HyChatComposer.maxFiles',
-      type: 'number',
-      default: '10',
-      description: 'Maximum attachment count.',
-    },
-    {
-      name: 'HyChatComposer.maxFileSize',
-      type: 'number | undefined',
-      default: 'undefined',
-      description: 'Optional per-file byte limit.',
-    },
-    {
-      name: 'HyChatComposer.submitOnEnter',
-      type: 'boolean',
-      default: 'true',
-      description: 'Enter submits; Shift+Enter inserts a newline and composition is preserved.',
-    },
-    {
-      name: 'HyChatComposer.clearOnSubmit',
-      type: 'boolean',
-      default: 'true',
-      description: 'Clears the draft and selected files before emitting the submission.',
-    },
-    {
-      name: 'HyChatComposer.submitted',
-      type: 'HyChatSubmission',
-      default: 'output',
-      description: 'Text and files to send through the application transport.',
-    },
-    {
-      name: 'HyChatComposer.filesRejected',
-      type: 'readonly HyChatFileRejection[]',
-      default: 'output',
-      description: 'Files rejected by count or byte limits, with reasons.',
-    },
-    {
-      name: 'HyChatComposer.send()',
-      type: '(event?: Event) => void',
-      default: 'method',
-      description: 'Submits an eligible text or attachment draft.',
-    },
-    {
-      name: 'HyChatComposer.addFiles()',
-      type: '(files: readonly File[]) => void',
-      default: 'method',
-      description: 'Adds eligible files and reports rejected entries.',
-    },
-    {
-      name: 'HyChatComposer.removeFile()',
-      type: '(index: number) => void',
-      default: 'method',
-      description: 'Removes one selected file by index.',
-    },
-    {
-      name: 'HyChatBubble.message',
-      type: 'HyChatMessage',
-      default: 'required',
-      description: 'Public input; see the live example and exported TypeScript declaration.',
-    },
-    {
-      name: 'HyChatBubble.locale',
-      type: 'string',
-      default: 'undefined',
-      description: 'Intl locale; inherits the shared HyLocale when omitted.',
-    },
-    {
-      name: 'HyChatBubble.timeZone',
-      type: 'string',
-      default: "'UTC'",
-      description: 'Explicit timezone used for deterministic timestamp formatting.',
-    },
-    {
-      name: 'HyChatBubble.retryLabel',
-      type: 'string',
-      default: "'Retry message'",
-      description: 'Localized text for retry.',
-    },
-    {
-      name: 'HyChatBubble.statusLabels',
-      type: 'Readonly<Record<HyMessageStatus, string>>',
-      default: 'see type defaults',
-      description: 'Localized text for each delivery state.',
-    },
-    {
-      name: 'HyChatBubble.retry',
-      type: 'string',
-      default: 'output',
-      description: 'Requests another attempt for a failed message ID.',
-    },
-    {
-      name: 'HyMessageList.messages',
-      type: 'readonly HyChatMessage[]',
-      default: 'required',
-      description: 'Immutable conversation history with stable message IDs.',
-    },
-    {
-      name: 'HyMessageList.label',
-      type: 'string',
-      default: 'required',
-      description: 'Accessible name for the control or region.',
-    },
-    {
-      name: 'HyMessageList.locale',
-      type: 'string',
-      default: 'undefined',
-      description: 'Intl locale; inherits the shared HyLocale when omitted.',
-    },
-    {
-      name: 'HyMessageList.timeZone',
-      type: 'string',
-      default: "'UTC'",
-      description: 'Explicit timezone used for deterministic timestamp formatting.',
-    },
-    {
-      name: 'HyMessageList.height',
-      type: 'string',
-      default: "'24rem'",
-      description: 'CSS block size of the native scrolling viewport.',
-    },
-    {
-      name: 'HyMessageList.autoScroll',
-      type: "'off' | 'near-bottom' | 'always'",
-      default: "'near-bottom'",
-      description: 'Off, always, or only when the reader was already near the newest message.',
-    },
-    {
-      name: 'HyMessageList.live',
-      type: "'off' | 'polite'",
-      default: "'off'",
-      description: 'Controls live announcements; avoid announcing initial history.',
-    },
-    {
-      name: 'HyMessageList.emptyLabel',
-      type: 'string',
-      default: "'No messages yet'",
-      description: 'Localized text for empty.',
-    },
-    {
-      name: 'HyMessageList.newMessagesLabel',
-      type: 'string',
-      default: "'New messages'",
-      description: 'Localized text for new messages.',
-    },
-    {
-      name: 'HyMessageList.loadOlderLabel',
-      type: 'string',
-      default: "'Load older messages'",
-      description: 'Localized text for load older.',
-    },
-    {
-      name: 'HyMessageList.canLoadOlder',
-      type: 'boolean',
-      default: 'false',
-      description: 'Exposes the Load older messages control.',
-    },
-    {
-      name: 'HyMessageList.loadingOlder',
-      type: 'boolean',
-      default: 'false',
-      description: 'Disables repeated history requests and shows loading feedback.',
-    },
-    {
-      name: 'HyMessageList.retryLabel',
-      type: 'string',
-      default: "'Retry message'",
-      description: 'Localized text for retry.',
-    },
-    {
-      name: 'HyMessageList.statusLabels',
-      type: 'Readonly<Record<HyMessageStatus, string>>',
-      default: 'see type defaults',
-      description: 'Localized text for each delivery state.',
-    },
-    {
-      name: 'HyMessageList.olderRequested',
-      type: 'void',
-      default: 'output',
-      description: 'Requests older history from the host.',
-    },
-    {
-      name: 'HyMessageList.retry',
-      type: 'string',
-      default: 'output',
-      description: 'Requests another attempt for a failed message ID.',
-    },
-    {
-      name: 'HyChatMessage',
-      type: 'readonly object',
-      default: 'data',
-      description:
-        'id, sender, text, direction, timestamp, delivery status, quote, and attachments with id/name/url.',
-    },
-    {
-      name: 'HyChatBubble',
-      type: 'component',
-      default: 'standalone export',
-      description: 'message, locale, timeZone, retryLabel, statusLabels; retry output.',
-    },
-    {
-      name: 'scrollToEnd()',
-      type: 'void',
-      default: 'method',
-      description: 'Moves to the newest content after explicit user intent.',
-    },
-  ];
-  protected readonly messages = signal<readonly HyChatMessage[]>([
-    {
-      id: 'welcome',
-      text: 'How can we help?',
-      sender: 'Support',
-      direction: 'incoming' as const,
-      timestamp: '2026-11-17T09:00:00Z',
-      status: 'delivered' as const,
+      id: 'seller-2',
+      sender: 'Maya Chen',
+      own: false,
+      text: 'Saturday works. I can meet you at the studio after 10.',
+      instant: '2026-11-17T09:04:00Z',
+      delivery: 'received',
+      attachments: [],
     },
   ]);
-  protected send(submission: HyChatSubmission): void {
-    const text = submission.text.trim();
-    if (!text) return;
+  readonly deliveryLabels: Readonly<Record<Delivery, string>> = {
+    received: 'Received',
+    read: 'Read',
+    local: 'Local draft',
+    pending: 'Pending · demo',
+    failed: 'Not sent · demo',
+  };
+  readonly draft = signal('');
+  readonly composerError = signal('');
+  readonly editingId = signal<string | null>(null);
+  readonly announcement = signal('');
+  readonly pending = computed(() =>
+    this.messages().some((message) => message.delivery === 'pending'),
+  );
+  private savedDraft = '';
+  private nextId = 1;
+
+  edit(id: string): void {
+    if (this.pending() || this.editingId()) return;
+    const message = this.messages().find((item) => item.id === id && item.delivery === 'local');
+    if (!message) return;
+    this.savedDraft = this.draft();
+    this.editingId.set(id);
+    this.updateDraft(message.text);
+    this.announcement.set('Editing local draft. Nothing has been sent.');
+  }
+
+  cancelEdit(): void {
+    if (this.pending() || !this.editingId()) return;
+    this.editingId.set(null);
+    this.updateDraft(this.savedDraft);
+    this.announcement.set('Edit cancelled. Previous composer draft restored.');
+  }
+
+  // Explicit preview controls only: no network, timers or fabricated acknowledgement.
+  preview(id: string, delivery: 'pending' | 'failed' | 'local'): void {
+    if (this.editingId()) return;
+    const message = this.messages().find((item) => item.id === id);
+    if (!message || !['local', 'pending', 'failed'].includes(message.delivery)) return;
+    const allowed =
+      delivery === 'pending'
+        ? !this.pending() && ['local', 'failed'].includes(message.delivery)
+        : message.delivery === 'pending';
+    if (!allowed) return;
+    this.messages.update((items) =>
+      items.map((item) => (item.id === id ? { ...item, delivery } : item)),
+    );
+    this.announcement.set(`${this.deliveryLabels[delivery]}. Preview only; nothing is sent.`);
+  }
+
+  updateDraft(value: string): void {
+    if (this.pending()) return;
+    this.draft.set(value);
+    this.composerError.set('');
+  }
+
+  submit(event: Event): void {
+    event.preventDefault();
+    if (this.pending()) return;
+    const text = this.draft().trim();
+    if (!text) {
+      this.composerError.set('Write a message before adding a draft.');
+      return;
+    }
+    const editingId = this.editingId();
+    if (editingId) {
+      this.messages.update((items) =>
+        items.map((item) => (item.id === editingId ? { ...item, text } : item)),
+      );
+      this.editingId.set(null);
+      this.draft.set(this.savedDraft);
+      this.composerError.set('');
+      this.announcement.set('Local draft updated. Nothing has been sent.');
+      return;
+    }
     this.messages.update((items) => [
       ...items,
       {
-        id: 'message-' + items.length,
-        text,
+        id: `local-${this.nextId++}`,
         sender: 'You',
-        direction: 'outgoing' as const,
-        timestamp: '2026-11-17T09:05:00Z',
-        status: 'delivered' as const,
+        own: true,
+        text,
+        instant: '2026-11-17T09:05:00Z',
+        delivery: 'local',
+        attachments: [],
       },
     ]);
+    this.announcement.set('Local draft added. Nothing has been sent.');
+    this.draft.set('');
+    this.composerError.set('');
   }
-  protected retry(id: string): void {
-    this.messages.update((items) =>
-      items.map((item) => (item.id === id ? { ...item, status: 'delivered' as const } : item)),
+
+  readonly clock = new Intl.DateTimeFormat('en-GB', { timeStyle: 'short', timeZone: 'UTC' });
+  formatTime(instant: string): string {
+    // Date-only values have no instant semantics. Require an explicit UTC ISO instant.
+    const valid = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(instant);
+    const value = Date.parse(instant);
+    return valid && Number.isFinite(value) ? this.clock.format(value) : 'Time unavailable';
+  }
+
+  safeAttachmentUrl(value: string): string | null {
+    const hasControlOrSpace = Array.from(value).some(
+      (character) => (character.codePointAt(0) ?? 0) <= 32 || character.codePointAt(0) === 127,
     );
+    if (
+      !/^https?:\/\//i.test(value) ||
+      value.includes('\\') ||
+      hasControlOrSpace ||
+      /%0[ad]/i.test(value)
+    )
+      return null;
+
+    try {
+      const url = new URL(value);
+      return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password
+        ? url.href
+        : null;
+    } catch {
+      return null;
+    }
   }
 }

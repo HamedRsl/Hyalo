@@ -91,6 +91,12 @@ export class HyTable<T> {
     const { first, last } = this.rowWindow();
     const rows = this.pageRows();
     const groupBy = this.groupBy();
+    const groups = new Map<string, T[]>();
+    if (groupBy) for (const row of rows) {
+      const group = groupBy(row);
+      const members = groups.get(group);
+      if (members) members.push(row); else groups.set(group, [row]);
+    }
     let previousGroup = groupBy && first > 0 ? rows.slice(first - 1, first).map(groupBy)[0] : undefined;
 
     return rows.slice(first, last).map((row, offset) => {
@@ -106,6 +112,7 @@ export class HyTable<T> {
         selectable: this.rowSelectable()(row),
         selected: this.selectedSet().has(key),
         group,
+        groupRows: group === undefined ? [] : groups.get(group) ?? [],
         groupStart,
         cells: this.orderedColumns().map((column) => ({ column, value: column.cell(row) })),
       };
@@ -124,7 +131,12 @@ export class HyTable<T> {
   toggleSort(column: HyTableColumn<T>, additive = this.sortMode() === 'multiple'): void {
     if (!column.sortable) return; const active = this.activeSorts(), current = active.find(sort => sort.column === column.id)?.direction ?? null;
     const cycle = this.sortCycle().length ? this.sortCycle() : ['asc','desc',null] as const; const direction = cycle[(cycle.indexOf(current)+1)%cycle.length] ?? null;
-    const next = [...(additive ? active.filter(sort => sort.column !== column.id) : []), ...(direction ? [{column:column.id,direction}] : [])];
+    const nextSort: HyTableSort[] = direction ? [{ column: column.id, direction }] : [];
+    const next = additive
+      ? active.some(sort => sort.column === column.id)
+        ? active.flatMap(sort => sort.column === column.id ? nextSort : [sort])
+        : [...active, ...nextSort]
+      : nextSort;
     if (this.sortMode() === 'multiple') this.sorts.set(next); else this.sort.set(next[0] ?? null); this.page.set(1); this.action.emit({type:'sort',column:column.id});
   }
   sortDirection(id: string): 'asc' | 'desc' | undefined { return this.activeSorts().find(sort => sort.column === id)?.direction; }
@@ -160,6 +172,11 @@ export class HyTable<T> {
   }
   protected scroll(event: Event): void { const element = event.target as HTMLElement; this.scrollOffset.set(element.scrollTop); this.viewportHeight.set(element.clientHeight); }
   exportCsv(scope: 'filtered' | 'all' | 'selected' = 'filtered'): string { const rows = scope === 'all' ? this.data() : scope === 'selected' ? this.data().filter(row => this.selectedSet().has(this.rowKey()(row))) : this.sorted(); const encode = (value: unknown): string => '"'+String(value ?? '').replace(/"/g,'""')+'"'; return [this.orderedColumns().map(col => encode(col.header)).join(','),...rows.map(row => this.orderedColumns().map(col => encode(col.cell(row))).join(','))].join('\r\n'); }
-  saveState(): HyTableState { return {...this.query(),selected:[...this.selected()],columnOrder:[...this.columnOrder()],columnWidths:{...this.columnWidths()}}; }
-  restoreState(state: HyTableState): void { this.page.set(state.page); this.pageSize.set(state.pageSize); this.sorts.set(state.sorts); this.sort.set(state.sorts[0] ?? null); this.filters.set(state.filters); this.search.set(state.search); this.selected.set(state.selected); this.columnOrder.set(state.columnOrder); this.columnWidths.set(state.columnWidths); }
+  saveState(): HyTableState { return {...this.query(),sorts:this.activeSorts().map(sort => ({...sort})),filters:{...this.filters()},selected:[...this.selected()],columnOrder:[...this.columnOrder()],columnWidths:{...this.columnWidths()}}; }
+  restoreState(state: HyTableState): void {
+    const sorts = state.sorts.map(sort => ({...sort}));
+    this.page.set(state.page); this.pageSize.set(state.pageSize); this.sorts.set(sorts); this.sort.set(sorts[0] ?? null);
+    this.filters.set({...state.filters}); this.search.set(state.search); this.selected.set([...state.selected]);
+    this.columnOrder.set([...state.columnOrder]); this.columnWidths.set({...state.columnWidths});
+  }
 }

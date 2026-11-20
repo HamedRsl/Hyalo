@@ -9,7 +9,8 @@
     description="A complete hero without a required animation engine."
     actionHref="/dashboard"
     actionLabel="Explore the dashboard"
-    ><div hyBlockMedia class="stage">
+    ><a hyBlockActions routerLink="/components">Browse components</a>
+    <div hyBlockMedia class="stage">
       Your media, refraction surface or interactive stage
     </div></hy-hero-block
   >
@@ -25,8 +26,41 @@
     actionLabel="Explore the gallery"
     ><div hyBlockMedia class="stage">Product media slot</div></hy-product-block
   >
+  <h2>Composition contracts</h2>
+  <p>
+    Hero exposes hyBlockMedia and hyBlockActions; the second CTA is a native projected link in DOM
+    focus order. Product exposes hyBlockMedia and hyBlockOptions. Plans use stable IDs and a
+    controlled monthly/annual billing model. Features, testimonials, KPIs and activity accept
+    readonly data with stable IDs; replace arrays when data changes. Activity dateTime values are
+    ISO instants. Static content and CSS Grid need no graphics engine; enhancement belongs inside
+    the media slot.
+  </p>
+  <p>
+    Hosts own loading, errors, empty data and success: keep the section mounted, set aria-busy on
+    its region, show a named status or alert and offer a native retry button. Do not turn a sample
+    quote, price, billing selection or request event into a claim of backend success. Dense repeated
+    cards use tinted material. Change locale and direction with the Kit Controller to inspect
+    Persian/RTL.
+  </p>
   <h2>Dashboard compositions</h2>
-  <h2>Transactional forms</h2><p>HyAuthBlock, HyBookingBlock, and HySettingsBlock compose the advanced controls with host-owned requested actions, pending state, and error feedback. Open the Advanced forms demo from the sidebar to try them.</p>
+  <h2>Copyable application screens</h2>
+  <p>
+    Notification inboxes, marketplace conversations and fintech keypads are compositions, not new
+    control families. Copy the complete TypeScript, HTML and CSS, then connect your own store,
+    transport and authorization. Existing wrapper exports remain available for compatibility; the
+    editable blocks are the recommended starting point.
+  </p>
+  <ul>
+    <li><a routerLink="/blocks/notifications">Notification inbox and push card</a></li>
+    <li><a routerLink="/blocks/marketplace-chat">09 Marketplace conversation</a></li>
+    <li><a routerLink="/blocks/transfer">06 Fintech transfer with inline numeric keypad</a></li>
+  </ul>
+  <h2>Transactional forms</h2>
+  <p>
+    HyAuthBlock, HyBookingBlock, and HySettingsBlock compose the advanced controls with host-owned
+    requested actions, pending state, and error feedback. Open the Advanced forms demo from the
+    sidebar to try them.
+  </p>
   <hy-kpi-strip-block [items]="kpis" /><hy-activity-block [items]="activities" />
   <p>
     HyDashboardBlock projects a sidebar, toolbar and main content. HyFilterToolbarBlock preserves

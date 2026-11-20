@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { HyPopover } from './popover';
 import { HyTooltip } from './tooltip';
 
@@ -106,5 +107,58 @@ describe('HyPopover', () => {
     await fixture.whenStable();
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(document.activeElement).toBe(trigger);
+  });
+
+  it('repositions when lazy content resizes and stops observing after dismissal', async () => {
+    let resized: ResizeObserverCallback | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback: ResizeObserverCallback) {
+          resized = callback;
+        }
+        observe = observe;
+        disconnect = disconnect;
+      },
+    );
+    try {
+      const { fixture, trigger } = await setup();
+      trigger.click();
+      await waitFor(() => document.querySelector('.hy-popover'));
+      await fixture.whenStable();
+      expect(observe).toHaveBeenCalled();
+      const directive = fixture.debugElement.query(By.directive(HyPopover)).injector.get(HyPopover);
+      const overlay = (directive as unknown as { overlayRef: { updatePosition(): void } })
+        .overlayRef;
+      const update = vi.spyOn(overlay, 'updatePosition');
+      const pane = document.querySelector('.hy-popover');
+      pane?.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'scale' }));
+      expect(update).toHaveBeenCalled();
+      update.mockClear();
+      resized?.([], {} as ResizeObserver);
+      await wait(50);
+      expect(update).toHaveBeenCalled();
+      directive.close();
+      await fixture.whenStable();
+      expect(disconnect).toHaveBeenCalled();
+      update.mockClear();
+      resized?.([], {} as ResizeObserver);
+      await wait(50);
+      expect(update).not.toHaveBeenCalled();
+      observe.mockClear();
+      trigger.click();
+      await fixture.whenStable();
+      await wait();
+      expect(document.querySelector('.hy-popover')).toBe(pane);
+      expect(observe).toHaveBeenCalled();
+      update.mockClear();
+      resized?.([], {} as ResizeObserver);
+      await wait(50);
+      expect(update).toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

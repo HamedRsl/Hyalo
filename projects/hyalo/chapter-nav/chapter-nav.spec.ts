@@ -81,6 +81,27 @@ describe('HyChapterNav', () => {
     };
   }
 
+  it('emits exact click/active payloads and a single completion across duplicate scrollend events', async () => {
+    const { fixture, nav, pane, links } = await setup();
+    const clicked = vi.fn(),
+      active = vi.fn(),
+      scrolled = vi.fn();
+    nav.chapterClick.subscribe(clicked);
+    nav.activeChange.subscribe(active);
+    nav.scrolled.subscribe(scrolled);
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    links[1]!.dispatchEvent(event);
+    await fixture.whenStable();
+    expect(clicked).toHaveBeenCalledWith({ id: 'chapter-care', event });
+    expect(active).toHaveBeenCalledWith('chapter-care');
+    expect(scrolled).not.toHaveBeenCalled();
+    pane.scrollTop = 402;
+    pane.dispatchEvent(new Event('scroll'));
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    pane.dispatchEvent(new Event('scrollend'));
+    pane.dispatchEvent(new Event('scrollend'));
+    expect(scrolled).toHaveBeenCalledExactlyOnceWith({ id: 'chapter-care', position: 402 });
+  });
   it('preserves route and query in native fallback links', async () => {
     const { fixture, links } = await setup();
     expect(links[1]!.getAttribute('href')).toBe('/components/chapter-nav?lang=fa#chapter-care');
@@ -180,6 +201,15 @@ describe('HyChapterNav', () => {
     fixture.componentRef.setInput('sticky', false);
     await fixture.whenStable();
     expect(fixture.nativeElement.dataset['sticky']).toBe('false');
+  });
+  it('renders a horizontal scrollable navigation row without the vertical progress thread', async () => {
+    const f = TestBed.createComponent(HyChapterNav);
+    f.componentRef.setInput('chapters', [{ id: 'one', label: 'One' }]);
+    f.componentRef.setInput('orientation', 'horizontal');
+    await f.whenStable();
+    expect(getComputedStyle(f.nativeElement.querySelector('nav')).display).toBe('flex');
+    expect(getComputedStyle(f.nativeElement.querySelector('ol')).display).toBe('flex');
+    expect(getComputedStyle(f.nativeElement.querySelector('.thread')).display).toBe('none');
   });
   it('uses instant scrolling for reduced motion', async () => {
     const { nav, scroll } = await setup();

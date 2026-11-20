@@ -1,7 +1,16 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { TestBed } from '@angular/core/testing';
+import { Component, viewChild, TemplateRef } from '@angular/core';
 import { HyMotion } from '@hyalo/angular';
-import { HyToaster } from './toaster';
+import { HyToaster, type HyToastContext } from './toaster';
+
+@Component({
+  template:
+    '<ng-template #body let-toast let-dismiss="dismiss"><button class="custom" (click)="dismiss()">{{ toast.message }} rich</button></ng-template>',
+})
+class RichToastFixture {
+  readonly body = viewChild.required<TemplateRef<HyToastContext>>('body');
+}
 
 describe('HyToaster', () => {
   let announce: ReturnType<typeof vi.fn>;
@@ -100,5 +109,88 @@ describe('HyToaster', () => {
     expect(visible.map((t) => t.message)).toEqual(['n2', 'n3', 'n4', 'n5']);
     vi.advanceTimersByTime(300);
     expect(toaster.items().length).toBe(4);
+  });
+
+  it('isolates channel limits, duplicates, pauses and dismissal', () => {
+    const toaster = TestBed.inject(HyToaster);
+    const uploads = toaster.channel('uploads', {
+      maxVisible: 1,
+      duplicates: 'ignore',
+      position: 'top-start',
+    });
+    expect(toaster.channel('uploads')).toBe(uploads);
+    const first = uploads.show({ message: 'One', duration: 1000 });
+    expect(uploads.show({ message: 'One', duration: 1000 })).toBe(first);
+    toaster.show({ message: 'Default', duration: 1000 });
+    uploads.pause('hover');
+    vi.advanceTimersByTime(1400);
+    expect(toaster.items()).toHaveLength(0);
+    expect(uploads.items()).toHaveLength(1);
+    uploads.show({ message: 'Two', duration: 0 });
+    expect(
+      uploads
+        .items()
+        .filter((item) => !item.leaving)
+        .map((item) => item.message),
+    ).toEqual(['Two']);
+    uploads.dismissAll();
+    vi.advanceTimersByTime(300);
+    expect(uploads.items()).toHaveLength(0);
+  });
+
+  it('renders template context and settles closure only after removal', async () => {
+    const fixture = TestBed.createComponent(RichToastFixture);
+    fixture.detectChanges();
+    const toaster = TestBed.inject(HyToaster);
+    const ref = toaster.show({
+      message: 'Hello',
+      template: fixture.componentInstance.body(),
+      announcement: 'off',
+    });
+    let result: unknown;
+    void ref.closed.then((value) => (result = value));
+    TestBed.tick();
+    const button = document.querySelector<HTMLButtonElement>('.custom')!;
+    expect(button.textContent).toBe('Hello rich');
+    expect(announce).not.toHaveBeenCalled();
+    button.click();
+    expect(result).toBeUndefined();
+    vi.advanceTimersByTime(300);
+    await Promise.resolve();
+    expect(result).toBe('dismiss');
+  });
+
+  it('settles action and timeout reasons exactly once', async () => {
+    const toaster = TestBed.inject(HyToaster);
+    const run = vi.fn();
+    const action = toaster.show({ message: 'Undo', action: { label: 'Undo', run } });
+    const timed = toaster.show({ message: 'Timed', duration: 100 });
+    TestBed.tick();
+    document.querySelector<HTMLButtonElement>('.hy-toast__action')!.click();
+    action.dismiss();
+    vi.advanceTimersByTime(500);
+    expect(await action.closed).toBe('action');
+    expect(await timed.closed).toBe('timeout');
+    expect(run).toHaveBeenCalledOnce();
+  });
+  it('uses responsive stack width and opt-in noninteractive content dismissal', async () => {
+    const toaster = TestBed.inject(HyToaster).channel('position', {
+      position: 'top-start',
+      width: '30rem',
+    });
+    const ref = toaster.show({
+      message: 'Click',
+      dismissOnClick: true,
+      contentClass: 'custom-message',
+    });
+    TestBed.tick();
+    const stack = document.querySelector<HTMLElement>('.hy-toast-stack')!;
+    const expected = document.createElement('div');
+    expected.style.inlineSize = 'min(30rem, calc(100vw - 2rem))';
+    expect(stack.style.inlineSize).toBe(expected.style.inlineSize);
+    expect(stack.closest<HTMLElement>('.cdk-global-overlay-wrapper')!.style.alignItems).toBe('flex-start');
+    document.querySelector<HTMLElement>('.hy-toast__message')!.click();
+    vi.advanceTimersByTime(300);
+    expect(await ref.closed).toBe('dismiss');
   });
 });

@@ -1,3 +1,3 @@
 @if (visible()) {
-  <button type="button" (click)="scroll()">↑ {{ label() }}</button>
+  <button type="button" (click)="scroll()"><span aria-hidden="true">@if (iconTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" /> } @else { ↑ }</span> {{ label() }}</button>
 }

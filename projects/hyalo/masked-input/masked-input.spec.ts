@@ -3,6 +3,19 @@ import { describe, expect, it } from 'vitest';
 import { HyMaskedInput } from './masked-input';
 import { normalizeIranianPhone } from './mask';
 describe('identifier editing', () => {
+  it('emits completion only when user input reaches the mask capacity', async () => {
+    const fixture = TestBed.createComponent(HyMaskedInput);
+    fixture.componentRef.setInput('mask', '##-##');
+    await fixture.whenStable();
+    const values: string[] = [];
+    fixture.componentInstance.completed.subscribe((value) => values.push(value));
+    const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+    for (const value of ['12', '1234', '1234', '123', '1234']) {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    }
+    expect(values).toEqual(['1234', '1234']);
+  });
   it('normalizes phone prefixes and preserves leading zeros', () => {
     expect(normalizeIranianPhone('+۹۸۹۱۲۳۴۵۶۷۸۹')).toBe('09123456789');
     expect(normalizeIranianPhone('0098 912 345 6789')).toBe('09123456789');

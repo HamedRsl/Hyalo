@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HyHoverCard } from './hover-card';
+import { By } from '@angular/platform-browser';
 import { expectNoAxeViolations } from '../src/testing/axe';
+@Component({
+  imports: [HyHoverCard],
+  template:
+    '<button [hyHoverCard]="card" hoverCardLabel="Details" [hoverCardShowDelay]="10" [hoverCardHideDelay]="20" hoverCardPanelClass="custom-card">Open</button><ng-template #card>Details</ng-template>',
+})
+class TimingHost {}
 @Component({
   imports: [HyHoverCard],
   template:
@@ -9,6 +16,31 @@ import { expectNoAxeViolations } from '../src/testing/axe';
 })
 class Host {}
 describe('HyHoverCard', () => {
+  it('honors public show and hide delays, panel classes, and destruction', async () => {
+    const fixture = TestBed.createComponent(TimingHost);
+    await fixture.whenStable();
+    const trigger: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    const card = fixture.debugElement.query(By.directive(HyHoverCard)).injector.get(HyHoverCard);
+    vi.useFakeTimers();
+    try {
+      trigger.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' }));
+      vi.advanceTimersByTime(9);
+      expect(card.open()).toBe(false);
+      vi.advanceTimersByTime(1);
+      expect(card.open()).toBe(true);
+      expect(document.querySelector('.custom-card')).not.toBeNull();
+      trigger.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse' }));
+      vi.advanceTimersByTime(19);
+      expect(card.open()).toBe(true);
+      vi.advanceTimersByTime(1);
+      expect(card.open()).toBe(false);
+      fixture.destroy();
+      card.show();
+      expect(document.querySelector('.custom-card')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((el) => el.remove()));
   it('opens on focus, retains focus until requested, and only Escape closes the card', async () => {
     const fixture = TestBed.createComponent(Host);

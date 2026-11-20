@@ -1,4 +1,5 @@
 import {
+  TemplateRef,
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
@@ -9,9 +10,11 @@ import {
   signal,
 } from '@angular/core';
 import { ɵinjectIsBrowser } from '@hyalo/angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { HyMotion } from '@hyalo/angular/motion';
 @Component({
   selector: 'hy-scroll-to-top',
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './scroll-to-top.html',
   styleUrl: './scroll-to-top.css',
@@ -20,6 +23,7 @@ export class HyScrollToTop {
   private readonly document = inject(DOCUMENT);
   private readonly motion = inject(HyMotion);
   private readonly browser = ɵinjectIsBrowser();
+  readonly iconTemplate = input<TemplateRef<unknown>>();
   readonly label = input('Back to top');
   readonly threshold = input(400);
   readonly behavior = input<ScrollBehavior>('smooth');

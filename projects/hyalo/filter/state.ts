@@ -89,18 +89,38 @@ export function isFilterToken(value: unknown): value is HyFilterToken {
   }
   if (data.kind === 'preset')
     return 'preset' in data && ['24H', '7D', '30D', '1Y'].includes(String(data.preset));
-  const instant = (v: unknown): v is string =>
-    typeof v === 'string' &&
-    /^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(v) &&
-    Number.isFinite(Date.parse(v));
+
   return (
     data.kind === 'absolute' &&
     'start' in data &&
     'end' in data &&
-    instant(data.start) &&
-    instant(data.end) &&
+    isInstant(data.start) &&
+    isInstant(data.end) &&
     Date.parse(data.start) < Date.parse(data.end)
   );
+}
+
+/** Date.parse normalizes some invalid dates, so validate the wall fields first. */
+function isInstant(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match =
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,9}))?)?(Z|[+-]\d{2}:\d{2})$/.exec(
+      value,
+    );
+  if (!match) return false;
+  const year = Number(match[1]),
+    month = Number(match[2]),
+    day = Number(match[3]);
+  const hour = Number(match[4]),
+    minute = Number(match[5]),
+    second = Number(match[6] ?? 0);
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  if (days === undefined || day < 1 || day > days || hour > 23 || minute > 59 || second > 59)
+    return false;
+  const zone = match[8];
+  if (zone !== 'Z' && (Number(zone?.slice(1, 3)) > 23 || Number(zone?.slice(4)) > 59)) return false;
+  return Number.isFinite(Date.parse(value));
 }
 
 /** Presets are rolling elapsed intervals; both editors use start-inclusive/end-exclusive instants. */

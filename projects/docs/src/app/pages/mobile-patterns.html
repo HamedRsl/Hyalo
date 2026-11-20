@@ -4,42 +4,140 @@
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="mobile-demo">
-      <hy-wallet-block
-        [accounts]="accounts"
-        [actions]="actions"
-        (selected)="transferState.set('idle')"
-      />
-      <hy-transfer-block
-        currency="USD"
-        [state]="transferState()"
-        [error]="transferError()"
-        (submitted)="submit($event)"
-        ><p hyTransferDetails>
-          Demo only. Review the recipient, currency and fees before authorizing a real payment.
-        </p></hy-transfer-block
+      <hy-wallet-block [accounts]="accounts" [actions]="actions" />
+      <form
+        class="transfer-screen"
+        aria-labelledby="transfer-heading"
+        novalidate
+        [attr.aria-busy]="transferState() === 'loading'"
+        (submit)="submit($event)"
       >
-      @if (request()) {
-        <p>Reviewing {{ request()?.amount }} USD for {{ request()?.recipient }}</p>
-      }
-      <div class="composer">
-        <button
-          hyButton
-          type="button"
-          variant="ghost"
-          [disabled]="transferState() !== 'loading'"
-          (click)="transferState.set('success')"
-        >
-          Simulate success</button
-        ><button
-          hyButton
-          type="button"
-          variant="ghost"
-          [disabled]="transferState() !== 'loading'"
-          (click)="fail()"
-        >
-          Simulate failure
+        <header class="transfer-header">
+          <p class="transfer-eyebrow">06 Fintech · P2P transfer</p>
+          <h2 id="transfer-heading">Send money</h2>
+          <p>Everyday account · USD</p>
+        </header>
+        <label for="transfer-recipient">Recipient</label>
+        <input
+          id="transfer-recipient"
+          type="text"
+          autocomplete="off"
+          maxlength="120"
+          [value]="recipient()"
+          [disabled]="locked()"
+          (input)="editRecipient($event)"
+        />
+        <label for="transfer-amount">Amount · USD</label>
+        <input
+          id="transfer-amount"
+          class="transfer-amount"
+          type="text"
+          inputmode="decimal"
+          dir="ltr"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="transfer-amount-help"
+          [value]="amountDisplay()"
+          [disabled]="locked()"
+          (input)="editAmount($event)"
+          (compositionend)="editAmount($event)"
+        />
+        <p id="transfer-amount-help" class="transfer-hint">
+          Enter more than zero, up to 9 whole digits and 2 decimal places. Persian and Arabic digits
+          are supported. Extra digits and invalid edits are rejected, never rounded.
+        </p>
+        <div class="transfer-keypad" role="group" aria-label="Amount keypad" dir="ltr">
+          @for (key of keys; track key) {
+            <button
+              hyButton
+              type="button"
+              variant="ghost"
+              [attr.data-key]="key"
+              [disabled]="locked()"
+              [attr.aria-label]="
+                key === 'backspace'
+                  ? 'Delete last digit'
+                  : key === '.'
+                    ? 'Decimal separator'
+                    : keyLabel(key)
+              "
+              (click)="pressKey(key)"
+            >
+              {{ keyLabel(key) }}
+            </button>
+          }
+        </div>
+        <dl class="transfer-review">
+          <div>
+            <dt>Currency</dt>
+            <dd>USD</dd>
+          </div>
+          <div>
+            <dt>Demo fee</dt>
+            <dd>0.00 USD</dd>
+          </div>
+        </dl>
+        <p class="transfer-hint">
+          Demo only. No money is sent. A real app must validate, authorize and submit on the server.
+        </p>
+        <button hyButton type="submit" data-confirm [disabled]="!canConfirm()">
+          {{ transferState() === 'error' ? 'Retry demo transfer' : 'Confirm demo transfer' }}
         </button>
-      </div>
+        <p data-status role="status" aria-live="polite">
+          @switch (transferState()) {
+            @case ('idle') {
+              Review the recipient and amount before confirming.
+            }
+            @case ('loading') {
+              Demo pending. Choose a simulated outcome below.
+            }
+            @case ('error') {
+              Review the details and retry this demo.
+            }
+            @case ('success') {
+              Demo complete. No money was sent.
+            }
+          }
+        </p>
+        @if (transferState() === 'error') {
+          <p role="alert">{{ transferError() }}</p>
+        }
+        @if (request(); as submitted) {
+          <p data-request>Demo request: {{ submitted.amount }} USD for {{ submitted.recipient }}</p>
+        }
+        <div class="composer" aria-label="Demo controls">
+          <button
+            hyButton
+            type="button"
+            variant="ghost"
+            data-simulate="success"
+            [disabled]="transferState() !== 'loading'"
+            (click)="succeed()"
+          >
+            Simulate success
+          </button>
+          <button
+            hyButton
+            type="button"
+            variant="ghost"
+            data-simulate="error"
+            [disabled]="transferState() !== 'loading'"
+            (click)="fail()"
+          >
+            Simulate failure
+          </button>
+          <button
+            hyButton
+            type="button"
+            variant="ghost"
+            data-reset
+            [disabled]="transferState() === 'loading'"
+            (click)="resetTransfer()"
+          >
+            Start over
+          </button>
+        </div>
+      </form>
       <button hyButton type="button" (click)="orderOpen.set(true)">Track order</button>
       <hy-order-tracker-block
         [(open)]="orderOpen"
@@ -62,8 +160,10 @@
   </p>
   <h2>Import</h2>
   <p>
-    Import HyWalletBlock, HyTransferBlock, and HyOrderTrackerBlock from @hyalo/angular/blocks. The
-    copyable example contains the complete public imports.
+    The transfer screen composes native inputs and HyButton from @hyalo/angular/button with the
+    Phase 0 normalizeDigits helper from @hyalo/angular/core. HyWalletBlock and HyOrderTrackerBlock
+    remain optional surrounding examples from @hyalo/angular/blocks. The copyable example contains
+    the complete public imports and editable screen styles; it needs no transfer or keypad wrapper.
   </p>
   <h2>API and slots</h2>
   <docs-api-table [rows]="rows"

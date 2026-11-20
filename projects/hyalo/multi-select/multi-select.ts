@@ -55,11 +55,15 @@ export class HyMultiSelect<T> extends HyOptionQuery<T> implements FormValueContr
         this.results().find((item) => this.same(item.option.value, value))?.option.value ?? value,
     ),
   );
-  protected readonly selected = computed(() =>
-    this.knownOptions().filter((option) =>
-      this.selection().some((value) => this.same(value, option.value)),
-    ),
-  );
+  protected readonly selected = computed(() => {
+    const values = this.value();
+    if (!values.length) return [];
+    const options = this.knownOptions();
+    return values.map((value) => options.find((option) => this.same(value, option.value)) ?? {
+      value,
+      label: this.displayWith()?.(value) ?? String(value),
+    });
+  });
   protected readonly selectedLabel = computed(() => this.selected()[0]?.label ?? '');
   protected readonly visibleChips = computed(() => {
     const max = this.maxVisibleChips();

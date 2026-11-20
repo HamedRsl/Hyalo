@@ -44,7 +44,7 @@ import { loadPopoverOverlay as loadOverlay } from './load-overlay';
     'aria-haspopup': 'dialog',
     '[attr.aria-expanded]': 'open()',
     '[attr.aria-controls]': 'open() ? panelId : null',
-    '(click)': 'toggle()',
+    '(click)': 'onTriggerClick()',
     // Fetch the overlay code as soon as the user heads for the trigger.
     '(pointerenter)': 'preload()',
     '(focusin)': 'preload()',
@@ -61,9 +61,18 @@ export class HyPopover {
   private readonly presence = new HyPresence();
   private destroyed = false;
   private positioned = false;
+  private resizeObserver: ResizeObserver | null = null;
+  private positionFrame = 0;
+  private timer: ReturnType<typeof setTimeout> | undefined;
 
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
+  readonly popoverContext = input<unknown>();
+  readonly popoverTrigger = input<'click' | 'manual'>('click');
+  /** False keeps the panel open on Escape, outside pointer and focus exit. */
+  readonly popoverAutoClose = input(true);
+  readonly popoverShowDelay = input(0);
+  readonly popoverHideDelay = input(0);
   /** Accessible name of the panel. */
   readonly popoverLabel = input<string>();
   /** Use solid over image content when the background would reduce text contrast. */
@@ -80,16 +89,40 @@ export class HyPopover {
     });
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
+      clearTimeout(this.timer);
+      this.stopPositionTracking();
       this.overlayRef?.dispose();
     });
   }
 
   toggle(): void {
-    this.open.update((v) => !v);
+    if (this.open()) this.hide();
+    else this.show();
+  }
+
+  protected onTriggerClick(): void {
+    if (this.popoverTrigger() === 'click') this.toggle();
+  }
+
+  show(): void {
+    clearTimeout(this.timer);
+    if (this.destroyed) return;
+    const delay = Math.max(0, this.popoverShowDelay());
+    if (!delay) this.open.set(true);
+    else this.timer = setTimeout(() => this.open.set(true), delay);
+  }
+
+  hide(): void {
+    clearTimeout(this.timer);
+    if (this.destroyed) return;
+    const delay = Math.max(0, this.popoverHideDelay());
+    if (!delay) this.close();
+    else this.timer = setTimeout(() => this.close(), delay);
   }
 
   /** Closes the panel, optionally moving focus back to the trigger. */
   close(restoreFocus = true): void {
+    clearTimeout(this.timer);
     if (!this.open()) return;
     this.open.set(false);
     if (restoreFocus) this.host.nativeElement.focus();
@@ -119,6 +152,9 @@ export class HyPopover {
     if (!this.overlayRef) {
       this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withViewportMargin(12)
+        // Content owns its scroll bounds. A flexible-fit box can be shorter
+        // than the actual panel and put its heading above the viewport.
+        .withFlexibleDimensions(false)
         .withPush(true)
         // The panel grows out of its trigger, not out of its own centre.
         .withTransformOriginOn('.hy-popover');
@@ -127,17 +163,30 @@ export class HyPopover {
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: 'hy-popover-pane',
       });
+      this.overlayRef.overlayElement.addEventListener('transitionend', (event) => {
+        if (
+          event.target === this.overlayRef?.overlayElement &&
+          (event.propertyName === 'scale' || event.propertyName === 'transform') &&
+          this.open()
+        ) {
+          this.overlayRef.updatePosition();
+        }
+      });
       this.overlayRef.keydownEvents().subscribe((event) => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && this.popoverAutoClose()) {
           event.preventDefault();
           this.close();
         }
       });
       this.overlayRef.outsidePointerEvents().subscribe((event) => {
-        if (!this.host.nativeElement.contains(event.target as Node)) this.close(false);
+        if (this.popoverAutoClose() && !this.host.nativeElement.contains(event.target as Node))
+          this.close(false);
       });
     }
     if (this.overlayRef.hasAttached()) {
+      const pane = this.overlayRef.overlayElement;
+      pane.addEventListener('focusout', this.onFocusOut);
+      this.startPositionTracking(pane);
       // Reopened while fading out: turn the exit around.
       if (this.presence.leaving && this.positioned)
         this.reveal(this.overlayRef.overlayElement, focusTraps);
@@ -163,7 +212,35 @@ export class HyPopover {
       if (this.destroyed || !this.open() || !this.overlayRef?.hasAttached()) return;
       this.reveal(pane, focusTraps);
     });
-    this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
+    this.overlayRef.attach(
+      new TemplatePortal(this.content(), this.viewContainer, this.popoverContext()),
+    );
+    this.startPositionTracking(pane);
+  }
+
+  private startPositionTracking(pane: HTMLElement): void {
+    // Lazy tabs/templates can change the panel size after CDK's initial
+    // measurement. Reposition on actual size changes, not a guessed timer.
+    if (typeof ResizeObserver === 'function') {
+      this.resizeObserver?.disconnect();
+      this.resizeObserver = new ResizeObserver(() => {
+        const view = pane.ownerDocument.defaultView;
+        if (this.positionFrame || this.destroyed || !this.open()) return;
+        this.positionFrame =
+          view?.requestAnimationFrame(() => {
+            this.positionFrame = 0;
+            if (!this.destroyed && this.open()) this.overlayRef?.updatePosition();
+          }) ?? 0;
+      });
+      this.resizeObserver.observe(pane);
+    }
+  }
+
+  private stopPositionTracking(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+    this.host.nativeElement.ownerDocument.defaultView?.cancelAnimationFrame?.(this.positionFrame);
+    this.positionFrame = 0;
   }
 
   private reveal(pane: HTMLElement, focusTraps: FocusTrapFactory): void {
@@ -180,6 +257,7 @@ export class HyPopover {
   }
 
   private detach(): void {
+    this.stopPositionTracking();
     const ref = this.overlayRef;
     if (!ref?.hasAttached()) return;
     ref.overlayElement.removeEventListener('focusout', this.onFocusOut);
@@ -189,6 +267,7 @@ export class HyPopover {
   private readonly onFocusOut = (event: FocusEvent): void => {
     const next = event.relatedTarget as Node | null;
     if (
+      this.popoverAutoClose() &&
       next &&
       !this.overlayRef?.overlayElement.contains(next) &&
       next !== this.host.nativeElement

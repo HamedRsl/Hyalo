@@ -3,6 +3,26 @@ import { HyMeter } from './meter';
 import { expectNoAxeViolations } from '../src/testing/axe';
 
 describe('HyMeter', () => {
+  it('normalizes semantic thresholds and derives accessible quality text', async () => {
+    const f = TestBed.createComponent(HyMeter);
+    for (const [key, value] of Object.entries({
+      label: 'CPU',
+      value: 85,
+      low: 20,
+      high: 80,
+      optimum: 10,
+    }))
+      f.componentRef.setInput(key, value);
+    await f.whenStable();
+    expect(f.nativeElement.getAttribute('data-quality')).toBe('worst');
+    expect(f.nativeElement.getAttribute('aria-valuetext')).toBe('85: Suboptimal');
+    f.componentRef.setInput('value', 10);
+    await f.whenStable();
+    expect(f.nativeElement.getAttribute('data-quality')).toBe('optimum');
+    f.componentRef.setInput('valueText', 'Custom reading');
+    await f.whenStable();
+    expect(f.nativeElement.getAttribute('aria-valuetext')).toBe('Custom reading');
+  });
   it('reports a measurement in its own range and clamps the reading', async () => {
     const f = TestBed.createComponent(HyMeter);
     f.componentRef.setInput('label', 'Memory');

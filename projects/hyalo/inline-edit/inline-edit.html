@@ -1,6 +1,8 @@
 @if (editing()) {
   <div class="control">
-    @if (multiline()) {
+    @if (editorTemplate(); as custom) {
+      <ng-container [ngTemplateOutlet]="custom" [ngTemplateOutletContext]="editorContext()" />
+    } @else if (multiline()) {
       <textarea
         [id]="id()"
         [name]="name()"
@@ -47,6 +49,13 @@
     [attr.aria-describedby]="describedBy()"
     (click)="begin()"
   >
-    {{ value() || placeholder() }}
+    @if (displayTemplate(); as custom) {
+      <ng-container
+        [ngTemplateOutlet]="custom"
+        [ngTemplateOutletContext]="{ $implicit: value() }"
+      />
+    } @else {
+      {{ value() || placeholder() }}
+    }
   </button>
 }

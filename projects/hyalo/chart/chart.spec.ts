@@ -2,6 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { HY_CHART_LOADER, HyChart } from './chart';
 import { expectNoAxeViolations } from '../src/testing/axe';
 describe('HyChart', () => {
+  beforeEach(() =>
+    vi.stubGlobal('matchMedia', () => ({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  );
   afterEach(() => vi.unstubAllGlobals());
   it('keeps a readable data table and destroys instances on replacement and teardown', async () => {
     const configs: unknown[] = [],
@@ -35,6 +42,40 @@ describe('HyChart', () => {
     const before = destroy.mock.calls.length;
     fixture.destroy();
     expect(destroy.mock.calls.length).toBe(before + 1);
+  });
+  it('preserves the external tooltip and token scales with partial consumer options', async () => {
+    let config!: {
+      options: {
+        plugins: { tooltip: { enabled: boolean; external: unknown } };
+        scales: { y: { max: number; ticks: { color: string } } };
+      };
+    };
+    class Chart {
+      constructor(_canvas: unknown, value: unknown) {
+        config = value as typeof config;
+      }
+      destroy() {}
+    }
+    TestBed.configureTestingModule({
+      providers: [{ provide: HY_CHART_LOADER, useValue: async () => ({ Chart }) }],
+    });
+    vi.stubGlobal('IntersectionObserver', undefined);
+    const f = TestBed.createComponent(HyChart);
+    f.componentRef.setInput('label', 'Revenue');
+    f.componentRef.setInput('data', {
+      labels: ['Jan'],
+      series: [{ label: 'Sales', values: [20] }],
+    });
+    f.componentRef.setInput('options', {
+      plugins: { legend: { display: false } },
+      scales: { y: { max: 100 } },
+    });
+    await f.whenStable();
+    expect(config.options.plugins.tooltip.enabled).toBe(false);
+    expect(config.options.plugins.tooltip.external).toBeTypeOf('function');
+    expect(config.options.scales.y.max).toBe(100);
+    expect(config.options.scales.y.ticks.color).toBeTruthy();
+    f.destroy();
   });
   it('ignores a late engine load after destruction', async () => {
     let resolve: ((value: unknown) => void) | undefined;

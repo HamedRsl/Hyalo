@@ -1,4 +1,4 @@
-<form (submit)="send($event)">
+<form (submit)="send($event)" [attr.aria-busy]="pending()">
   <h2>{{ heading() }}</h2>
   <hy-field label="Workspace name"><input hyInput type="text" [formField]="f.name" /></hy-field>
   <hy-field label="Teams"><hy-multi-select [formField]="f.teams" [options]="teams()" /></hy-field>

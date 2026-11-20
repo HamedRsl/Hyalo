@@ -9,7 +9,7 @@
   <select
     [attr.aria-label]="countryLabel()"
     [disabled]="blocked()"
-    [value]="country()"
+    [value]="currentCountry().code"
     (change)="chooseCountry($event)"
   >
     @for (item of filteredCountries(); track item.code) {

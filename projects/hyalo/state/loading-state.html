@@ -1,5 +1,9 @@
 <div class="loading">
-  <hy-spinner [label]="label()" aria-hidden="true" />
+  <div class="illustration">
+    <ng-content select="[hyStateIllustration]"
+      ><hy-spinner [label]="label()" aria-hidden="true"
+    /></ng-content>
+  </div>
   <div class="copy">
     <p class="label" [attr.aria-live]="live()" aria-atomic="true">{{ label() }}</p>
     @if (description()) {

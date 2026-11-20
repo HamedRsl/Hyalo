@@ -347,7 +347,7 @@ describe('phase 2 effects and fallbacks', () => {
   it('registers refraction only on high tier and releases it when fidelity changes', async () => {
     const remove = vi.fn();
     const register = vi.fn().mockResolvedValue(remove);
-    TestBed.overrideProvider(HyRefractionRenderer, { useValue: { register } });
+    TestBed.overrideProvider(HyRefractionRenderer, { useValue: { register, draw: vi.fn() } });
     const fixture = TestBed.createComponent(EffectsHost);
     await fixture.whenStable();
     TestBed.inject(HyFidelity).setTier('medium');

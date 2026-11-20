@@ -5,7 +5,15 @@ import {
   type OverlayRef,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Injectable, Injector, inject, signal } from '@angular/core';
+import {
+  DestroyRef,
+  InjectionToken,
+  Injectable,
+  Injector,
+  type TemplateRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { ɵinjectIsBrowser as injectIsBrowser } from '@hyalo/angular/core';
 import { MOTION } from '@hyalo/angular/motion';
 import { HyToastStack } from './toast-stack';
@@ -15,6 +23,11 @@ export type HyToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
 /** What to show. */
 export interface HyToastOptions {
+  readonly dismissOnClick?: boolean;
+  readonly contentClass?: string;
+  readonly template?: TemplateRef<HyToastContext>;
+  readonly announcement?: 'off' | 'polite' | 'assertive';
+  readonly announcementText?: string;
   readonly message: string;
   readonly title?: string;
   readonly tone?: HyToastTone;
@@ -35,10 +48,23 @@ export interface HyToastItem extends HyToastOptions {
 
 /** Handle to a shown toast. */
 export interface HyToastRef {
+  readonly closed: Promise<HyToastCloseReason>;
   dismiss(): void;
 }
+export type HyToastCloseReason =
+  'dismiss' | 'timeout' | 'action' | 'swipe' | 'overflow' | 'destroy' | 'server';
+export interface HyToastContext {
+  readonly $implicit: HyToastItem;
+  readonly dismiss: () => void;
+}
 
-const MAX_VISIBLE = 4;
+export interface HyToastChannelConfig {
+  readonly width?: string;
+  readonly position?: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
+  readonly maxVisible?: number;
+  readonly duplicates?: 'allow' | 'ignore';
+}
+const CHANNEL_CONFIG = new InjectionToken<HyToastChannelConfig>('Toast channel configuration');
 
 /** @internal Why the timers are on hold. Hover and focus are tracked apart. */
 export type HyToastHold = 'hover' | 'focus';
@@ -59,6 +85,43 @@ export type HyToastHold = 'hover' | 'focus';
  */
 @Injectable({ providedIn: 'root' })
 export class HyToaster {
+  /** @internal Responsive width applied by the stack, independent of placement. */
+  get stackWidth(): string {
+    return `min(${this.config.width ?? '24rem'}, calc(100vw - 2rem))`;
+  }
+  private readonly config = inject(CHANNEL_CONFIG, { optional: true }) ?? {};
+  private readonly channels = new Map<string, HyToaster>();
+  private readonly refs = new Map<number, HyToastRef>();
+  private readonly results = new Map<
+    number,
+    { reason?: HyToastCloseReason; resolve: (reason: HyToastCloseReason) => void }
+  >();
+  private readonly exits = new Set<ReturnType<typeof setTimeout>>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      for (const id of this.timers.keys()) this.clearTimer(id);
+      for (const timer of this.exits) clearTimeout(timer);
+      this.overlayRef?.dispose();
+      for (const result of this.results.values()) result.resolve('destroy');
+      this.results.clear();
+    });
+  }
+
+  /** Named stacks are independent. Configuration is fixed on first access. */
+  channel(name: string, config: HyToastChannelConfig = {}): HyToaster {
+    let channel = this.channels.get(name);
+    if (!channel) {
+      const child = Injector.create({
+        parent: this.injector,
+        providers: [HyToaster, { provide: CHANNEL_CONFIG, useValue: config }],
+      });
+      channel = child.get(HyToaster);
+      this.channels.set(name, channel);
+      this.injector.get(DestroyRef).onDestroy(() => child.destroy());
+    }
+    return channel;
+  }
   private readonly injector = inject(Injector);
   private readonly announcer = inject(LiveAnnouncer);
   private readonly isBrowser = injectIsBrowser();
@@ -75,20 +138,45 @@ export class HyToaster {
 
   /** Shows a toast. Does nothing during server rendering. */
   show(options: HyToastOptions): HyToastRef {
+    if (this.config.duplicates === 'ignore') {
+      const duplicate = this.items().find(
+        (item) =>
+          !item.leaving &&
+          item.message === options.message &&
+          item.title === options.title &&
+          item.tone === (options.tone ?? 'neutral'),
+      );
+      const existing = duplicate ? this.refs.get(duplicate.id) : undefined;
+      if (existing) return existing;
+    }
     const id = this.nextId++;
-    const ref = { dismiss: () => this.dismiss(id) };
-    if (!this.isBrowser) return ref;
+    let resolve!: (reason: HyToastCloseReason) => void;
+    const closed = new Promise<HyToastCloseReason>((done) => (resolve = done));
+    const ref = { closed, dismiss: () => this.dismiss(id) };
+    if (!this.isBrowser) {
+      resolve('server');
+      return ref;
+    }
+    this.results.set(id, { resolve });
+    this.refs.set(id, ref);
     this.ensureStack();
 
     const item: HyToastItem = { tone: 'neutral', ...options, id, leaving: false };
     this.items.update((list) => [...list, item]);
     // Toasts already on their way out do not count, and are not picked again.
     const staying = this.items().filter((t) => !t.leaving);
-    const overflow = staying.length - MAX_VISIBLE;
-    for (const old of staying.slice(0, Math.max(0, overflow))) this.dismiss(old.id);
+    const limit = this.config.maxVisible;
+    const overflow =
+      staying.length -
+      (limit !== undefined && Number.isFinite(limit) ? Math.max(1, Math.trunc(limit)) : 4);
+    for (const old of staying.slice(0, Math.max(0, overflow))) this.dismiss(old.id, 'overflow');
 
     const text = options.title ? `${options.title}. ${options.message}` : options.message;
-    void this.announcer.announce(text, item.tone === 'danger' ? 'assertive' : 'polite');
+    if (options.announcement !== 'off')
+      void this.announcer.announce(
+        options.announcementText ?? text,
+        options.announcement ?? (item.tone === 'danger' ? 'assertive' : 'polite'),
+      );
 
     const duration = options.duration ?? (options.action ? 0 : 5000);
     if (duration > 0) {
@@ -107,15 +195,26 @@ export class HyToaster {
   }
 
   /** Hides one toast with its exit animation, a fade with reduced motion. */
-  dismiss(id: number): void {
+  dismiss(id: number, reason: HyToastCloseReason = 'dismiss'): void {
     this.clearTimer(id);
     if (!this.items().some((t) => t.id === id && !t.leaving)) return;
+    const result = this.results.get(id);
+    if (result) result.reason = reason;
     this.items.update((list) => list.map((t) => (t.id === id ? { ...t, leaving: true } : t)));
-    setTimeout(() => this.remove(id), MOTION.quick.duration * 1000 + 40);
+    const timer = setTimeout(
+      () => {
+        this.exits.delete(timer);
+        this.remove(id);
+      },
+      MOTION.quick.duration * 1000 + 40,
+    );
+    this.exits.add(timer);
   }
 
   /** @internal Removes a toast that already left the screen, as after a swipe. */
   discard(id: number): void {
+    const result = this.results.get(id);
+    if (result && !result.reason) result.reason = 'swipe';
     this.clearTimer(id);
     this.remove(id);
   }
@@ -156,17 +255,27 @@ export class HyToaster {
     const timer = this.timers.get(id);
     if (!timer) return;
     timer.started = Date.now();
-    timer.handle = setTimeout(() => this.dismiss(id), Math.max(0, timer.left));
+    timer.handle = setTimeout(() => this.dismiss(id, 'timeout'), Math.max(0, timer.left));
   }
 
   private remove(id: number): void {
+    const result = this.results.get(id);
+    result?.resolve(result.reason ?? 'dismiss');
+    this.results.delete(id);
+    this.refs.delete(id);
     this.items.update((list) => list.filter((t) => t.id !== id));
   }
 
   private ensureStack(): void {
     if (this.overlayRef) return;
+    const position = createGlobalPositionStrategy(this.injector);
+    const placement = this.config.position ?? 'bottom-end';
+    if (placement.startsWith('top')) position.top('0');
+    else position.bottom('0');
+    if (placement.endsWith('start')) position.start('0');
+    else position.end('0');
     this.overlayRef = createOverlayRef(this.injector, {
-      positionStrategy: createGlobalPositionStrategy(this.injector).bottom('0').end('0'),
+      positionStrategy: position,
       panelClass: 'hy-toast-pane',
     });
     this.overlayRef.attach(new ComponentPortal(HyToastStack, null, this.injector));

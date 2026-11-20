@@ -1,3 +1,20 @@
+.illustration {
+  display: flex;
+  justify-content: center;
+  color: var(--hy-state-color, var(--hy-primary));
+}
+.illustration:empty {
+  display: none;
+}
+:host([data-variant='success']) {
+  --hy-state-color: var(--hy-success);
+}
+:host([data-variant='warning']) {
+  --hy-state-color: var(--hy-warning);
+}
+:host([data-variant='error']) {
+  --hy-state-color: var(--hy-danger);
+}
 :host {
   display: block;
   color: var(--hy-ink);

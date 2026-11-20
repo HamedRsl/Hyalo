@@ -4,7 +4,8 @@
   color: var(--hy-primary);
 }
 :host([data-variant='bar']) .track {
-  block-size: 0.5rem;
+  position: relative;
+  block-size: var(--hy-progress-thickness, 0.5rem);
   border-radius: var(--hy-radius-pill);
   overflow: hidden;
   background: var(--hy-surface-3);
@@ -29,8 +30,6 @@ svg {
 }
 circle {
   fill: none;
-  stroke-width: 3;
-  stroke-linecap: round;
 }
 .track {
   stroke: var(--hy-surface-3);
@@ -38,8 +37,31 @@ circle {
 .fill {
   stroke: currentColor;
 }
+.success {
+  stroke: var(--hy-success);
+}
+:host([data-variant='bar']) .success {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  background: var(--hy-success);
+}
+:host([data-variant='bar']) .track:not([data-segments='1'])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0 calc(var(--hy-progress-segment) - 2px),
+    var(--hy-bg) calc(var(--hy-progress-segment) - 2px) var(--hy-progress-segment)
+  );
+}
+.value-label {
+  font-size: var(--hy-step--1);
+  color: var(--hy-ink-2);
+}
 :host(.indeterminate.moving) svg {
-  animation: hy-progress-spin 1s linear infinite;
+  animation: hy-progress-spin var(--hy-progress-duration, 1s) linear infinite;
 }
 :host(.indeterminate) .track > .fill {
   inline-size: 30%;

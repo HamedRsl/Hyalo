@@ -1,11 +1,7 @@
 import { EXAMPLE } from './examples/mobile-patterns';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import {
-  HyWalletBlock,
-  HyTransferBlock,
-  HyOrderTrackerBlock,
-  type HyTransferRequest,
-} from '@hyalo/angular/blocks';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { HyWalletBlock, HyOrderTrackerBlock } from '@hyalo/angular/blocks';
+import { HyLocale, normalizeDigits } from '@hyalo/angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import type { HyProgressStep } from '@hyalo/angular/meter';
 import { DocsPage } from '../shared/page';
@@ -13,18 +9,10 @@ import { DocsExample } from '../shared/example';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 @Component({
   selector: 'docs-mobile-patterns',
-  imports: [
-    DocsPage,
-    DocsExample,
-    DocsApiTable,
-    HyWalletBlock,
-    HyTransferBlock,
-    HyOrderTrackerBlock,
-    HyButton,
-  ],
+  imports: [DocsPage, DocsExample, DocsApiTable, HyWalletBlock, HyOrderTrackerBlock, HyButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './mobile-patterns.html',
-  styleUrl: './mobile-demos.css',
+  styleUrl: './transfer-screen.css',
 })
 export default class MobilePatternsPage {
   protected readonly example = EXAMPLE;
@@ -45,19 +33,93 @@ export default class MobilePatternsPage {
   protected readonly orderOpen = signal(false);
   protected readonly transferState = signal<'idle' | 'loading' | 'error' | 'success'>('idle');
   protected readonly transferError = signal('');
-  protected readonly request = signal<HyTransferRequest | null>(null);
+  protected readonly request = signal<{ recipient: string; amount: string } | null>(null);
+  protected readonly amount = signal('');
+  protected readonly recipient = signal('Alex Morgan');
+  protected readonly locked = computed(
+    () => this.transferState() === 'loading' || this.transferState() === 'success',
+  );
+  protected readonly canConfirm = computed(
+    () =>
+      !this.locked() &&
+      this.recipient().trim().length > 0 &&
+      /^\d{1,9}(?:\.\d{1,2})?$/u.test(this.amount()) &&
+      /[1-9]/u.test(this.amount()),
+  );
+  protected readonly locale = inject(HyLocale).locale;
+  protected readonly keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'backspace'];
+  protected keyLabel(key: string): string {
+    if (key === 'backspace') return '⌫';
+    if (key === '.')
+      return (
+        new Intl.NumberFormat(this.locale())
+          .formatToParts(1.1)
+          .find((part) => part.type === 'decimal')?.value ?? '.'
+      );
+    return new Intl.NumberFormat(this.locale(), { useGrouping: false }).format(Number(key));
+  }
+  protected readonly amountDisplay = computed(() => {
+    const formatter = new Intl.NumberFormat(this.locale(), { useGrouping: false });
+    const separator =
+      new Intl.NumberFormat(this.locale())
+        .formatToParts(1.1)
+        .find((part) => part.type === 'decimal')?.value ?? '.';
+    return this.amount().replace(/[0-9.]/gu, (character) =>
+      character === '.' ? separator : formatter.format(Number(character)),
+    );
+  });
+  protected editAmount(event: Event): void {
+    if ('isComposing' in event && event.isComposing) return;
+    const input = event.target as HTMLInputElement;
+    const start = input.selectionStart,
+      end = input.selectionEnd;
+    if (!this.locked()) this.setAmount(input.value);
+    input.value = this.amountDisplay();
+    if (start !== null && end !== null) input.setSelectionRange(start, end);
+  }
+  protected editRecipient(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!this.locked()) this.recipient.set(input.value);
+    else input.value = this.recipient();
+  }
+  private setAmount(text: string): void {
+    const separator = this.keyLabel('.');
+    const value = normalizeDigits(text)
+      .replaceAll(separator, '.')
+      .replace(/\u066b/gu, '.');
+    // Reject rather than round or truncate a monetary value. Keep the canonical string intact.
+    if (/^\d{0,9}(?:\.\d{0,2})?$/u.test(value)) this.amount.set(value);
+  }
+  protected pressKey(key: string): void {
+    if (this.locked()) return;
+    this.setAmount(key === 'backspace' ? this.amount().slice(0, -1) : this.amount() + key);
+  }
   protected readonly steps: readonly HyProgressStep[] = [
     { id: 'placed', label: 'Placed', state: 'complete' },
     { id: 'preparing', label: 'Preparing', state: 'active' },
     { id: 'delivery', label: 'Delivery', state: 'pending' },
   ];
-  protected submit(request: HyTransferRequest): void {
-    this.request.set(request);
+  protected submit(event: Event): void {
+    event.preventDefault();
+    if (!this.canConfirm()) return;
+    this.request.set({ recipient: this.recipient().trim(), amount: this.amount() });
+    this.transferError.set('');
     this.transferState.set('loading');
   }
   protected fail(): void {
+    if (this.transferState() !== 'loading') return;
     this.transferError.set('The demo request could not complete. Review the amount and retry.');
     this.transferState.set('error');
+  }
+  protected succeed(): void {
+    if (this.transferState() === 'loading') this.transferState.set('success');
+  }
+  protected resetTransfer(): void {
+    if (this.transferState() === 'loading') return;
+    this.transferState.set('idle');
+    this.transferError.set('');
+    this.request.set(null);
+    this.amount.set('');
   }
   protected readonly rows: ApiRow[] = [
     {
@@ -75,16 +137,16 @@ export default class MobilePatternsPage {
         'Optional detail. Currency uses an Intl currency code; non-finite balance is unavailable.',
     },
     {
-      name: 'HyTransferBlock',
-      type: 'component',
-      default: 'state idle',
+      name: 'Transfer screen composition',
+      type: 'editable example',
+      default: 'idle',
       description:
-        'recipient and amount models, currency, locale, state idle/loading/error/success, error and localized labels. submitted emits recipient and canonical amount. hyTransferDetails projects fees or disclosures.',
+        'Native labeled inputs and twelve HyButton keys; normalizeDigits from @hyalo/angular/core produces canonical ASCII strings. Host-owned idle/loading/error/success state. No keypad or transfer wrapper is required.',
     },
     {
-      name: 'HyTransferRequest',
+      name: 'Demo request',
       type: '{ recipient: string; amount: string }',
-      default: 'output',
+      default: 'host snapshot',
       description:
         'The host validates, authorizes and submits. Confirming a demo does not send money.',
     },

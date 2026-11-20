@@ -2,10 +2,33 @@
   <button hyButton type="button" variant="ghost" (click)="ref.close()">
     {{ data.closeLabel ?? 'Close gallery' }}
   </button>
+  <button hyButton type="button" variant="ghost" (click)="zoomIn()">
+    {{ data.zoomInLabel ?? 'Zoom in' }}
+  </button>
+  <button hyButton type="button" variant="ghost" (click)="zoomOut()">
+    {{ data.zoomOutLabel ?? 'Zoom out' }}
+  </button>
+  <button hyButton type="button" variant="ghost" (click)="rotate()">
+    {{ data.rotateLabel ?? 'Rotate image' }}
+  </button>
+  <button
+    hyButton
+    type="button"
+    variant="ghost"
+    class="slideshow"
+    [attr.aria-pressed]="playing()"
+    (click)="playing() ? pause() : play()"
+  >
+    {{ playing() ? (data.pauseLabel ?? 'Pause slideshow') : (data.playLabel ?? 'Play slideshow') }}
+  </button>
 </div>
 @if (image(); as image) {
   <figure>
-    <img [src]="image.src" [alt]="image.alt" />
+    <img
+      [src]="image.src"
+      [alt]="image.alt"
+      [style.transform]="'scale(' + scale() + ') rotate(' + rotation() + 'deg)'"
+    />
     @if (image.caption) {
       <figcaption>{{ image.caption }}</figcaption>
     }

@@ -1,13 +1,12 @@
 import { HyTabBar } from '@hyalo/angular/tab-bar';
 import { HyFab } from '@hyalo/angular/fab';
 import { HySlideConfirm } from '@hyalo/angular/slide-confirm';
-import { HyNumericKeypad } from '@hyalo/angular/keypad';
+
 import { HyPullRefresh } from '@hyalo/angular/pull-refresh';
 import { HySwipeActions } from '@hyalo/angular/swipe-actions';
 import { HY_SWIPE_DECK } from '@hyalo/angular/swipe-deck';
 import { HY_CARD_STACK } from '@hyalo/angular/card-stack';
-import { HyNotificationCard } from '@hyalo/angular/notification-center';
-import { HyChatBubble } from '@hyalo/angular/chat';
+
 import { HyDock } from '@hyalo/angular/dock';
 import { HyStatusIsland } from '@hyalo/angular/status-island';
 import { HyMeter } from '@hyalo/angular/meter';
@@ -230,13 +229,12 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
     HyTabBar,
     HyFab,
     HySlideConfirm,
-    HyNumericKeypad,
+
     HyPullRefresh,
     HySwipeActions,
     HY_SWIPE_DECK,
     HY_CARD_STACK,
-    HyNotificationCard,
-    HyChatBubble,
+
     HyDock,
     HyStatusIsland,
     HyMeter,

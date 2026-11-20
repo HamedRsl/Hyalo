@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
   HyHeroBlock,
   HyPricingBlock,
@@ -14,6 +15,7 @@ import { DocsPage } from '../shared/page';
   selector: 'docs-blocks',
   imports: [
     DocsPage,
+    RouterLink,
     HyHeroBlock,
     HyPricingBlock,
     HyFeatureBlock,
@@ -102,5 +104,5 @@ export default class BlocksPage {
     },
   ];
   protected readonly source =
-    '<hy-hero-block heading="Your next chapter" description="Your copy" actionHref="/start">\n  <div hyBlockMedia>Your media</div>\n</hy-hero-block>';
+    '<hy-hero-block heading="Your next chapter" description="Your copy" actionHref="/start">\n  <a hyBlockActions href="/learn">Learn more</a>\n  <div hyBlockMedia>Your media</div>\n</hy-hero-block>';
 }

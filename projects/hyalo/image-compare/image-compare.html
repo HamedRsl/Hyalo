@@ -1,4 +1,4 @@
-<div class="frame" [style.aspect-ratio]="ratio()">
+<div class="frame" [style.aspect-ratio]="ratio()" (pointermove)="hover($event)">
   <img [src]="after()" [alt]="afterAlt()" draggable="false" />
   <img
     class="before"
@@ -22,9 +22,11 @@
   type="range"
   [class.vertical]="vertical()"
   [attr.aria-orientation]="orientation()"
-  min="0"
-  max="100"
-  step="1"
+  [min]="lower()"
+  [max]="upper()"
+  [step]="increment()"
+  [disabled]="disabled()"
   [value]="position()"
   (input)="change($event)"
+  (change)="commit()"
 />

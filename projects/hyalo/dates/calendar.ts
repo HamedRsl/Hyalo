@@ -2,6 +2,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  afterNextRender,
+  Injector,
   ElementRef,
   computed,
   inject,
@@ -76,6 +78,7 @@ interface CalendarWeek {
 })
 export class HyCalendar {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly injector = inject(Injector);
   readonly adapter = input<HyDateAdapter<HyDate>>(inject(HY_DATE_ADAPTER));
   readonly locale = input('en');
   readonly value = model<HyDate | undefined>(undefined);
@@ -305,28 +308,83 @@ export class HyCalendar {
       this.rangePreview.emit(null);
       return;
     }
-    const range = this.rangeStrategy()?.(date, { start, end: start }, 'preview') ?? {
-      start: date < start ? date : start,
-      end: date < start ? start : date,
-    };
-    const next = this.validRange(range) ? range : null;
+    const strategy = this.rangeStrategy();
+    const range = strategy
+      ? strategy(date, { start, end: start }, 'preview')
+      : {
+          start: date < start ? date : start,
+          end: date < start ? start : date,
+        };
+    const next = range && this.validRange(range) ? range : null;
     this.preview.set(next);
     this.rangePreview.emit(next);
   }
+  protected choiceKeys(event: KeyboardEvent): void {
+    const buttons = [
+      ...this.element.querySelectorAll<HTMLButtonElement>(
+        '.calendar-choices button:not(:disabled)',
+      ),
+    ];
+    const index = buttons.indexOf(event.target as HTMLButtonElement);
+    const rtl = this.element.closest('[dir="rtl"]') !== null;
+    let next: number;
+    switch (event.key) {
+      case 'ArrowRight':
+        next = index + (rtl ? -1 : 1);
+        break;
+      case 'ArrowLeft':
+        next = index + (rtl ? 1 : -1);
+        break;
+      case 'ArrowDown':
+        next = index + 4;
+        break;
+      case 'ArrowUp':
+        next = index - 4;
+        break;
+      case 'Home':
+        next = 0;
+        break;
+      case 'End':
+        next = buttons.length - 1;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    buttons[Math.max(0, Math.min(buttons.length - 1, next))]?.focus();
+  }
+  private focusChoices(): void {
+    afterNextRender(
+      () =>
+        this.element
+          .querySelector<HTMLButtonElement>('.calendar-choices button:not(:disabled)')
+          ?.focus(),
+      { injector: this.injector },
+    );
+  }
   showView(view: HyCalendarView): void {
-    if (!this.disabled()) this.view.set(view);
+    if (!this.disabled()) {
+      this.view.set(view);
+      if (view === 'month') afterNextRender(() => this.focusActive(), { injector: this.injector });
+      else this.focusChoices();
+    }
   }
   protected chooseMonth(date: HyDate): void {
     if (this.disabled()) return;
-    this.month.set(date);
-    this.active.set(date);
+    const min = this.min() ?? this.adapter().min;
+    const max = this.max() ?? this.adapter().max;
+    const active = date < min ? min : date > max ? max : date;
+    this.active.set(active);
+    this.month.set(this.adapter().startOfMonth(active));
     this.view.set('month');
+    afterNextRender(() => this.focusActive(), { injector: this.injector });
   }
   protected chooseYear(date: HyDate | undefined): void {
     if (!date || this.disabled()) return;
     this.month.set(date);
     this.active.set(date);
     this.view.set('year');
+    this.focusChoices();
   }
   moveMonth(direction: number): void {
     if (this.disabled() || (direction < 0 ? this.previousDisabled() : this.nextDisabled())) return;
@@ -373,9 +431,7 @@ export class HyCalendar {
     if (next < (this.min() ?? adapter.min) || next > (this.max() ?? adapter.max)) return;
     this.active.set(next);
     this.month.set(adapter.startOfMonth(next));
-    queueMicrotask(() =>
-      this.element.querySelector<HTMLElement>('[data-date="' + next + '"]')?.focus(),
-    );
+    afterNextRender(() => this.focusActive(), { injector: this.injector });
   }
   focusActive(): void {
     this.element.querySelector<HTMLElement>('button[data-date][tabindex="0"]')?.focus();

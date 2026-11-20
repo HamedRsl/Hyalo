@@ -9,6 +9,42 @@ export function formatMask(value: string, mask: string): string {
   }
   return result;
 }
+/** Token parser shared by formatting, completion and caret mapping. Regex state is never mutated. */
+export function parseMask(
+  value: string,
+  mask: string,
+  tokens: Readonly<Record<string, RegExp>>,
+): { raw: string; masked: string; complete: boolean; positions: number[] } {
+  const rules: Readonly<Record<string, RegExp>> = { '#': /[0-9]/u, ...tokens };
+  const source = Array.from(value, (character) =>
+    /[۰-۹٠-٩]/u.test(character) ? normalizeIdentifier(character) : character,
+  );
+  let cursor = 0,
+    raw = '',
+    masked = '';
+  const positions: number[] = [];
+  let capacity = 0;
+  for (const slot of mask) if (rules[slot]) capacity++;
+  for (const slot of mask) {
+    const rule = rules[slot];
+    if (!rule) {
+      if (cursor < source.length) {
+        masked += slot;
+        if (source[cursor] === slot) cursor++;
+      }
+      continue;
+    }
+    const matcher = new RegExp(`^(?:${rule.source})$`, rule.flags.replace(/[gy]/gu, ''));
+    while (cursor < source.length && !matcher.test(source[cursor] ?? '')) cursor++;
+    if (cursor >= source.length) break;
+    const character = source[cursor++] ?? '';
+    raw += character;
+    masked += character;
+    positions.push(masked.length);
+  }
+  return { raw, masked, complete: capacity > 0 && raw.length === capacity, positions };
+}
+
 export function normalizeIranianPhone(value: string): string {
   let digits = normalizeIdentifier(value);
   if (digits.startsWith('0098')) digits = '0' + digits.slice(4);

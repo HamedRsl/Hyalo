@@ -24,18 +24,21 @@ export class HyCopy {
   readonly copiedLabel = input('Copied');
   readonly failedLabel = input('Copy failed. Select and copy the text.');
   readonly completed = output<boolean>();
-  protected readonly status = signal('');
+  private readonly result = signal<boolean | null>(null);
+  protected readonly status = computed(() =>
+    this.result() === null ? '' : this.result() ? this.copiedLabel() : this.failedLabel(),
+  );
   private readonly clipboard = inject(Clipboard);
   private timer?: ReturnType<typeof setTimeout>;
-  protected readonly copied = computed(() => this.status() === this.copiedLabel());
+  protected readonly copied = computed(() => this.result() === true);
   constructor() {
     inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
   }
   copy(): void {
     clearTimeout(this.timer);
     const success = this.clipboard.copy(this.text());
-    this.status.set(success ? this.copiedLabel() : this.failedLabel());
+    this.result.set(success);
     this.completed.emit(success);
-    this.timer = setTimeout(() => this.status.set(''), 2000);
+    this.timer = setTimeout(() => this.result.set(null), 2000);
   }
 }

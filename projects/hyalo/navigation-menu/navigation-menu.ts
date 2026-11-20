@@ -1,10 +1,13 @@
+import { RouterLink, type Params, type UrlTree } from '@angular/router';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { injectId } from '@hyalo/angular/core';
@@ -15,6 +18,10 @@ import {
   type ConnectedPosition,
 } from '@angular/cdk/overlay';
 export interface HyNavigationMetadata {
+  readonly routerLink?: string | readonly unknown[] | UrlTree;
+  readonly queryParams?: Params;
+  readonly fragment?: string;
+  readonly state?: Record<string, unknown>;
   readonly description?: string;
   readonly icon?: string;
   readonly badge?: string;
@@ -47,7 +54,7 @@ export interface HyNavigationItem extends HyNavigationMetadata {
 }
 @Component({
   selector: 'hy-navigation-menu',
-  imports: [NgTemplateOutlet, HyIcon, CdkConnectedOverlay, CdkOverlayOrigin],
+  imports: [RouterLink, NgTemplateOutlet, HyIcon, CdkConnectedOverlay, CdkOverlayOrigin],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navigation-menu.html',
   styleUrl: './navigation-menu.css',
@@ -57,11 +64,21 @@ export class HyNavigationMenu {
   readonly items = input.required<readonly HyNavigationItem[]>();
   readonly label = input('Main navigation');
   readonly open = signal<string | null>(null);
+  readonly openChanged = output<string | null>();
+  readonly selected = output<HyNavigationCommandEvent>();
   protected readonly id = injectId('navigation');
   protected readonly expanded = signal<ReadonlySet<string>>(new Set());
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly document = inject(DOCUMENT);
   private trigger: HTMLElement | null = null;
+  constructor() {
+    effect(() => {
+      const open = this.open();
+      if (open === null) return;
+      const item = this.items().find(item => item.id === open);
+      if (!item || item.disabled || item.visible === false || (!item.children?.length && !item.sections?.length)) this.close();
+    });
+  }
   protected readonly positions: ConnectedPosition[] = [
     { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 8 },
     { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -8 },
@@ -128,8 +145,24 @@ export class HyNavigationMenu {
     const item = this.items().find((item) => item.id === id);
     if (!item || item.disabled || item.visible === false) return;
     this.trigger = event.currentTarget as HTMLElement;
+    if (this.open() === id) this.close();
+    else this.openMenu(id);
+  }
+  /** Opens an enabled, visible root disclosure without moving focus. */
+  openMenu(id: string): void {
+    const item = this.items().find((entry) => entry.id === id);
+    if (
+      !item ||
+      item.disabled ||
+      item.visible === false ||
+      (!item.children?.length && !item.sections?.length) ||
+      this.open() === id
+    )
+      return;
+    this.trigger = this.document.getElementById(this.id + '-' + id + '-trigger');
     this.expanded.set(new Set());
-    this.open.update((value) => (value === id ? null : id));
+    this.open.set(id);
+    this.openChanged.emit(id);
   }
   protected branchId(parent: string, item: HyNavigationItem): string {
     return parent + '/' + encodeURIComponent(item.id);
@@ -139,7 +172,9 @@ export class HyNavigationMenu {
       event.preventDefault();
       return;
     }
-    item.command?.({ item, originalEvent: event });
+    const activation = { item, originalEvent: event };
+    item.command?.(activation);
+    this.selected.emit(activation);
     this.close();
   }
   protected linkRel(item: HyNavigationMetadata): string | undefined {
@@ -157,9 +192,14 @@ export class HyNavigationMenu {
       );
     });
   }
-  protected close(): void {
+  close(restoreFocus = false): void {
+    const wasOpen = this.open() !== null;
     this.expanded.set(new Set());
     this.open.set(null);
+    if (wasOpen) {
+      this.openChanged.emit(null);
+      if (restoreFocus) this.trigger?.focus();
+    }
   }
   escape(event: Event): void {
     if (this.open() !== null) {

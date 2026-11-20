@@ -1,4 +1,13 @@
-<span class="dot" aria-hidden="true"></span>
+<span class="dot" aria-hidden="true">
+  @if (markerTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context" />
+  }
+</span>
+@if (oppositeTemplate(); as template) {
+  <div class="opposite">
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context" />
+  </div>
+}
 @if (date()) {
   <time [attr.datetime]="dateTime()">{{ date() }}</time>
 }

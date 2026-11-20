@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
+  Injectable,
+  effect,
   afterRenderEffect,
   computed,
   inject,
@@ -20,6 +22,21 @@ export interface HySidebarResponsive {
   readonly collapsed?: string;
 }
 
+/** Application-scoped registry; duplicate live tags are rejected. */
+@Injectable({ providedIn: 'root' })
+export class HySidebarController {
+  private readonly instances = new Map<string, HySidebar>();
+  get(tag: string): HySidebar | undefined { return this.instances.get(tag); }
+  register(tag: string, sidebar: HySidebar): () => void {
+    if (this.instances.has(tag)) throw new Error('Duplicate sidebar tag: ' + tag);
+    this.instances.set(tag, sidebar);
+    return () => { if (this.instances.get(tag) === sidebar) this.instances.delete(tag); };
+  }
+  collapse(tag: string): void { this.get(tag)?.setCollapsed(true); }
+  expand(tag: string): void { this.get(tag)?.setCollapsed(false); }
+  toggle(tag: string): void { this.get(tag)?.toggle(); }
+}
+
 type SidebarState = 'expanded' | 'compact' | 'collapsed';
 
 @Component({
@@ -29,6 +46,9 @@ type SidebarState = 'expanded' | 'compact' | 'collapsed';
   styleUrl: './sidebar.css',
   host: {
     '[attr.data-state]': 'state()',
+    '[style.position]': 'docked() ? "sticky" : null',
+    '[style.top]': 'docked() ? topOffset() : null',
+    '[style.bottom]': 'docked() ? bottomOffset() : null',
     '[attr.data-collapsed]': 'isCollapsed()',
     '[style.--hy-sidebar-label-display]': 'isCollapsed() ? "none" : null',
     '[style.--hy-sidebar-item-justify]': 'isCollapsed() ? "center" : null',
@@ -36,6 +56,14 @@ type SidebarState = 'expanded' | 'compact' | 'collapsed';
 })
 export class HySidebar {
   readonly collapsed = model(false);
+  readonly tag = input<string>();
+  readonly docked = input(false);
+  readonly topOffset = input('0px');
+  readonly bottomOffset = input('0px');
+  setCollapsed(collapsed: boolean): void {
+    this.expandOverride.set(!collapsed && this.collapseMatch());
+    this.collapsed.set(collapsed);
+  }
   /** No queries are active by default. Viewport changes never write to `collapsed`. */
   readonly responsive = input<HySidebarResponsive | null>(null);
   readonly label = input('Main navigation');
@@ -52,6 +80,11 @@ export class HySidebar {
 
   constructor() {
     const document = inject(DOCUMENT);
+    const controller = inject(HySidebarController);
+    effect(onCleanup => {
+      const tag = this.tag();
+      if (tag) onCleanup(controller.register(tag, this));
+    });
     afterRenderEffect({
       read: (onCleanup) => {
         const responsive = this.responsive();
@@ -77,7 +110,7 @@ export class HySidebar {
     });
   }
 
-  protected toggle(): void {
+  toggle(): void {
     const expand = this.isCollapsed();
     this.expandOverride.set(expand && this.collapseMatch());
     this.collapsed.set(!expand);

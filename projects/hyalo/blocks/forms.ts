@@ -85,13 +85,21 @@ export class HyBookingBlock {
   readonly error = input('');
   readonly requested = output<HyBookingValue & { readonly timeZone: string }>();
   protected readonly attempted = signal(false);
-  protected readonly ready = computed(
-    () =>
-      !!this.value().date &&
-      !!this.value().time &&
-      (this.value().guests ?? 0) > 0 &&
-      /^09[0-9]{9}$/u.test(this.value().phone),
-  );
+  protected readonly ready = computed(() => {
+    const { date, time, guests, phone } = this.value();
+    return (
+      !!date &&
+      this.adapter().deserialize(date) !== undefined &&
+      /^([01][0-9]|2[0-3]):[0-5][0-9]$/u.test(time) &&
+      (this.slots().length === 0 ||
+        this.slots().some((slot) => slot.value === time && !slot.disabled)) &&
+      guests !== null &&
+      Number.isInteger(guests) &&
+      guests >= 1 &&
+      guests <= 12 &&
+      /^09[0-9]{9}$/u.test(phone)
+    );
+  });
   protected update<K extends keyof HyBookingValue>(key: K, value: HyBookingValue[K]): void {
     this.value.update((current) => ({ ...current, [key]: value }));
   }

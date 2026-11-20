@@ -14,6 +14,10 @@ export class HySearchField extends HyValueControl implements FormValueControl<st
   readonly placeholder = input('Search');
   readonly loading = input(false);
   readonly submitted = output<string>();
+  protected submit(event: Event): void {
+    if (this.effectiveDisabled() || ('isComposing' in event && event.isComposing)) return;
+    this.submitted.emit(this.value());
+  }
   protected update(event: Event): void {
     if (this.blocked() || ('isComposing' in event && event.isComposing)) return;
     this.value.set((event.target as HTMLInputElement).value);

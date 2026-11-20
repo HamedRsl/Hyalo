@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Directive, booleanAttribute, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 
 /** Establishes the positioning context for an attached notification badge. */
 @Directive({ selector: '[hyBadgeHost]', host: { '[style.position]': '"relative"' } })
@@ -16,10 +23,11 @@ export class HyBadgeHost {}
     '[style.inset-block-end]': 'position().startsWith("bottom") ? "0" : null',
     '[style.inset-inline-start]': 'position().endsWith("start") ? "0" : null',
     '[style.inset-inline-end]': 'position().endsWith("end") ? "0" : null',
-    '[style.translate]': 'overlap() ? "30% -30%" : null',
+    '[style.translate]': 'translation()',
+    '[attr.dir]': 'direction()',
   },
   template: '<span aria-hidden="true">{{ dot() ? "" : text() }}</span>',
-  styles: `:host{position:absolute;display:grid;place-items:center;min-inline-size:1.25em;min-block-size:1.25em;border-radius:999px;background:var(--hy-danger);color:var(--hy-danger-ink);font-size:.75rem;padding-inline:.25em}:host([hidden]){display:none}:host([data-dot]){min-inline-size:.5rem;min-block-size:.5rem;padding:0}`,
+  styleUrl: './notification.css',
 })
 export class HyNotificationBadge {
   readonly count = input<number | null>(null);
@@ -29,10 +37,21 @@ export class HyNotificationBadge {
   readonly overlap = input(true, { transform: booleanAttribute });
   readonly position = input<'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'>('top-end');
   readonly label = input('');
+  readonly direction = input<'ltr' | 'rtl'>('ltr');
+  protected readonly translation = computed(() => {
+    if (!this.overlap()) return null;
+    const start = this.position().endsWith('start');
+    const negativeX = this.direction() === 'rtl' ? !start : start;
+    return `${negativeX ? '-30%' : '30%'} ${this.position().startsWith('top') ? '-30%' : '30%'}`;
+  });
+  private readonly safeCount = computed(() => {
+    const count = this.count() ?? 0;
+    return Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
+  });
   readonly text = computed(() => {
-    const count = Math.max(0, Math.floor(this.count() ?? 0));
-    const max = Math.max(0, Math.floor(this.max()));
+    const count = this.safeCount();
+    const max = Number.isFinite(this.max()) ? Math.max(0, Math.floor(this.max())) : 99;
     return count > max ? `${max}+` : String(count);
   });
-  protected readonly shown = computed(() => this.dot() || this.showZero() || (this.count() ?? 0) > 0);
+  protected readonly shown = computed(() => this.dot() || this.showZero() || this.safeCount() > 0);
 }

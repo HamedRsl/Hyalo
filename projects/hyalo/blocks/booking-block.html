@@ -1,9 +1,9 @@
-<form class="split" (submit)="send($event)">
+<form class="split" (submit)="send($event)" [attr.aria-busy]="pending()">
   <section class="fields">
     <h2>{{ heading() }}</h2>
     <hy-field label="Date"
       ><hy-date-picker
-        [value]="value().date"
+        [value]="value().date ? (adapter().deserialize(value().date!) ?? null) : null"
         (valueChange)="update('date', $event)"
         [adapter]="adapter()"
         [locale]="locale()"

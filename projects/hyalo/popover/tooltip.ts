@@ -20,6 +20,7 @@ import {
   ɵHyPresence as HyPresence,
 } from '@hyalo/angular/overlay';
 import { loadOverlay } from './load-overlay';
+import { HY_CONFIG } from '@hyalo/angular/core';
 
 @Component({
   selector: 'hy-tooltip-panel',
@@ -55,6 +56,7 @@ export class HyTooltipPanel {
   },
 })
 export class HyTooltip {
+  private readonly policy = inject(HY_CONFIG).components?.tooltip;
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly describer = inject(AriaDescriber);
@@ -74,7 +76,11 @@ export class HyTooltip {
   /** Preferred side. Flips when there is no room. */
   readonly tooltipPlacement = input<HyPlacement>('top');
   /** Hover delay in milliseconds. Focus shows it right away. */
-  readonly tooltipDelay = input(400, { transform: numberAttribute });
+  readonly tooltipDelay = input(this.policy?.showDelay ?? 400, { transform: numberAttribute });
+  /** Pointer-leave delay; focusout and Escape dismiss immediately. */
+  readonly tooltipHideDelay = input(this.policy?.hideDelay ?? 120, { transform: numberAttribute });
+  readonly tooltipTouch = input<'ignore' | 'show'>(this.policy?.touch ?? 'ignore');
+  readonly tooltipPanelClass = input<string | string[]>('');
   readonly tooltipDisabled = input(false, { transform: booleanAttribute });
 
   constructor() {
@@ -96,7 +102,8 @@ export class HyTooltip {
   }
 
   protected onPointerEnter(event: PointerEvent): void {
-    if (event.pointerType !== 'touch') this.show(this.tooltipDelay());
+    if (event.pointerType !== 'touch' || this.tooltipTouch() === 'show')
+      this.show(this.tooltipDelay());
   }
 
   /** Shows the tooltip after the given delay. */
@@ -122,7 +129,7 @@ export class HyTooltip {
 
   protected scheduleHide(): void {
     clearTimeout(this.showTimer);
-    this.hideTimer = setTimeout(() => this.hide(), 120);
+    this.hideTimer = setTimeout(() => this.hide(), Math.max(0, this.tooltipHideDelay()));
   }
 
   private async attach(): Promise<void> {
@@ -142,7 +149,7 @@ export class HyTooltip {
       this.overlayRef = createOverlayRef(this.injector, {
         positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
-        panelClass: 'hy-tooltip-pane',
+        panelClass: ['hy-tooltip-pane', ...[this.tooltipPanelClass()].flat().filter(Boolean)],
       });
       // Hovering the tooltip itself keeps it open.
       this.overlayRef.overlayElement.addEventListener('pointerenter', () =>

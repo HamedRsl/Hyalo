@@ -1,3 +1,13 @@
+@for (preset of presets(); track $index) {
+  <button
+    type="button"
+    data-range-preset
+    [disabled]="presetDisabled(preset.range)"
+    (click)="applyPreset(preset.range)"
+  >
+    {{ preset.label }}
+  </button>
+}
 @if (sharedCalendar()) {
   <hy-calendar
     [labels]="calendarOptions().labels ?? defaultCalendarLabels"

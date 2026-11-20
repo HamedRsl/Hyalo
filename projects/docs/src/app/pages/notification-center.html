@@ -1,34 +1,264 @@
 <docs-page
   heading="Notification center"
-  lead="Persistent notifications and push-style cards with controlled read and dismiss actions."
+  lead="A copyable inbox and push card composed from Popover, List, Badge, Tabs and Empty state."
   ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><div class="mobile-demo">
-      <hy-notification-center
-        [notifications]="notifications()"
-        (readRequested)="read($event)"
-        (dismissed)="dismiss($event)"
-        (markAllRead)="readAll()"
-        (cleared)="notifications.set([])"
-      /></div
+    ><div class="notification-demo">
+      <header class="notification-launcher">
+        <div>
+          <p class="notification-eyebrow">YOUR WORKSPACE</p>
+          <strong>Good morning, Alex</strong>
+        </div>
+        <button
+          type="button"
+          hyButton
+          variant="soft"
+          class="notification-control"
+          [hyPopover]="inbox"
+          popoverLabel="Notifications"
+          popoverMaterial="solid"
+          aria-label="Open notifications"
+          #popover="hyPopover"
+        >
+          Notifications
+          <hy-badge material="solid" [attr.aria-label]="store.unreadCount() + ' unread'">{{
+            store.unreadCount()
+          }}</hy-badge>
+        </button>
+      </header>
+
+      <label class="notification-preview"
+        >Preview state
+        <select
+          class="notification-select"
+          aria-label="Preview notification state"
+          [value]="
+            store.status() === 'ready' && !store.notifications().length ? 'empty' : store.status()
+          "
+          #statePreview
+          (change)="store.preview(statePreview.value)"
+        >
+          <option value="ready">Ready</option>
+          <option value="loading">Loading</option>
+          <option value="error">Error</option>
+          <option value="empty">Empty</option>
+        </select>
+      </label>
+      <p class="notification-demo-note">
+        Local demo data. Retry and Ready restore the sample inbox; no push permission or network
+        request is made.
+      </p>
+
+      <ng-template #inbox>
+        <section class="notification-panel" aria-label="Notification inbox">
+          <header class="notification-heading">
+            <div>
+              <h2>Notifications</h2>
+              <p>{{ store.unreadCount() }} unread · Your latest updates</p>
+            </div>
+            <button
+              type="button"
+              hyButton
+              variant="ghost"
+              class="notification-control"
+              (click)="popover.close()"
+            >
+              Close
+            </button>
+          </header>
+          <div class="notification-toolbar">
+            <button
+              type="button"
+              hyButton
+              variant="ghost"
+              class="notification-control"
+              [disabled]="store.busy() || !store.unreadCount()"
+              (click)="store.readAll()"
+            >
+              Mark all as read
+            </button>
+            <button
+              type="button"
+              hyButton
+              variant="ghost"
+              class="notification-control"
+              [disabled]="store.busy() || !store.notifications().length"
+              (click)="store.clear()"
+            >
+              Clear all
+            </button>
+          </div>
+          <hy-tabs
+            label="Filter notifications"
+            [selected]="store.filter()"
+            (selectedChange)="store.setFilter($event)"
+          >
+            <hy-tab value="all" label="All"
+              ><ng-template hyTabHeader
+                ><span class="notification-tab-label"
+                  >All · {{ store.notifications().length }}</span
+                ></ng-template
+              ><ng-template ngTabContent><ng-container [ngTemplateOutlet]="items" /></ng-template
+            ></hy-tab>
+            <hy-tab value="unread" label="Unread"
+              ><ng-template hyTabHeader
+                ><span class="notification-tab-label"
+                  >Unread · {{ store.unreadCount() }}</span
+                ></ng-template
+              ><ng-template ngTabContent><ng-container [ngTemplateOutlet]="items" /></ng-template
+            ></hy-tab>
+          </hy-tabs>
+        </section>
+      </ng-template>
+
+      <ng-template #items>
+        @if (store.status() === 'loading') {
+          <p class="notification-feedback" role="status" aria-busy="true">Loading notifications…</p>
+        } @else if (store.status() === 'error') {
+          <div class="notification-feedback">
+            <p role="alert">Could not load your notifications. Please try again.</p>
+            <button
+              type="button"
+              hyButton
+              variant="soft"
+              class="notification-control"
+              (click)="store.retry()"
+            >
+              Retry
+            </button>
+          </div>
+        } @else if (store.visible().length) {
+          <hy-list label="Notifications">
+            @for (item of store.visible(); track item.id) {
+              <li
+                hyListItem
+                class="notification-item"
+                [heading]="item.title"
+                [description]="item.body"
+                [attr.data-unread]="!item.read"
+              >
+                <div class="notification-meta">
+                  @if (!item.read) {
+                    <hy-badge material="solid">Unread</hy-badge>
+                  }
+                  <time [attr.datetime]="item.createdAt">{{ item.timeLabel }}</time>
+                  <div class="notification-actions">
+                    @if (!item.read) {
+                      <button
+                        type="button"
+                        hyButton
+                        variant="ghost"
+                        class="notification-control"
+                        [attr.aria-label]="'Mark ' + item.title + ' as read'"
+                        (click)="store.read(item.id)"
+                      >
+                        Mark as read
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      hyButton
+                      variant="ghost"
+                      class="notification-control"
+                      [attr.aria-label]="'Dismiss ' + item.title"
+                      (click)="store.dismiss(item.id)"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </li>
+            }
+          </hy-list>
+        } @else {
+          <hy-empty-state
+            [headingLevel]="3"
+            [heading]="
+              store.filter() === 'unread' ? 'You are all caught up' : 'No notifications yet'
+            "
+            description="New updates will appear here."
+          />
+        }
+      </ng-template>
+
+      <section class="notification-push-region" aria-label="Push card preview">
+        <p class="notification-eyebrow">PUSH CARD · SAME APPLICATION STORE</p>
+        @if (store.busy()) {
+          <p class="notification-feedback">
+            {{
+              store.status() === 'loading'
+                ? 'Checking for updates…'
+                : 'Updates are unavailable. Retry from the inbox.'
+            }}
+          </p>
+        } @else if (store.push(); as item) {
+          <article class="notification-push" aria-label="Latest unread notification">
+            <div class="notification-push-top">
+              <hy-badge material="solid">New update</hy-badge
+              ><time [attr.datetime]="item.createdAt">{{ item.timeLabel }}</time>
+            </div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.body }}</p>
+            <div class="notification-actions">
+              <button
+                type="button"
+                hyButton
+                variant="soft"
+                class="notification-control"
+                (click)="store.read(item.id)"
+              >
+                Mark as read
+              </button>
+              <button
+                type="button"
+                hyButton
+                variant="ghost"
+                class="notification-control"
+                (click)="store.dismiss(item.id)"
+              >
+                Dismiss
+              </button>
+            </div>
+          </article>
+        } @else {
+          <hy-empty-state
+            [headingLevel]="3"
+            heading="No unread updates"
+            description="The push card and inbox share the same read state."
+          />
+        }
+      </section></div
   ></docs-example>
   <h2>Import</h2>
   <docs-import
-    code="import &#123; HyNotificationCenter &#125; from '@hyalo/angular/notification-center';" />
+    code="import &#123; HyPopover &#125; from '@hyalo/angular/popover';
+import &#123; HyList, HyListItem &#125; from '@hyalo/angular/list';
+import &#123; HyBadge &#125; from '@hyalo/angular/badge';
+import &#123; HyTabs, HyTab, HyTabHeader &#125; from '@hyalo/angular/tabs';
+import &#123; TabContent &#125; from '@angular/aria/tabs';
+import &#123; HyEmptyState &#125; from '@hyalo/angular/empty-state';
+import &#123; HyButton &#125; from '@hyalo/angular/button';
+import &#123; NgTemplateOutlet &#125; from '@angular/common';" />
   <h2>Behavior and accessibility</h2>
   <p>
-    Notifications are immutable application data. Read, dismiss, mark-all and clear outputs request
-    changes from the host. Filtering and sorting copy the data. Dates use explicit locale and
-    timezone, with a deterministic UTC default. HyNotificationCard is exported for standalone
-    push-card presentation; announce is opt-in. Use HyToast for transient messages rather than
-    duplicating a notification queue.
+    Copy the complete TypeScript, HTML and CSS above into your application. The local store owns
+    immutable data, filtering and read/dismiss actions; no notification wrapper or notification
+    service is required. The popover owns focus, Escape and outside-click dismissal. Tabs provide
+    keyboard navigation, rows retain native list semantics and actions are separate native buttons.
+    Push cards do not announce on initial render. Use a polite live region only for genuinely new
+    incoming updates, and use Toast for transient feedback, not another notification queue.
   </p>
   <h2>Design tokens</h2>
   <p>
-    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
-    local component variables on the host; reduced motion, forced colors and fidelity retain
-    functional controls.
+    Uses shared surface, ink, spacing, radius and focus tokens. The panel and badges use solid
+    material, so there is no repeated row blur. Layout uses logical properties for RTL; local
+    controls and tab headers provide 44px touch targets. The popover owns motion and fidelity
+    fallbacks, and the full panel scrolls as one surface on short screens.
   </p>
   <docs-tokens [groups]="['notifications']" />
-  <h2>API</h2>
+  <h2>Legacy API reference</h2>
+  <p>
+    The existing notification-center package remains compatible. These legacy exports are not used
+    by the copyable composition above.
+  </p>
   <docs-api-table [rows]="apiRows"
 /></docs-page>

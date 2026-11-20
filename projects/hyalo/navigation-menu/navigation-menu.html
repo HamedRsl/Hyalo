@@ -135,6 +135,10 @@
     >
       <ng-container *ngTemplateOutlet="content; context: { $implicit: item, inPanel: inPanel }" />
     </button>
+  } @else if (item.routerLink && !item.disabled) {
+    <a [routerLink]="item.routerLink" [queryParams]="item.queryParams" [fragment]="item.fragment" [state]="item.state" [attr.target]="item.target" [attr.rel]="linkRel(item)" [attr.title]="item.title" (click)="activate(item, $event)">
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item, inPanel: inPanel }" />
+    </a>
   } @else {
     <a
       [attr.href]="item.disabled ? null : item.href"

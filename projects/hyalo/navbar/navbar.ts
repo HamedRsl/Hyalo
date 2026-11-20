@@ -11,6 +11,7 @@ import {
   model,
   numberAttribute,
   signal,
+  computed,
   viewChild,
 } from '@angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
@@ -62,6 +63,8 @@ export type HyNavbarAppearance = 'floating' | 'full';
     '[attr.data-scrolled]': 'scrolled() || null',
     '[attr.data-hidden]': 'hidden() || null',
     '[attr.data-menu-open]': 'menuOpen() || null',
+    '[attr.data-custom-breakpoint]': 'mobileBreakpoint() !== undefined || null',
+    '[attr.data-mobile]': 'mobile() || null',
     '(keydown.escape)': 'closeMenu(true)',
     '(focusin)': 'hidden.set(false)',
     '(click)': 'onClick($event)',
@@ -89,6 +92,13 @@ export class HyNavbar {
   readonly scrollThreshold = input(8, { transform: numberAttribute });
   /** Whether the collapsed menu is open. Two-way bindable. */
   readonly menuOpen = model(false);
+  /** Optional container breakpoint in CSS pixels; undefined preserves the 48rem CSS fallback. */
+  readonly mobileBreakpoint = input<number>();
+  private readonly containerWidth = signal<number | undefined>(undefined);
+  protected readonly mobile = computed(() => {
+    const breakpoint = this.mobileBreakpoint(), width = this.containerWidth();
+    return breakpoint !== undefined && width !== undefined && width <= Math.max(0, breakpoint);
+  });
 
   protected readonly scrolled = signal(false);
   protected readonly hidden = signal(false);
@@ -99,6 +109,13 @@ export class HyNavbar {
     afterNextRender(() => {
       const view = host.ownerDocument.defaultView;
       if (!view) return;
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(entries => {
+          this.containerWidth.set(entries[0]?.contentRect.width ?? host.clientWidth);
+        });
+        observer.observe(host);
+        destroyRef.onDestroy(() => observer.disconnect());
+      }
       let last = view.scrollY;
       const onScroll = (): void => {
         const y = view.scrollY;

@@ -4,6 +4,27 @@ import { HyCombobox } from './combobox';
 import { HyMultiSelect } from '@hyalo/angular/multi-select';
 
 describe('async selection', () => {
+  it('renders bounded virtual suggestions with comparator display and keyboard navigation', async () => {
+    const fixture = TestBed.createComponent(HyCombobox<{ id: number }>);
+    fixture.componentRef.setInput('options', Array.from({ length: 1000 }, (_, id) => ({ key: String(id), value: { id }, label: 'Duplicate' })));
+    fixture.componentRef.setInput('compareWith', (a: { id: number }, b: { id: number }) => a.id === b.id);
+    fixture.componentRef.setInput('displayWith', (value: { id: number }) => `Record ${value.id}`);
+    fixture.componentRef.setInput('value', { id: 999 });
+    fixture.componentRef.setInput('virtualized', true);
+    await fixture.whenStable();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(input.value).toBe('Record 999');
+    fixture.componentInstance.show();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('[ngOption]').length).toBeLessThanOrEqual(10);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await fixture.whenStable();
+    expect(document.querySelector('[ngOption][aria-posinset="1000"]')).not.toBeNull();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toEqual({ id: 999 });
+    expect(input.value).toBe('Record 999');
+  });
   it('does not leave a required multi-selection invalid after selection', async () => {
     const fixture = TestBed.createComponent(HyMultiSelect<string>);
     fixture.componentRef.setInput('required', true);

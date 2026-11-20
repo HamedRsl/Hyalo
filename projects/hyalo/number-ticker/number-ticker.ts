@@ -1,4 +1,9 @@
-import { booleanAttribute } from '@angular/core';
+import { booleanAttribute, TemplateRef } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+export interface HyTickerValueContext {
+  readonly $implicit: number;
+  readonly formatted: string;
+}
 import { HyLocale } from '@hyalo/angular/core';
 import {
   ChangeDetectionStrategy,
@@ -17,13 +22,18 @@ import { HyMotion, HySpring, injectHyVisibility } from '@hyalo/angular/motion';
 @Component({
   selector: 'hy-number-ticker',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<span aria-hidden="true">{{ formatted() }}</span
-    ><span class="sr">{{ accessible() }}</span>`,
+  imports: [NgTemplateOutlet],
+  host: { '[attr.aria-busy]': 'loading() || null' },
+  templateUrl: './number-ticker.html',
   styleUrl: './number-ticker.css',
 })
 export class HyNumberTicker {
   readonly value = input.required<number>();
   readonly locale = input<string>();
+  readonly loading = input(false, { transform: booleanAttribute });
+  readonly loadingLabel = input('Loading');
+  readonly valueTemplate = input<TemplateRef<HyTickerValueContext>>();
+  readonly loadingTemplate = input<TemplateRef<unknown>>();
   private readonly globalLocale = inject(HyLocale);
   private readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   readonly format = input<Intl.NumberFormatOptions>({ maximumFractionDigits: 0 });

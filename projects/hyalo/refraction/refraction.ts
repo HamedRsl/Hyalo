@@ -19,14 +19,23 @@ import type { RefractionRenderer, RefractionTarget } from './renderer';
 export class HyRefractionRenderer {
   private readonly document = inject(DOCUMENT);
   private renderer: Promise<RefractionRenderer | null> | undefined;
+  private destroyed = false;
   constructor() {
     inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
       void this.renderer?.then((renderer) => renderer?.destroy());
     });
   }
+  draw(): void {
+    void this.renderer?.then((renderer) => {
+      if (!this.destroyed) renderer?.draw();
+    });
+  }
   async register(target: RefractionTarget): Promise<() => void> {
+    if (this.destroyed) return () => undefined;
     this.renderer ??= import('./renderer')
       .then(({ RefractionRenderer }) => {
+        if (this.destroyed) return null;
         try {
           return new RefractionRenderer(this.document);
         } catch {
@@ -34,7 +43,18 @@ export class HyRefractionRenderer {
         }
       })
       .catch(() => null);
-    const renderer = await this.renderer;
+    const pending = this.renderer;
+    const renderer = await pending;
+    if (this.destroyed) return () => undefined;
+    if (renderer && !renderer.available) {
+      // Several registrations may have awaited the same lost renderer. Only its
+      // owner clears the cache, so another caller's replacement is not discarded.
+      if (this.renderer === pending) {
+        renderer.destroy();
+        this.renderer = undefined;
+      }
+      return this.register(target);
+    }
     if (!renderer)
       return () => {
         /* CSS fallback remains visible. */
@@ -68,7 +88,6 @@ export class HyRefraction {
     afterNextRender(() => this.ready.set(true));
     effect((onCleanup) => {
       const src = this.src();
-      this.strength();
       if (!this.ready() || this.fidelity.tier() !== 'high' || !src) return;
       let cancelled = false;
       let unregister: (() => void) | undefined;
@@ -82,6 +101,10 @@ export class HyRefraction {
         cancelled = true;
         unregister?.();
       });
+    });
+    effect(() => {
+      this.strength();
+      this.renderer.draw();
     });
   }
 }

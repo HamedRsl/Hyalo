@@ -34,6 +34,8 @@
       @for (hour of hours(); track hour) {
         <option
           [value]="hour"
+          [selected]="hour === shownHour()"
+          [attr.selected]="hour === shownHour() ? '' : null"
           [disabled]="isHourDisabled()(hourFormat() === '12' ? (hour % 12) + period() * 12 : hour)"
         >
           {{ hour }}
@@ -47,7 +49,12 @@
       (change)="editPart('minute', $event)"
     >
       @for (minute of minutes(); track minute) {
-        <option [value]="minute" [disabled]="isMinuteDisabled()(parts()[0], minute)">
+        <option
+          [value]="minute"
+          [selected]="minute === parts()[1]"
+          [attr.selected]="minute === parts()[1] ? '' : null"
+          [disabled]="isMinuteDisabled()(parts()[0], minute)"
+        >
           {{ minute }}
         </option>
       }
@@ -60,7 +67,12 @@
         (change)="editPart('second', $event)"
       >
         @for (second of seconds(); track second) {
-          <option [value]="second" [disabled]="isSecondDisabled()(parts()[0], parts()[1], second)">
+          <option
+            [value]="second"
+            [selected]="second === parts()[2]"
+            [attr.selected]="second === parts()[2] ? '' : null"
+            [disabled]="isSecondDisabled()(parts()[0], parts()[1], second)"
+          >
             {{ second }}
           </option>
         }
@@ -73,8 +85,12 @@
         [value]="period()"
         (change)="editPart('period', $event)"
       >
-        <option value="0">{{ meridianLabels()[0] }}</option>
-        <option value="1">{{ meridianLabels()[1] }}</option>
+        <option value="0" [selected]="period() === 0" [attr.selected]="period() === 0 ? '' : null">
+          {{ meridianLabels()[0] }}
+        </option>
+        <option value="1" [selected]="period() === 1" [attr.selected]="period() === 1 ? '' : null">
+          {{ meridianLabels()[1] }}
+        </option>
       </select>
     }
   </div>

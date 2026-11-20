@@ -42,4 +42,19 @@ export class HyLoadingState {
   readonly compact = input(false, { transform: booleanAttribute });
   readonly live = input<HyStateLiveness>('polite');
 }
-export const HY_STATE = [HyErrorState, HyLoadingState] as const;
+@Component({
+  selector: 'hy-result-state',
+  imports: [HyEmptyState],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './result-state.html',
+  styleUrl: './state.css',
+  host: { '[attr.data-variant]': 'variant()', '[attr.aria-live]': 'live()', 'aria-atomic': 'true' },
+})
+export class HyResultState {
+  readonly heading = input.required<string>();
+  readonly description = input('');
+  readonly headingLevel = input<2 | 3 | 4 | 5 | 6>(2);
+  readonly variant = input<'info' | 'success' | 'warning' | 'error'>('info');
+  readonly live = input<HyStateLiveness>('off');
+}
+export const HY_STATE = [HyErrorState, HyLoadingState, HyResultState] as const;

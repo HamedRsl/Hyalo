@@ -1,4 +1,7 @@
 import {
+  TemplateRef,
+  output,
+  signal,
   ChangeDetectionStrategy,
   Component,
   booleanAttribute,
@@ -6,11 +9,13 @@ import {
   input,
   model,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import type { FormValueControl } from '@angular/forms/signals';
 import { HyValueControl } from '@hyalo/angular/field';
 
 @Component({
   selector: 'hy-rating',
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(focusout)': 'leave($event)' },
   templateUrl: './rating.html',
@@ -18,6 +23,16 @@ import { HyValueControl } from '@hyalo/angular/field';
 })
 export class HyRating extends HyValueControl implements FormValueControl<number> {
   readonly value = model(0);
+  readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
+  readonly glyph = input<string>();
+  readonly tooltipFormatter = input<(value: number) => string>(String);
+  readonly iconTemplate = input<TemplateRef<{ $implicit: number; selected: boolean; preview: boolean }>>();
+  readonly previewChanged = output<number | null>();
+  protected readonly previewValue = signal<number | null>(null);
+  protected preview(value: number | null): void {
+    if (this.blocked()) return;
+    this.previewValue.set(value); this.previewChanged.emit(value);
+  }
   readonly max = input<number | undefined>(5);
   /** Increment between choices, from 0.1 to 1. */
   readonly step = input(1);

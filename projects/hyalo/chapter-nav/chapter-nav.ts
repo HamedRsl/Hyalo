@@ -29,6 +29,7 @@ interface ChapterScroll {
   readonly id: string;
   destination: number;
   settled: boolean;
+  notified: boolean;
 }
 
 /** Route-safe section navigation for a page or an explicitly supplied reading pane. */
@@ -37,7 +38,11 @@ interface ChapterScroll {
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chapter-nav.html',
   styleUrl: './chapter-nav.css',
-  host: { '[attr.data-orientation]': 'orientation()', '[attr.data-sticky]': 'sticky()', '[style.--hy-chapter-sticky-top]': 'stickyTop()' },
+  host: {
+    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-sticky]': 'sticky()',
+    '[style.--hy-chapter-sticky-top]': 'stickyTop()',
+  },
 })
 export class HyChapterNav {
   private readonly document = inject(DOCUMENT);
@@ -103,9 +108,14 @@ export class HyChapterNav {
         schedule();
       };
       const settled = (): void => {
-        if (this.navigation && Math.abs(this.scrollPosition() - this.navigation.destination) <= 1) {
+        if (
+          this.navigation &&
+          !this.navigation.notified &&
+          Math.abs(this.scrollPosition() - this.navigation.destination) <= 1
+        ) {
           this.navigation.settled = true;
-          this.scrolled.emit({id:this.navigation.id,position:this.scrollPosition()});
+          this.navigation.notified = true;
+          this.scrolled.emit({ id: this.navigation.id, position: this.scrollPosition() });
         }
       };
       const history = (): void => {
@@ -163,7 +173,7 @@ export class HyChapterNav {
     )
       return;
     event.preventDefault();
-    this.chapterClick.emit({id,event});
+    this.chapterClick.emit({ id, event });
     this.goTo(id);
   }
 
@@ -208,6 +218,7 @@ export class HyChapterNav {
       id,
       destination,
       settled: !smooth || Math.abs(this.scrollPosition() - destination) < 1,
+      notified: !smooth,
     };
     this.current.set(id);
     if (writeHistory && this.location.hash !== '#' + encodeURIComponent(id)) {
@@ -228,7 +239,7 @@ export class HyChapterNav {
     const options: ScrollToOptions = { top: destination, behavior: smooth ? 'smooth' : 'instant' };
     if (root) root.scrollTo(options);
     else window.scrollTo(options);
-    if (!smooth) this.scrolled.emit({id,position:destination});
+    if (!smooth) this.scrolled.emit({ id, position: destination });
     return true;
   }
   private track(): void {

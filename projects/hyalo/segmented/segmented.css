@@ -1,3 +1,8 @@
+:host([data-block]) { display: block; }
+:host([data-shape='rounded']) { --hy-segmented-radius: var(--hy-radius-m); }
+:host([data-orientation='vertical']) .hy-segmented__row { flex-direction: column; }
+:host([data-orientation='vertical']) .hy-segmented__indicator { display: none; }
+:host([data-orientation='vertical']) .hy-segmented__item[data-checked] { background: var(--hy-surface-1); }
 :host {
   display: inline-block;
   max-inline-size: 100%;

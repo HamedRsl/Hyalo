@@ -23,7 +23,37 @@ import {
   output,
   type InputSignal,
 } from '@angular/core';
-import type { Chart, ChartOptions, ChartDataset, ChartEvent, ActiveElement, Plugin } from 'chart.js';
+import type {
+  Chart,
+  ChartOptions,
+  ChartDataset,
+  ChartEvent,
+  ActiveElement,
+  Plugin,
+} from 'chart.js';
+function mergeChartOptions(base: ChartOptions, override: ChartOptions): ChartOptions {
+  const merge = (
+    left: Record<string, unknown>,
+    right: Record<string, unknown>,
+  ): Record<string, unknown> => {
+    const result = { ...left };
+    for (const [key, value] of Object.entries(right)) {
+      const previous = result[key];
+      result[key] =
+        value &&
+        previous &&
+        Object.getPrototypeOf(value) === Object.prototype &&
+        Object.getPrototypeOf(previous) === Object.prototype
+          ? merge(previous as Record<string, unknown>, value as Record<string, unknown>)
+          : value;
+    }
+    return result;
+  };
+  return merge(
+    base as Record<string, unknown>,
+    override as Record<string, unknown>,
+  ) as ChartOptions;
+}
 export interface HyChartSeries {
   readonly label: string;
   readonly values: readonly (number | null)[];
@@ -35,7 +65,8 @@ export interface HyChartData {
   readonly labels: readonly string[];
   readonly series: readonly HyChartSeries[];
 }
-export type HyChartType = 'line' | 'area' | 'bar' | 'doughnut' | 'pie' | 'radar' | 'polarArea' | 'scatter' | 'bubble';
+export type HyChartType =
+  'line' | 'area' | 'bar' | 'doughnut' | 'pie' | 'radar' | 'polarArea' | 'scatter' | 'bubble';
 let engine: Promise<typeof import('./engine')> | undefined;
 const loadEngine = (): Promise<typeof import('./engine')> =>
   (engine ??= import('./engine').catch((error: unknown) => {
@@ -152,15 +183,24 @@ export class HyChart {
       media?.removeEventListener('change', changed);
       this.tooltip.set(null);
       this.chart?.destroy();
+      this.chart = undefined;
     });
   }
   protected retry(): void {
     this.theme.update((value) => value + 1);
   }
-  getCanvas(): HTMLCanvasElement | null { return this.canvas()?.nativeElement ?? null; }
-  toBase64Image(type?: string, quality?: number): string | undefined { return this.chart?.toBase64Image(type, quality); }
-  refresh(): void { this.chart?.update(); }
-  reinitialize(): void { this.theme.update((value) => value + 1); }
+  getCanvas(): HTMLCanvasElement | null {
+    return this.destroyed ? null : this.canvas()?.nativeElement ?? null;
+  }
+  toBase64Image(type?: string, quality?: number): string | undefined {
+    return this.chart?.toBase64Image(type, quality);
+  }
+  refresh(): void {
+    this.chart?.update();
+  }
+  reinitialize(): void {
+    this.theme.update((value) => value + 1);
+  }
   private async render(data: HyChartData, type: HyChartType, locale: string): Promise<void> {
     const generation = ++this.generation;
     try {
@@ -176,10 +216,13 @@ export class HyChart {
       const rtl = view.getComputedStyle(this.host.nativeElement).direction === 'rtl';
       const datasets = data.series.map((series, index) => ({
         label: series.label,
-        data: (type === 'scatter' || type === 'bubble') && series.points ? [...series.points] : data.labels.map((_, i) => {
-          const value = series.values[i];
-          return value != null && Number.isFinite(value) ? value : null;
-        }),
+        data:
+          (type === 'scatter' || type === 'bubble') && series.points
+            ? [...series.points]
+            : data.labels.map((_, i) => {
+                const value = series.values[i];
+                return value != null && Number.isFinite(value) ? value : null;
+              }),
         borderColor: colors[index % colors.length],
         backgroundColor:
           type === 'doughnut'
@@ -213,53 +256,57 @@ export class HyChart {
         type: type === 'area' ? 'line' : type,
         data: { labels: [...data.labels], datasets },
         plugins: [...this.plugins()],
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          locale,
-          plugins: {
-            legend: {
-              display: data.series.length > 1 || type === 'doughnut',
-              rtl,
-              textDirection: rtl ? 'rtl' : 'ltr',
-              labels: { color: ink, usePointStyle: true },
-            },
-            tooltip: {
-              enabled: false,
-              external: ({ tooltip }) => {
-                if (!tooltip.opacity) {
-                  this.tooltip.set(null);
-                  return;
-                }
-                this.tooltip.set({
-                  x: tooltip.caretX,
-                  y: tooltip.caretY - 8,
-                  title: tooltip.title?.join(' ') ?? '',
-                  lines: tooltip.dataPoints.map(
-                    (point) => `${point.dataset.label ?? ''}: ${point.formattedValue}`,
-                  ),
-                });
+        options: mergeChartOptions(
+          {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+            locale,
+            plugins: {
+              legend: {
+                display: data.series.length > 1 || type === 'doughnut',
+                rtl,
+                textDirection: rtl ? 'rtl' : 'ltr',
+                labels: { color: ink, usePointStyle: true },
+              },
+              tooltip: {
+                enabled: false,
+                external: ({ tooltip }) => {
+                  if (!tooltip.opacity) {
+                    this.tooltip.set(null);
+                    return;
+                  }
+                  this.tooltip.set({
+                    x: tooltip.caretX,
+                    y: tooltip.caretY - 8,
+                    title: tooltip.title?.join(' ') ?? '',
+                    lines: tooltip.dataPoints.map(
+                      (point) => `${point.dataset.label ?? ''}: ${point.formattedValue}`,
+                    ),
+                  });
+                },
               },
             },
-          },
-          ...(type === 'doughnut' || type === 'pie' || type === 'radar' || type === 'polarArea'
-            ? {}
-            : {
-                scales: {
-                  x: {
-                    ticks: { color: ink, maxRotation: 0, autoSkip: true },
-                    grid: { display: false },
+            ...(type === 'doughnut' || type === 'pie' || type === 'radar' || type === 'polarArea'
+              ? {}
+              : {
+                  scales: {
+                    x: {
+                      ticks: { color: ink, maxRotation: 0, autoSkip: true },
+                      grid: { display: false },
+                    },
+                    y: { ticks: { color: ink }, grid: { color: border }, beginAtZero: true },
                   },
-                  y: { ticks: { color: ink }, grid: { color: border }, beginAtZero: true },
-                },
-              }),
-          ...this.options(),
-          onClick: (event, elements, chart) => {
-            if (elements.length) this.dataPointSelected.emit({ event, elements });
-            this.options().onClick?.(event, elements, chart);
+                }),
           },
-        },
+          {
+            ...this.options(),
+            onClick: (event, elements, chart) => {
+              if (elements.length) this.dataPointSelected.emit({ event, elements });
+              this.options().onClick?.(event, elements, chart);
+            },
+          },
+        ),
       });
       this.error.set(false);
     } catch {

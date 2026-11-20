@@ -2,6 +2,22 @@
 
 Implemented on `develop`. Package version: 0.5.0.
 
+### Scope correction: application compositions
+
+The latest roadmap decision moves notification center/push card, chat/message list,
+and numeric keypad out of reusable component-family scope and into editable blocks.
+Phase 5 therefore contains **12 reusable families and 3 application compositions**,
+rather than 15 reusable families. The original 15-row inventory below is retained
+as historical release scope, not as the updated family count.
+
+Use `/blocks/notifications`, `/blocks/marketplace-chat`, and `/blocks/transfer` for
+copyable primitive-based source. Each example supplies editable TypeScript, HTML
+and CSS; hosts own their state, transport and backend validation. Existing
+`/notification-center`, `/chat`, `/keypad` and `/blocks` exports remain compatible;
+no existing selector or entry point is removed. Old component docs routes remain
+reachable but these compositions are listed under Application blocks, not the
+component-family catalog. No AI chat or prompt-kit family is introduced.
+
 The supplied roadmap is scope and acceptance data. This implementation covers its 15 phase 5 families, shared drag controller and three composed blocks. The optional dock and status island are included. Phase 6 remains separate.
 
 ## Inventory

@@ -16,7 +16,9 @@ import {
   input,
   model,
   numberAttribute,
+  output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -24,6 +26,10 @@ import { ɵinjectIsBrowser } from '@hyalo/angular/core';
 import { HyMotion } from '@hyalo/angular/motion';
 import { HyButton } from '@hyalo/angular/button';
 import { HyIcon } from '@hyalo/angular/icon';
+export interface HyCarouselBreakpoint {
+  readonly minWidth: number;
+  readonly visibleSlides: number;
+}
 export type HyCarouselMode = 'slide' | 'fade';
 export type HyCarouselPagination = 'dots' | 'counter' | 'none';
 export type HyCarouselNavigationMode = 'text' | 'icons' | 'none';
@@ -70,6 +76,9 @@ export class HySlide {
     'aria-roledescription': 'carousel',
     '[attr.aria-label]': 'label()',
     '[attr.data-mode]': 'mode()',
+    '[attr.data-orientation]': 'orientation()',
+    '(focusin)': 'pause()',
+    '(pointerenter)': 'pauseOnHover() && pause()',
     '[attr.data-scrollbar]': 'scrollbar()',
     '[attr.data-navigation-position]': 'navPosition()',
     '[style.--hy-carousel-visible]': 'visibleCount()',
@@ -88,7 +97,10 @@ export class HyCarousel {
   readonly previousLabel = input('Previous slide');
   readonly nextLabel = input('Next slide');
   readonly index = model(0);
+  readonly transitionCompleted = output<number>();
+  private pendingCompletion: number | null = null;
   readonly mode = input<HyCarouselMode>('slide');
+  readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
   readonly pagination = input<HyCarouselPagination>('dots');
   readonly paginationLabel = input('Choose slide');
   readonly loop = input(false, { transform: booleanAttribute });
@@ -96,14 +108,51 @@ export class HyCarousel {
   /** Number of slides per viewport. Fade mode always shows one. */
   readonly visibleSlides = input(1, { transform: numberAttribute });
   readonly pageStep = input(1, { transform: numberAttribute });
+  readonly autoplay = input(false, { transform: booleanAttribute });
+  readonly autoplayInterval = input(3000, { transform: numberAttribute });
+  readonly pauseOnHover = input(true, { transform: booleanAttribute });
+  readonly playing = signal(false);
+  private autoplayTimer?: ReturnType<typeof setInterval>;
+
+  /** Focus always stops autoplay; resumption is an explicit user action. */
+  play(): void {
+    if (!this.browser || this.destroyRef.destroyed || !this.canNext() || this.playing()) return;
+    this.playing.set(true);
+    const interval = this.autoplayInterval();
+    this.autoplayTimer = setInterval(
+      () => {
+        this.movePage(1);
+        if (!this.canNext()) this.pause();
+      },
+      Number.isFinite(interval) ? Math.max(100, interval) : 3000,
+    );
+  }
+  pause(): void {
+    clearInterval(this.autoplayTimer);
+    this.playing.set(false);
+  }
   readonly navigation = input<HyCarouselNavigationMode>('text');
   readonly navPosition = input<HyCarouselNavigationPosition>('below');
   protected readonly customNavigation = contentChild(HyCarouselNavigation);
   protected readonly navigationContext: HyCarouselNavigationContext = { $implicit: this };
   readonly slides = contentChildren(HySlide);
-  protected readonly visibleCount = computed(() =>
-    this.mode() === 'fade' ? 1 : carouselCount(this.visibleSlides()),
-  );
+  readonly responsive = input<readonly HyCarouselBreakpoint[]>([]);
+  private readonly containerWidth = signal(0);
+  protected readonly visibleCount = computed(() => {
+    if (this.mode() === 'fade') return 1;
+    const breakpoint = this.responsive()
+      .filter(
+        (item) =>
+          Number.isFinite(item.minWidth) &&
+          item.minWidth >= 0 &&
+          item.minWidth <= this.containerWidth(),
+      )
+      .reduce<HyCarouselBreakpoint | undefined>(
+        (best, item) => (!best || item.minWidth >= best.minWidth ? item : best),
+        undefined,
+      );
+    return carouselCount(breakpoint?.visibleSlides ?? this.visibleSlides());
+  });
   readonly lastIndex = computed(() => Math.max(0, this.slides().length - this.visibleCount()));
   protected readonly positions = computed(() => this.slides().slice(0, this.lastIndex() + 1));
   readonly current = computed(() =>
@@ -128,6 +177,16 @@ export class HyCarousel {
   private settleTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
+    this.destroyRef.onDestroy(() => this.pause());
+    effect(() => {
+      const autoplay = this.autoplay();
+      this.autoplayInterval();
+      if (!this.ready()) return;
+      untracked(() => {
+        this.pause();
+        if (autoplay) this.play();
+      });
+    });
     effect(() => {
       const current = this.current();
       if (this.index() !== current) this.index.set(current);
@@ -146,14 +205,17 @@ export class HyCarousel {
         this.animated.set(false);
         this.scrollToSlide(false);
       }
+      if (this.ready() && (!this.animated() || !this.motion.enabled())) this.completeTransition();
     });
     afterNextRender(() => {
       const viewport = this.viewport().nativeElement;
       this.viewportWidth = viewport.clientWidth;
+      this.containerWidth.set(viewport.clientWidth);
       const resize =
         typeof ResizeObserver === 'function'
           ? new ResizeObserver(([entry]) => {
               this.viewportWidth = entry?.contentRect.width ?? viewport.clientWidth;
+              this.containerWidth.set(this.viewportWidth);
               this.scrollToSlide(false);
             })
           : null;
@@ -179,11 +241,13 @@ export class HyCarousel {
   goTo(index: number, smooth = true): void {
     const count = this.lastIndex() + 1;
     const requested = Number.isFinite(index) ? Math.trunc(index) : 0;
+    const previous = this.current();
     this.index.set(
       this.loop() && count
         ? ((requested % count) + count) % count
         : Math.max(0, Math.min(count - 1, requested)),
     );
+    if (previous !== this.current()) this.pendingCompletion = this.current();
     this.syncedIndex = this.current();
     this.animated.set(smooth);
     this.scrollToSlide(smooth);
@@ -212,7 +276,7 @@ export class HyCarousel {
         this.scrollToSlide(false);
       }, 800);
     viewport.scrollBy?.({
-      left: delta,
+      ...(this.orientation() === 'vertical' ? { top: delta } : { left: delta }),
       behavior: smooth && this.motion.enabled() ? 'smooth' : 'instant',
     });
   }
@@ -221,6 +285,7 @@ export class HyCarousel {
     const rtl = viewport.ownerDocument.defaultView?.getComputedStyle(viewport).direction === 'rtl';
     const frame = viewport.getBoundingClientRect();
     const item = slide.getBoundingClientRect();
+    if (this.orientation() === 'vertical') return item.y - frame.y;
     return rtl ? item.right - frame.right : item.x - frame.x;
   }
 
@@ -232,23 +297,46 @@ export class HyCarousel {
       viewport.ownerDocument.defaultView?.requestAnimationFrame(() => {
         this.scrollFrame = 0;
         if (this.drag || this.scrollTarget !== null || this.mode() !== 'slide') return;
-        const width = (this.viewportWidth || viewport.clientWidth) / this.visibleCount();
+        const vertical = this.orientation() === 'vertical';
+        const width =
+          (vertical ? viewport.clientHeight : this.viewportWidth || viewport.clientWidth) /
+          this.visibleCount();
         if (!width) return;
         const closest = Math.max(
           0,
-          Math.min(this.lastIndex(), Math.round(Math.abs(viewport.scrollLeft) / width)),
+          Math.min(
+            this.lastIndex(),
+            Math.round(Math.abs(vertical ? viewport.scrollTop : viewport.scrollLeft) / width),
+          ),
         );
         this.syncedIndex = closest;
         this.index.set(closest);
       }) ?? 0;
   }
   protected onScrollEnd(): void {
-    if (this.scrollTarget === null) return;
+    if (this.scrollTarget === null && this.pendingCompletion === null) return;
     const viewport = this.viewport().nativeElement;
-    const slide = viewport.children[this.scrollTarget];
+    const slide = viewport.children[this.scrollTarget ?? this.current()];
     if (slide && Math.abs(this.slideDelta(viewport, slide)) > 1) return;
     this.scrollTarget = null;
     clearTimeout(this.settleTimer);
+    this.completeTransition();
+  }
+
+  protected onFadeEnd(event: TransitionEvent): void {
+    if (
+      this.mode() === 'fade' &&
+      event.propertyName === 'opacity' &&
+      event.target === this.viewport().nativeElement.children[this.current()]
+    )
+      this.completeTransition();
+  }
+
+  private completeTransition(): void {
+    if (this.pendingCompletion === null) return;
+    const index = this.pendingCompletion;
+    this.pendingCompletion = null;
+    this.transitionCompleted.emit(index);
   }
 
   protected onKey(event: KeyboardEvent): void {
@@ -257,7 +345,11 @@ export class HyCarousel {
       this.viewport().nativeElement.ownerDocument.defaultView?.getComputedStyle(
         this.viewport().nativeElement,
       ).direction === 'rtl';
-    if (event.key === 'ArrowRight') this.movePage(rtl ? -1 : 1, false);
+    if (this.orientation() === 'vertical' && event.key === 'ArrowDown') this.movePage(1, false);
+    else if (this.orientation() === 'vertical' && event.key === 'ArrowUp') this.movePage(-1, false);
+    else if (this.orientation() === 'vertical' && ['ArrowRight', 'ArrowLeft'].includes(event.key))
+      return;
+    else if (event.key === 'ArrowRight') this.movePage(rtl ? -1 : 1, false);
     else if (event.key === 'ArrowLeft') this.movePage(rtl ? 1 : -1, false);
     else if (event.key === 'Home') this.goTo(0, false);
     else if (event.key === 'End') this.goTo(this.lastIndex(), false);
@@ -277,8 +369,11 @@ export class HyCarousel {
       return;
     this.viewport().nativeElement.style.scrollSnapType = 'none';
     this.drag = {
-      x: event.clientX,
-      scroll: this.viewport().nativeElement.scrollLeft,
+      x: this.orientation() === 'vertical' ? event.clientY : event.clientX,
+      scroll:
+        this.orientation() === 'vertical'
+          ? this.viewport().nativeElement.scrollTop
+          : this.viewport().nativeElement.scrollLeft,
       time: event.timeStamp,
       moved: false,
     };
@@ -290,12 +385,16 @@ export class HyCarousel {
       this.pointerCancel();
       return;
     }
-    const distance = event.clientX - this.drag.x;
+    const distance =
+      (this.orientation() === 'vertical' ? event.clientY : event.clientX) - this.drag.x;
     if (Math.abs(distance) < 6 && !this.drag.moved) return;
     this.drag.moved = true;
     const viewport = this.viewport().nativeElement;
     viewport.setPointerCapture?.(event.pointerId);
-    if (this.mode() === 'slide') viewport.scrollLeft = this.drag.scroll - distance;
+    if (this.mode() === 'slide') {
+      if (this.orientation() === 'vertical') viewport.scrollTop = this.drag.scroll - distance;
+      else viewport.scrollLeft = this.drag.scroll - distance;
+    }
     event.preventDefault();
   }
   protected pointerUp(event: PointerEvent): void {
@@ -309,9 +408,17 @@ export class HyCarousel {
     if (!drag.moved) return;
     this.suppressClick = true;
     const rtl = viewport.ownerDocument.defaultView?.getComputedStyle(viewport).direction === 'rtl';
-    const distance = (event.clientX - drag.x) * (rtl ? -1 : 1);
+    const vertical = this.orientation() === 'vertical';
+    const distance =
+      ((vertical ? event.clientY : event.clientX) - drag.x) * (!vertical && rtl ? -1 : 1);
     const projected = distance + (distance / Math.max(1, event.timeStamp - drag.time)) * 180;
-    const shift = Math.round(-projected / Math.max(1, viewport.clientWidth / this.visibleCount()));
+    const shift = Math.round(
+      -projected /
+        Math.max(
+          1,
+          (vertical ? viewport.clientHeight : viewport.clientWidth) / this.visibleCount(),
+        ),
+    );
     this.goTo(this.current() + shift);
   }
   protected pointerCancel(): void {

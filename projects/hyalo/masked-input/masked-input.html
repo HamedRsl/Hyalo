@@ -1,6 +1,7 @@
 <input
   type="text"
-  inputmode="numeric"
+  [attr.inputmode]="inputMode()"
+  (blur)="blur($event)"
   [id]="id()"
   [name]="name()"
   [disabled]="effectiveDisabled()"

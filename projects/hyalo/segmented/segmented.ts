@@ -1,4 +1,6 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
+  TemplateRef,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -37,14 +39,18 @@ export interface HySegmentedOption<T> {
  */
 @Component({
   selector: 'hy-segmented',
-  imports: [HyIcon],
+  imports: [HyIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'hy-segmented',
-    role: 'radiogroup',
+    '[attr.role]': 'multiple() ? "group" : "radiogroup"',
     '[attr.aria-label]': 'label() || null',
     '[attr.aria-disabled]': 'disabled() || null',
     '[attr.data-size]': 'size()',
+    '[attr.aria-orientation]': 'orientation()',
+    '[attr.data-orientation]': 'orientation()',
+    '[attr.data-shape]': 'shape()',
+    '[attr.data-block]': 'block() || null',
     '[attr.data-ready]': 'ready() || null',
   },
   templateUrl: './segmented.html',
@@ -67,6 +73,34 @@ export class HySegmented<T> implements FormValueControl<T | undefined> {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Control size. */
   readonly size = input<HySize>('md');
+  readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
+  readonly shape = input<'pill' | 'rounded'>('pill');
+  readonly block = input(false);
+  readonly allowEmpty = input(false);
+  readonly multiple = input(false);
+  /** Multiple-selection model; single-value Signal Forms contract remains unchanged. */
+  readonly selectedValues = model<readonly T[]>([]);
+  protected selected(option: HySegmentedOption<T>): boolean {
+    return this.multiple() ? this.selectedValues().includes(option.value) : this.value() === option.value;
+  }
+  readonly optionTemplate = input<TemplateRef<{ $implicit: HySegmentedOption<T>; selected: boolean }>>();
+  protected choose(option: HySegmentedOption<T>): void {
+    if (this.disabled() || option.disabled) return;
+    if (this.multiple()) {
+      const values = this.selectedValues();
+      if (values.includes(option.value)) {
+        if (this.allowEmpty() || values.length > 1) this.selectedValues.set(values.filter(value => value !== option.value));
+      } else this.selectedValues.set([...values, option.value]);
+    } else this.value.set(option.value);
+  }
+  protected clear(event: MouseEvent, option: HySegmentedOption<T>): void {
+    if (this.multiple()) {
+      if (this.disabled() || option.disabled || (!this.allowEmpty() && this.selected(option) && this.selectedValues().length === 1)) event.preventDefault();
+      return;
+    }
+    if (this.disabled() || option.disabled || !this.allowEmpty() || this.value() !== option.value) return;
+    event.preventDefault(); this.value.set(undefined);
+  }
   /** Emits when focus leaves an option, so forms can mark the field touched. */
   readonly touch = output<void>();
 

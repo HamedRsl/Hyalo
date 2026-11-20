@@ -10,7 +10,15 @@ import {
   model,
   viewChild,
   viewChildren,
-  Directive, TemplateRef, contentChild, DestroyRef, effect, output, signal, afterNextRender, Injector,
+  Directive,
+  TemplateRef,
+  contentChild,
+  DestroyRef,
+  effect,
+  output,
+  signal,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
@@ -20,10 +28,17 @@ import { HyIcon } from '@hyalo/angular/icon';
 import { ɵtrackIndicator as trackIndicator } from '@hyalo/angular/core';
 
 @Directive({ selector: 'ng-template[hyTabContent]' })
-export class HyTabContent { readonly template = inject(TemplateRef<unknown>); }
+export class HyTabContent {
+  readonly template = inject(TemplateRef<unknown>);
+}
 @Directive({ selector: 'ng-template[hyTabHeader]' })
-export class HyTabHeader { readonly template = inject(TemplateRef<unknown>); }
-export interface HyTabTransition { readonly previous: string | undefined; readonly next: string; }
+export class HyTabHeader {
+  readonly template = inject(TemplateRef<unknown>);
+}
+export interface HyTabTransition {
+  readonly previous: string | undefined;
+  readonly next: string;
+}
 
 /**
  * One tab and its panel. The panel content is rendered up front and hidden
@@ -35,7 +50,10 @@ export interface HyTabTransition { readonly previous: string | undefined; readon
   hostDirectives: [{ directive: TabPanel, inputs: ['value'] }],
   host: { class: 'hy-tab-panel' },
   imports: [NgTemplateOutlet],
-  template: `<ng-content />@if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }`,
+  template: `<ng-content />
+    @if (created()) {
+      <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" />
+    }`,
   styleUrl: './tab.css',
 })
 export class HyTab {
@@ -83,7 +101,12 @@ export class HyTab {
   imports: [TabList, Tab, HyIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [Tabs],
-  host: { class: 'hy-tabs', '[attr.data-stretch]': 'stretch() || null', '[attr.data-placement]': 'placement()', '[attr.aria-busy]': 'pending() || null' },
+  host: {
+    class: 'hy-tabs',
+    '[attr.data-stretch]': 'stretch() || null',
+    '[attr.data-placement]': 'placement()',
+    '[attr.aria-busy]': 'pending() || null',
+  },
   templateUrl: './tabs.html',
   styleUrl: './tabs.css',
 })
@@ -121,28 +144,85 @@ export class HyTabs {
   readonly overflowLabel = input('Choose tab');
   readonly previousLabel = input('Previous tabs');
   readonly nextLabel = input('Next tabs');
-  constructor() { inject(DestroyRef).onDestroy(() => { this.destroyed = true; this.generation++; }); }
-  isActive(value: string): boolean { return this.current() === value; }
+  constructor() {
+    let observed: string | undefined;
+    effect(() => {
+      const current = this.current();
+      if (current !== observed) {
+        observed = current;
+        if (this.pending()) {
+          this.generation++;
+          this.pending.set(false);
+        }
+      }
+    });
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      this.generation++;
+    });
+  }
+  private restoreSelectionFocus(): void {
+    const index = this.tabs().findIndex((tab) => tab.panel.value() === this.current());
+    const target = this.tabEls()[index]?.nativeElement;
+    // Do not steal focus if the user has left the tab headers while awaiting a guard.
+    const active = target?.ownerDocument.activeElement;
+    if (this.tabEls().some((tab) => tab.nativeElement === active)) target?.focus();
+  }
+  isActive(value: string): boolean {
+    return this.current() === value;
+  }
   select(next: string | undefined): void {
-    if (!next || next === this.current() || !this.tabs().some((tab) => tab.panel.value() === next && !tab.disabled())) return;
+    if (
+      !next ||
+      next === this.current() ||
+      !this.tabs().some((tab) => tab.panel.value() === next && !tab.disabled())
+    )
+      return;
     this.tabList()?.selectedTab.set(this.current());
     const transition = { previous: this.current(), next };
     const generation = ++this.generation;
     const accept = (approved: boolean): void => {
       if (this.destroyed || generation !== this.generation) return;
       this.pending.set(false);
-      if (!approved) return;
+      if (
+        !approved ||
+        this.current() !== transition.previous ||
+        !this.tabs().some((tab) => tab.panel.value() === next && !tab.disabled())
+      ) {
+        this.restoreSelectionFocus();
+        return;
+      }
       this.selected.set(next);
       this.selectionChange.emit(transition);
-      const route = this.tabs().find((tab) => tab.panel.value() === next)?.route();
+      const route = this.tabs()
+        .find((tab) => tab.panel.value() === next)
+        ?.route();
       if (route) void this.router?.navigateByUrl(route);
-      afterNextRender(() => { if (!this.destroyed && generation === this.generation) this.transitionComplete.emit(next); }, { injector: this.injector });
+      afterNextRender(
+        () => {
+          if (!this.destroyed && generation === this.generation) this.transitionComplete.emit(next);
+        },
+        { injector: this.injector },
+      );
     };
     try {
       const result = this.beforeChange()?.(transition) ?? true;
       if (typeof result === 'boolean') accept(result);
-      else { this.pending.set(true); void result.then(accept, (error: unknown) => { if (generation === this.generation && !this.destroyed) { this.pending.set(false); this.transitionError.emit(error); } }); }
-    } catch (error) { this.pending.set(false); this.transitionError.emit(error); }
+      else {
+        this.pending.set(true);
+        void result.then(accept, (error: unknown) => {
+          if (generation === this.generation && !this.destroyed) {
+            this.pending.set(false);
+            this.restoreSelectionFocus();
+            this.transitionError.emit(error);
+          }
+        });
+      }
+    } catch (error) {
+      this.pending.set(false);
+      this.restoreSelectionFocus();
+      this.transitionError.emit(error);
+    }
   }
   protected scroll(direction: number): void {
     const list = this.list()?.nativeElement;

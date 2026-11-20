@@ -7,6 +7,7 @@
     [attr.aria-label]="label()"
     (scroll)="onScroll()"
     (scrollend)="onScrollEnd()"
+    (transitionend)="onFadeEnd($event)"
     (keydown)="onKey($event)"
     (pointerdown)="pointerDown($event)"
     (pointermove)="pointerMove($event)"

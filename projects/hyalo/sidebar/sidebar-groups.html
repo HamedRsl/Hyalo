@@ -1,18 +1,22 @@
 @for (group of visibleGroups(); track group.id) {
-  <hy-sidebar-group [label]="group.label">
-    @for (item of group.items; track item.id) {
-      <!-- eslint-disable-next-line @angular-eslint/template/elements-content -- HySidebarItem renders the label in its component template. -->
-      <a
-        hySidebarItem
-        [href]="item.href"
-        [label]="item.label"
-        [icon]="item.icon ?? ''"
-        [description]="item.description ?? ''"
-        [count]="item.count ?? null"
-        [countLabel]="item.countLabel ?? ''"
-        [active]="item.id === activeId()"
-        (click)="selected.emit(item)"
-      ></a>
-    }
-  </hy-sidebar-group>
+  <hy-sidebar-group [label]="group.label"><ul><ng-container [ngTemplateOutlet]="tree" [ngTemplateOutletContext]="{ $implicit: group.items, parent: group.id }" /></ul></hy-sidebar-group>
 }
+<ng-template #tree let-items let-parent="parent">
+@for (item of items; track item.id) {
+  @if (item.visible !== false) {
+    @let path = parent + '/' + item.id;
+    <li>
+    @if (item.children?.length) {
+      <button type="button" [disabled]="item.disabled" [attr.aria-expanded]="expanded().has(path)" (click)="toggle(path)" (keydown.escape)="close($event, path)">{{ item.label }}</button>
+      @if (expanded().has(path)) { <ul tabindex="-1" (keydown.escape)="close($event, path)"><ng-container [ngTemplateOutlet]="tree" [ngTemplateOutletContext]="{ $implicit: item.children, parent: path }" /></ul> }
+    } @else if (item.routerLink && !item.disabled) {
+      <!-- eslint-disable-next-line @angular-eslint/template/elements-content -- HySidebarItem renders its label. -->
+      <a hySidebarItem [routerLink]="item.routerLink" [queryParams]="item.queryParams" [fragment]="item.fragment" [state]="item.state" [label]="item.label" [icon]="item.icon ?? ''" [description]="item.description ?? ''" [count]="item.count ?? null" [countLabel]="item.countLabel ?? ''" [active]="item.id === activeId()" (click)="activate($event, item)"></a>
+    } @else {
+      <!-- eslint-disable-next-line @angular-eslint/template/elements-content -- HySidebarItem renders its label. -->
+      <a hySidebarItem [attr.href]="item.disabled ? null : item.href" [attr.aria-disabled]="item.disabled || null" [attr.tabindex]="item.disabled ? -1 : null" [label]="item.label" [icon]="item.icon ?? ''" [description]="item.description ?? ''" [count]="item.count ?? null" [countLabel]="item.countLabel ?? ''" [active]="item.id === activeId()" (click)="activate($event, item)"></a>
+    }
+    </li>
+  }
+}
+</ng-template>

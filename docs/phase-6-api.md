@@ -393,20 +393,20 @@ export function moveHyKanbanCard<T>(columns:readonly HyKanbanColumn<T>[],id:stri
 - `HyScheduler.events`: `readonly EventInput[]` (default: `[]`) - Input.
 - `HyScheduler.options`: `CalendarOptions` (default: `{}`) - Input.
 - `HyScheduler.view`: `string` (default: `'dayGridMonth'`) - Two-way model; also exposes viewChange.
-- `HyScheduler.date`: `string|null` (default: `null`) - Two-way model; also exposes dateChange.
+- `HyScheduler.date`: `string | null` (default: `null`) - Two-way model; also exposes dateChange.
 - `HyScheduler.locale`: `string` - Input.
 - `HyScheduler.timeZone`: `'local'` (default: `'local'`) - Input.
-- `HyScheduler.direction`: `'ltr'|'rtl'` - Input.
+- `HyScheduler.direction`: `'ltr' | 'rtl'` - Input.
 - `HyScheduler.editable`: `false` (default: `false`) - Input.
 - `HyScheduler.selectable`: `false` (default: `false`) - Input.
 - `HyScheduler.disabled`: `false` (default: `false`) - Input.
-- `HyScheduler.height`: `number|string` (default: `'auto'`) - Input.
+- `HyScheduler.height`: `number | string` (default: `'auto'`) - Input.
 - `HyScheduler.showToolbar`: `true` (default: `true`) - Input.
 - `HyScheduler.showAgenda`: `true` (default: `true`) - Input.
 - `HyScheduler.agendaLabel`: `'Event summary'` (default: `'Event summary'`) - Input.
 - `HyScheduler.emptyLabel`: `'No events'` (default: `'No events'`) - Input.
 - `HyScheduler.loadingLabel`: `'Loading calendar'` (default: `'Loading calendar'`) - Input.
-- `HyScheduler.canChange`: `(change:HySchedulerChange)=>boolean|Promise<boolean>` (default: `()=>true`) - Input.
+- `HyScheduler.canChange`: `(change: HySchedulerChange) => boolean | Promise<boolean>` (default: `() => true`) - Input.
 - `HyScheduler.initialized`: `CalendarApi` - Typed event.
 - `HyScheduler.rangeChanged`: `DatesSetArg` - Typed event.
 - `HyScheduler.eventClicked`: `EventClickArg` - Typed event.
@@ -417,26 +417,35 @@ export function moveHyKanbanCard<T>(columns:readonly HyKanbanColumn<T>[],id:stri
 - `HyScheduler.loadingChanged`: `boolean` - Typed event.
 - `HyScheduler.failed`: `unknown` - Typed event.
 - `HyScheduler.pending`: `0` - Read-only derived state.
-- `HyScheduler.retry`: `retry():void{i` - Public method.
-- `HyScheduler.getApi`: `getApi():CalendarApi|undefined{r` - Public method.
-- `HyScheduler.next`: `next():void{i` - Public method.
-- `HyScheduler.previous`: `previous():void{i` - Public method.
-- `HyScheduler.today`: `today():void{i` - Public method.
-- `HyScheduler.gotoDate`: `gotoDate(date:string):void{i` - Public method.
-- `HyScheduler.changeView`: `changeView(view:string,date?:string):void{i` - Public method.
-- `HyScheduler.refetchEvents`: `refetchEvents():void{t` - Public method.
-- `HyScheduler.updateSize`: `updateSize():void{t` - Public method.
+- `HyScheduler.retry`: `retry(): void {` - Public method.
+- `HyScheduler.getApi`: `getApi(): CalendarApi | undefined {` - Public method.
+- `HyScheduler.next`: `next(): void {` - Public method.
+- `HyScheduler.previous`: `previous(): void {` - Public method.
+- `HyScheduler.today`: `today(): void {` - Public method.
+- `HyScheduler.gotoDate`: `gotoDate(date: string): void {` - Public method.
+- `HyScheduler.changeView`: `changeView(view: string, date?: string): void {` - Public method.
+- `HyScheduler.refetchEvents`: `refetchEvents(): void {` - Public method.
+- `HyScheduler.updateSize`: `updateSize(): void {` - Public method.
 
 ~~~ts
-export type HySchedulerView='dayGridMonth'|'timeGridWeek'|'timeGridDay'|'listWeek';
+export type HySchedulerView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
 ~~~
 
 ~~~ts
-export interface HySchedulerChange{readonly kind:'drop'|'resize';readonly event:EventApi;readonly previous:EventApi;readonly related:readonly EventApi[];readonly revert:()=>void;}
+export interface HySchedulerChange {
+  readonly kind: 'drop' | 'resize';
+  readonly event: EventApi;
+  readonly previous: EventApi;
+  readonly related: readonly EventApi[];
+  readonly revert: () => void;
+}
 ~~~
 
 ~~~ts
-HY_SCHEDULER_LOADER=new InjectionToken<()=>Promise<typeof import('./engine')>>('HY_SCHEDULER_LOADER',{providedIn:'root',factory:()=>loadEngine})
+HY_SCHEDULER_LOADER = new InjectionToken<() => Promise<typeof import('./engine')>>(
+  'HY_SCHEDULER_LOADER',
+  { providedIn: 'root', factory: () => loadEngine },
+)
 ~~~
 
 ## splitter
@@ -588,35 +597,35 @@ export interface HyContextActionEvent<T>{readonly action:HyContextAction<T>;read
 
 ## rich-text
 
-- `HyRichText.value`: `JSONContent|null` (default: `null`) - Two-way model; also exposes valueChange.
+- `HyRichText.value`: `JSONContent | null` (default: `null`) - Two-way model; also exposes valueChange.
 - `HyRichText.placeholder`: `'Write something'` (default: `'Write something'`) - Input.
 - `HyRichText.minHeight`: `'12rem'` (default: `'12rem'`) - Input.
 - `HyRichText.maxHeight`: `'32rem'` (default: `'32rem'`) - Input.
 - `HyRichText.toolbar`: `readonly HyRichTextAction[]` (default: `HY_RICH_TEXT_ACTIONS`) - Input.
 - `HyRichText.showToolbar`: `true` (default: `true`) - Input.
 - `HyRichText.showCount`: `true` (default: `true`) - Input.
-- `HyRichText.characterLimit`: `number|null` (default: `null`) - Input.
+- `HyRichText.characterLimit`: `number | null` (default: `null`) - Input.
 - `HyRichText.images`: `false` (default: `false`) - Input.
 - `HyRichText.links`: `true` (default: `true`) - Input.
 - `HyRichText.starterKit`: `Partial<StarterKitOptions>` (default: `{}`) - Input.
-- `HyRichText.extensions`: `Extensions|(()=>Promise<Extensions>)` (default: `[]`) - Input.
+- `HyRichText.extensions`: `Extensions | (() => Promise<Extensions>)` (default: `[]`) - Input.
 - `HyRichText.editorOptions`: `Partial<EditorOptions>` (default: `{}`) - Input.
 - `HyRichText.initialized`: `Editor` - Typed event.
-- `HyRichText.updated`: `{readonly json:JSONContent|null;readonly html:string;readonly text:string}` - Typed event.
-- `HyRichText.selectionChanged`: `{readonly from:number;readonly to:number}` - Typed event.
+- `HyRichText.updated`: `{     readonly json: JSONContent | null;     readonly html: string;     readonly text: string;   }` - Typed event.
+- `HyRichText.selectionChanged`: `{ readonly from: number; readonly to: number }` - Typed event.
 - `HyRichText.focused`: `void` - Typed event.
 - `HyRichText.blurred`: `void` - Typed event.
 - `HyRichText.failed`: `unknown` - Typed event.
-- `HyRichText.run`: `run(command:HyRichTextCommand):boolean{` - Public method.
-- `HyRichText.setLink`: `setLink(href:string):boolean{i` - Public method.
-- `HyRichText.insertImage`: `insertImage(src:string,alt=''):boolean{i` - Public method.
-- `HyRichText.getEditor`: `getEditor():Editor|undefined{r` - Public method.
-- `HyRichText.getHTML`: `getHTML():string{r` - Public method.
-- `HyRichText.getText`: `getText():string{r` - Public method.
-- `HyRichText.setHTML`: `setHTML(html:string):boolean{i` - Public method.
-- `HyRichText.focus`: `focus():void{t` - Public method.
-- `HyRichText.reset`: `reset():void{t` - Public method.
-- `HyRichText.retry`: `retry():void{i` - Public method.
+- `HyRichText.run`: `run(command: HyRichTextCommand): boolean {` - Public method.
+- `HyRichText.setLink`: `setLink(href: string): boolean {` - Public method.
+- `HyRichText.insertImage`: `insertImage(src: string, alt = ''): boolean {` - Public method.
+- `HyRichText.getEditor`: `getEditor(): Editor | undefined {` - Public method.
+- `HyRichText.getHTML`: `getHTML(): string {` - Public method.
+- `HyRichText.getText`: `getText(): string {` - Public method.
+- `HyRichText.setHTML`: `setHTML(html: string): boolean {` - Public method.
+- `HyRichText.focus`: `focus(): void {` - Public method.
+- `HyRichText.reset`: `reset(): void {` - Public method.
+- `HyRichText.retry`: `retry(): void {` - Public method.
 - `HyValueControl.id`: `void` - Read-only derived state.
 - `HyValueControl.label`: `''` (default: `''`) - Input.
 - `HyValueControl.name`: `''` (default: `''`) - Input.
@@ -626,33 +635,68 @@ export interface HyContextActionEvent<T>{readonly action:HyContextAction<T>;read
 - `HyValueControl.required`: `false` (default: `false`) - Input.
 - `HyValueControl.invalid`: `false` (default: `false`) - Input.
 - `HyValueControl.touched`: `false` (default: `false`) - Input.
+- `HyValueControl.dirty`: `false` (default: `false`) - Input.
+- `HyValueControl.pending`: `false` (default: `false`) - Input.
 - `HyValueControl.errors`: `readonly { readonly kind: string; readonly message?: string }[]` (default: `[]`) - Input.
 - `HyValueControl.touch`: `void` - Typed event.
 - `HyValueControl.errorMessage`: `() => this.errors()[0]?.message ?? this.errors()[0]?.kind` - Read-only derived state.
 - `HyValueControl.focus`: `focus(): void {` - Public method.
 
 ~~~ts
-export type HyRichTextCommand='bold'|'italic'|'underline'|'strike'|'code'|'bulletList'|'orderedList'|'blockquote'|'horizontalRule'|'undo'|'redo'|'clear'|'paragraph'|'heading1'|'heading2'|'heading3';
+export type HyRichTextCommand =
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'strike'
+  | 'code'
+  | 'bulletList'
+  | 'orderedList'
+  | 'blockquote'
+  | 'horizontalRule'
+  | 'undo'
+  | 'redo'
+  | 'clear'
+  | 'paragraph'
+  | 'heading1'
+  | 'heading2'
+  | 'heading3';
 ~~~
 
 ~~~ts
-export interface HyRichTextAction{readonly command:HyRichTextCommand;readonly label:string;}
+export interface HyRichTextAction {
+  readonly command: HyRichTextCommand;
+  readonly label: string;
+}
 ~~~
 
 ~~~ts
-HY_RICH_TEXT_ACTIONS:readonly HyRichTextAction[]=[{command:'bold',label:'Bold'},{command:'italic',label:'Italic'},{command:'underline',label:'Underline'},{command:'strike',label:'Strike through'},{command:'heading2',label:'Heading'},{command:'bulletList',label:'Bullet list'},{command:'orderedList',label:'Numbered list'},{command:'blockquote',label:'Quote'},{command:'undo',label:'Undo'},{command:'redo',label:'Redo'}]
+HY_RICH_TEXT_ACTIONS: readonly HyRichTextAction[] = [
+  { command: 'bold', label: 'Bold' },
+  { command: 'italic', label: 'Italic' },
+  { command: 'underline', label: 'Underline' },
+  { command: 'strike', label: 'Strike through' },
+  { command: 'heading2', label: 'Heading' },
+  { command: 'bulletList', label: 'Bullet list' },
+  { command: 'orderedList', label: 'Numbered list' },
+  { command: 'blockquote', label: 'Quote' },
+  { command: 'undo', label: 'Undo' },
+  { command: 'redo', label: 'Redo' },
+]
 ~~~
 
 ~~~ts
-export function getHyRichTextText(value:JSONContent|null):string{;
+export function getHyRichTextText(value: JSONContent | null): string;
 ~~~
 
 ~~~ts
-export function isHyRichTextUrl(value:string,image=false):boolean{;
+export function isHyRichTextUrl(value: string, image = false): boolean;
 ~~~
 
 ~~~ts
-HY_RICH_TEXT_LOADER=new InjectionToken<()=>Promise<typeof import('./engine')>>('HY_RICH_TEXT_LOADER',{providedIn:'root',factory:()=>loadEngine})
+HY_RICH_TEXT_LOADER = new InjectionToken<() => Promise<typeof import('./engine')>>(
+  'HY_RICH_TEXT_LOADER',
+  { providedIn: 'root', factory: () => loadEngine },
+)
 ~~~
 
 ## gauge

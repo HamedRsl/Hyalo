@@ -45,6 +45,33 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
     week: 'Week',
   };
   readonly touchUi = input(false);
+  /** Opt-in calendar transaction; typed input retains its existing immediate behavior. */
+  readonly confirmation = input(false);
+  readonly applyLabel = input('Apply');
+  readonly cancelLabel = input('Cancel');
+  protected readonly pendingDate = linkedSignal({
+    source: () => ({ value: this.value(), open: this.opened() }),
+    computation: ({ value }) => value,
+  });
+  protected readonly canApply = computed(() => {
+    const date = this.pendingDate();
+    return (
+      !!date &&
+      !this.blocked() &&
+      date >= (this.min() ?? this.adapter().min) &&
+      date <= (this.max() ?? this.adapter().max) &&
+      !this.isDateDisabled()(date)
+    );
+  });
+  apply(): void {
+    if (!this.canApply()) return;
+    this.value.set(this.pendingDate());
+    this.error.set('');
+    this.close();
+  }
+  cancel(): void {
+    this.close();
+  }
   readonly closeLabel = input('Close calendar');
   readonly dialogLabel = input('Choose date');
   readonly opened = model(false);
@@ -122,11 +149,16 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
   }
   protected pick(date: HyDate): void {
     if (this.blocked()) return;
+    if (this.confirmation()) {
+      this.pendingDate.set(date);
+      return;
+    }
     this.value.set(date);
     this.error.set('');
     this.close();
   }
   close(restore = true): void {
+    this.pendingDate.set(this.value());
     this.open.set(false);
     this.touch.emit();
     if (restore) this.focus();

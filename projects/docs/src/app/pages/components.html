@@ -44,13 +44,7 @@
               @case ('/components/slide-confirm') {
                 <div class="form-preview"><hy-slide-confirm label="Confirm reservation" /></div>
               }
-              @case ('/components/keypad') {
-                <hy-numeric-keypad
-                  label="Amount"
-                  value="1250"
-                  style="--hy-keypad-key-height: 44px; --hy-keypad-width: 14rem"
-                />
-              }
+
               @case ('/components/pull-refresh') {
                 <hy-pull-refresh label="Activity" height="10rem"
                   ><p>Recent activity</p>
@@ -87,27 +81,7 @@
                   ></hy-card-stack
                 >
               }
-              @case ('/components/notification-center') {
-                <hy-notification-card
-                  [notification]="{
-                    id: 'order',
-                    title: 'Order confirmed',
-                    body: 'Your order is being prepared.',
-                    read: false,
-                  }"
-                />
-              }
-              @case ('/components/chat') {
-                <hy-chat-bubble
-                  [message]="{
-                    id: 'support',
-                    sender: 'Support',
-                    text: 'How can we help?',
-                    direction: 'incoming',
-                    status: 'delivered',
-                  }"
-                />
-              }
+
               @case ('/components/dock') {
                 <hy-dock label="Workspace" [items]="mobileNavigation" activeId="home" />
               }

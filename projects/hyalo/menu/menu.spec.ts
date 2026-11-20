@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HY_MENU } from './menu';
+import { HY_MENU, HyMenuTrigger } from './menu';
+import { By } from '@angular/platform-browser';
 import { expectNoAxeViolations } from '../src/testing/axe';
 @Component({
   imports: [HY_MENU],
@@ -11,6 +12,27 @@ class Host {
   readonly chosen = signal(false);
 }
 describe('HyMenu', () => {
+  it('opens, closes, and toggles imperatively without stealing focus on close', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const controller = fixture.debugElement
+      .query(By.directive(HyMenuTrigger))
+      .injector.get(HyMenuTrigger);
+    controller.open();
+    await fixture.whenStable();
+    expect(controller.isOpen()).toBe(true);
+    expect(document.querySelector('hy-menu')).not.toBeNull();
+    controller.close();
+    await fixture.whenStable();
+    expect(controller.isOpen()).toBe(false);
+    controller.toggle();
+    await fixture.whenStable();
+    expect(controller.isOpen()).toBe(true);
+    fixture.destroy();
+    expect(document.querySelector('hy-menu')).toBeNull();
+    controller.open();
+    expect(document.querySelector('hy-menu')).toBeNull();
+  });
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((el) => el.remove()));
   it('supports keyboard activation and restores trigger focus on Escape', async () => {
     const fixture = TestBed.createComponent(Host);

@@ -14,7 +14,9 @@
       [slots]="slots"
       referenceDate="2026-11-16"
       timeZone="Asia/Tehran"
-      (requested)="notice.set('Booking details are ready for your application to confirm.')"
+      [pending]="formPending()"
+      [error]="formError()"
+      (requested)="request('booking')"
     >
       <p>
         Wall times use Asia/Tehran. The host must reject unavailable or ambiguous times before
@@ -24,10 +26,14 @@
     <hy-settings-block
       [(value)]="settings"
       [teams]="teams"
-      (requested)="notice.set('Settings are ready for your application to save.')"
+      [pending]="formPending()"
+      [error]="formError()"
+      (requested)="request('settings')"
     />
     <hy-auth-block
-      (requested)="notice.set('Credentials are ready for your authentication provider.')"
+      [pending]="formPending()"
+      [error]="formError()"
+      (requested)="request('authentication')"
     >
       <div authAside>
         <h2>Your next chapter starts here.</h2>
@@ -36,7 +42,87 @@
       <p>This example does not authenticate or send credentials.</p>
     </hy-auth-block>
     <p role="status">{{ notice() }}</p>
+    <div role="group" aria-label="Simulate form host response">
+      <button type="button" [disabled]="!formPending()" (click)="settle(false)">
+        Simulate form failure
+      </button>
+      <button type="button" [disabled]="!formPending()" (click)="settle(true)">
+        Simulate form success
+      </button>
+    </div>
   </docs-example>
+  <h2>Editable checkout summary</h2>
+  <p>
+    This native composition deliberately collects no payment credentials. Copy this page's Angular
+    source and connect requestCheckout to your payment provider. The controls below settle the local
+    demonstration explicitly; no timer or fake network request claims a payment succeeded.
+  </p>
+  <form
+    data-checkout
+    (submit)="requestCheckout($event)"
+    [attr.aria-busy]="checkoutState() === 'pending'"
+    style="display: grid; gap: 1rem; max-inline-size: 36rem; padding-block: 1rem"
+  >
+    <h3>A considered edition</h3>
+    <label
+      >Quantity
+      <input
+        name="quantity"
+        type="number"
+        min="1"
+        max="12"
+        step="1"
+        required
+        [value]="checkoutQuantity()"
+        (input)="editQuantity($event)"
+        [disabled]="checkoutState() === 'pending'"
+      />
+    </label>
+    <dl>
+      <dt>Unit price</dt>
+      <dd>$240.00</dd>
+      <dt>Total (USD)</dt>
+      <dd>{{ checkoutTotal() }}</dd>
+    </dl>
+    <p>Demo total excludes tax and delivery. The server must recalculate the final amount.</p>
+    @if (checkoutState() === 'error') {
+      <p role="alert">Demo payment declined. Your quantity is preserved; retry or change it.</p>
+    }
+    <p role="status">
+      {{
+        checkoutState() === 'pending'
+          ? 'Awaiting host confirmation.'
+          : checkoutState() === 'success'
+            ? 'Demo order confirmed. No payment was processed.'
+            : ''
+      }}
+    </p>
+    <button
+      type="submit"
+      [disabled]="checkoutState() === 'pending' || checkoutState() === 'success'"
+    >
+      Request demo checkout
+    </button>
+  </form>
+  <div role="group" aria-label="Simulate checkout provider response">
+    <button
+      type="button"
+      data-checkout-error
+      [disabled]="checkoutState() !== 'pending'"
+      (click)="checkoutState.set('error')"
+    >
+      Simulate decline
+    </button>
+    <button
+      type="button"
+      data-checkout-success
+      [disabled]="checkoutState() !== 'pending'"
+      (click)="checkoutState.set('success')"
+    >
+      Simulate confirmation
+    </button>
+    <button type="button" (click)="checkoutState.set('idle')">Reset demo</button>
+  </div>
   <h2>Host-owned actions</h2>
   <p>
     The blocks emit requested values and accept pending and error state. Applications own

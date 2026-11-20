@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: 'blocks/notifications', loadComponent: () => import('./pages/notification-center') },
+  { path: 'blocks/marketplace-chat', loadComponent: () => import('./pages/chat') },
+  { path: 'blocks/transfer', loadComponent: () => import('./pages/mobile-patterns') },
   { path: 'mobile-patterns', loadComponent: () => import('./pages/mobile-patterns') },
   { path: '', loadComponent: () => import('./pages/home') },
   { path: 'foundations', loadComponent: () => import('./pages/foundations') },
@@ -13,16 +16,16 @@ export const routes: Routes = [
   {
     path: 'components',
     children: [
-      {path:'data-grid',loadComponent:()=>import('./pages/data-grid')},
-      {path:'tree',loadComponent:()=>import('./pages/tree')},
-      {path:'tree-table',loadComponent:()=>import('./pages/tree-table')},
-      {path:'virtual-scroller',loadComponent:()=>import('./pages/virtual-scroller')},
-      {path:'kanban',loadComponent:()=>import('./pages/kanban')},
-      {path:'splitter',loadComponent:()=>import('./pages/splitter')},
-      {path:'dashboard-layout',loadComponent:()=>import('./pages/dashboard-layout')},
-      {path:'context-menu',loadComponent:()=>import('./pages/context-menu')},
-      {path:'scheduler',loadComponent:()=>import('./pages/scheduler')},
-      {path:'rich-text',loadComponent:()=>import('./pages/rich-text')},
+      { path: 'data-grid', loadComponent: () => import('./pages/data-grid') },
+      { path: 'tree', loadComponent: () => import('./pages/tree') },
+      { path: 'tree-table', loadComponent: () => import('./pages/tree-table') },
+      { path: 'virtual-scroller', loadComponent: () => import('./pages/virtual-scroller') },
+      { path: 'kanban', loadComponent: () => import('./pages/kanban') },
+      { path: 'splitter', loadComponent: () => import('./pages/splitter') },
+      { path: 'dashboard-layout', loadComponent: () => import('./pages/dashboard-layout') },
+      { path: 'context-menu', loadComponent: () => import('./pages/context-menu') },
+      { path: 'scheduler', loadComponent: () => import('./pages/scheduler') },
+      { path: 'rich-text', loadComponent: () => import('./pages/rich-text') },
       { path: 'bottom-sheet', loadComponent: () => import('./pages/bottom-sheet') },
       { path: 'action-sheet', loadComponent: () => import('./pages/action-sheet') },
       { path: 'tab-bar', loadComponent: () => import('./pages/tab-bar') },

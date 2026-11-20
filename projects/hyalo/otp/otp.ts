@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, model, output, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  model,
+  output,
+  TemplateRef,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { FormValueControl } from '@angular/forms/signals';
 import { HyValueControl } from '@hyalo/angular/field';
@@ -18,13 +26,17 @@ export class HyOtp extends HyValueControl implements FormValueControl<string> {
   readonly mode = input<'numeric' | 'alphanumeric'>('numeric');
   readonly formatter = input<(text: string) => string>();
   readonly cellTemplate = input<TemplateRef<{ $implicit: string; index: number }>>();
-  protected readonly cells = computed(() => Array.from({length: this.count()}, (_, index) => ({
-    $implicit: this.masked() && this.value()[index] ? '•' : this.value()[index] ?? '', index,
-  })));
+  protected readonly cells = computed(() =>
+    Array.from({ length: this.count() }, (_, index) => ({
+      $implicit: this.masked() && this.value()[index] ? '•' : (this.value()[index] ?? ''),
+      index,
+    })),
+  );
   private normalize(text: string): string {
-    const custom = this.formatter();
-    const value = normalizeDigits(custom ? custom(text) : text);
-    return this.mode() === 'numeric' ? value.replace(/[^0-9]/gu, '') : value.replace(/[^a-zA-Z0-9]/gu, '');
+    const value = normalizeDigits(text);
+    return this.mode() === 'numeric'
+      ? value.replace(/[^0-9]/gu, '')
+      : value.replace(/[^a-zA-Z0-9]/gu, '');
   }
   readonly complete = output<string>();
   protected readonly count = computed(() =>
@@ -38,7 +50,7 @@ export class HyOtp extends HyValueControl implements FormValueControl<string> {
       end = input.selectionEnd ?? start;
     input.value =
       input.value.slice(0, start) +
-      this.normalize(event.clipboardData?.getData('text') ?? '') +
+      (event.clipboardData?.getData('text') ?? '') +
       input.value.slice(end);
     input.setSelectionRange(input.value.length, input.value.length);
     this.commit(input);
@@ -50,8 +62,12 @@ export class HyOtp extends HyValueControl implements FormValueControl<string> {
   }
   private commit(input: HTMLInputElement): void {
     const caret = input.selectionStart ?? input.value.length;
-    const position = this.normalize(input.value.slice(0, caret)).length;
-    const next = this.normalize(input.value).slice(0, this.count());
+    const formatter = this.formatter();
+    const formatted = formatter ? formatter(input.value) : input.value;
+    const position = formatter
+      ? this.normalize(formatted).length
+      : this.normalize(input.value.slice(0, caret)).length;
+    const next = this.normalize(formatted).slice(0, this.count());
     const changed = next !== this.value();
     input.value = next;
     input.setSelectionRange(Math.min(position, next.length), Math.min(position, next.length));

@@ -61,7 +61,11 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
   protected readonly selectedLabel = computed(() => {
     const option = this.selected()[0];
     const value = this.value();
-    return option ? this.optionLabel(option) : value === null ? '' : (this.displayWith()?.(value) ?? '');
+    return option
+      ? this.optionLabel(option)
+      : value === null
+        ? ''
+        : (this.displayWith()?.(value) ?? '');
   });
   protected virtualKey(event: KeyboardEvent): void {
     this.virtualKeys(event, (values) => this.choose(values), this.selection());
@@ -80,7 +84,9 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
     }
   }
   protected choose(values: readonly T[]): void {
-    if (this.blocked()) return;
+    // Aria may clear its transient listbox selection when a new query has no match.
+    // Clearing the committed value is an explicit clear-button action instead.
+    if (this.blocked() || !values.length) return;
     const selectable = values.filter(
       (value) => !this.results().find((item) => this.same(item.option.value, value))?.disabled,
     );

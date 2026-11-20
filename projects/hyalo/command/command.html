@@ -1,4 +1,9 @@
 <div class="search">
+  @if (pages().length) {
+    <button type="button" [attr.aria-label]="data.backLabel ?? 'Back'" (click)="back()">
+      {{ data.backLabel ?? 'Back' }}
+    </button>
+  }
   <input
     ngCombobox
     #combobox="ngCombobox"
@@ -45,7 +50,11 @@
   </ul>
 </ng-template>
 <div class="status" role="status">
-  @if (!results().length) {
+  @if (loading()) {
+    {{ data.loadingLabel ?? 'Loading commands' }}
+  } @else if (failed()) {
+    {{ data.errorLabel ?? 'Could not load commands' }}
+  } @else if (!results().length) {
     {{ data.emptyLabel ?? 'No matching commands' }}
   } @else {
     {{ matches().length }} results

@@ -40,6 +40,10 @@ export class HyHoverCard {
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyHoverCard' });
   readonly hoverCardLabel = input.required<string>();
   readonly placement = input<HyPlacement>('top');
+  readonly hoverCardShowDelay = input(250);
+  /** Null preserves pointer-corridor grace; a number uses a fixed delay. */
+  readonly hoverCardHideDelay = input<number | null>(null);
+  readonly hoverCardPanelClass = input<string | string[]>('');
   readonly open = signal(false);
   protected readonly id = injectId('hover-card');
   private readonly injector = inject(Injector);
@@ -67,18 +71,27 @@ export class HyHoverCard {
     this.intent.cancel();
     if (event.pointerType === 'touch') return;
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.show(), 250);
+    this.timer = setTimeout(() => this.show(), this.delay(this.hoverCardShowDelay(), 250));
   }
   protected leave(event?: PointerEvent): void {
     clearTimeout(this.timer);
-    this.intent.leave(event, this.ref?.overlayElement, () => {
+    const close = (): void => {
       if (
         this.ref?.overlayElement.contains(this.document.activeElement) ||
         this.host.nativeElement.contains(this.document.activeElement)
       )
         return;
       this.hide();
-    });
+    };
+    if (this.hoverCardHideDelay() === null)
+      this.intent.leave(event, this.ref?.overlayElement, close);
+    else {
+      this.intent.cancel();
+      this.timer = setTimeout(close, this.delay(this.hoverCardHideDelay() ?? 150, 150));
+    }
+  }
+  private delay(value: number, fallback: number): number {
+    return Number.isFinite(value) ? Math.max(0, value) : fallback;
   }
   protected focusOut(event: FocusEvent): void {
     if (event.relatedTarget && this.ref?.overlayElement.contains(event.relatedTarget as Node))
@@ -117,7 +130,7 @@ export class HyHoverCard {
       this.ref = createOverlayRef(this.injector, {
         positionStrategy: position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
-        panelClass: 'hy-hover-card-pane',
+        panelClass: ['hy-hover-card-pane', ...[this.hoverCardPanelClass()].flat().filter(Boolean)],
       });
       const pane = this.ref.overlayElement;
       pane.classList.add('hy-glass');

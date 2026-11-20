@@ -1,6 +1,6 @@
 <docs-page
-  heading="Numeric keypad"
-  lead="Localized digit entry with canonical string values and preserved leading zeros."
+  heading="Numeric keypad (compatibility API)"
+  lead="Existing control documentation. New fintech screens should copy the inline Button-grid keypad from the transfer block."
   ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="mobile-demo">
       <hy-numeric-keypad
@@ -18,6 +18,12 @@
     </div></docs-example
   >
   <h2>Import</h2>
+  <p>
+    This exported control remains available to avoid breaking existing consumers. For new work, open
+    Application blocks → Fintech transfer and keypad: its complete editable source uses the shared
+    digit normalizer and Button primitives without importing this wrapper. The application owns
+    validation and payment state.
+  </p>
   <docs-import code="import &#123; HyNumericKeypad &#125; from '@hyalo/angular/keypad';" />
   <h2>Behavior and accessibility</h2>
   <p>

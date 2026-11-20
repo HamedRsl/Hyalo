@@ -1,34 +1,194 @@
 <docs-page
-  heading="Chat and message list"
-  lead="Text-safe bubbles, delivery states, attachments, and a scroll-aware conversation log."
-  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><div class="mobile-demo">
-      <hy-message-list
-        [messages]="messages()"
-        label="Conversation with support"
-        height="20rem"
-        (retry)="retry($event)"
-        ><hy-chat-composer (submitted)="send($event)"
-      /></hy-message-list></div
-  ></docs-example>
-  <h2>Import</h2>
+  heading="Marketplace chat"
+  lead="09 / A buyer–seller conversation, composed from primitives you can rearrange."
+>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column>
+    <section class="marketplace-chat" aria-label="Marketplace conversation demo">
+      <hy-card material="solid" padding="none">
+        <header class="marketplace-header">
+          <hy-avatar name="Maya Chen" />
+          <div>
+            <h3>Maya Chen</h3>
+            <p>Seller · Portland, Oregon</p>
+          </div>
+          <span class="marketplace-tag">Marketplace</span>
+        </header>
+        <div class="marketplace-listing">
+          <span class="marketplace-listing-icon" aria-hidden="true">09</span>
+          <div>
+            <strong>Oak lounge chair</strong>
+            <p>Original finish · Local collection</p>
+          </div>
+          <strong>$240</strong>
+        </div>
+        <hy-scroll-area
+          class="marketplace-history"
+          label="Conversation with Maya Chen"
+          maxHeight="25rem"
+        >
+          <p class="marketplace-date">17 November 2026 · UTC</p>
+          <ol class="marketplace-messages">
+            @for (message of messages(); track message.id) {
+              <li
+                class="marketplace-message"
+                [attr.data-own]="message.own"
+                [attr.data-message-id]="message.id"
+              >
+                <hy-avatar [name]="message.sender" size="sm" />
+                <div class="marketplace-message-content">
+                  <strong class="marketplace-sender">{{ message.sender }}</strong>
+                  <p class="marketplace-bubble" dir="auto">{{ message.text }}</p>
+                  @for (attachment of message.attachments; track $index) {
+                    @if (safeAttachmentUrl(attachment.url); as url) {
+                      <a
+                        class="marketplace-attachment"
+                        [href]="url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >{{ attachment.name }}
+                        <span class="marketplace-link-note">(opens in new tab)</span></a
+                      >
+                    } @else {
+                      <span class="marketplace-unavailable"
+                        >{{ attachment.name }} · Link unavailable</span
+                      >
+                    }
+                  }
+                  @if (
+                    message.delivery === 'local' ||
+                    message.delivery === 'pending' ||
+                    message.delivery === 'failed'
+                  ) {
+                    <div class="marketplace-preview" aria-label="Local draft preview controls">
+                      @if (message.delivery === 'local') {
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          [disabled]="pending() || !!editingId()"
+                          (click)="edit(message.id); composer.focus()"
+                        >
+                          Edit draft
+                        </button>
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          [disabled]="pending() || !!editingId()"
+                          (click)="preview(message.id, 'pending')"
+                        >
+                          Preview pending
+                        </button>
+                      }
+                      @if (message.delivery === 'pending') {
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          (click)="preview(message.id, 'failed')"
+                        >
+                          Preview failure
+                        </button>
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          (click)="preview(message.id, 'local')"
+                        >
+                          Return to draft
+                        </button>
+                      }
+                      @if (message.delivery === 'failed') {
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          [disabled]="pending() || !!editingId()"
+                          (click)="preview(message.id, 'pending')"
+                        >
+                          Retry preview
+                        </button>
+                      }
+                    </div>
+                  }
+                  <p class="marketplace-meta">
+                    <time [attr.datetime]="message.instant">{{ formatTime(message.instant) }}</time>
+                    · {{ deliveryLabels[message.delivery] }}
+                  </p>
+                </div>
+              </li>
+            }
+          </ol>
+        </hy-scroll-area>
+        <form class="marketplace-composer" [attr.aria-busy]="pending()" (submit)="submit($event)">
+          <hy-field
+            label="Message Maya"
+            hint="Enter inserts a new line. Use the button to add a local draft."
+            [error]="composerError()"
+            [forceError]="!!composerError()"
+          >
+            <textarea
+              #composer
+              hyInput
+              [disabled]="pending()"
+              rows="2"
+              placeholder="Ask about collection…"
+              [value]="draft()"
+              (input)="updateDraft(composer.value)"
+            ></textarea>
+          </hy-field>
+          <div class="marketplace-actions">
+            <small>Demo only · Nothing is sent</small
+            ><button hyButton type="submit" [disabled]="pending() || !draft().trim()">
+              {{ editingId() ? 'Save edit' : 'Add local draft' }}
+            </button>
+          </div>
+          @if (editingId()) {
+            <button hyButton type="button" variant="ghost" (click)="cancelEdit(); composer.focus()">
+              Cancel edit
+            </button>
+          }
+          <p class="marketplace-notice" role="status">{{ announcement() }}</p>
+        </form>
+      </hy-card>
+    </section>
+  </docs-example>
+  <h2>Compose, don’t configure a chat kit</h2>
+  <p>
+    Scroll area contains a native ordered history. Card supplies the solid content surface; Avatar,
+    Text field and Button supply the rest. Change the listing, sender layout, bubbles or delivery
+    labels directly in your template and local records. There is no conversation API or AI
+    dependency.
+  </p>
+  <h2>Import the primitives</h2>
   <docs-import
-    code="import &#123; HyChatComposer, HyMessageList, type HyChatMessage, type HyChatSubmission &#125; from '@hyalo/angular/chat';" />
-  <h2>Behavior and accessibility</h2>
+    code="import &#123; HyAvatar &#125; from '@hyalo/angular/avatar';
+import &#123; HyButton &#125; from '@hyalo/angular/button';
+import &#123; HyCard &#125; from '@hyalo/angular/card';
+import &#123; HY_TEXT_FIELD &#125; from '@hyalo/angular/field';
+import &#123; HyScrollArea &#125; from '@hyalo/angular/scroll-area';"
+  />
+  <h2>Application boundaries</h2>
   <p>
-    Messages are rendered as text, never HTML. Native attachment links and retry buttons remain
-    keyboard accessible. Near-bottom autoscroll preserves a reader browsing history, offers a New
-    messages button, and compensates for prepended history. Live announcements are off by default to
-    avoid replaying server-rendered history. Use HyChatComposer or project a custom composer through
-    hyChatComposer; transport, uploads and message persistence remain application responsibilities.
+    This is local demo state, not a transport. Add and edit local drafts, then use the explicit
+    preview buttons to inspect pending, failure and retry. Pending blocks the composer until you
+    choose a result; it never advances on a timer. The fixed demo date also applies to new drafts.
+    Attachment URLs accept absolute HTTP or HTTPS links; unsafe or malformed destinations render as
+    unavailable text. The sample PDF is a public dummy file, not listing evidence. Validate and
+    authorize uploads on your server. Connect your own persistence, authorization, upload validation
+    and delivery acknowledgements. Render messages as plain text; never pass untrusted messages into
+    HTML. ISO instants are displayed with en-GB and UTC explicitly, rather than the visitor’s
+    machine defaults.
   </p>
-  <h2>Design tokens</h2>
+  <h2>Keyboard and reading order</h2>
   <p>
-    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
-    local component variables on the host; reduced motion, forced colors and fidelity retain
-    functional controls.
+    The named scroll region is keyboard focusable. History is not a live region and does not
+    autoscroll or steal focus while you read. The labelled textarea keeps Enter and IME composition
+    native; submit with the button. Logical CSS follows the page direction.
   </p>
-  <docs-tokens [groups]="['chat']" />
-  <h2>API</h2>
-  <docs-api-table [rows]="apiRows"
-/></docs-page>
+</docs-page>

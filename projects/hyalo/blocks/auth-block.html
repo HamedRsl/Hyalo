@@ -1,6 +1,6 @@
 <section class="split">
   <aside><ng-content select="[authAside]" /></aside>
-  <form (submit)="send($event)">
+  <form (submit)="send($event)" [attr.aria-busy]="pending()">
     <h2>{{ heading() }}</h2>
     <hy-field label="Email"
       ><input hyInput type="email" autocomplete="email" [formField]="f.email"

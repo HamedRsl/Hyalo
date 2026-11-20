@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -70,6 +71,58 @@ describe('HyDateTimePicker', () => {
     await f.whenStable();
     expect(f.componentInstance.validationError()).not.toBeNull();
     await expectNoAxeViolations(f.nativeElement);
+  });
+  it('passes precision and presentation to the time control and applies seconds', async () => {
+    const f = TestBed.createComponent(HyDateTimePicker);
+    f.componentRef.setInput('label','Precise');
+    f.componentRef.setInput('value',Date.UTC(2026,0,2,13,14,15));
+    f.componentRef.setInput('showSeconds',true);
+    f.componentRef.setInput('hourFormat','12');
+    f.componentRef.setInput('timeStep',5);
+    f.componentRef.setInput('hourStep',2);
+    f.componentRef.setInput('minuteStep',3);
+    f.componentRef.setInput('secondStep',5);
+    await f.whenStable();
+    const time = f.debugElement.query(By.directive(HyTimePicker)).componentInstance as HyTimePicker;
+    expect([time.hourFormat(),time.showSeconds(),time.step(),time.hourStep(),time.minuteStep(),time.secondStep()]).toEqual(['12',true,5,2,3,5]);
+    expect(time.value()).toBe('13:14:15');
+    time.value.set('14:15:20');
+    await f.whenStable();
+    f.nativeElement.querySelector('.actions button').click();
+    expect(f.componentInstance.value()).toBe(Date.UTC(2026,0,2,14,15,20));
+  });
+  it.each(['isTimeDisabled','isHourDisabled','isMinuteDisabled','isSecondDisabled'])('blocks Apply using %s without changing the committed value', async predicate => {
+    const f = TestBed.createComponent(HyDateTimePicker);
+    const value = Date.UTC(2026,0,2,13,14,15);
+    f.componentRef.setInput('label','Restricted');
+    f.componentRef.setInput('value',value);
+    f.componentRef.setInput('showSeconds',true);
+    f.componentRef.setInput(predicate,()=>true);
+    await f.whenStable();
+    expect(f.componentInstance.validationError()).not.toBeNull();
+    expect(f.nativeElement.querySelector('.actions button').disabled).toBe(true);
+    expect(f.componentInstance.value()).toBe(value);
+    f.componentRef.setInput(predicate,()=>false);
+    await f.whenStable();
+    expect(f.componentInstance.validationError()).toBeNull();
+    expect(f.nativeElement.querySelector('.actions button').disabled).toBe(false);
+  });
+  it.each(['date','time'] as const)('applies %s-only mode with the configured hidden counterpart', async mode => {
+    const f = TestBed.createComponent(HyDateTimePicker);
+    f.componentRef.setInput('label','Mode');
+    f.componentRef.setInput('panelMode',mode);
+    f.componentRef.setInput('referenceDate','2026-01-02');
+    f.componentRef.setInput('defaultTime','13:14');
+    await f.whenStable();
+    const date = f.debugElement.query(By.directive(HyDatePicker));
+    const time = f.debugElement.query(By.directive(HyTimePicker));
+    expect(!!date).toBe(mode==='date');
+    expect(!!time).toBe(mode==='time');
+    if (date) (date.componentInstance as HyDatePicker).value.set('2026-01-02');
+    if (time) (time.componentInstance as HyTimePicker).value.set('13:14');
+    await f.whenStable();
+    f.nativeElement.querySelector('.actions button').click();
+    expect(f.componentInstance.value()).toBe(Date.UTC(2026,0,2,13,14));
   });
   it('passes the Jalali adapter through while keeping the value an instant', async () => {
     const f = TestBed.createComponent(HyDateTimePicker);

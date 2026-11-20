@@ -1,0 +1,97 @@
+.mobile-demo {
+  display: grid;
+  gap: var(--hy-space-4);
+  inline-size: 100%;
+  max-inline-size: 34rem;
+  margin-inline: auto;
+  min-inline-size: 0;
+  color: var(--hy-ink);
+}
+.transfer-screen {
+  display: grid;
+  gap: var(--hy-space-3);
+  min-inline-size: 0;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+  background: var(--hy-surface-1);
+}
+.transfer-screen p,
+.transfer-screen h2 {
+  margin: 0;
+}
+.transfer-header {
+  display: grid;
+  gap: var(--hy-space-2);
+  padding-block-end: var(--hy-space-3);
+}
+.transfer-eyebrow,
+.transfer-hint {
+  color: var(--hy-ink-2);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.transfer-screen input {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 48px;
+  padding: var(--hy-space-3);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+  color: var(--hy-ink);
+  font: inherit;
+}
+.transfer-screen input:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+.transfer-screen input:disabled {
+  opacity: 0.6;
+}
+.transfer-screen .transfer-amount {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.transfer-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hy-space-2);
+}
+.transfer-keypad button {
+  min-inline-size: 0;
+  min-block-size: 52px;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+.transfer-screen > button {
+  min-block-size: 44px;
+}
+.transfer-review {
+  display: grid;
+  gap: var(--hy-space-2);
+  margin: 0;
+  padding-block: var(--hy-space-3);
+  border-block: 1px solid var(--hy-line);
+}
+.transfer-review div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--hy-space-3);
+}
+.transfer-review dd {
+  margin: 0;
+}
+.transfer-screen [data-request] {
+  overflow-wrap: anywhere;
+}
+.composer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-2);
+}
+.composer button {
+  min-block-size: 44px;
+}

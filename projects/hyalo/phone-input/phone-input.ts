@@ -52,13 +52,14 @@ export class HyPhoneInput extends HyValueControl implements FormValueControl<str
   readonly countryChanged = output<HyPhoneCountry>();
   protected readonly countryQuery = signal('');
   protected readonly currentCountry = computed(
-    () => this.countries().find((item) => item.code === this.country()) ?? IRAN,
+    () =>
+      this.countries().find((item) => item.code === this.country()) ?? this.countries()[0] ?? IRAN,
   );
   protected readonly filteredCountries = computed(() => {
     const query = normalizeSearch(this.countryQuery());
     return this.countries().filter(
       (item) =>
-        item.code === this.country() ||
+        item.code === this.currentCountry().code ||
         normalizeSearch(item.name + ' ' + item.code + ' ' + item.dialCode).includes(query),
     );
   });

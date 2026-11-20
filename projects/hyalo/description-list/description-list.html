@@ -1,12 +1,39 @@
+<header>
+  @if (title()) {
+    <strong>{{ title() }}</strong>
+  }
+  <ng-content select="[hyDescriptionExtra]" />
+</header>
 <dl
   [class.stacked]="layout() === 'stacked'"
   [style.--hy-description-columns-compact]="columnCounts().compact"
   [style.--hy-description-columns-wide]="columnCounts().wide"
 >
   @for (item of items(); track $index) {
-    <div>
-      <dt>{{ item.term }}</dt>
-      <dd>{{ item.detail }}</dd>
+    <div
+      [style.--hy-description-span-wide]="span(item, 'wide')"
+      [style.--hy-description-span-compact]="span(item, 'compact')"
+    >
+      <dt>
+        @if (termTemplate(); as template) {
+          <ng-container
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ $implicit: item, index: $index }"
+          />
+        } @else {
+          <ng-container>{{ item.term }}</ng-container>
+        }
+      </dt>
+      <dd>
+        @if (detailTemplate(); as template) {
+          <ng-container
+            [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ $implicit: item, index: $index }"
+          />
+        } @else {
+          <ng-container>{{ item.detail }}</ng-container>
+        }
+      </dd>
     </div>
   }
 </dl>

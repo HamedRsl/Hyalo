@@ -1,9 +1,9 @@
 <div class="chips">
-  @for (option of visibleChips(); track option.key ?? option.label) {
+  @for (option of visibleChips(); track $index) {
     <button
       type="button"
       [disabled]="blocked() || option.disabled || option.group?.disabled"
-      [attr.aria-label]="'Remove ' + option.label"
+      [attr.aria-label]="'Remove ' + optionLabel(option)"
       (click)="remove(option.value)"
     >
       @if (selectedTemplate(); as template) {
@@ -16,6 +16,9 @@
       }
       <span aria-hidden="true">×</span>
     </button>
+  }
+  @if (selected().length > visibleChips().length) {
+    <span class="hy-multi-select__summary" role="status">{{ summary()(selected().length) }}</span>
   }
 </div>
 <div class="control" cdkOverlayOrigin #origin="cdkOverlayOrigin">

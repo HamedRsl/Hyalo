@@ -47,6 +47,7 @@
         <button
           type="button"
           [disabled]="disabled() || year.disabled"
+          (keydown)="choiceKeys($event)"
           (click)="chooseYear(year.date)"
         >
           {{ year.label }}
@@ -59,6 +60,7 @@
         <button
           type="button"
           [disabled]="disabled() || month.disabled"
+          (keydown)="choiceKeys($event)"
           (click)="chooseMonth(month.date)"
         >
           {{ month.label }}

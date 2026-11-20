@@ -4,6 +4,40 @@ import { HyCalendar } from './calendar';
 import { HyDatePicker } from './date-picker';
 import { HyJalaliDateAdapter } from './date-adapter';
 describe('calendar interaction', () => {
+  it('honors a custom strategy that suppresses live preview', async () => {
+    const fixture = TestBed.createComponent(HyCalendar);
+    fixture.componentRef.setInput('rangeMode', true);
+    await fixture.whenStable();
+    // Start with the default strategy, then let an application suppress previews.
+    fixture.nativeElement.querySelector('[data-date="2026-01-10"]').click();
+    fixture.componentRef.setInput('rangeStrategy', () => null);
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('[data-date="2026-01-12"]').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('[data-preview="true"]')).toHaveLength(0);
+  });
+  it('drills from bounded year choices into a month with an in-bounds active day', async () => {
+    const fixture = TestBed.createComponent(HyCalendar);
+    fixture.componentRef.setInput('min', '2026-06-15');
+    fixture.componentRef.setInput('max', '2027-03-10');
+    fixture.componentRef.setInput('referenceDate', '2026-06-15');
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('[aria-label="Choose year"]').click();
+    await fixture.whenStable();
+    const year = [...fixture.nativeElement.querySelectorAll('.calendar-choices button') as NodeListOf<HTMLButtonElement>].find(button => button.textContent?.trim() === '2026')!;
+    year.click();
+    await fixture.whenStable();
+    const months = fixture.nativeElement.querySelectorAll('.calendar-choices button') as NodeListOf<HTMLButtonElement>;
+    expect(months).toHaveLength(12);
+    expect(months[0]!.disabled).toBe(true);
+    months[5]!.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.view()).toBe('month');
+    const active = fixture.nativeElement.querySelector('button[data-date][tabindex="0"]') as HTMLButtonElement;
+    expect(active.getAttribute('data-date')).toBe('2026-06-15');
+    expect(active.getAttribute('aria-disabled')).not.toBe('true');
+  });
+
   it('clamps a reference date to the upper bound and keeps one tab stop', async () => {
     const fixture = TestBed.createComponent(HyCalendar);
     fixture.componentRef.setInput('max', '2025-01-01');

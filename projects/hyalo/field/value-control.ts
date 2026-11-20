@@ -28,6 +28,8 @@ export abstract class HyValueControl {
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly touched = input(false, { transform: booleanAttribute });
+  readonly dirty = input(false, { transform: booleanAttribute });
+  readonly pending = input(false, { transform: booleanAttribute });
   readonly errors = input<readonly { readonly kind: string; readonly message?: string }[]>([]);
   readonly touch = output<void>();
   readonly errorMessage = computed(() => this.errors()[0]?.message ?? this.errors()[0]?.kind);
@@ -49,6 +51,8 @@ export abstract class HyValueControl {
       invalid: computed(() => this.invalid() && this.touched()),
       rawInvalid: this.invalid,
       touched: this.touched,
+      dirty: this.dirty,
+      pending: this.pending,
       errorMessage: this.errorMessage,
     });
   }

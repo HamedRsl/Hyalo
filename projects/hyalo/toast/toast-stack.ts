@@ -7,6 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
+import { NgTemplateOutlet } from '@angular/common';
 import { HyFidelity } from '@hyalo/angular/core';
 import {
   HyMotion,
@@ -16,7 +17,7 @@ import {
   project,
   SPRINGS,
 } from '@hyalo/angular/motion';
-import { HyToaster, type HyToastItem } from './toaster';
+import { HyToaster, type HyToastItem, type HyToastContext } from './toaster';
 
 /** How far a swipe has to be headed before it dismisses, in px. */
 const SWIPE_DISTANCE = 80;
@@ -36,12 +37,13 @@ interface Swipe {
 /** @internal The visible stack of toasts. Created by HyToaster. */
 @Component({
   selector: 'hy-toast-stack',
-  imports: [HyIcon],
+  imports: [HyIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'hy-toast-stack',
     role: 'region',
     'aria-label': 'Notifications',
+    '[style.inline-size]': 'toaster.stackWidth',
     '(pointerenter)': "toaster.pause('hover')",
     '(pointerleave)': "toaster.resume('hover')",
     '(focusin)': "toaster.pause('focus')",
@@ -62,6 +64,24 @@ export class HyToastStack {
   protected readonly material = computed(() =>
     this.fidelity.tier() === 'low' ? 'solid' : 'frosted',
   );
+
+  protected context(toast: HyToastItem): HyToastContext {
+    return { $implicit: toast, dismiss: () => this.toaster.dismiss(toast.id) };
+  }
+
+  protected act(toast: HyToastItem): void {
+    if (toast.leaving) return;
+    toast.action?.run();
+    this.toaster.dismiss(toast.id, 'action');
+  }
+
+  protected contentClick(event: Event, toast: HyToastItem): void {
+    if (
+      toast.dismissOnClick &&
+      !(event.target as Element).closest('button, a, input, select, textarea, [role="button"]')
+    )
+      this.toaster.dismiss(toast.id);
+  }
 
   constructor() {
     afterRenderEffect(() => {

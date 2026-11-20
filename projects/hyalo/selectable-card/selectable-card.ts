@@ -12,15 +12,19 @@ import { HyValueControl } from '@hyalo/angular/field';
 export class HySelectableCard extends HyValueControl implements FormValueControl<string> {
   readonly value = model('');
   readonly size = input<'sm' | 'md' | 'lg'>('md');
-  readonly options =
-    input.required<
-      readonly {
-        readonly value: string;
-        readonly label: string;
-        readonly description?: string;
-        readonly disabled?: boolean;
-      }[]
-    >();
+  readonly options = input.required<
+    readonly {
+      readonly value: string;
+      readonly label: string;
+      readonly description?: string;
+      readonly disabled?: boolean;
+    }[]
+  >();
+  override focus(): void {
+    const selected = this.element.querySelector<HTMLInputElement>('input:checked:not(:disabled)');
+    const first = this.element.querySelector<HTMLInputElement>('input:not(:disabled)');
+    (selected ?? first)?.focus();
+  }
   protected choose(event: Event): void {
     if (!this.blocked()) this.value.set((event.target as HTMLInputElement).value);
   }

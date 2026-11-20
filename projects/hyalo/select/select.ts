@@ -29,7 +29,7 @@ import {
   type ScrollStrategy,
 } from '@angular/cdk/overlay';
 import type { FormValueControl } from '@angular/forms/signals';
-import { HyFidelity, injectId } from '@hyalo/angular/core';
+import { HY_CONFIG, HyFidelity, injectId } from '@hyalo/angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
 import { HY_FIELD, type HyFieldControl } from '@hyalo/angular/field';
 import { hyDropdownPositions, ɵHyPresence as HyPresence } from '@hyalo/angular/overlay';
@@ -96,11 +96,13 @@ export interface HySelectPage<T> {
   styleUrl: './select.css',
 })
 export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldControl {
+  private readonly policy = inject(HY_CONFIG).components?.select;
   private readonly fidelity = inject(HyFidelity);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly destroy = inject(DestroyRef);
   private readonly ready = signal(false);
+  private pendingNativeKey: string | undefined;
   protected readonly field = inject(HY_FIELD, { optional: true });
   private readonly trigger = viewChild<ElementRef<HTMLElement>>('trigger');
   private readonly overlay = viewChild(CdkConnectedOverlay);
@@ -127,9 +129,9 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly scrollStrategy = input<ScrollStrategy>(inject(Overlay).scrollStrategies.reposition());
   readonly offsetX = input(0);
   readonly offsetY = input(0);
-  readonly typeaheadDelay = input(500);
-  readonly wrap = input(true);
-  readonly canSelectNullable = input(true);
+  readonly typeaheadDelay = input(this.policy?.typeaheadDelay ?? 500);
+  readonly wrap = input(this.policy?.wrap ?? true);
+  readonly canSelectNullable = input(this.policy?.canSelectNullable ?? true);
   readonly createValue = input<(text: string) => T>();
   readonly customValueLabel = input('Add option');
   readonly virtualized = input(false);
@@ -147,6 +149,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   private readonly remoteOptions = signal<readonly HySelectOption<T>[]>([]);
   private readonly pageOffset = signal(0);
   private readonly hasMore = signal(false);
+  private pageController: AbortController | undefined;
   protected readonly virtualOffset = signal(0);
   protected readonly virtualIndex = signal(-1);
   protected readonly virtualActiveId = computed(() =>
@@ -159,10 +162,25 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
         ? { load, offset: this.pageOffset(), limit: Math.max(1, this.pageSize()) }
         : undefined;
     },
-    loader: async ({ params, abortSignal }) => ({
-      ...(await params.load({ offset: params.offset, limit: params.limit, signal: abortSignal })),
-      offset: params.offset,
-    }),
+    loader: async ({ params, abortSignal }) => {
+      this.pageController?.abort();
+      const controller = new AbortController();
+      this.pageController = controller;
+      const abort = (): void => controller.abort();
+      abortSignal.addEventListener('abort', abort, { once: true });
+      try {
+        return {
+          ...(await params.load({
+            offset: params.offset,
+            limit: params.limit,
+            signal: controller.signal,
+          })),
+          offset: params.offset,
+        };
+      } finally {
+        abortSignal.removeEventListener('abort', abort);
+      }
+    },
   });
   protected readonly pageBusy = computed(() => this.page.isLoading());
   protected readonly pageFailed = computed(() => this.page.status() === 'error');
@@ -212,7 +230,11 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
         index,
         option,
         key,
-        disabled: !!(option.disabled || option.group?.disabled),
+        disabled: !!(
+          option.disabled ||
+          option.group?.disabled ||
+          (value == null && !this.canSelectNullable())
+        ),
         context: { $implicit: option },
       };
     });
@@ -274,6 +296,26 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   );
 
   constructor() {
+    this.destroy.onDestroy(() => this.pageController?.abort());
+    effect(() => {
+      if (!this.opened()) this.pageController?.abort();
+    });
+    // During hydration the host already contains the server-rendered control.
+    // Read the live value before option bindings can restore the server default.
+    // A native picker can commit before Angular's change listener exists; unlike
+    // synthetic replay, its live selected state is the browser's source of truth.
+    const baseline = this.host.querySelector<HTMLSelectElement>('select.hy-select__native');
+    const baselineKey = baseline?.value;
+    const defaultKey = baseline?.querySelector<HTMLOptionElement>('option[selected]')?.value;
+    afterNextRender(() => {
+      // This callback only gates this instance's first completed render, not
+      // application-wide hydration. Incremental replay may arrive before inputs.
+      const key =
+        this.pendingNativeKey ?? (baseline && baselineKey !== defaultKey ? baselineKey : undefined);
+      this.pendingNativeKey = undefined;
+      if (key !== undefined) this.commitNativeKey(key);
+      this.ready.set(true);
+    });
     effect(() => {
       if (this.effectiveDisabled()) this.opened.set(false);
     });
@@ -294,7 +336,6 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
       else this.closedPanel.emit();
     });
     effect(() => this.renderedRangeChange.emit(this.virtualRange()));
-    afterNextRender(() => this.ready.set(true));
     effect(() => {
       this.ready();
       this.native();
@@ -452,8 +493,16 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   }
 
   protected pickNative(event: Event): void {
-    if (this.effectiveDisabled()) return;
     const key = (event.target as HTMLSelectElement).value;
+    if (!this.ready()) {
+      this.pendingNativeKey = key;
+      return;
+    }
+    this.commitNativeKey(key);
+  }
+
+  private commitNativeKey(key: string): void {
+    if (this.effectiveDisabled()) return;
     if (!key && !this.required()) {
       this.value.set(undefined);
       return;

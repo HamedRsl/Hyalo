@@ -1,5 +1,6 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import {
+  PLATFORM_ID,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -59,6 +60,7 @@ export class HyVirtualItem<T> {
 })
 export class HyVirtualList<T> {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly document = inject(DOCUMENT);
   private readonly destroy = inject(DestroyRef);
   readonly items = input.required<readonly T[]>();
@@ -118,9 +120,9 @@ export class HyVirtualList<T> {
         this.rangeChange.emit(range);
         if (this.appendOnly()) this.retained.update(old => ({first:Math.min(old.first,range.start),last:Math.max(old.last,range.end)}));
         this.request?.abort();
-        if (!loader || range.end <= range.start) { this.loading.set(false); return; }
+        if (!this.browser || !loader || range.end <= range.start) { this.loading.set(false); return; }
         const request = new AbortController(); this.request = request; this.loading.set(true); this.error.set(null);
-        Promise.resolve().then(() => loader(range,request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
+        Promise.resolve().then(() => request.signal.aborted ? undefined : loader(range,request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
       });
     });
     this.destroy.onDestroy(() => this.request?.abort());
@@ -277,10 +279,11 @@ export class HyVirtualList<T> {
     this.scrollTo(horizontal ? {left:next,behavior:options.behavior} : {top:next,left,behavior:options.behavior});
   }
   retry(): void {
-    const loader = this.loadRange(); if (!loader) return;
+    const loader = this.loadRange(); if (!this.browser || !loader) return;
     this.request?.abort(); const request = new AbortController(); this.request = request;
     this.loading.set(true); this.error.set(null);
-    Promise.resolve().then(() => loader(this.renderedRange(),request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
+    const range = this.renderedRange();
+    Promise.resolve().then(() => request.signal.aborted ? undefined : loader(range,request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
   }  focusIndex(index: number): void {
     if (
       !Number.isInteger(index) ||

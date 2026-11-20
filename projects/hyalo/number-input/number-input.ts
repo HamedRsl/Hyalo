@@ -83,7 +83,8 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
         number < (this.min() ?? -Infinity) ||
         number > (this.max() ?? Infinity));
     const precision = this.precision();
-    this.value.set(bad ? null : number === undefined ? null : precision === undefined ? number : Number(number.toFixed(Math.min(20, Math.max(0, precision)))));
+    const rounded = number === undefined ? null : precision === undefined ? number : Number(number.toFixed(Number.isFinite(precision) ? Math.min(20, Math.max(0, precision)) : 12));
+    this.value.set(bad || rounded === null ? null : Math.min(this.max() ?? Infinity, Math.max(this.min() ?? -Infinity, rounded)));
     this.parseError.set(bad);
     this.draft.set(text);
     (event.target as HTMLInputElement).setCustomValidity(this.validationError() ?? '');
@@ -101,6 +102,7 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
         Number(stepped.toFixed(Math.min(20, Math.max(0, this.precision() ?? 12)))),
       ),
     );
+    if (next === this.value()) return;
     this.value.set(next);
     this.draft.set(this.formatted());
     this.parseError.set(false);

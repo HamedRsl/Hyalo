@@ -12,6 +12,22 @@ class EditingHost {
 }
 
 describe('HyInlineEdit', () => {
+  it('emits rendered editor lifecycle and cancellation without saving', async () => {
+    const fixture = TestBed.createComponent(HyInlineEdit);
+    await fixture.whenStable();
+    const opened = vi.fn(() => expect(fixture.nativeElement.querySelector('input')).not.toBeNull());
+    const closed = vi.fn(() => expect(fixture.nativeElement.querySelector('input')).toBeNull());
+    fixture.componentInstance.opened.subscribe(opened);
+    fixture.componentInstance.closed.subscribe(closed);
+    fixture.componentInstance.editing.set(true);
+    expect(opened).not.toHaveBeenCalled();
+    await fixture.whenStable();
+    expect(opened).toHaveBeenCalledOnce();
+    fixture.componentInstance.editing.set(false);
+    expect(closed).not.toHaveBeenCalled();
+    await fixture.whenStable();
+    expect(closed).toHaveBeenCalledOnce();
+  });
   it('opens and closes from its editing binding without committing a draft (API-136)', async () => {
     const fixture = TestBed.createComponent(EditingHost);
     const host = fixture.nativeElement as HTMLElement;

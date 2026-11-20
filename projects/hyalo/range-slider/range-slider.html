@@ -7,23 +7,40 @@
   <input
     type="range"
     [id]="id()"
-    [disabled]="blocked()"
-    [min]="minValue()"
-    [max]="value()[1]"
-    [step]="step()"
-    [value]="value()[0]"
+    [disabled]="blocked() || startDisabled()"
+    [min]="position(startMin())"
+    [max]="position(startMax())"
+    [step]="scale() ? 'any' : step()"
+    [value]="position(value()[0])"
     [attr.aria-describedby]="describedBy()"
     (input)="change($event, 0)"
+    (change)="commit(0)"
+    [style.writing-mode]="orientation() === 'vertical' ? 'vertical-lr' : null"
+    [style.direction]="reversed() ? 'rtl' : 'ltr'"
+    [attr.aria-orientation]="orientation()"
+    [attr.aria-valuetext]="valueFormatter()(value()[0])"
+    [attr.title]="valueFormatter()(value()[0])"
+    [attr.list]="id() + '-marks'"
   />
   <label [attr.for]="id() + '-end'">Maximum: {{ value()[1] }}</label>
   <input
     type="range"
     [id]="id() + '-end'"
-    [disabled]="blocked()"
-    [min]="value()[0]"
-    [max]="maxValue()"
-    [step]="step()"
-    [value]="value()[1]"
+    [disabled]="blocked() || endDisabled()"
+    [min]="position(endMin())"
+    [max]="position(endMax())"
+    [step]="scale() ? 'any' : step()"
+    [value]="position(value()[1])"
     (input)="change($event, 1)"
+    (change)="commit(1)"
+    [style.writing-mode]="orientation() === 'vertical' ? 'vertical-lr' : null"
+    [style.direction]="reversed() ? 'rtl' : 'ltr'"
+    [attr.aria-orientation]="orientation()"
+    [attr.aria-valuetext]="valueFormatter()(value()[1])"
+    [attr.title]="valueFormatter()(value()[1])"
+    [attr.list]="id() + '-marks'"
   />
+  <datalist [id]="id() + '-marks'">
+    @for (mark of marks(); track $index) { <option [value]="position(mark.value)" [label]="mark.label"></option> }
+  </datalist>
 </div>

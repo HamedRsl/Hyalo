@@ -4,21 +4,26 @@
     <label
       #item
       class="hy-segmented__item"
-      [attr.data-checked]="option.value === value() || null"
+      [attr.data-checked]="selected(option) || null"
     >
       <input
-        type="radio"
+        [type]="multiple() ? 'checkbox' : 'radio'"
         class="hy-segmented__input"
         [name]="name() || groupName"
-        [checked]="option.value === value()"
+        [checked]="selected(option)"
         [disabled]="disabled() || !!option.disabled"
-        (change)="value.set(option.value)"
+        (change)="choose(option)"
+        (click)="clear($event, option)"
         (blur)="touch.emit()"
       />
+      @if (optionTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: option, selected: selected(option) }" />
+      } @else {
       @if (option.icon; as icon) {
         <hy-icon [name]="icon" />
       }
       <span>{{ option.label }}</span>
+      }
     </label>
   }
 </div>
