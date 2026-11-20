@@ -1,59 +1,168 @@
 <nav cdkOverlayOrigin #origin="cdkOverlayOrigin" [attr.aria-label]="label()">
   <ul>
     @for (item of items(); track item.id) {
-      <li>
-        @if (item.sections?.length) {
-          <button
-            type="button"
-            [id]="id + '-' + item.id + '-trigger'"
-            [attr.aria-expanded]="open() === item.id"
-            [attr.aria-controls]="id + '-' + item.id"
-            (click)="toggle(item.id, $event)"
-            (keydown)="enterPanel($event)"
-          >
-            {{ item.label }}<hy-icon class="chevron" name="chevron-down" size="1rem" />
-          </button>
-          <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="origin"
-            [cdkConnectedOverlayOpen]="open() === item.id"
-            [cdkConnectedOverlayPositions]="positions"
-            [cdkConnectedOverlayPush]="true"
-            [cdkConnectedOverlayViewportMargin]="16"
-            (overlayOutsideClick)="outside($event)"
-          >
-            <div
-              class="panel"
-              tabindex="-1"
-              role="region"
-              (keydown)="panelKeydown($event)"
-              (focusout)="focusOut($event)"
-              [id]="id + '-' + item.id"
-              [attr.aria-labelledby]="id + '-' + item.id + '-trigger'"
+      @if (item.visible !== false) {
+        <li>
+          @if (item.sections?.length || item.children?.length) {
+            <button
+              type="button"
+              [id]="id + '-' + item.id + '-trigger'"
+              [disabled]="item.disabled"
+              [attr.title]="item.title"
+              [attr.aria-expanded]="open() === item.id"
+              [attr.aria-controls]="id + '-' + item.id"
+              (click)="toggle(item.id, $event)"
+              (keydown)="enterPanel($event)"
             >
-              @for (section of item.sections; track $index) {
-                <section>
-                  <h3>{{ section.label }}</h3>
+              <ng-container
+                *ngTemplateOutlet="content; context: { $implicit: item, inPanel: false }"
+              />
+              <hy-icon class="chevron" name="chevron-down" size="1rem" />
+            </button>
+            <ng-template
+              cdkConnectedOverlay
+              [cdkConnectedOverlayOrigin]="origin"
+              [cdkConnectedOverlayOpen]="open() === item.id"
+              [cdkConnectedOverlayPositions]="positions"
+              [cdkConnectedOverlayPush]="true"
+              [cdkConnectedOverlayViewportMargin]="16"
+              (overlayOutsideClick)="outside($event)"
+            >
+              <div
+                class="panel"
+                tabindex="-1"
+                role="region"
+                (keydown)="panelKeydown($event)"
+                (focusout)="focusOut($event)"
+                [id]="id + '-' + item.id"
+                [attr.aria-labelledby]="id + '-' + item.id + '-trigger'"
+              >
+                <ng-container *ngTemplateOutlet="sections; context: { $implicit: item.sections }" />
+                @if (item.children?.length) {
                   <ul>
-                    @for (link of section.links; track $index) {
-                      <li>
-                        <a [href]="link.href" (click)="open.set(null)"
-                          ><strong>{{ link.label }}</strong>
-                          @if (link.description) {
-                            <span>{{ link.description }}</span>
-                          }
-                        </a>
-                      </li>
-                    }
+                    <ng-container
+                      *ngTemplateOutlet="
+                        tree;
+                        context: {
+                          $implicit: item.children,
+                          parent: branchId(id + ':branch', item),
+                        }
+                      "
+                    />
                   </ul>
-                </section>
-              }
-            </div>
-          </ng-template>
-        } @else {
-          <a [href]="item.href">{{ item.label }}</a>
-        }
-      </li>
+                }
+              </div>
+            </ng-template>
+          } @else {
+            <ng-container *ngTemplateOutlet="leaf; context: { $implicit: item, inPanel: false }" />
+          }
+        </li>
+      }
     }
   </ul>
 </nav>
+
+<ng-template #sections let-sections>
+  @for (section of sections; track $index) {
+    <section>
+      <h3>{{ section.label }}</h3>
+      <ul>
+        @for (link of section.links; track $index) {
+          @if (link.visible !== false) {
+            <li>
+              <ng-container *ngTemplateOutlet="leaf; context: { $implicit: link, inPanel: true }" />
+            </li>
+          }
+        }
+      </ul>
+    </section>
+  }
+</ng-template>
+
+<ng-template #tree let-items let-parent="parent">
+  @for (item of items; track item.id) {
+    @if (item.visible !== false) {
+      <li>
+        @if (item.children?.length || item.sections?.length) {
+          @let branch = branchId(parent, item);
+          <button
+            type="button"
+            [disabled]="item.disabled"
+            [id]="branch + ':trigger'"
+            [attr.data-branch]="branch"
+            [attr.aria-expanded]="expanded().has(branch)"
+            [attr.title]="item.title"
+            [attr.aria-controls]="branch"
+            (click)="toggleBranch(branch)"
+          >
+            <ng-container
+              *ngTemplateOutlet="content; context: { $implicit: item, inPanel: true }"
+            />
+            <hy-icon class="chevron" name="chevron-down" size="1rem" />
+          </button>
+          <div
+            class="branch"
+            [id]="branch"
+            [attr.data-branch]="branch"
+            [hidden]="!expanded().has(branch)"
+          >
+            @if (expanded().has(branch)) {
+              <ng-container *ngTemplateOutlet="sections; context: { $implicit: item.sections }" />
+              @if (item.children?.length) {
+                <ul>
+                  <ng-container
+                    *ngTemplateOutlet="tree; context: { $implicit: item.children, parent: branch }"
+                  />
+                </ul>
+              }
+            }
+          </div>
+        } @else {
+          <ng-container *ngTemplateOutlet="leaf; context: { $implicit: item, inPanel: true }" />
+        }
+      </li>
+    }
+  }
+</ng-template>
+
+<ng-template #leaf let-item let-inPanel="inPanel">
+  @if ((item.href === undefined || item.href === null) && item.command) {
+    <button
+      type="button"
+      [disabled]="item.disabled"
+      [attr.title]="item.title"
+      (click)="activate(item, $event)"
+    >
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item, inPanel: inPanel }" />
+    </button>
+  } @else {
+    <a
+      [attr.href]="item.disabled ? null : item.href"
+      [attr.aria-disabled]="item.disabled ? 'true' : null"
+      [attr.target]="item.target"
+      [attr.rel]="linkRel(item)"
+      [attr.title]="item.title"
+      [attr.tabindex]="item.disabled ? -1 : null"
+      (click)="activate(item, $event)"
+    >
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: item, inPanel: inPanel }" />
+    </a>
+  }
+</ng-template>
+
+<ng-template #content let-item let-inPanel="inPanel">
+  @if (item.icon) {
+    <hy-icon [name]="item.icon" size="1rem" />
+  }
+  @if (inPanel) {
+    <strong>{{ item.label }}</strong>
+  } @else {
+    {{ item.label }}
+  }
+  @if (item.badge) {
+    <span class="badge">{{ item.badge }}</span>
+  }
+  @if (item.description) {
+    <span>{{ item.description }}</span>
+  }
+</ng-template>

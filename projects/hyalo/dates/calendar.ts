@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,10 +9,67 @@ import {
   linkedSignal,
   model,
   output,
+  signal,
+  TemplateRef,
 } from '@angular/core';
-import { HY_DATE_ADAPTER, type HyDate, type HyDateAdapter } from './date-adapter';
+import {
+  HY_DATE_ADAPTER,
+  dateEpoch,
+  type HyDate,
+  type HyDateAdapter,
+  type HyDateRange,
+} from './date-adapter';
+export type HyCalendarView = 'month' | 'year' | 'multi-year';
+export interface HyCalendarLabels {
+  readonly previous: string;
+  readonly next: string;
+  readonly chooseMonth: string;
+  readonly chooseYear: string;
+  readonly week: string;
+}
+export interface HyCalendarCellContext {
+  readonly $implicit: HyDate;
+  readonly selected: boolean;
+  readonly preview: boolean;
+  readonly comparison: boolean;
+  readonly outside: boolean;
+}
+export type HyRangeStrategy = (
+  date: HyDate,
+  current: HyDateRange | null,
+  phase: 'select' | 'preview',
+) => HyDateRange | null;
+export interface HyCalendarOptions {
+  readonly view?: HyCalendarView;
+  readonly months?: number;
+  readonly firstDayOfWeek?: number;
+  readonly showWeekNumbers?: boolean;
+  readonly outsideDays?: 'visible' | 'hidden' | 'disabled';
+  readonly labels?: HyCalendarLabels;
+  readonly cellClass?: (date: HyDate) => string | string[];
+  readonly cellTemplate?: TemplateRef<HyCalendarCellContext>;
+  readonly headerTemplate?: TemplateRef<{ $implicit: HyCalendar; heading: string }>;
+  readonly comparisonRange?: HyDateRange;
+}
+interface CalendarDay {
+  readonly date: HyDate;
+  readonly text: string;
+  readonly label: string;
+  readonly outside: boolean;
+  readonly disabled: boolean;
+  readonly active: boolean;
+  readonly selected: boolean;
+  readonly preview: boolean;
+  readonly comparison: boolean;
+  readonly classes: string | string[];
+}
+interface CalendarWeek {
+  readonly days: readonly CalendarDay[];
+  readonly number: number;
+}
 @Component({
   selector: 'hy-calendar',
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.html',
   styleUrl: './calendar.css',
@@ -29,6 +87,34 @@ export class HyCalendar {
   readonly isDateDisabled = input<(date: HyDate) => boolean>(() => false);
   readonly selectedRange = input<readonly [HyDate, HyDate]>();
   readonly selected = output<HyDate>();
+  readonly view = model<HyCalendarView>('month');
+  readonly months = input(1);
+  readonly firstDayOfWeek = input<number>();
+  readonly showWeekNumbers = input(false);
+  readonly weekNumber = input<(date: HyDate) => number>();
+  readonly outsideDays = input<'visible' | 'hidden' | 'disabled'>('visible');
+  readonly selectedDates = model<readonly HyDate[]>([]);
+  readonly multiple = input(false);
+  readonly comparisonRange = input<HyDateRange>();
+  readonly rangeMode = input(false);
+  readonly range = model<HyDateRange | null>(null);
+  readonly minRangeDays = input(1);
+  readonly maxRangeDays = input<number>();
+  readonly rangeStrategy = input<HyRangeStrategy>();
+  readonly rangeStarted = output<HyDate>();
+  readonly rangePreview = output<HyDateRange | null>();
+  readonly cellClass = input<(date: HyDate) => string | string[]>(() => '');
+  readonly cellTemplate = input<TemplateRef<HyCalendarCellContext>>();
+  readonly headerTemplate = input<TemplateRef<{ $implicit: HyCalendar; heading: string }>>();
+  readonly labels = input<HyCalendarLabels>({
+    previous: 'Previous month',
+    next: 'Next month',
+    chooseMonth: 'Choose month',
+    chooseYear: 'Choose year',
+    week: 'Week',
+  });
+  private readonly rangeStart = signal<HyDate | null>(null);
+  protected readonly preview = signal<HyDateRange | null>(null);
   protected readonly active = linkedSignal(() => {
     const adapter = this.adapter(),
       min = this.min() ?? adapter.min,
@@ -41,7 +127,11 @@ export class HyCalendar {
   protected readonly heading = computed(() =>
     this.adapter().format(this.month(), this.locale(), { month: 'long', year: 'numeric' }),
   );
-  protected readonly firstDay = computed(() => (this.adapter().calendar === 'persian' ? 6 : 0));
+  protected readonly firstDay = computed(() => {
+    const first = this.firstDayOfWeek();
+    if (first === undefined) return this.adapter().calendar === 'persian' ? 6 : 0;
+    return ((Math.floor(first) % 7) + 7) % 7;
+  });
   protected readonly weekdays = computed(() =>
     Array.from({ length: 7 }, (_, index) => {
       const date = '2026-01-' + String(4 + ((this.firstDay() + index) % 7)).padStart(2, '0');
@@ -51,27 +141,95 @@ export class HyCalendar {
       };
     }),
   );
-  protected readonly weeks = computed(() => {
-    const adapter = this.adapter(),
-      month = this.month();
-    const start = adapter.addDays(month, -((adapter.weekday(month) - this.firstDay() + 7) % 7));
-    const number = new Intl.NumberFormat(this.locale());
-    const range = this.selectedRange();
-    const days = Array.from({ length: 42 }, (_, index) => {
-      const date = adapter.addDays(start, index),
-        parts = adapter.parts(date);
+  protected readonly weeks = computed(() => this.monthWeeks(this.month()));
+  protected readonly monthViews = computed(() =>
+    Array.from({ length: Math.min(12, Math.max(1, Math.floor(this.months()))) }, (_, index) => {
+      const month = this.adapter().addMonths(this.month(), index);
       return {
+        month,
+        heading: this.adapter().format(month, this.locale(), { month: 'long', year: 'numeric' }),
+        weeks: this.monthWeeks(month),
+      };
+    }),
+  );
+  protected readonly monthChoices = computed(() => {
+    const adapter = this.adapter(),
+      year = adapter.parts(this.month()).year;
+    return Array.from({ length: 12 }, (_, index) => {
+      const date = adapter.create(year, index + 1, 1);
+      return date
+        ? {
+            date,
+            label: adapter.format(date, this.locale(), { month: 'short' }),
+            disabled:
+              adapter.addDays(date, adapter.daysInMonth(date) - 1) < (this.min() ?? adapter.min) ||
+              date > (this.max() ?? adapter.max),
+          }
+        : null;
+    }).filter((item) => item !== null);
+  });
+  protected readonly yearChoices = computed(() => {
+    const adapter = this.adapter(),
+      year = adapter.parts(this.month()).year,
+      start = Math.floor(year / 24) * 24;
+    return Array.from({ length: 24 }, (_, index) => {
+      const date = adapter.create(start + index, 1, 1);
+      return {
+        year: start + index,
         date,
-        text: number.format(parts.day),
-        label: adapter.format(date, this.locale()),
-        outside: parts.month !== adapter.parts(month).month,
-        disabled: this.unavailable(date),
-        active: date === this.active(),
-        selected: date === this.value() || !!(range && date >= range[0] && date <= range[1]),
+        label: new Intl.NumberFormat(this.locale(), { useGrouping: false }).format(start + index),
+        disabled:
+          !date ||
+          start + index < adapter.parts(this.min() ?? adapter.min).year ||
+          start + index > adapter.parts(this.max() ?? adapter.max).year,
       };
     });
-    return Array.from({ length: 6 }, (_, i) => days.slice(i * 7, i * 7 + 7));
   });
+  private monthWeeks(month: HyDate): CalendarWeek[] {
+    const adapter = this.adapter(),
+      visibleMonth = adapter.parts(month).month;
+    const start = adapter.addDays(month, -((adapter.weekday(month) - this.firstDay() + 7) % 7));
+    const number = new Intl.NumberFormat(this.locale());
+    const selection = this.range();
+    const range =
+      this.selectedRange() ?? (selection ? [selection.start, selection.end] : undefined);
+    const preview = this.preview(),
+      comparison = this.comparisonRange();
+    return Array.from({ length: 6 }, (_, week) => {
+      const weekStart = adapter.addDays(start, week * 7);
+      return {
+        days: Array.from({ length: 7 }, (_, index) => {
+          const date = index === 0 ? weekStart : adapter.addDays(start, week * 7 + index),
+            parts = adapter.parts(date),
+            outside = parts.month !== visibleMonth;
+          return {
+            date,
+            text: number.format(parts.day),
+            label: adapter.format(date, this.locale()),
+            outside,
+            disabled: this.unavailable(date) || (outside && this.outsideDays() === 'disabled'),
+            active: date === this.active() && !outside,
+            selected:
+              date === this.value() ||
+              this.selectedDates().includes(date) ||
+              !!(range && date >= range[0] && date <= range[1]),
+            preview: !!(preview && date >= preview.start && date <= preview.end),
+            comparison: !!(comparison && date >= comparison.start && date <= comparison.end),
+            classes: this.cellClass()(date),
+          };
+        }),
+        number: this.weekNumber()?.(weekStart) ?? this.isoWeek(weekStart),
+      };
+    });
+  }
+  private isoWeek(date: HyDate): number {
+    const value = new Date(dateEpoch(date));
+    value.setUTCDate(value.getUTCDate() + 4 - (value.getUTCDay() || 7));
+    const start = new Date(0);
+    start.setUTCFullYear(value.getUTCFullYear(), 0, 1);
+    start.setUTCHours(0, 0, 0, 0);
+    return Math.ceil(((value.getTime() - start.getTime()) / 86400000 + 1) / 7);
+  }
   protected readonly previousDisabled = computed(
     () => this.month() <= this.adapter().startOfMonth(this.min() ?? this.adapter().min),
   );
@@ -89,12 +247,93 @@ export class HyCalendar {
   protected pick(date: HyDate): void {
     if (this.unavailable(date)) return;
     this.active.set(date);
+    if (this.rangeMode()) {
+      const start = this.rangeStart();
+      const strategy = this.rangeStrategy();
+      if (strategy) {
+        const next = strategy(date, start ? { start, end: start } : this.range(), 'select');
+        if (next && this.validRange(next)) {
+          this.range.set(next);
+          this.rangeStart.set(null);
+          this.preview.set(null);
+        }
+      } else if (!start) {
+        this.rangeStart.set(date);
+        this.range.set(null);
+        this.preview.set({ start: date, end: date });
+        this.rangeStarted.emit(date);
+      } else {
+        const next = { start: date < start ? date : start, end: date < start ? start : date };
+        if (this.validRange(next)) {
+          this.range.set(next);
+          this.rangeStart.set(null);
+          this.preview.set(null);
+        }
+      }
+      this.selected.emit(date);
+      return;
+    }
+    if (this.multiple()) {
+      this.selectedDates.update((dates) =>
+        dates.includes(date) ? dates.filter((item) => item !== date) : [...dates, date],
+      );
+      this.selected.emit(date);
+      return;
+    }
     this.value.set(date);
     this.selected.emit(date);
   }
-  protected moveMonth(direction: number): void {
+  private validRange(range: HyDateRange): boolean {
+    if (
+      !this.adapter().deserialize(range.start) ||
+      !this.adapter().deserialize(range.end) ||
+      range.start > range.end ||
+      this.unavailable(range.start) ||
+      this.unavailable(range.end)
+    )
+      return false;
+    const days = (dateEpoch(range.end) - dateEpoch(range.start)) / 86400000 + 1,
+      max = this.maxRangeDays();
+    return days >= Math.max(1, this.minRangeDays()) && (max === undefined || days <= max);
+  }
+  protected previewDate(date: HyDate): void {
+    if (!this.rangeMode()) return;
+    const start = this.rangeStart();
+    if (!start) return;
+    if (this.unavailable(date)) {
+      this.preview.set(null);
+      this.rangePreview.emit(null);
+      return;
+    }
+    const range = this.rangeStrategy()?.(date, { start, end: start }, 'preview') ?? {
+      start: date < start ? date : start,
+      end: date < start ? start : date,
+    };
+    const next = this.validRange(range) ? range : null;
+    this.preview.set(next);
+    this.rangePreview.emit(next);
+  }
+  showView(view: HyCalendarView): void {
+    if (!this.disabled()) this.view.set(view);
+  }
+  protected chooseMonth(date: HyDate): void {
+    if (this.disabled()) return;
+    this.month.set(date);
+    this.active.set(date);
+    this.view.set('month');
+  }
+  protected chooseYear(date: HyDate | undefined): void {
+    if (!date || this.disabled()) return;
+    this.month.set(date);
+    this.active.set(date);
+    this.view.set('year');
+  }
+  moveMonth(direction: number): void {
     if (this.disabled() || (direction < 0 ? this.previousDisabled() : this.nextDisabled())) return;
-    const next = this.adapter().addMonths(this.month(), direction);
+    const next = this.adapter().addMonths(
+      this.month(),
+      direction * (this.view() === 'multi-year' ? 288 : this.view() === 'year' ? 12 : 1),
+    );
     this.month.set(next);
     this.active.set(next);
   }

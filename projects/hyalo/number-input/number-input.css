@@ -93,3 +93,7 @@ label:has(input:checked) {
     background: var(--hy-surface-1);
   }
 }
+
+:host([data-buttons='hidden']) .control > button { display: none; }
+:host([data-buttons='stacked']) .control { display: grid; grid-template-columns: 1fr auto; }
+:host([data-buttons='stacked']) .control > input { grid-column: 1; grid-row: 1 / 3; inline-size: 100%; }

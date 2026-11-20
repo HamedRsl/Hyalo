@@ -33,7 +33,7 @@ export class HyDialogActions {}
 /** Closes the surrounding dialog or drawer with an optional result. */
 @Directive({
   selector: 'button[hyDialogClose]',
-  host: { type: 'button', '(click)': 'ref?.close(hyDialogClose())' },
+  host: { type: 'button', '(click)': 'ref?.close(hyDialogClose(), "action")' },
 })
 export class HyDialogClose {
   protected readonly ref = inject(HyDialogRef, { optional: true });

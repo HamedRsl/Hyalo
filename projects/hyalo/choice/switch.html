@@ -12,7 +12,8 @@
       class="hy-choice__input"
       [name]="name()"
       [checked]="checked()"
-      [disabled]="disabled()"
+      [disabled]="effectiveDisabled() && !disabledFocusable()"
+      [attr.aria-disabled]="effectiveDisabled() || null"
       [required]="required()"
       [attr.aria-checked]="checked()"
       [attr.aria-describedby]="description() ? descriptionId : null"
@@ -28,6 +29,8 @@
     ></span>
   </span>
   <span class="hy-choice__label"><ng-content /></span>
+  @if (checked()) { <ng-content select="[hySwitchOn]" /> }
+  @else { <ng-content select="[hySwitchOff]" /> }
 </label>
 @if (description()) {
   <p class="hy-choice__description" [id]="descriptionId">{{ description() }}</p>

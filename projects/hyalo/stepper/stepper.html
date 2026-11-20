@@ -1,20 +1,32 @@
 <nav [attr.aria-label]="label()">
   <ol>
     @for (step of steps(); track step; let i = $index) {
-      <li>
+      @if (!step.hidden()) { <li>
         <button
           type="button"
           [id]="step.id"
-          [disabled]="!available()[i]"
+          [disabled]="!available()[i] || !headerNavigation()"
+          [attr.data-step]="i"
+          [attr.aria-invalid]="step.error() ? true : null"
+          [attr.aria-busy]="step.process() || step.control()?.pending || null"
           [attr.aria-current]="activeIndex() === i ? 'step' : null"
           [attr.aria-controls]="step.id + '-panel'"
           (click)="select(i)"
           (keydown)="onKey($event, i)"
         >
-          <span aria-hidden="true">{{ step.completed() ? '✓' : i + 1 }}</span
-          >{{ step.label() }}
+          <span aria-hidden="true">
+            @if (step.indicatorTemplate(); as indicator) {
+              <ng-container [ngTemplateOutlet]="indicator.template" [ngTemplateOutletContext]="{ $implicit: i, active: activeIndex() === i, completed: step.isComplete() }" />
+            } @else { {{ step.icon() || (step.isComplete() ? '✓' : progress() === 'dot' ? '•' : i + 1) }} }
+          </span>
+          <div>
+            @if (step.labelTemplate(); as label) { <ng-container [ngTemplateOutlet]="label.template" /> }
+            @else { {{ step.label() }} }
+            @if (step.subtitle()) { <small>{{ step.subtitle() }}</small> }
+            @if (step.error()) { <small role="status">{{ step.error() }}</small> }
+          </div>
         </button>
-      </li>
+      </li> }
     }
   </ol>
 </nav>

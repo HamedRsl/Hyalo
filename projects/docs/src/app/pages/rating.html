@@ -1,8 +1,28 @@
 <docs-page heading="Rating" lead="A clearly labeled score using native radio semantics.">
-<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
-<hy-field label="How was your visit?"><hy-rating [(value)]="rating" [max]="5" /></hy-field>
-</docs-example>
-<h2>Behavior and accessibility</h2><p>Arrow keys move within the radio group. Each score has a complete accessible name. Numbers keep the scale readable without relying on color or decorative stars.</p>
-<h2>API</h2><p><code>value: number (0 means unrated), max (1..10), locale</code></p>
-<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="How was your visit?"><hy-rating [(value)]="rating" [max]="5" /></hy-field>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Arrow keys move within the radio group. Each score has a complete accessible name. Numbers keep
+    the scale readable without relying on color or decorative stars.
+  </p>
+  <h2>API</h2>
+  <p>
+    <code
+      >value: number (0 means unrated), max (1..10), step (0.1..1, default 1), clearable (default
+      false), locale</code
+    >. Enable clearable to reset the score by selecting the active choice again.
+  </p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
 </docs-page>

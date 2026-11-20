@@ -1,52 +1,138 @@
 <div class="calendar" [attr.lang]="locale()">
-  <div class="calendar-heading">
-    <button
-      type="button"
-      aria-label="Previous month"
-      [disabled]="disabled() || previousDisabled()"
-      (click)="moveMonth(-1)"
-    >
-      ‹</button
-    ><strong aria-live="polite">{{ heading() }}</strong
-    ><button
-      type="button"
-      aria-label="Next month"
-      [disabled]="disabled() || nextDisabled()"
-      (click)="moveMonth(1)"
-    >
-      ›
-    </button>
-  </div>
-  <table role="grid" [attr.aria-label]="heading()">
-    <thead>
-      <tr>
-        @for (day of weekdays(); track day.key) {
-          <th scope="col">{{ day.label }}</th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @for (week of weeks(); track $index) {
-        <tr>
-          @for (day of week; track day.date) {
-            <td role="gridcell" [attr.aria-selected]="day.selected">
-              <button
-                type="button"
-                [attr.data-date]="day.date"
-                [attr.data-outside]="day.outside || null"
-                [attr.tabindex]="day.active ? 0 : -1"
-                [attr.aria-disabled]="day.disabled"
-                [attr.aria-label]="day.label"
-                [attr.aria-pressed]="day.selected"
-                (click)="pick(day.date)"
-                (keydown)="keys($event, day.date)"
-              >
-                {{ day.text }}
-              </button>
-            </td>
-          }
-        </tr>
+  @if (headerTemplate(); as template) {
+    <ng-container
+      [ngTemplateOutlet]="template"
+      [ngTemplateOutletContext]="{ $implicit: this, heading: heading() }"
+    />
+  } @else {
+    <div class="calendar-heading">
+      <button
+        type="button"
+        [attr.aria-label]="labels().previous"
+        [disabled]="disabled() || previousDisabled()"
+        (click)="moveMonth(-1)"
+      >
+        ‹
+      </button>
+      <strong aria-live="polite">{{ heading() }}</strong>
+      <button
+        type="button"
+        [attr.aria-label]="labels().chooseMonth"
+        [disabled]="disabled()"
+        (click)="showView('year')"
+      >
+        {{ labels().chooseMonth }}
+      </button>
+      <button
+        type="button"
+        [attr.aria-label]="labels().chooseYear"
+        [disabled]="disabled()"
+        (click)="showView('multi-year')"
+      >
+        {{ labels().chooseYear }}
+      </button>
+      <button
+        type="button"
+        [attr.aria-label]="labels().next"
+        [disabled]="disabled() || nextDisabled()"
+        (click)="moveMonth(1)"
+      >
+        ›
+      </button>
+    </div>
+  }
+  @if (view() === 'multi-year') {
+    <div class="calendar-choices" role="group" [attr.aria-label]="labels().chooseYear">
+      @for (year of yearChoices(); track year.year) {
+        <button
+          type="button"
+          [disabled]="disabled() || year.disabled"
+          (click)="chooseYear(year.date)"
+        >
+          {{ year.label }}
+        </button>
       }
-    </tbody>
-  </table>
+    </div>
+  } @else if (view() === 'year') {
+    <div class="calendar-choices" role="group" [attr.aria-label]="labels().chooseMonth">
+      @for (month of monthChoices(); track month.date) {
+        <button
+          type="button"
+          [disabled]="disabled() || month.disabled"
+          (click)="chooseMonth(month.date)"
+        >
+          {{ month.label }}
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="calendar-months">
+      @for (month of monthViews(); track month.month) {
+        <div class="calendar-month">
+          @if (monthViews().length > 1) {
+            <strong>{{ month.heading }}</strong>
+          }
+          <table role="grid" [attr.aria-label]="month.heading">
+            <thead>
+              <tr>
+                @if (showWeekNumbers()) {
+                  <th scope="col">{{ labels().week }}</th>
+                }
+                @for (day of weekdays(); track day.key) {
+                  <th scope="col">{{ day.label }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (week of month.weeks; track $index) {
+                <tr>
+                  @if (showWeekNumbers()) {
+                    <th scope="row">{{ week.number }}</th>
+                  }
+                  @for (day of week.days; track day.date) {
+                    <td role="gridcell" [attr.aria-selected]="day.selected">
+                      <button
+                        type="button"
+                        [attr.data-date]="day.date"
+                        [attr.data-outside]="day.outside || null"
+                        [attr.data-preview]="day.preview || null"
+                        [attr.data-comparison]="day.comparison || null"
+                        [class]="day.classes"
+                        [style.visibility]="
+                          day.outside && outsideDays() === 'hidden' ? 'hidden' : null
+                        "
+                        [attr.tabindex]="day.active ? 0 : -1"
+                        [attr.aria-disabled]="day.disabled"
+                        [attr.aria-label]="day.label"
+                        [attr.aria-pressed]="day.selected"
+                        (click)="!day.disabled && pick(day.date)"
+                        (keydown)="keys($event, day.date)"
+                        (mouseenter)="previewDate(day.date)"
+                        (focus)="previewDate(day.date)"
+                      >
+                        @if (cellTemplate(); as template) {
+                          <ng-container
+                            [ngTemplateOutlet]="template"
+                            [ngTemplateOutletContext]="{
+                              $implicit: day.date,
+                              selected: day.selected,
+                              outside: day.outside,
+                              preview: day.preview,
+                              comparison: day.comparison,
+                            }"
+                          />
+                        } @else {
+                          {{ day.text }}
+                        }
+                      </button>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
 </div>

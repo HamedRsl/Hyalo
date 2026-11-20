@@ -34,6 +34,13 @@ export default class ShowcasePage {
   protected readonly example = EXAMPLE;
   protected readonly rows: ApiRow[] = [
     {
+      name: 'visibleSlides / pageStep',
+      type: 'number',
+      default: '1',
+      description:
+        'Slides per viewport and navigation step. Navigation stops at the final full viewport; fade mode shows one slide.',
+    },
+    {
       name: 'navigation',
       type: "'text' | 'icons' | 'none'",
       default: 'text',

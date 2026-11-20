@@ -3,6 +3,7 @@ import { dateEpoch } from '@hyalo/angular/dates';
 export interface WallDateTime {
   readonly date: string;
   readonly time: string;
+  readonly second?: number;
 }
 function formatter(timeZone: string): Intl.DateTimeFormat {
   return new Intl.DateTimeFormat('en-US', {
@@ -41,11 +42,11 @@ export function zonedDateTime(instant: number, timeZone: string): WallDateTime |
 
 /** Round-tripping rejects skipped times and retains both instants in a repeated hour. */
 export function possibleInstants(date: string, time: string, timeZone: string): readonly number[] {
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/u.test(time)) return [];
+  if (!/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/u.test(time)) return [];
   try {
     const format = formatter(timeZone);
-    const [hour = 0, minute = 0] = time.split(':').map(Number);
-    const wall = dateEpoch(date) + hour * 3600000 + minute * 60000;
+    const [hour = 0, minute = 0, second = 0] = time.split(':').map(Number);
+    const wall = dateEpoch(date) + hour * 3600000 + minute * 60000 + second * 1000;
     const offsets = new Set<number>();
     for (const hours of [-48, -24, -12, 0, 12, 24, 48]) {
       const sample = wall + hours * 3600000;
@@ -57,7 +58,7 @@ export function possibleInstants(date: string, time: string, timeZone: string): 
       .map((offset) => wall - offset)
       .filter((instant) => {
         const p = parts(instant, format);
-        return p.date === date && p.time === time && p.second === 0;
+        return p.date === date && p.time === time.slice(0, 5) && p.second === second;
       })
       .sort((a, b) => a - b);
   } catch {

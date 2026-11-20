@@ -74,3 +74,6 @@ a:focus-visible {
     background: var(--hy-primary-wash);
   }
 }
+:host([data-orientation='horizontal']) nav { display: flex; align-items: center; gap: var(--hy-space-4); overflow: auto; }
+:host([data-orientation='horizontal']) ol { display: flex; gap: var(--hy-space-4); }
+:host([data-orientation='horizontal']) .thread { display: none; }

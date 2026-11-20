@@ -12,8 +12,12 @@
   background: var(--hy-surface-2);
   box-sizing: border-box;
 }
+:host([data-state='compact']) {
+  inline-size: min(var(--hy-sidebar-width, 16rem), var(--hy-sidebar-compact-width, 12rem));
+  gap: 1rem;
+}
 :host([data-collapsed='true']) {
-  inline-size: 4.5rem;
+  inline-size: var(--hy-sidebar-collapsed-width, 4.5rem);
 }
 header {
   display: flex;

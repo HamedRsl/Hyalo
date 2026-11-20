@@ -5,12 +5,13 @@ import { HyValueControl } from '@hyalo/angular/field';
 @Component({
   selector: 'hy-selectable-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '(focusout)': 'leave($event)' },
+  host: { '(focusout)': 'leave($event)', '[attr.data-size]': 'size()' },
   templateUrl: './selectable-card.html',
   styleUrl: './selectable-card.css',
 })
 export class HySelectableCard extends HyValueControl implements FormValueControl<string> {
   readonly value = model('');
+  readonly size = input<'sm' | 'md' | 'lg'>('md');
   readonly options =
     input.required<
       readonly {

@@ -7,11 +7,27 @@ import {
   forwardRef,
   input,
   signal,
+  TemplateRef,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { type HySize, injectId } from '@hyalo/angular/core';
 
 import { HY_FIELD, type HyFieldContext, type HyFieldControl } from './field-control';
 import { HyInput } from './input';
+
+export interface HyErrorState {
+  readonly invalid: boolean;
+  readonly touched: boolean;
+  readonly dirty: boolean;
+  readonly submitted: boolean;
+  readonly pending: boolean;
+}
+export type HyErrorStateMatcher = (state: HyErrorState) => boolean;
+export type HyFieldStatus = 'none' | 'pending' | 'success' | 'warning' | 'error';
+export interface HyFieldFeedbackContext {
+  readonly $implicit: string | undefined;
+  readonly status: HyFieldStatus;
+}
 
 /** Content before the control inside the field box, such as an icon. */
 @Directive({ selector: '[hyPrefix]', host: { class: 'hy-field__prefix' } })
@@ -37,6 +53,7 @@ export class HySuffix {}
  */
 @Component({
   selector: 'hy-field',
+  imports: [NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: HY_FIELD, useExisting: forwardRef(() => HyField) }],
   host: {
@@ -45,6 +62,11 @@ export class HySuffix {}
     '[attr.data-invalid]': 'errorShown() || null',
     '[attr.data-disabled]': 'control()?.disabled() || null',
     '[attr.data-composite]': 'control()?.composite || null',
+    '[attr.data-status]': 'currentStatus()',
+    '[attr.data-float-label]': 'floatLabel()',
+    '[attr.data-filled]': 'filled() || null',
+    '[attr.data-subscript]': 'subscriptSizing()',
+    '[attr.aria-busy]': 'currentStatus() === "pending" || null',
   },
   templateUrl: './field.html',
   styleUrl: './field.css',
@@ -64,6 +86,18 @@ export class HyField implements HyFieldContext {
   readonly forceError = input(false, { transform: booleanAttribute });
   /** Height of the field box. */
   readonly size = input<HySize>('md');
+  readonly submitted = input(false, { transform: booleanAttribute });
+  readonly errorStateMatcher = input<HyErrorStateMatcher>();
+  readonly status = input<HyFieldStatus | 'auto'>('auto');
+  readonly statusText = input('');
+  readonly hintTemplate = input<TemplateRef<HyFieldFeedbackContext>>();
+  readonly errorTemplate = input<TemplateRef<HyFieldFeedbackContext>>();
+  readonly feedbackTemplate = input<TemplateRef<HyFieldFeedbackContext>>();
+  readonly hideRequiredMarker = input(false, { transform: booleanAttribute });
+  readonly subscriptSizing = input<'dynamic' | 'fixed'>('dynamic');
+  /** Floating labels use filled for custom controls that do not expose native text. */
+  readonly floatLabel = input<'never' | 'auto' | 'always'>('never');
+  readonly filled = input(false, { transform: booleanAttribute });
 
   protected readonly control = signal<HyFieldControl | undefined>(undefined);
 
@@ -75,15 +109,31 @@ export class HyField implements HyFieldContext {
   protected readonly errorText = computed(() => {
     if (this.error()) return this.error();
     const c = this.control();
-    return c && (c.invalid() || this.forceError()) ? c.errorMessage() : undefined;
+    if (!c) return undefined;
+    const matcher = this.errorStateMatcher();
+    const visible = matcher ? matcher({
+      invalid: c.rawInvalid?.() ?? c.invalid(),
+      touched: c.touched?.() ?? c.invalid(),
+      dirty: c.dirty?.() ?? false,
+      pending: c.pending?.() ?? false,
+      submitted: this.submitted(),
+    }) : c.invalid();
+    return visible || this.forceError() ? c.errorMessage() : undefined;
   });
 
   readonly errorShown = computed(() => !!this.errorText());
+  readonly currentStatus = computed<HyFieldStatus>(() => this.errorShown() ? 'error' :
+    this.status() !== 'auto' ? this.status() as HyFieldStatus :
+    this.control()?.pending?.() ? 'pending' : 'none');
+  protected readonly feedbackContext = computed<HyFieldFeedbackContext>(() => ({
+    $implicit: this.errorText() ?? this.hint(), status: this.currentStatus(),
+  }));
 
   readonly describedBy = computed(() => {
     const ids = [];
-    if (this.hint() && !this.errorText()) ids.push(this.hintId);
+    if ((this.hint() || this.hintTemplate()) && !this.errorText()) ids.push(this.hintId);
     if (this.errorText()) ids.push(this.errorId);
+    if (this.statusText() || this.feedbackTemplate()) ids.push(this.hintId + '-status');
     return ids.length ? ids.join(' ') : null;
   });
 

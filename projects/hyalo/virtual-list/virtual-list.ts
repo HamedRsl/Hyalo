@@ -13,12 +13,14 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
   untracked,
 } from '@angular/core';
 import { rowWindow } from './window';
 
 export type HyVirtualKey = string | number;
+export interface HyVirtualRange { readonly start: number; readonly end: number; }
 export interface HyVirtualItemContext<T> {
   readonly $implicit: T;
   readonly index: number;
@@ -48,6 +50,8 @@ export class HyVirtualItem<T> {
     tabindex: '0',
     '[attr.aria-label]': 'label()',
     '[style.block-size]': 'height()',
+    '[attr.data-orientation]': 'orientation()',
+    '[attr.aria-busy]': 'loading()',
     '(keydown)': 'keys($event)',
     '(focusin)': 'focusIn($event)',
     '(focusout)': 'focusOut($event)',
@@ -65,6 +69,21 @@ export class HyVirtualList<T> {
   readonly overscan = input(4);
   /** The server and first client render use the same bounded slice. */
   readonly initialCount = input(10);
+  readonly orientation = input<'vertical' | 'horizontal' | 'grid'>('vertical');
+  readonly columnCount = input(1); readonly columnWidth = input(160);
+  readonly virtual = input(true); readonly appendOnly = input(false);
+  readonly loadRange = input<(range: HyVirtualRange, signal: AbortSignal) => Promise<void>>();
+  readonly rangeChange = output<HyVirtualRange>(); readonly loadError = output<unknown>();
+  readonly loading = signal(false); readonly error = signal<unknown>(null);
+  private readonly horizontalOffset = signal(0); private readonly viewportWidth = signal(0);
+  private readonly retained = signal({ first: Number.MAX_SAFE_INTEGER, last: 0 });
+  private request: AbortController | undefined;
+  readonly columns = computed(() => this.orientation() === 'grid' ? Math.max(1, Math.trunc(this.columnCount()) || 1) : 1);
+  readonly itemSize = computed(() => this.orientation() === 'horizontal' ? Math.max(1,this.columnWidth()) : this.safeRowHeight());
+  readonly renderedRange = computed<HyVirtualRange>(() => ({ start: this.window().first, end: this.window().last }));
+  readonly columnRange = computed(() => this.orientation() === 'grid' ? { start: Math.max(0,Math.floor(this.horizontalOffset()/Math.max(1,this.columnWidth()))-this.overscan()), end: Math.min(this.columns(),Math.ceil((this.horizontalOffset()+this.viewportWidth())/Math.max(1,this.columnWidth()))+this.overscan()+1) } : {start:0,end:1});
+  readonly canvasHeight = computed(() => Math.ceil(this.items().length/this.columns())*this.safeRowHeight());
+  readonly canvasWidth = computed(() => this.columns()*Math.max(1,this.columnWidth()));
   protected readonly item = contentChild.required<HyVirtualItem<T>>(HyVirtualItem);
   private readonly offset = signal(0);
   private readonly viewport = signal(0);
@@ -74,33 +93,37 @@ export class HyVirtualList<T> {
   protected readonly safeRowHeight = computed(() =>
     Number.isFinite(this.rowHeight()) && this.rowHeight() > 0 ? this.rowHeight() : 0,
   );
-  protected readonly window = computed(
-    () =>
-      rowWindow(
-        this.items().length,
-        this.safeRowHeight(),
-        this.offset(),
-        this.viewport(),
-        this.overscan(),
-        this.initialCount(),
-      ),
-    {
-      equal: (a, b) =>
-        a.first === b.first && a.last === b.last && a.before === b.before && a.after === b.after,
-    },
-  );
-  protected readonly rows = computed(() => {
-    const { first, last } = this.window(),
-      items = this.items(),
-      key = this.itemKey();
-    return items.slice(first, last).map((item, offset) => ({
-      key: key(item),
-      index: first + offset,
-      context: { $implicit: item, index: first + offset, count: items.length },
-    }));
+  protected readonly window = computed(() => {
+    const total = this.items().length, columns = this.columns(), size = this.itemSize();
+    if (!this.virtual()) return {first:0,last:total,before:0,after:0};
+    const horizontal = this.orientation() === 'horizontal';
+    const range = rowWindow(Math.ceil(total/columns), size, horizontal ? this.horizontalOffset() : this.offset(), horizontal ? this.viewportWidth() : this.viewport(), this.overscan(),this.initialCount());
+    const current = { first:range.first*columns,last:Math.min(total,range.last*columns),before:range.before,after:range.after };
+    if (!this.appendOnly()) return current;
+    const retained = this.retained(), first = Math.min(current.first,retained.first), last = Math.min(total,Math.max(current.last,retained.last));
+    return {first,last,before:Math.floor(first/columns)*size,after:Math.ceil((total-last)/columns)*size};
   });
-
+  protected readonly rows = computed(() => {
+    const { first, last } = this.window(), items = this.items(), key = this.itemKey(), cols = this.columns(), range = this.columnRange();
+    return items.slice(first,last).flatMap((item,offset) => {
+      const index = first+offset, col = index%cols;
+      if (this.virtual() && this.orientation() === 'grid' && (col < range.start || col >= range.end)) return [];
+      return [{key:key(item),index,top:Math.floor(index/cols)*this.safeRowHeight(),left:col*this.columnWidth(),context:{$implicit:item,index,count:items.length}}];
+    });
+  });
   constructor() {
+    effect(() => {
+      const range = this.renderedRange(), loader = this.loadRange();
+      untracked(() => {
+        this.rangeChange.emit(range);
+        if (this.appendOnly()) this.retained.update(old => ({first:Math.min(old.first,range.start),last:Math.max(old.last,range.end)}));
+        this.request?.abort();
+        if (!loader || range.end <= range.start) { this.loading.set(false); return; }
+        const request = new AbortController(); this.request = request; this.loading.set(true); this.error.set(null);
+        Promise.resolve().then(() => loader(range,request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
+      });
+    });
+    this.destroy.onDestroy(() => this.request?.abort());
     effect(() => {
       const items = this.items(),
         key = this.itemKey();
@@ -131,7 +154,7 @@ export class HyVirtualList<T> {
           if (index >= 0) this.focusIndex(index);
         }
       };
-      const measure = (): void => measureHeight(this.element.clientHeight);
+      const measure = (): void => { measureHeight(this.element.clientHeight); this.viewportWidth.set(this.element.clientWidth); };
       const scroll = (): void => {
         const next = rowWindow(
           this.items().length,
@@ -149,6 +172,7 @@ export class HyVirtualList<T> {
           if (index < next.first || index >= next.last) this.parkFocus();
         }
         this.offset.set(this.element.scrollTop);
+        this.horizontalOffset.set(Math.abs(this.element.scrollLeft));
       };
       measure();
       this.element.addEventListener('scroll', scroll, { passive: true });
@@ -157,7 +181,7 @@ export class HyVirtualList<T> {
           ? null
           : new ResizeObserver((entries) => {
               const entry = entries[0];
-              if (entry) measureHeight(entry.contentRect.height);
+              if (entry) { measureHeight(entry.contentRect.height); this.viewportWidth.set(entry.contentRect.width); }
             });
       resize?.observe(this.element);
       this.document.defaultView?.addEventListener('resize', measure);
@@ -203,11 +227,19 @@ export class HyVirtualList<T> {
     const page = Math.max(1, Math.floor(this.viewport() / (this.safeRowHeight() || 1)));
     let next: number;
     switch (event.key) {
-      case 'ArrowDown':
+      case 'ArrowRight':
+        if (this.orientation() === 'vertical') return;
         next = index < 0 ? firstVisible : index + 1;
         break;
-      case 'ArrowUp':
+      case 'ArrowLeft':
+        if (this.orientation() === 'vertical') return;
         next = index < 0 ? firstVisible : index - 1;
+        break;
+      case 'ArrowDown':
+        next = index < 0 ? firstVisible : index + this.columns();
+        break;
+      case 'ArrowUp':
+        next = index < 0 ? firstVisible : index - this.columns();
         break;
       case 'Home':
         next = 0;
@@ -228,19 +260,28 @@ export class HyVirtualList<T> {
     event.preventDefault();
     this.focusIndex(Math.min(items.length - 1, Math.max(0, next)));
   }
-  scrollToIndex(index: number): void {
-    const height = this.safeRowHeight();
-    if (!Number.isFinite(index) || index < 0 || index >= this.items().length || height === 0)
-      return;
-    const top = Math.trunc(index) * height;
-    const viewport = this.viewport() || this.element.clientHeight || height;
-    const offset = this.element.scrollTop;
-    const next =
-      top < offset ? top : top + height > offset + viewport ? top + height - viewport : offset;
-    this.element.scrollTop = next;
-    this.offset.set(next);
+  scrollTo(offset: { readonly top?: number; readonly left?: number; readonly behavior?: ScrollBehavior }): void {
+    const top = offset.top !== undefined && Number.isFinite(offset.top) ? Math.max(0, offset.top) : this.element.scrollTop;
+    const left = offset.left !== undefined && Number.isFinite(offset.left) ? Math.max(0, offset.left) : Math.abs(this.element.scrollLeft);
+    if (offset.behavior === 'smooth' && this.element.scrollTo) this.element.scrollTo({top,left,behavior:'smooth'});
+    else { this.element.scrollTop = top; this.element.scrollLeft = left; }
+    this.offset.set(top); this.horizontalOffset.set(left);
   }
-  focusIndex(index: number): void {
+  scrollToIndex(index: number, options: { readonly align?: 'auto' | 'start' | 'center' | 'end'; readonly behavior?: ScrollBehavior } = {}): void {
+    if (!Number.isInteger(index) || index < 0 || index >= this.items().length || this.itemSize() <= 0) return;
+    const horizontal = this.orientation() === 'horizontal', size = this.itemSize(), position = Math.floor(index/this.columns())*size;
+    const viewport = (horizontal ? this.viewportWidth() : this.viewport()) || size, offset = horizontal ? this.horizontalOffset() : this.offset();
+    const align = options.align ?? 'auto';
+    const next = align === 'start' ? position : align === 'center' ? position-(viewport-size)/2 : align === 'end' ? position+size-viewport : position < offset ? position : position+size > offset+viewport ? position+size-viewport : offset;
+    const left = this.orientation() === 'grid' ? (index%this.columns())*this.columnWidth() : undefined;
+    this.scrollTo(horizontal ? {left:next,behavior:options.behavior} : {top:next,left,behavior:options.behavior});
+  }
+  retry(): void {
+    const loader = this.loadRange(); if (!loader) return;
+    this.request?.abort(); const request = new AbortController(); this.request = request;
+    this.loading.set(true); this.error.set(null);
+    Promise.resolve().then(() => loader(this.renderedRange(),request.signal)).then(() => { if (!request.signal.aborted) this.loading.set(false); },error => { if (!request.signal.aborted) { this.loading.set(false); this.error.set(error); this.loadError.emit(error); } });
+  }  focusIndex(index: number): void {
     if (
       !Number.isInteger(index) ||
       index < 0 ||

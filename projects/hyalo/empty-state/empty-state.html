@@ -1,6 +1,6 @@
-@if (icon()) {
+<ng-content select="[hyEmptyIllustration]">@if (icon()) {
   <div class="symbol"><hy-icon [name]="icon()!" /></div>
-}
+}</ng-content>
 @switch (headingLevel()) {
   @case (3) {
     <h3>{{ heading() }}</h3>

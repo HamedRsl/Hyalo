@@ -1,6 +1,6 @@
 :host {
   display: block;
-  flex: 0 0 100%;
+  flex: 0 0 calc(100% / var(--hy-carousel-visible, 1));
   min-inline-size: 0;
   scroll-snap-align: start;
   scroll-snap-stop: always;

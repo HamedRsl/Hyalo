@@ -32,15 +32,15 @@ export function driveSheet(
   backdrop: HTMLElement | null,
   side: HyDrawerSide,
   host: HySheetHost,
-): { exit: (finish: () => void) => void; destroy: () => void } {
+): { exit: (finish: () => void) => void; restore: () => void; destroy: () => void } {
   const lifetime = new (panel.ownerDocument.defaultView?.AbortController ?? AbortController)();
   let disposed = false;
   let resize: ResizeObserver | undefined;
   let clickTimer: ReturnType<typeof setTimeout> | undefined;
-  const vertical = side === 'bottom';
+  const vertical = side === 'bottom' || side === 'top';
   const rtl = getComputedStyle(panel).direction === 'rtl';
   // +1 when closing moves toward larger x or y.
-  const sign = vertical ? 1 : (side === 'end') !== rtl ? 1 : -1;
+  const sign = vertical ? (side === 'top' ? -1 : 1) : (side === 'end') !== rtl ? 1 : -1;
   // Extra travel so the shadow is gone too.
   const size = (): number => (vertical ? panel.offsetHeight : panel.offsetWidth) + 32;
 
@@ -61,7 +61,7 @@ export function driveSheet(
 
   const spring = new HySpring(0, paint);
   // Start out of view without measuring yet; the content has not rendered.
-  panel.style.translate = vertical ? '0 100%' : `${sign * 100}% 0`;
+  panel.style.translate = vertical ? `0 ${sign * 100}%` : `${sign * 100}% 0`;
   if (backdrop) backdrop.style.opacity = '0';
   let enterFrame = requestAnimationFrame(() => {
     enterFrame = 0;
@@ -210,6 +210,7 @@ export function driveSheet(
 
   return {
     exit,
+    restore: () => { closing = false; spring.to(0, SPRINGS.settle); },
     destroy: () => {
       if (disposed) return;
       disposed = true;

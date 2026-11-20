@@ -1,3 +1,10 @@
 :host {
   display: block;
 }
+:host([data-orientation='horizontal']) {
+  display: flex;
+  overflow-inline: auto;
+}
+:host([data-orientation='horizontal'][data-alignment='end']) {
+  align-items: end;
+}

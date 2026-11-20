@@ -1,11 +1,11 @@
 <input
-  type="text"
-  inputmode="numeric"
+  [type]="masked() ? 'password' : 'text'"
+  [attr.inputmode]="mode() === 'numeric' ? 'numeric' : 'text'"
   autocomplete="one-time-code"
   dir="ltr"
   [id]="id()"
   [name]="name()"
-  [disabled]="disabled()"
+  [disabled]="effectiveDisabled()"
   [required]="required()"
   [readOnly]="readonly()"
   [attr.aria-label]="label() || null"
@@ -14,9 +14,14 @@
   [attr.aria-invalid]="showsError() || null"
   [value]="value()"
   [attr.maxlength]="count()"
-  [attr.pattern]="'[0-9]{' + count() + '}'"
+  [attr.pattern]="(mode() === 'numeric' ? '[0-9]{' : '[a-zA-Z0-9]{') + count() + '}'"
   (paste)="paste($event)"
   (input)="update($event)"
   (compositionend)="update($event)"
 />
-<p class="message">Enter {{ count() }} digits. You can paste the complete code.</p>
+@if (cellTemplate(); as template) {
+  <div class="chips" aria-hidden="true">@for (cell of cells(); track cell.index) {
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="cell" />
+  }</div>
+}
+<p class="message">Enter {{ count() }} {{ mode() === 'numeric' ? 'digits' : 'characters' }}. You can paste the complete code.</p>

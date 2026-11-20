@@ -1,4 +1,4 @@
 <ng-content />
 @if (removable()) {
-  <button type="button" [attr.aria-label]="removeLabel()" (click)="removed.emit()">×</button>
+  <button type="button" [attr.aria-label]="removeLabel()" (click)="removed.emit()"><ng-content select="[hyBadgeRemoveIcon]">×</ng-content></button>
 }

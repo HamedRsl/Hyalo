@@ -61,8 +61,8 @@ export type HyButtonVariant = 'solid' | 'glass' | 'soft' | 'ghost';
     '[attr.data-loading]': 'loading() || null',
     '[attr.aria-busy]': 'loading() || null',
     '[attr.aria-disabled]': 'blocked() || null',
-    '[attr.disabled]': 'isButton && disabled() ? "" : null',
-    '[attr.tabindex]': '!isButton && disabled() ? -1 : null',
+    '[attr.disabled]': 'isButton && disabled() && !disabledFocusable() ? "" : null',
+    '[attr.tabindex]': '!isButton && disabled() && !disabledFocusable() ? -1 : null',
   },
   templateUrl: './button.html',
   styleUrl: './button.css',
@@ -86,6 +86,7 @@ export class HyButton {
   readonly loading = input(false, { transform: booleanAttribute });
   /** Disables the button. On links this sets `aria-disabled`. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly disabledFocusable = input(false, { transform: booleanAttribute });
 
   /** Glass follows the configured material and goes solid on the low tier. */
   protected readonly material = computed(() => {
@@ -97,7 +98,7 @@ export class HyButton {
 
   /** True when clicks should be ignored. */
   protected readonly blocked = computed(
-    () => this.loading() || (!this.isButton && this.disabled()),
+    () => this.loading() || this.disabled(),
   );
 
   constructor() {

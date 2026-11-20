@@ -1,10 +1,29 @@
+@if (countries().length) {
+  <input
+    type="search"
+    [attr.aria-label]="countrySearchLabel()"
+    [disabled]="blocked()"
+    [value]="countryQuery()"
+    (input)="countryQuery.set($any($event.target).value)"
+  />
+  <select
+    [attr.aria-label]="countryLabel()"
+    [disabled]="blocked()"
+    [value]="country()"
+    (change)="chooseCountry($event)"
+  >
+    @for (item of filteredCountries(); track item.code) {
+      <option [value]="item.code">{{ item.name }} +{{ item.dialCode }}</option>
+    }
+  </select>
+}
 <input
   type="tel"
   autocomplete="tel-national"
   dir="ltr"
   [id]="id()"
   [name]="name()"
-  [disabled]="disabled()"
+  [disabled]="effectiveDisabled()"
   [required]="required()"
   [readOnly]="readonly()"
   [attr.aria-label]="label() || null"
@@ -12,11 +31,9 @@
   [attr.aria-describedby]="describedBy()"
   [attr.aria-invalid]="showsError() || null"
   [value]="display()"
-  pattern="09[0-9]{2} [0-9]{3} [0-9]{4}"
+  [attr.pattern]="countryPattern() || null"
   (beforeinput)="beforeDelete($event)"
   (input)="update($event)"
   (compositionend)="update($event)"
 />
-<p class="message">
-  Iranian mobile number, for example 0912 345 6789. +98 and Persian digits are accepted.
-</p>
+<p class="message">{{ currentCountry().example }}</p>

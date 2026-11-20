@@ -5,7 +5,7 @@ import type { TemplateRef } from '@angular/core';
 import { filter } from 'rxjs';
 import type { HyFidelity, HyMaterial } from '@hyalo/angular/core';
 import type { HyMotion } from '@hyalo/angular/motion';
-import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
+import { HY_DIALOG_DATA, HyDialogRef, type HyDialogCloseGuard } from './dialog-ref';
 import type { HyDrawerSide } from './drawer';
 import { driveSheet } from './sheet';
 
@@ -23,6 +23,31 @@ export interface HySurfaceConfig<D> {
   readonly autoFocus?: DialogConfig['autoFocus'];
   /** `alertdialog` for messages that need an answer. */
   readonly role?: 'dialog' | 'alertdialog';
+  readonly closeGuard?: HyDialogCloseGuard;
+  readonly closeOnEscape?: boolean;
+  readonly closeOnBackdrop?: boolean;
+  readonly hasBackdrop?: boolean;
+  readonly panelClass?: string | string[];
+  readonly backdropClass?: string | string[];
+  readonly id?: string;
+  readonly width?: string;
+  readonly height?: string;
+  readonly minWidth?: string | number;
+  readonly minHeight?: string | number;
+  readonly maxWidth?: string | number;
+  readonly maxHeight?: string | number;
+  readonly positionStrategy?: PositionStrategy;
+  readonly injector?: DialogConfig['injector'];
+  readonly viewContainerRef?: DialogConfig['viewContainerRef'];
+  readonly templateContext?: DialogConfig['templateContext'];
+  readonly restoreFocus?: DialogConfig['restoreFocus'];
+  readonly ariaLabelledBy?: string;
+  readonly ariaDescribedBy?: string;
+  readonly ariaModal?: boolean;
+  readonly direction?: DialogConfig['direction'];
+  readonly scrollStrategy?: DialogConfig['scrollStrategy'];
+  readonly closeOnNavigation?: boolean;
+  readonly closeOnScroll?: boolean;
 }
 
 /** @internal Opens a CDK dialog wrapped in a HyDialogRef. */
@@ -50,19 +75,31 @@ export function openSurface<R, D>(
     role: config.role ?? 'dialog',
     ariaLabel: config.label ?? null,
     autoFocus: config.autoFocus ?? 'first-tabbable',
-    restoreFocus: true,
-    ariaModal: true,
+    restoreFocus: config.restoreFocus ?? true,
+    ariaModal: config.ariaModal ?? true,
+    ariaLabelledBy: config.ariaLabelledBy,
+    ariaDescribedBy: config.ariaDescribedBy,
+    id: config.id,
+    injector: config.injector,
+    viewContainerRef: config.viewContainerRef,
+    templateContext: config.templateContext,
+    direction: config.direction,
+    scrollStrategy: config.scrollStrategy,
+    closeOnNavigation: false,
     // Closing is handled here so the exit animation can play first.
     disableClose: true,
-    hasBackdrop: true,
-    backdropClass: 'hy-backdrop',
-    panelClass: extra.panelClass,
-    positionStrategy: extra.positionStrategy,
-    width: extra.width,
-    maxWidth: extra.maxWidth,
-    height: extra.height,
+    hasBackdrop: config.hasBackdrop ?? true,
+    backdropClass: ['hy-backdrop', ...[config.backdropClass ?? []].flat()],
+    panelClass: [...extra.panelClass, ...[config.panelClass ?? []].flat()],
+    positionStrategy: config.positionStrategy ?? extra.positionStrategy,
+    width: config.width ?? extra.width,
+    maxWidth: config.maxWidth ?? extra.maxWidth,
+    height: config.height ?? extra.height,
+    minWidth: config.minWidth,
+    minHeight: config.minHeight,
+    maxHeight: config.maxHeight,
     providers: (dialogRef) => {
-      ref = new HyDialogRef<R>(dialogRef);
+      ref = new HyDialogRef<R>(dialogRef, config.closeGuard);
       return [
         { provide: HyDialogRef, useValue: ref },
         { provide: HY_DIALOG_DATA, useValue: config.data },
@@ -70,7 +107,7 @@ export function openSurface<R, D>(
     },
   });
 
-  const hyRef = ref ?? new HyDialogRef<R>(cdkRef);
+  const hyRef = ref ?? new HyDialogRef<R>(cdkRef, config.closeGuard);
   const container = hyRef.containerElement;
   if (container) {
     container.classList.add('hy-glass');
@@ -82,21 +119,39 @@ export function openSurface<R, D>(
     if (extra.sheet && !motion.reduced()) {
       const driver = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
         dismissible,
-        close: () => hyRef.close(),
+        close: () => hyRef.close(undefined, 'gesture'),
         cancelClose: () => hyRef.cancelClose(),
       });
       hyRef.exit = driver.exit;
+      hyRef.closeVetoed.subscribe(() => driver.restore());
       cdkRef.closed.subscribe(() => driver.destroy());
     }
   }
-  if (dismissible) {
-    cdkRef.backdropClick.subscribe(() => hyRef.close());
+  if (config.closeOnBackdrop ?? dismissible) {
+    cdkRef.backdropClick.subscribe(() => hyRef.close(undefined, 'backdrop'));
+  }
+  if (config.closeOnEscape ?? dismissible) {
     cdkRef.keydownEvents
       .pipe(filter((e) => e.key === 'Escape' && !e.defaultPrevented))
       .subscribe((e) => {
         e.preventDefault();
-        hyRef.close();
+        hyRef.close(undefined, 'escape');
       });
   }
+  const view = container?.ownerDocument.defaultView;
+  const navigation = (): void => hyRef.close(undefined, 'navigation');
+  const scroll = (event: Event): void => { if (!container?.contains(event.target as Node)) hyRef.close(undefined, 'scroll'); };
+  if (config.closeOnNavigation) view?.addEventListener('popstate', navigation);
+  if (config.closeOnScroll) view?.addEventListener('scroll', scroll, true);
+  const opened = (): void => { hyRef.opened.next(); container?.removeEventListener('animationend', onEnter); };
+  const onEnter = (event: Event): void => { if (event.target === container) { clearTimeout(timer); opened(); } };
+  container?.addEventListener('animationend', onEnter);
+  const timer = setTimeout(opened, motion.reduced() ? 0 : 400);
+  cdkRef.closed.subscribe(() => {
+    clearTimeout(timer);
+    container?.removeEventListener('animationend', onEnter);
+    view?.removeEventListener('popstate', navigation);
+    view?.removeEventListener('scroll', scroll, true);
+  });
   return hyRef;
 }

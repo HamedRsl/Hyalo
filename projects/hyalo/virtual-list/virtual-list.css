@@ -21,3 +21,8 @@
   outline: 2px solid var(--hy-primary);
   outline-offset: -2px;
 }
+:host([data-orientation='horizontal']) { display: flex; }
+:host([data-orientation='horizontal']) > .row,
+:host([data-orientation='horizontal']) > .spacer { flex: 0 0 auto; }
+.canvas { position: relative; }
+.grid-row { position: absolute; }

@@ -22,6 +22,7 @@ export class HyScrollToTop {
   private readonly browser = ɵinjectIsBrowser();
   readonly label = input('Back to top');
   readonly threshold = input(400);
+  readonly behavior = input<ScrollBehavior>('smooth');
   /** Focus this heading or landmark after scrolling, so keyboard users return too. */
   readonly targetId = input<string | null>(null);
   protected readonly visible = signal(false);
@@ -55,7 +56,7 @@ export class HyScrollToTop {
     }
     this.document.defaultView?.scrollTo({
       top: 0,
-      behavior: this.motion.reduced() ? 'instant' : 'smooth',
+      behavior: this.motion.reduced() ? 'instant' : this.behavior(),
     });
   }
 }

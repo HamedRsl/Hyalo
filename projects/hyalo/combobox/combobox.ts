@@ -1,8 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   afterRenderEffect,
   computed,
+  input,
+  output,
   model,
 } from '@angular/core';
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
@@ -14,6 +17,7 @@ import { HyOptionQuery } from './query';
 @Component({
   selector: 'hy-combobox',
   imports: [
+    NgTemplateOutlet,
     Combobox,
     ComboboxPopup,
     ComboboxWidget,
@@ -37,19 +41,52 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
     );
   }
   readonly value = model<T | null>(null);
+  /** A typed conversion is required before arbitrary text can become a value. */
+  readonly createValue = input<(text: string) => T>();
+  readonly requireExactMatch = input(false);
+  readonly hint = input('');
+  readonly valueCommitted = output<T | null>();
   protected readonly positions = hyDropdownPositions();
-  protected readonly selection = computed(() => (this.value() === null ? [] : [this.value() as T]));
+  protected readonly selection = computed(() => {
+    const value = this.value();
+    return value === null
+      ? []
+      : [this.results().find((item) => this.same(item.option.value, value))?.option.value ?? value];
+  });
   protected readonly selected = computed(() =>
-    this.knownOptions().filter((option) => this.selection().includes(option.value)),
+    this.knownOptions().filter((option) =>
+      this.selection().some((value) => this.same(value, option.value)),
+    ),
   );
-  protected readonly selectedLabel = computed(() => this.selected()[0]?.label ?? '');
+  protected readonly selectedLabel = computed(() => {
+    const option = this.selected()[0];
+    const value = this.value();
+    return option ? this.optionLabel(option) : value === null ? '' : (this.displayWith()?.(value) ?? '');
+  });
+  protected virtualKey(event: KeyboardEvent): void {
+    this.virtualKeys(event, (values) => this.choose(values), this.selection());
+  }
+  protected commitText(event: KeyboardEvent): void {
+    if (event.key !== 'Enter' || this.blocked() || !this.query().trim()) return;
+    const exact = this.results().find((item) => !item.disabled && item.label === this.query());
+    const create = this.createValue();
+    if (exact) this.choose([exact.option.value]);
+    else if (!this.requireExactMatch() && create) {
+      const text = this.query().trim(),
+        value = create(text);
+      this.value.set(value);
+      this.valueCommitted.emit(value);
+      this.dismiss();
+    }
+  }
   protected choose(values: readonly T[]): void {
     if (this.blocked()) return;
     const selectable = values.filter(
-      (value) => !this.results().find((item) => item.option.value === value)?.disabled,
+      (value) => !this.results().find((item) => this.same(item.option.value, value))?.disabled,
     );
     this.remember(selectable);
     this.value.set(selectable[selectable.length - 1] ?? null);
+    this.valueCommitted.emit(this.value());
     this.dismiss();
     this.query.set('');
     this.focus();

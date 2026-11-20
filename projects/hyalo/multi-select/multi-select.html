@@ -1,12 +1,20 @@
 <div class="chips">
-  @for (option of selected(); track option.key ?? option.label) {
+  @for (option of visibleChips(); track option.key ?? option.label) {
     <button
       type="button"
       [disabled]="blocked() || option.disabled || option.group?.disabled"
       [attr.aria-label]="'Remove ' + option.label"
       (click)="remove(option.value)"
     >
-      {{ option.label }} <span aria-hidden="true">×</span>
+      @if (selectedTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: option }"
+        />
+      } @else {
+        {{ optionLabel(option) }}
+      }
+      <span aria-hidden="true">×</span>
     </button>
   }
 </div>
@@ -17,7 +25,7 @@
     #combobox="ngCombobox"
     autocomplete="off"
     [id]="id()"
-    [disabled]="disabled()"
+    [disabled]="effectiveDisabled()"
     [readonly]="readonly()"
     [required]="required() && !value().length"
     [attr.aria-required]="required() || null"
@@ -31,6 +39,7 @@
     (expandedChange)="expand($event)"
     (input)="type($event)"
     (compositionend)="type($event)"
+    (keydown)="virtualKey($event)"
   />
   <button
     type="button"
@@ -48,12 +57,28 @@
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayOpen]="expanded()"
-    [cdkConnectedOverlayPositions]="positions"
-    [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
-    (overlayOutsideClick)="dismiss()"
+    [cdkConnectedOverlayPositions]="overlayPositions() ?? positions"
+    [cdkConnectedOverlayPanelClass]="panelClass()"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy()!"
+    [cdkConnectedOverlayOffsetX]="offsetX()"
+    [cdkConnectedOverlayOffsetY]="offsetY()"
+    [cdkConnectedOverlayWidth]="panelWidth() ?? origin.elementRef.nativeElement.offsetWidth"
+    (overlayOutsideClick)="closeOnOutside() && hide()"
     (detach)="dismiss()"
   >
-    <div class="options">
+    <div
+      class="options"
+      [style.max-block-size.px]="viewportHeight()"
+      (scroll)="scrollOptions($event)"
+    >
+      <ng-container [ngTemplateOutlet]="headerTemplate() ?? null" />
+      @if (showSelectAll()) {
+        <button type="button" [disabled]="blocked()" (click)="selectAll()">
+          {{ selectAllLabel() }}</button
+        ><button type="button" [disabled]="blocked()" (click)="clearAll()">
+          {{ clearAllLabel() }}
+        </button>
+      }
       <!-- Aria forwards navigation from the input while focus stays on that input. -->
       <div
         ngComboboxWidget
@@ -65,21 +90,50 @@
         [disabled]="blocked()"
         [value]="selection()"
         (valueChange)="choose($event)"
-        [activeDescendant]="list.activeDescendant()"
+        [activeDescendant]="virtualized() ? activeId() : list.activeDescendant()"
         [attr.aria-label]="label() || 'Options'"
         [attr.aria-busy]="busy() || null"
       >
-        @for (item of results(); track item.key) {
+        <div role="presentation" [style.block-size.px]="beforeSize()"></div>
+        @for (item of visibleResults(); track item.key) {
+          @if (
+            item.option.group?.label &&
+            (item.index === 0 ||
+              results()[item.index - 1]?.option?.group?.key !== item.option.group.key)
+          ) {
+            <div role="presentation">
+              @if (groupTemplate(); as template) {
+                <ng-container
+                  [ngTemplateOutlet]="template"
+                  [ngTemplateOutletContext]="{ $implicit: item.option.group!.label }"
+                />
+              } @else {
+                {{ item.option.group.label }}
+              }
+            </div>
+          }
           <div
             ngOption
             [value]="item.option.value"
-            [label]="item.option.label"
+            [label]="item.label"
+            [id]="id() + '-option-' + item.index"
+            [attr.aria-setsize]="range().total"
+            [attr.aria-posinset]="item.index + 1"
+            [style.block-size.px]="virtualized() ? itemHeight() : null"
             [disabled]="item.disabled"
           >
-            {{ item.option.label }}
+            @if (optionTemplate(); as template) {
+              <ng-container
+                [ngTemplateOutlet]="template"
+                [ngTemplateOutletContext]="item.context"
+              />
+            } @else {
+              {{ item.label }}
+            }
           </div>
         }
       </div>
+      <ng-container [ngTemplateOutlet]="footerTemplate() ?? null" />
       @if (busy()) {
         <p class="message" role="status">{{ loadingLabel() }}</p>
       } @else if (failed()) {

@@ -1,6 +1,14 @@
 :host {
   display: block;
 }
+:host([data-placement='bottom']) { display: flex; flex-direction: column; }
+:host([data-placement='bottom']) .hy-tabs__panels { order: -1; }
+:host([data-placement='start']), :host([data-placement='end']) { display: flex; gap: var(--hy-space-4); }
+:host([data-placement='start']) .hy-tabs__list, :host([data-placement='end']) .hy-tabs__list { flex-direction: column; }
+:host([data-placement='end']) .hy-tabs__panels { order: -1; }
+:host([data-placement='start']) .hy-tabs__indicator, :host([data-placement='end']) .hy-tabs__indicator { display: none; }
+.hy-tabs__compact-label { display: none; }
+@media (max-width: 36rem) { .hy-tabs__full-label { display: none; } .hy-tabs__compact-label { display: inline; } }
 
 .hy-tabs__list {
   position: relative;

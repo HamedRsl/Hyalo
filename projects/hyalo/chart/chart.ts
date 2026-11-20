@@ -20,17 +20,22 @@ import {
   signal,
   untracked,
   viewChild,
+  output,
+  type InputSignal,
 } from '@angular/core';
-import type { Chart } from 'chart.js';
+import type { Chart, ChartOptions, ChartDataset, ChartEvent, ActiveElement, Plugin } from 'chart.js';
 export interface HyChartSeries {
   readonly label: string;
   readonly values: readonly (number | null)[];
+  /** Coordinates for scatter/bubble charts; numeric values remain the accessible fallback. */
+  readonly points?: readonly { x: number; y: number; r?: number }[];
+  readonly options?: Partial<ChartDataset>;
 }
 export interface HyChartData {
   readonly labels: readonly string[];
   readonly series: readonly HyChartSeries[];
 }
-export type HyChartType = 'line' | 'area' | 'bar' | 'doughnut';
+export type HyChartType = 'line' | 'area' | 'bar' | 'doughnut' | 'pie' | 'radar' | 'polarArea' | 'scatter' | 'bubble';
 let engine: Promise<typeof import('./engine')> | undefined;
 const loadEngine = (): Promise<typeof import('./engine')> =>
   (engine ??= import('./engine').catch((error: unknown) => {
@@ -55,6 +60,9 @@ export class HyChart {
   readonly label = input.required<string>();
   readonly summary = input('');
   readonly locale = input<string>();
+  readonly options: InputSignal<ChartOptions> = input<ChartOptions>({});
+  readonly plugins: InputSignal<readonly Plugin[]> = input<readonly Plugin[]>([]);
+  readonly dataPointSelected = output<{ event: ChartEvent; elements: readonly ActiveElement[] }>();
   private readonly globalLocale = inject(HyLocale);
   private readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   readonly tableLabel = input('View chart data');
@@ -130,6 +138,8 @@ export class HyChart {
         type = this.type(),
         locale = this.effectiveLocale();
       this.theme();
+      this.options();
+      this.plugins();
       this.fidelity.tier();
       if (!this.visible()) return;
       untracked(() => void this.render(data, type, locale));
@@ -147,6 +157,10 @@ export class HyChart {
   protected retry(): void {
     this.theme.update((value) => value + 1);
   }
+  getCanvas(): HTMLCanvasElement | null { return this.canvas()?.nativeElement ?? null; }
+  toBase64Image(type?: string, quality?: number): string | undefined { return this.chart?.toBase64Image(type, quality); }
+  refresh(): void { this.chart?.update(); }
+  reinitialize(): void { this.theme.update((value) => value + 1); }
   private async render(data: HyChartData, type: HyChartType, locale: string): Promise<void> {
     const generation = ++this.generation;
     try {
@@ -162,7 +176,7 @@ export class HyChart {
       const rtl = view.getComputedStyle(this.host.nativeElement).direction === 'rtl';
       const datasets = data.series.map((series, index) => ({
         label: series.label,
-        data: data.labels.map((_, i) => {
+        data: (type === 'scatter' || type === 'bubble') && series.points ? [...series.points] : data.labels.map((_, i) => {
           const value = series.values[i];
           return value != null && Number.isFinite(value) ? value : null;
         }),
@@ -190,6 +204,7 @@ export class HyChart {
         pointRadius: 2,
         tension: 0.25,
         fill: type === 'area',
+        ...series.options,
       }));
       this.tooltip.set(null);
       this.chart?.destroy();
@@ -197,6 +212,7 @@ export class HyChart {
       this.chart = new kit.Chart(canvas, {
         type: type === 'area' ? 'line' : type,
         data: { labels: [...data.labels], datasets },
+        plugins: [...this.plugins()],
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -227,7 +243,7 @@ export class HyChart {
               },
             },
           },
-          ...(type === 'doughnut'
+          ...(type === 'doughnut' || type === 'pie' || type === 'radar' || type === 'polarArea'
             ? {}
             : {
                 scales: {
@@ -238,6 +254,11 @@ export class HyChart {
                   y: { ticks: { color: ink }, grid: { color: border }, beginAtZero: true },
                 },
               }),
+          ...this.options(),
+          onClick: (event, elements, chart) => {
+            if (elements.length) this.dataPointSelected.emit({ event, elements });
+            this.options().onClick?.(event, elements, chart);
+          },
         },
       });
       this.error.set(false);

@@ -1,7 +1,7 @@
 @if (label()) {
   <label class="hy-field__label" [id]="labelId" [attr.for]="labelFor()">
     {{ label() }}
-    @if (control()?.required()) {
+    @if (control()?.required() && !hideRequiredMarker()) {
       <span class="hy-field__required" aria-hidden="true">*</span>
     }
   </label>
@@ -11,7 +11,20 @@
   <ng-content />
   <ng-content select="[hySuffix]" />
 </div>
-@if (hint() && !errorText()) {
-  <p class="hy-field__hint" [id]="hintId">{{ hint() }}</p>
+@if ((hint() || hintTemplate()) && !errorText()) {
+  <p class="hy-field__hint" [id]="hintId">
+    @if (hintTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
+    } @else { {{ hint() }} }
+  </p>
 }
-<p class="hy-field__error" [id]="errorId" aria-live="polite">{{ errorText() }}</p>
+<p class="hy-field__error" [id]="errorId" aria-live="polite">@if (errorText() && errorTemplate(); as template) {
+  <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
+} @else { {{ errorText() }} }</p>
+@if (statusText() || feedbackTemplate()) {
+  <p class="hy-field__hint" [id]="hintId + '-status'" role="status">
+    @if (feedbackTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
+    } @else { {{ statusText() }} }
+  </p>
+}

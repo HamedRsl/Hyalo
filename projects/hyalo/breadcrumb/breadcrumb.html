@@ -1,15 +1,11 @@
 <nav [attr.aria-label]="label()">
   <ol>
-    @for (item of items(); track $index; let last = $last) {
+    @for (item of visibleItems(); track $index; let last = $last; let index = $index) {
       <li>
-        @if (item.href && !last) {
-          <a [href]="item.href">{{ item.label }}</a>
-        } @else {
-          <span [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span>
-        }
-        @if (!last) {
-          <span class="separator" aria-hidden="true">/</span>
-        }
+        @if (itemTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, index, last }" /> }
+        @else if (href(item) && !last) { <a [href]="href(item)" (click)="navigate($event,item)">{{ item.label }}</a> }
+        @else { <span [attr.aria-current]="last ? 'page' : null">{{ item.label }}</span> }
+        @if (!last) { <span class="separator" aria-hidden="true">@if (separatorTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" /> } @else { / }</span> }
       </li>
     }
   </ol>

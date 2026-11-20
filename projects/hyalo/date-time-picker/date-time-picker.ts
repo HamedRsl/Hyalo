@@ -47,6 +47,20 @@ export class HyDateTimePicker extends HyValueControl implements FormValueControl
   readonly max = input<number>();
   readonly referenceDate = input<HyDate>('2026-01-01');
   readonly isDateDisabled = input<(date: HyDate) => boolean>(() => false);
+  readonly panelMode = input<'both' | 'date' | 'time'>('both');
+  readonly defaultTime = input('00:00');
+  readonly hourFormat = input<'auto' | '12' | '24'>('auto');
+  readonly showSeconds = input(false);
+  readonly timeStep = input(60);
+  readonly hourStep = input(1);
+  readonly minuteStep = input(1);
+  readonly secondStep = input(1);
+  readonly isTimeDisabled = input<(date: HyDate, time: string) => boolean>(() => false);
+  readonly isHourDisabled = input<(hour: number) => boolean>(() => false);
+  readonly isMinuteDisabled = input<(hour: number, minute: number) => boolean>(() => false);
+  readonly isSecondDisabled = input<(hour: number, minute: number, second: number) => boolean>(
+    () => false,
+  );
   readonly dateLabel = input('Date');
   readonly calendarLabel = input('Calendar');
   readonly timeLabel = input('Time');
@@ -62,7 +76,17 @@ export class HyDateTimePicker extends HyValueControl implements FormValueControl
   protected readonly draft = linkedSignal<Draft>(() => this.initialDraft());
   protected readonly candidate = computed(() => {
     const { date, time } = this.draft();
-    if (!date || !time || !this.adapter().deserialize(date) || this.isDateDisabled()(date))
+    const [hour = 0, minute = 0, second = 0] = time.split(':').map(Number);
+    if (
+      !date ||
+      !time ||
+      !this.adapter().deserialize(date) ||
+      this.isDateDisabled()(date) ||
+      this.isTimeDisabled()(date, time) ||
+      this.isHourDisabled()(hour) ||
+      this.isMinuteDisabled()(hour, minute) ||
+      this.isSecondDisabled()(hour, minute, second)
+    )
       return null;
     const instants = possibleInstants(date, time, this.timeZone());
     if (instants.length > 1 && this.disambiguation() === 'reject') return null;
@@ -103,7 +127,14 @@ export class HyDateTimePicker extends HyValueControl implements FormValueControl
     const value = this.value();
     this.adapter();
     const wall = value === null ? null : zonedDateTime(value, this.timeZone());
-    return { date: wall?.date ?? null, time: wall?.time ?? '' };
+    return {
+      date: wall?.date ?? (this.panelMode() === 'time' ? this.referenceDate() : null),
+      time: wall
+        ? wall.time + (this.showSeconds() ? ':' + String(wall.second ?? 0).padStart(2, '0') : '')
+        : this.panelMode() === 'date'
+          ? this.defaultTime()
+          : '',
+    };
   }
   protected editDate(date: HyDate | null): void {
     if (!this.blocked()) this.draft.update((draft) => ({ ...draft, date }));

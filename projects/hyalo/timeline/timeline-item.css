@@ -32,3 +32,38 @@ strong {
   color: var(--hy-ink);
   margin-block-end: var(--hy-space-2);
 }
+:host-context(hy-timeline[data-orientation='vertical'][data-alignment='end']) {
+  padding-inline: 0 var(--hy-space-8);
+  margin-inline: 0 0.5rem;
+  border-inline-start: 0;
+  border-inline-end: 1px solid var(--hy-line-strong);
+}
+:host-context(hy-timeline[data-orientation='vertical'][data-alignment='end']) .dot {
+  inset-inline: auto -0.35rem;
+}
+:host-context(hy-timeline[data-orientation='horizontal']) {
+  flex: 1 0 min(12rem, 100%);
+  min-inline-size: 0;
+  padding-block: var(--hy-space-8) 0;
+  padding-inline: 0 var(--hy-space-8);
+  margin-block-start: 0.5rem;
+  margin-inline: 0;
+  border-inline-start: 0;
+  border-block-start: 1px solid var(--hy-line-strong);
+}
+:host-context(hy-timeline[data-orientation='horizontal']) .dot {
+  inset-block-start: -0.35rem;
+  inset-inline-start: 0;
+}
+:host-context(hy-timeline[data-orientation='horizontal'][data-alignment='end']) {
+  padding-block: 0 var(--hy-space-8);
+  margin-block: 0 0.5rem;
+  border-block-start: 0;
+  border-block-end: 1px solid var(--hy-line-strong);
+}
+:host-context(hy-timeline[data-orientation='horizontal'][data-alignment='end']) .dot {
+  inset-block: auto -0.35rem;
+}
+:host(:last-child) {
+  border-color: transparent;
+}

@@ -5,4 +5,5 @@ export * from './dialog-ref';
 export * from './dialog-parts';
 export * from './dialog';
 export * from './drawer';
+export * from './dialog-registry';
 export { type HySurfaceConfig } from './open-surface';

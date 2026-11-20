@@ -1,7 +1,11 @@
 :host {
   display: block;
+  container: hy-description-list / inline-size;
 }
 dl {
+  --hy-description-columns: var(--hy-description-columns-wide);
+  display: grid;
+  grid-template-columns: repeat(var(--hy-description-columns), minmax(0, 1fr));
   margin: 0;
 }
 dl > div {
@@ -19,9 +23,16 @@ dd {
   color: var(--hy-ink);
   overflow-wrap: anywhere;
 }
-@media (max-width: 30rem) {
+dl.stacked > div {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.25rem;
+}
+@container hy-description-list (max-width: 30rem) {
+  dl {
+    --hy-description-columns: var(--hy-description-columns-compact);
+  }
   dl > div {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.25rem;
   }
 }

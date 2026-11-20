@@ -9,7 +9,6 @@ import {
   linkedSignal,
   model,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -17,7 +16,7 @@ import { CdkTrapFocus } from '@angular/cdk/a11y';
 import type { FormValueControl } from '@angular/forms/signals';
 import { HyValueControl } from '@hyalo/angular/field';
 import { hyDropdownPositions } from '@hyalo/angular/overlay';
-import { HyCalendar } from './calendar';
+import { HyCalendar, type HyCalendarOptions } from './calendar';
 import { HY_DATE_ADAPTER, type HyDate, type HyDateAdapter } from './date-adapter';
 @Component({
   selector: 'hy-date-picker',
@@ -36,12 +35,37 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
   readonly max = input<HyDate>();
   readonly referenceDate = input<HyDate>('2026-01-01');
   readonly isDateDisabled = input<(date: HyDate) => boolean>(() => false);
+  readonly calendarOptions = input<HyCalendarOptions>({});
+  protected readonly defaultCellClass = (): string => '';
+  protected readonly defaultCalendarLabels = {
+    previous: 'Previous month',
+    next: 'Next month',
+    chooseMonth: 'Choose month',
+    chooseYear: 'Choose year',
+    week: 'Week',
+  };
+  readonly touchUi = input(false);
+  readonly closeLabel = input('Close calendar');
+  readonly dialogLabel = input('Choose date');
+  readonly opened = model(false);
+  readonly opening = output<void>();
+  readonly openedPanel = output<void>();
+  readonly closedPanel = output<void>();
+  readonly visibilityChange = output<boolean>();
   protected readonly positions = hyDropdownPositions();
-  protected readonly open = signal(false);
+  protected readonly open = this.opened;
   constructor() {
     super();
     effect(() => {
       if (this.blocked()) this.open.set(false);
+    });
+    let wasOpen = false;
+    effect(() => {
+      const open = this.open();
+      if (open === wasOpen) return;
+      wasOpen = open;
+      this.visibilityChange.emit(open);
+      if (open) this.opening.emit();
     });
     effect(() => this.validationChange.emit(this.validationError()));
     afterRenderEffect(() =>
@@ -89,10 +113,11 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
     this.draft.set(text);
     (event.target as HTMLInputElement).setCustomValidity(this.error());
   }
-  protected show(): void {
+  show(): void {
     if (!this.blocked()) this.open.set(true);
   }
   protected attached(): void {
+    this.openedPanel.emit();
     queueMicrotask(() => this.calendar()?.focusActive());
   }
   protected pick(date: HyDate): void {
@@ -101,10 +126,17 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
     this.error.set('');
     this.close();
   }
-  protected close(restore = true): void {
+  close(restore = true): void {
     this.open.set(false);
     this.touch.emit();
     if (restore) this.focus();
+  }
+  hide(): void {
+    this.close();
+  }
+  toggle(): void {
+    if (this.open()) this.close();
+    else this.show();
   }
   protected keys(event: KeyboardEvent): void {
     if (event.key === 'Escape') {

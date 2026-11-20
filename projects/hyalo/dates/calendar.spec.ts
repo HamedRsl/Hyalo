@@ -39,6 +39,31 @@ describe('calendar interaction', () => {
     const active = fixture.nativeElement.querySelector('button[data-date][tabindex="0"]');
     expect(new HyJalaliDateAdapter().parts(active.getAttribute('data-date')).year).toBe(1405);
   });
+  it('clears the live range preview when hovering a disabled endpoint', async () => {
+    const fixture = TestBed.createComponent(HyCalendar);
+    fixture.componentRef.setInput('rangeMode', true);
+    fixture.componentRef.setInput('isDateDisabled', (date: string) => date === '2026-01-13');
+    const previews: unknown[] = [];
+    fixture.componentInstance.rangePreview.subscribe((range) => previews.push(range));
+    await fixture.whenStable();
+    const day = (date: string): HTMLButtonElement =>
+      fixture.nativeElement.querySelector('button[data-date="' + date + '"]');
+    day('2026-01-10').click();
+    day('2026-01-12').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(previews.at(-1)).toEqual({ start: '2026-01-10', end: '2026-01-12' });
+    expect(fixture.nativeElement.querySelectorAll('[data-preview="true"]').length).toBe(3);
+
+    day('2026-01-13').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(previews.at(-1)).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('[data-preview="true"]').length).toBe(0);
+    expect(fixture.componentInstance.range()).toBeNull();
+
+    day('2026-01-12').click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.range()).toEqual({ start: '2026-01-10', end: '2026-01-12' });
+  });
   it('clears a stale value when a date draft is invalid', async () => {
     const fixture = TestBed.createComponent(HyDatePicker);
     fixture.componentRef.setInput('value', '2026-11-16');

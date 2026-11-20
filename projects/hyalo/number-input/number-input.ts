@@ -15,7 +15,7 @@ import { parseLocaleNumber } from '@hyalo/angular/core';
 @Component({
   selector: 'hy-number-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '(focusout)': 'leave($event)' },
+  host: { '(focusout)': 'leave($event)', '[attr.data-buttons]': 'buttonLayout()' },
   templateUrl: './number-input.html',
   styleUrl: './number-input.css',
 })
@@ -26,10 +26,21 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
   readonly min = input<number>();
   readonly max = input<number>();
   readonly step = input(1);
+  readonly formatOptions = input<Intl.NumberFormatOptions>({});
+  readonly useGrouping = input(true);
+  readonly precision = input<number>();
+  readonly parser = input<(text: string) => number | undefined>();
+  readonly formatter = input<(value: number) => string>();
+  readonly buttonLayout = input<'horizontal' | 'stacked' | 'hidden'>('horizontal');
+  readonly stepMode = input<'add' | 'snap'>('add');
+  readonly stepped = output<{ value: number; direction: number }>();
+  readonly currencyDisplay = input<'symbol' | 'narrowSymbol' | 'code' | 'name'>('symbol');
   protected readonly formatted = computed(() =>
     this.value() === null
       ? ''
-      : new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 12 }).format(
+      : this.formatter()?.(this.value() as number) ?? new Intl.NumberFormat(this.locale(), {
+          maximumFractionDigits: this.precision() ?? 12, useGrouping: this.useGrouping(), ...this.formatOptions(),
+        }).format(
           this.value() as number,
         ),
   );
@@ -55,7 +66,7 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
       ? new Intl.NumberFormat(this.locale(), {
           style: 'currency',
           currency: this.currency(),
-          currencyDisplay: 'symbol',
+          currencyDisplay: this.currencyDisplay(),
         })
           .formatToParts(0)
           .find((p) => p.type === 'currency')?.value
@@ -64,13 +75,15 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
   protected update(event: Event): void {
     if (this.blocked() || ('isComposing' in event && event.isComposing)) return;
     const text = (event.target as HTMLInputElement).value;
-    const number = parseLocaleNumber(text, this.locale());
+    const parser = this.parser();
+    const number = parser ? parser(text) : parseLocaleNumber(text, this.locale());
     const bad =
       !!text.trim() &&
-      (number === undefined ||
+      (number === undefined || !Number.isFinite(number) ||
         number < (this.min() ?? -Infinity) ||
         number > (this.max() ?? Infinity));
-    this.value.set(bad ? null : (number ?? null));
+    const precision = this.precision();
+    this.value.set(bad ? null : number === undefined ? null : precision === undefined ? number : Number(number.toFixed(Math.min(20, Math.max(0, precision)))));
     this.parseError.set(bad);
     this.draft.set(text);
     (event.target as HTMLInputElement).setCustomValidity(this.validationError() ?? '');
@@ -79,16 +92,19 @@ export class HyNumberInput extends HyValueControl implements FormValueControl<nu
     if (this.blocked()) return;
     const step = this.step();
     if (!Number.isFinite(step) || step <= 0) return;
+    const base = this.value() ?? 0;
+    const stepped = this.stepMode() === 'snap' ? (Math.round((base - (this.min() ?? 0)) / step) + direction) * step + (this.min() ?? 0) : base + direction * step;
     const next = Math.min(
       this.max() ?? Infinity,
       Math.max(
         this.min() ?? -Infinity,
-        Number(((this.value() ?? 0) + direction * step).toFixed(12)),
+        Number(stepped.toFixed(Math.min(20, Math.max(0, this.precision() ?? 12)))),
       ),
     );
     this.value.set(next);
     this.draft.set(this.formatted());
     this.parseError.set(false);
+    this.stepped.emit({ value: next, direction });
   }
   protected arrows(event: KeyboardEvent): void {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;

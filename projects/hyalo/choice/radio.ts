@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  signal,
 } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 import { injectId } from '@hyalo/angular/core';
@@ -51,6 +52,8 @@ export class HyRadioGroup<T> implements FormValueControl<T | undefined> {
   readonly name = input('');
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly formDisabled = signal(false);
+  readonly effectiveDisabled = computed(() => this.disabled() || this.formDisabled());
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly touched = input(false, { transform: booleanAttribute });
@@ -87,7 +90,10 @@ export class HyRadio<T> {
   /** Secondary text under the label. */
   readonly description = input<string>();
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly disabledFocusable = input(false, { transform: booleanAttribute });
+  readonly labelPosition = input<'before' | 'after'>('after');
 
   protected readonly checked = computed(() => this.group.value() === this.value());
-  protected readonly isDisabled = computed(() => this.disabled() || this.group.disabled());
+  protected readonly isDisabled = computed(() => this.disabled() || this.group.effectiveDisabled());
+  protected guard(event: MouseEvent): void { if (this.isDisabled()) event.preventDefault(); }
 }

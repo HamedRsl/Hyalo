@@ -12,6 +12,7 @@ export type HySkeletonAnimation = 'shimmer' | 'pulse' | 'none';
     '[attr.data-animation]': 'animation()',
     '[style.inline-size]': 'width()',
     '[style.block-size]': 'height()',
+    '[style.border-radius]': 'radius() ?? null',
   },
   template: '',
   styleUrl: './skeleton.css',
@@ -23,4 +24,5 @@ export class HySkeleton {
   readonly shape = input<'text' | 'circle' | 'rect'>('text');
   readonly width = input('100%');
   readonly height = input('1em');
+  readonly radius = input<string>();
 }

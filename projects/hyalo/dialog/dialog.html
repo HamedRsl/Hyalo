@@ -3,10 +3,11 @@
   <p hyDialogContent>{{ data.message }}</p>
 }
 <div hyDialogActions>
-  <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="false">
+  <button hyButton variant="ghost" tone="neutral" [hyDialogClose]="false" [disabled]="pending()">
     {{ data.cancelLabel ?? 'Cancel' }}
   </button>
-  <button hyButton [tone]="data.tone ?? 'primary'" [hyDialogClose]="true">
+  <button hyButton [tone]="data.tone ?? 'primary'" [disabled]="pending()" [attr.aria-busy]="pending() || null" (click)="confirm()">
     {{ data.confirmLabel ?? 'Confirm' }}
   </button>
 </div>
+@if (failed()) { <p role="alert">{{ data.errorMessage ?? 'The action could not be completed. Try again.' }}</p> }

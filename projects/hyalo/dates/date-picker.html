@@ -4,7 +4,7 @@
     inputmode="numeric"
     [id]="id()"
     [name]="name()"
-    [disabled]="disabled()"
+    [disabled]="effectiveDisabled()"
     [readOnly]="readonly()"
     [required]="required()"
     [attr.aria-label]="label() || null"
@@ -38,19 +38,37 @@
   [cdkConnectedOverlayOrigin]="origin"
   [cdkConnectedOverlayOpen]="open()"
   [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayHasBackdrop]="touchUi()"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-dark-backdrop"
+  (backdropClick)="close()"
+  (detach)="closedPanel.emit()"
   (attach)="attached()"
   (overlayOutsideClick)="close(false)"
   (overlayKeydown)="keys($event)"
 >
   <div
     class="date-panel"
+    [attr.data-touch]="touchUi() || null"
+    [style.inline-size]="
+      calendarOptions().months && calendarOptions().months! > 1 ? 'min(90vw, 72rem)' : null
+    "
     role="dialog"
     aria-modal="true"
-    [attr.aria-label]="label() || 'Choose date'"
+    [attr.aria-label]="label() || dialogLabel()"
     cdkTrapFocus
     [cdkTrapFocusAutoCapture]="true"
   >
     <hy-calendar
+      [labels]="calendarOptions().labels ?? defaultCalendarLabels"
+      [months]="calendarOptions().months ?? 1"
+      [view]="calendarOptions().view ?? 'month'"
+      [firstDayOfWeek]="calendarOptions().firstDayOfWeek"
+      [showWeekNumbers]="calendarOptions().showWeekNumbers ?? false"
+      [outsideDays]="calendarOptions().outsideDays ?? 'visible'"
+      [cellClass]="calendarOptions().cellClass ?? defaultCellClass"
+      [cellTemplate]="calendarOptions().cellTemplate"
+      [headerTemplate]="calendarOptions().headerTemplate"
+      [comparisonRange]="calendarOptions().comparisonRange"
       [value]="value() ?? undefined"
       (selected)="pick($event)"
       [adapter]="adapter()"
@@ -60,6 +78,6 @@
       [referenceDate]="referenceDate()"
       [isDateDisabled]="isDateDisabled()"
     />
-    <button type="button" (click)="close()">Close calendar</button>
+    <button type="button" (click)="close()">{{ closeLabel() }}</button>
   </div>
 </ng-template>

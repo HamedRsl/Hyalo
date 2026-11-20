@@ -21,6 +21,9 @@ export abstract class HyValueControl {
   readonly label = input('');
   readonly name = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Disabled state owned by the optional classic forms bridge. */
+  readonly formDisabled = signal(false);
+  protected readonly effectiveDisabled = computed(() => this.disabled() || this.formDisabled());
   readonly readonly = input(false, { transform: booleanAttribute });
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
@@ -32,7 +35,7 @@ export abstract class HyValueControl {
   protected readonly showsError = computed(
     () => this.field?.errorShown() ?? (this.invalid() && this.touched()),
   );
-  protected readonly blocked = computed(() => this.disabled() || this.readonly());
+  protected readonly blocked = computed(() => this.effectiveDisabled() || this.readonly());
   constructor() {
     const labelable = (): boolean => this.labelable;
     this.field?.register({
@@ -41,9 +44,11 @@ export abstract class HyValueControl {
         return labelable();
       },
       composite: true,
-      disabled: this.disabled,
+      disabled: this.effectiveDisabled,
       required: this.required,
       invalid: computed(() => this.invalid() && this.touched()),
+      rawInvalid: this.invalid,
+      touched: this.touched,
       errorMessage: this.errorMessage,
     });
   }

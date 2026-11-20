@@ -217,3 +217,5 @@
     background: Highlight;
   }
 }
+
+:host([data-label-position='before']) .hy-choice__row { flex-direction: row-reverse; }

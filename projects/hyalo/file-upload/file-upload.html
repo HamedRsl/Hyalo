@@ -5,33 +5,42 @@
   (dragleave)="drag($event, false)"
   (drop)="drop($event)"
 >
-  <label [attr.for]="id()">{{ label() || 'Choose files or drop them here' }}</label>
+  <label [attr.for]="id()">{{ label() || labels().choose || 'Choose files or drop them here' }}</label>
   <input
     type="file"
     [id]="id()"
     [disabled]="blocked()"
     [multiple]="multiple()"
+    [attr.webkitdirectory]="directory() ? '' : null"
+    [attr.aria-busy]="preparing() || null"
     [accept]="accept()"
     [required]="required() && !value().length"
     [attr.aria-describedby]="describedBy()"
     (change)="browse($event)"
   />
   <p class="message">
-    Maximum {{ maxSize() / 1024 / 1024 }} MB per file. Files stay on this device until your
-    application uploads them.
+    {{ labels().help?.(maxSize()) ?? ('Maximum ' + maxSize() / 1024 / 1024 + ' MB per file. Files stay on this device until your application uploads them.') }}
   </p>
 </div>
+<ng-container [ngTemplateOutlet]="toolbarTemplate() ?? null" [ngTemplateOutletContext]="{ $implicit: value(), upload: upload.bind(this) }" />
+@if (!value().length) { <ng-container [ngTemplateOutlet]="emptyTemplate() ?? null" /> }
 <ul>
   @for (file of value(); track $index) {
     <li>
-      {{ file.name }} ({{ file.size }} bytes)
+      @if (fileTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: file, state: state(file) }" />
+      } @else { {{ file.name }} ({{ file.size }} bytes) }
+      @if (state(file).status !== 'idle') { <span role="status">{{ state(file).status }} @if (state(file).progress !== null) { {{ state(file).progress }}% }</span> }
+      @if (state(file).previewUrl; as url) { <img [src]="url" [alt]="file.name" /> }
+      @if (previewFile()) { <button type="button" (click)="preview(file)">{{ labels().preview ?? 'Preview' }}</button> }
+      @if (downloadFile()) { <button type="button" (click)="download(file)">{{ labels().download ?? 'Download' }}</button> }
       <button
         type="button"
         [disabled]="blocked()"
-        [attr.aria-label]="'Remove ' + file.name"
+        [attr.aria-label]="(labels().remove ?? 'Remove') + ' ' + file.name"
         (click)="remove($index)"
       >
-        Remove
+        {{ labels().remove ?? 'Remove' }}
       </button>
     </li>
   }

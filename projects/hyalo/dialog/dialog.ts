@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/portal';
-import { ChangeDetectionStrategy, Component, Injectable, TemplateRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, TemplateRef, inject, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 
 import { HyFidelity, type HyTone } from '@hyalo/angular/core';
@@ -9,6 +9,7 @@ import { HyMotion } from '@hyalo/angular/motion';
 import { HY_DIALOG_DATA, HyDialogRef } from './dialog-ref';
 import { HY_DIALOG_PARTS } from './dialog-parts';
 import { openSurface, type HySurfaceConfig } from './open-surface';
+import { HyDialogRegistry } from './dialog-registry';
 
 /** Dialog width. `full` fills the screen on small viewports. */
 export type HyDialogSize = 'sm' | 'md' | 'lg' | 'full';
@@ -34,6 +35,9 @@ export interface HyConfirmOptions {
   readonly cancelLabel?: string;
   /** Use `danger` for destructive actions. */
   readonly tone?: HyTone;
+  /** Returning false keeps the confirmation open. Errors are exposed as accessible text. */
+  readonly confirm?: () => boolean | void | Promise<boolean | void>;
+  readonly errorMessage?: string;
 }
 
 @Component({
@@ -44,6 +48,17 @@ export interface HyConfirmOptions {
 })
 class HyConfirmDialog {
   protected readonly data = inject(HY_DIALOG_DATA) as HyConfirmOptions;
+  protected readonly ref = inject(HyDialogRef<boolean>);
+  protected readonly pending = signal(false);
+  protected readonly failed = signal(false);
+  protected async confirm(): Promise<void> {
+    if (this.pending()) return;
+    this.pending.set(true);
+    this.failed.set(false);
+    try { if ((await this.data.confirm?.()) !== false) this.ref.close(true, 'action'); }
+    catch { this.failed.set(true); }
+    finally { this.pending.set(false); }
+  }
 }
 
 /**
@@ -69,6 +84,11 @@ export class HyDialog {
   private readonly cdk = inject(Dialog);
   private readonly motion = inject(HyMotion);
   private readonly fidelity = inject(HyFidelity);
+  private readonly registry = inject(HyDialogRegistry);
+  readonly openDialogs = this.registry.openDialogs;
+  readonly afterAllClosed = this.registry.afterAllClosed;
+  getById(id: string): HyDialogRef | undefined { return this.registry.getById(id); }
+  closeAll(): void { this.registry.closeAll(); }
 
   /** Opens a component or template as a dialog. */
   open<R = unknown, D = unknown>(
@@ -76,10 +96,10 @@ export class HyDialog {
     config: HyDialogConfig<D> = {},
   ): HyDialogRef<R> {
     const size = config.size ?? 'md';
-    return openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
+    return this.registry.track(openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
       panelClass: ['hy-dialog-pane', `hy-dialog--${size}`],
       maxWidth: MAX_WIDTH[size],
-    });
+    }));
   }
 
   /** Asks a yes or no question. Resolves to true only when confirmed. */

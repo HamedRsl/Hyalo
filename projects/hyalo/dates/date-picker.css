@@ -103,3 +103,11 @@ label:has(input:checked) {
   color: var(--hy-ink);
   box-shadow: var(--hy-shadow-m);
 }
+.date-panel[data-touch] {
+  position: fixed;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+  max-block-size: 90vh;
+  overflow: auto;
+}

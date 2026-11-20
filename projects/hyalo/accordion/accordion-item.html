@@ -5,19 +5,26 @@
     ngAccordionTrigger
     [panel]="panel"
     [(expanded)]="expanded"
-    [disabled]="disabled()"
+    [disabled]="disabled() || toggleTrigger() === 'manual'"
   >
     <span class="hy-accordion__label">
       {{ heading() }}
       <ng-content select="[hyAccordionHeading]" />
     </span>
-    <hy-icon class="hy-accordion__chevron" name="chevron-down" />
+    @if (!hideIcon()) {
+      @if (customIcon(); as icon) {
+        <ng-container [ngTemplateOutlet]="icon.template" [ngTemplateOutletContext]="{ $implicit: expanded() }" />
+      } @else { <hy-icon class="hy-accordion__chevron" name="chevron-down" /> }
+    }
   </button>
+  <ng-content select="[hyAccordionActions]" />
 </div>
 <div ngAccordionPanel #panel="ngAccordionPanel" class="hy-accordion__panel">
-  <div class="hy-accordion__body">
+  <div class="hy-accordion__body" (transitionend)="completed($event)">
     <div class="hy-accordion__content">
-      <div class="hy-accordion__inner"><ng-content /></div>
+      <div class="hy-accordion__inner"><ng-content />
+        @if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }
+      </div>
     </div>
   </div>
 </div>

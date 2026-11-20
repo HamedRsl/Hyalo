@@ -82,3 +82,8 @@ tbody tr:last-child td {
   outline: 2px solid var(--hy-primary);
   outline-offset: 3px;
 }
+.frozen { position: sticky; z-index: 2; background: var(--hy-surface-1); }
+.frozen-row { position: sticky; z-index: 2; background: var(--hy-surface-1); }
+.spacer { padding: 0; border: 0; }
+.resizer { display: block; inline-size: 100%; }
+.sr-only { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }

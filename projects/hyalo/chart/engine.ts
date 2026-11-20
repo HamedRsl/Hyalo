@@ -12,6 +12,12 @@ import {
   Tooltip,
   Legend,
   Filler,
+  PieController,
+  RadarController,
+  PolarAreaController,
+  ScatterController,
+  BubbleController,
+  RadialLinearScale,
 } from 'chart.js';
 Chart.register(
   LineController,
@@ -26,5 +32,11 @@ Chart.register(
   Tooltip,
   Legend,
   Filler,
+  PieController,
+  RadarController,
+  PolarAreaController,
+  ScatterController,
+  BubbleController,
+  RadialLinearScale,
 );
 export { Chart };

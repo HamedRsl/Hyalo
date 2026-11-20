@@ -1,5 +1,6 @@
 @if (visible()) {
   <section [attr.role]="announce() ? (tone() === 'danger' ? 'alert' : 'status') : null">
+    <ng-content select="[hyAlertIcon]" />
     <div>
       @if (heading()) {
         <strong>{{ heading() }}</strong>
@@ -8,7 +9,7 @@
     </div>
     @if (dismissible()) {
       <button type="button" [attr.aria-label]="dismissLabel()" (click)="dismiss()">
-        <span aria-hidden="true">×</span>
+        <ng-content select="[hyAlertCloseIcon]"><span aria-hidden="true">×</span></ng-content>
       </button>
     }
   </section>

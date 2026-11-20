@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal, output } from '@angular/core';
+import { HyIcon } from '@hyalo/angular/icon';
 import type { HySize } from '@hyalo/angular/core';
 @Component({
   selector: 'hy-avatar',
+  imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { role: 'img', '[attr.aria-label]': 'name()', '[attr.data-size]': 'size()' },
+  host: { role: 'img', '[attr.aria-label]': 'name()', '[attr.data-size]': 'size()', '[style.border-radius]': 'shape() === "circle" ? "50%" : "var(--hy-radius-m)"' },
   templateUrl: './avatar.html',
   styleUrl: './avatar.css',
 })
@@ -11,6 +13,17 @@ export class HyAvatar {
   readonly name = input.required<string>();
   readonly src = input('');
   readonly size = input<HySize>('md');
+  readonly shape = input<'circle' | 'square'>('circle');
+  readonly srcset = input('');
+  readonly sizes = input('');
+  readonly loading = input<'eager' | 'lazy'>('eager');
+  readonly fetchPriority = input<'auto' | 'high' | 'low'>('auto');
+  readonly icon = input<string>();
+  readonly imageError = output<Event>();
+  protected fail(event: Event): void {
+    this.failedSrc.set(this.src());
+    this.imageError.emit(event);
+  }
   protected readonly failedSrc = signal<string | null>(null);
   protected readonly initials = computed(() =>
     this.name()

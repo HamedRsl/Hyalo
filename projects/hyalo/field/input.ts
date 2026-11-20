@@ -70,6 +70,23 @@ export class HyInput implements HyFieldControl, DoCheck {
     return state ? state.invalid() && state.touched() : !!control?.invalid && control.touched;
   });
 
+  readonly rawInvalid = computed(() => {
+    this.revision();
+    return this.formField?.state().invalid() ?? !!this.ngControl?.control?.invalid;
+  });
+  readonly touched = computed(() => {
+    this.revision();
+    return this.formField?.state().touched() ?? !!this.ngControl?.control?.touched;
+  });
+  readonly dirty = computed(() => {
+    this.revision();
+    return this.formField?.state().dirty() ?? !!this.ngControl?.control?.dirty;
+  });
+  readonly pending = computed(() => {
+    this.revision();
+    return this.formField?.state().pending() ?? !!this.ngControl?.control?.pending;
+  });
+
   readonly errorMessage = computed(() => {
     this.revision();
     const control = this.ngControl?.control;

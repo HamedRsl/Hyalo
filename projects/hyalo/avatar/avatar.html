@@ -1,5 +1,7 @@
 @if (src() && failedSrc() !== src()) {
-  <img [src]="src()" alt="" (error)="failedSrc.set(src())" />
+  <img [src]="src()" [attr.srcset]="srcset() || null" [attr.sizes]="sizes() || null" [loading]="loading()" [attr.fetchpriority]="fetchPriority()" alt="" (error)="fail($event)" />
+} @else if (icon(); as name) {
+  <hy-icon [name]="name" />
 } @else {
   <span aria-hidden="true">{{ initials() }}</span>
 }

@@ -5,6 +5,8 @@ import {
   input,
   model,
   output,
+  signal,
+  computed,
 } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
 import { injectId } from '@hyalo/angular/core';
@@ -30,6 +32,7 @@ import { HyIcon } from '@hyalo/angular/icon';
     '[attr.data-indeterminate]': 'indeterminate() || null',
     '[attr.data-disabled]': 'disabled() || null',
     '[attr.data-invalid]': '(invalid() && touched()) || null',
+    '[attr.data-label-position]': 'labelPosition()',
   },
   templateUrl: './checkbox.html',
   styleUrl: './choice.css',
@@ -45,6 +48,12 @@ export class HyCheckbox implements FormCheckboxControl {
   readonly description = input<string>();
   readonly name = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly formDisabled = signal(false);
+  protected readonly effectiveDisabled = computed(() => this.disabled() || this.formDisabled());
+  readonly readonly = input(false, { transform: booleanAttribute });
+  readonly disabledFocusable = input(false, { transform: booleanAttribute });
+  readonly labelPosition = input<'before' | 'after'>('after');
+  readonly clickAction = input<'check-indeterminate' | 'check' | 'noop'>('check-indeterminate');
   readonly required = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly touched = input(false, { transform: booleanAttribute });
@@ -52,7 +61,14 @@ export class HyCheckbox implements FormCheckboxControl {
   readonly touch = output<void>();
 
   protected onChange(event: Event): void {
-    this.indeterminate.set(false);
+    if (this.effectiveDisabled() || this.readonly() || this.clickAction() === 'noop') {
+      (event.target as HTMLInputElement).checked = this.checked();
+      return;
+    }
+    if (this.clickAction() === 'check-indeterminate') this.indeterminate.set(false);
     this.checked.set((event.target as HTMLInputElement).checked);
+  }
+  protected guard(event: MouseEvent): void {
+    if (this.effectiveDisabled() || this.readonly() || this.clickAction() === 'noop') event.preventDefault();
   }
 }

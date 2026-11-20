@@ -35,8 +35,8 @@
           [variant]="navPosition() === 'below' ? 'glass' : 'solid'"
           [iconOnly]="navigation() === 'icons'"
           [attr.aria-label]="previousLabel()"
-          [disabled]="!slides().length || (!loop() && current() === 0)"
-          (click)="goTo(current() - 1)"
+          [disabled]="!canPrevious()"
+          (click)="movePage(-1)"
         >
           @if (navigation() === 'icons') {
             <hy-icon class="previous-icon" name="chevron-end" />
@@ -48,7 +48,7 @@
     }
     @if (pagination() === 'dots') {
       <div class="dots" role="group" [attr.aria-label]="paginationLabel()">
-        @for (slide of slides(); track slide; let i = $index) {
+        @for (slide of positions(); track slide; let i = $index) {
           <button
             type="button"
             [attr.aria-label]="slide.label()"
@@ -61,7 +61,7 @@
       </div>
     }
     <span [class.sr-only]="pagination() !== 'counter'" aria-live="polite" aria-atomic="true"
-      >{{ slides().length ? current() + 1 : 0 }} / {{ slides().length }}</span
+      >{{ positions().length ? current() + 1 : 0 }} / {{ positions().length }}</span
     >
     @if (navigation() !== 'none' && !customNavigation()) {
       <button
@@ -71,8 +71,8 @@
         [variant]="navPosition() === 'below' ? 'glass' : 'solid'"
         [iconOnly]="navigation() === 'icons'"
         [attr.aria-label]="nextLabel()"
-        [disabled]="!slides().length || (!loop() && current() >= slides().length - 1)"
-        (click)="goTo(current() + 1)"
+        [disabled]="!canNext()"
+        (click)="movePage(1)"
       >
         @if (navigation() === 'icons') {
           <hy-icon name="chevron-end" />

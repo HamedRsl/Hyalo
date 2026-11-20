@@ -135,3 +135,26 @@ td button {
   opacity: 0.4;
   cursor: not-allowed;
 }
+.calendar-months {
+  display: flex;
+  gap: var(--hy-space-4);
+  flex-wrap: wrap;
+}
+.calendar-month {
+  inline-size: 23rem;
+  max-inline-size: 100%;
+}
+.calendar:has(.calendar-month + .calendar-month) {
+  inline-size: 100%;
+}
+.calendar-choices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--hy-space-2);
+}
+[data-preview] {
+  background: var(--hy-primary-wash);
+}
+[data-comparison] {
+  box-shadow: inset 0 -3px var(--hy-ink-3);
+}

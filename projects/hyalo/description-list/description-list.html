@@ -1,4 +1,8 @@
-<dl>
+<dl
+  [class.stacked]="layout() === 'stacked'"
+  [style.--hy-description-columns-compact]="columnCounts().compact"
+  [style.--hy-description-columns-wide]="columnCounts().wide"
+>
   @for (item of items(); track $index) {
     <div>
       <dt>{{ item.term }}</dt>

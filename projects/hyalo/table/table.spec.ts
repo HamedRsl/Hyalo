@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { describe, expect, it } from 'vitest';
 import { HyTable, type HyTableColumn } from './table';
 import { expectNoAxeViolations } from '../src/testing/axe';
 interface Project {
@@ -55,6 +56,30 @@ describe('HyTable', () => {
     await fixture.whenStable();
     instance.toggleAll();
     expect(instance.selected()).toEqual(['other', 'a']);
+  });
+  it('renders matching rows after filtering a scrolled virtual table', async () => {
+    const fixture = await setup();
+    const instance = fixture.componentInstance;
+    fixture.componentRef.setInput('data', [
+      ...data,
+      ...Array.from({ length: 30 }, (_, i) => ({ id: `extra-${i}`, name: 'Other', cost: i })),
+    ]);
+    fixture.componentRef.setInput('virtual', true);
+    fixture.componentRef.setInput('overscan', 0);
+    await fixture.whenStable();
+
+    const viewport = fixture.nativeElement.querySelector('.viewport') as HTMLElement;
+    Object.defineProperty(viewport, 'clientHeight', { value: 96 });
+    viewport.scrollTop = 48 * 20;
+    viewport.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+    expect(instance.view().map((row) => row.key)).toEqual(['extra-18', 'extra-19']);
+
+    instance.setFilter('name', 'alpha');
+    await fixture.whenStable();
+    expect(instance.view().map((row) => row.key)).toEqual(['b']);
+    expect(viewport.querySelector('tbody')?.textContent).toContain('Alpha');
+    expect(viewport.textContent).not.toContain('No results');
   });
   it('supports native checkboxes and handles empty loading results', async () => {
     const fixture = await setup();

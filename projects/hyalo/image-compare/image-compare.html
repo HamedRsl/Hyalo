@@ -7,12 +7,21 @@
     [style.clip-path]="clip()"
     draggable="false"
   />
-  <span class="handle" aria-hidden="true" [style.left.%]="position()">‖</span>
+  <span
+    class="handle"
+    aria-hidden="true"
+    [class.vertical]="vertical()"
+    [style.inset-inline-start.%]="vertical() ? null : position()"
+    [style.inset-block-end.%]="vertical() ? position() : null"
+    ><span>‖</span></span
+  >
 </div>
 <label [for]="id">{{ label() }}: {{ position() }}%</label>
 <input
   [id]="id"
   type="range"
+  [class.vertical]="vertical()"
+  [attr.aria-orientation]="orientation()"
   min="0"
   max="100"
   step="1"

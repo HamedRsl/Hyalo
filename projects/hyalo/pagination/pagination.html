@@ -2,16 +2,18 @@
   <button
     type="button"
     [attr.aria-label]="previousLabel()"
-    [disabled]="current() === 1"
+    [disabled]="disabled() || current() === 1"
     (click)="go(current() - 1)"
   >
     <span aria-hidden="true" class="arrow">‹</span>
   </button>
-  @for (item of pages(); track $index) {
+  <ng-content select="[hyPaginationStart]" />
+  @if (showLinks()) { @for (item of pages(); track $index) {
     @if (item) {
       <button
         type="button"
-        [attr.aria-label]="'Page ' + item.label"
+        [attr.aria-label]="pageLabel()(item.label)"
+        [disabled]="disabled()"
         [attr.aria-current]="item.value === current() ? 'page' : null"
         (click)="go(item.value)"
       >
@@ -21,12 +23,17 @@
       <span aria-hidden="true">…</span>
     }
   }
+  }
   <button
     type="button"
     [attr.aria-label]="nextLabel()"
-    [disabled]="current() === pageCount()"
+    [disabled]="disabled() || current() === pageCount()"
     (click)="go(current() + 1)"
   >
     <span aria-hidden="true" class="arrow">›</span>
   </button>
+  @if (pageSizes().length) { <label>{{ pageSizeLabel() }}<select [disabled]="disabled()" [value]="pageSize()" (change)="changePageSize(+$any($event.target).value)">@for (size of pageSizes(); track size) { <option [value]="size">{{ size }}</option> }</select></label> }
+  @if (showJump()) { <label>{{ jumpLabel() }}<input type="number" min="1" [max]="pageCount()" [value]="current()" [disabled]="disabled()" (change)="go(+$any($event.target).value)" /></label> }
+  @if (reportTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="report()" /> }
+  <ng-content select="[hyPaginationEnd]" />
 </nav>

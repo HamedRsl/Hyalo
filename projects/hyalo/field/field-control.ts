@@ -12,6 +12,11 @@ export interface HyFieldControl {
   readonly id: Signal<string>;
   /** True when the field should show as invalid. */
   readonly invalid: Signal<boolean>;
+  /** Unfiltered validity, for policies such as showing errors on submit. */
+  readonly rawInvalid?: Signal<boolean>;
+  readonly touched?: Signal<boolean>;
+  readonly dirty?: Signal<boolean>;
+  readonly pending?: Signal<boolean>;
   /** First error message to show, if any. */
   readonly errorMessage: Signal<string | undefined>;
   readonly required: Signal<boolean>;

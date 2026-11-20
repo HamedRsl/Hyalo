@@ -7,17 +7,18 @@
   [attr.aria-invalid]="showsError() || null"
   [attr.aria-required]="required() || null"
 >
-  @for (choice of choices(); track choice.value) {
+  @for (choice of choices(); track choice.value; let first = $first) {
     <label class="score"
       ><input
         type="radio"
-        [id]="choice.value === 1 ? id() : id() + '-' + choice.value"
+        [id]="first ? id() : id() + '-' + choice.value"
         [name]="name() || id()"
         [value]="choice.value"
         [checked]="value() === choice.value"
         [disabled]="blocked()"
         [required]="required()"
-        [attr.aria-label]="choice.text + ' out of ' + choices().length"
+        [attr.aria-label]="choice.text + ' out of ' + maximumText()"
+        (click)="clearChoice($event, choice.value)"
         (change)="choose($event)"
       /><span aria-hidden="true">{{ choice.text }}</span></label
     >

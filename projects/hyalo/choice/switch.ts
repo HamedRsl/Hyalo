@@ -6,6 +6,7 @@ import {
   model,
   output,
   signal,
+  computed,
 } from '@angular/core';
 import type { FormCheckboxControl } from '@angular/forms/signals';
 import { injectId } from '@hyalo/angular/core';
@@ -37,6 +38,8 @@ const PRESSED_THUMB = 1.5;
     class: 'hy-choice hy-switch',
     '[attr.data-checked]': 'checked() || null',
     '[attr.data-disabled]': 'disabled() || null',
+    '[attr.data-label-position]': 'labelPosition()',
+    '[attr.aria-busy]': 'pending() || null',
   },
   templateUrl: './switch.html',
   styleUrl: './choice.css',
@@ -56,16 +59,29 @@ export class HySwitch implements FormCheckboxControl {
   readonly description = input<string>();
   readonly name = input('');
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly formDisabled = signal(false);
+  protected readonly effectiveDisabled = computed(() => this.disabled() || this.formDisabled() || this.pending());
+  readonly pending = input(false, { transform: booleanAttribute });
+  readonly controlled = input(false, { transform: booleanAttribute });
+  readonly disabledFocusable = input(false, { transform: booleanAttribute });
+  readonly labelPosition = input<'before' | 'after'>('after');
+  readonly toggleRequested = output<boolean>();
+  private request(value: boolean): void {
+    if (this.effectiveDisabled()) return;
+    this.toggleRequested.emit(value);
+    if (!this.controlled()) this.checked.set(value);
+  }
   readonly required = input(false, { transform: booleanAttribute });
   /** Emits when focus leaves the switch. */
   readonly touch = output<void>();
 
   protected onChange(event: Event): void {
-    this.checked.set((event.target as HTMLInputElement).checked);
+    this.request((event.target as HTMLInputElement).checked);
+    (event.target as HTMLInputElement).checked = this.checked();
   }
 
   protected onDown(event: PointerEvent): void {
-    if (this.disabled() || event.button !== 0) return;
+    if (this.effectiveDisabled() || event.button !== 0) return;
     const track = event.currentTarget as HTMLElement;
     const rem = parseFloat(getComputedStyle(track.ownerDocument.documentElement).fontSize) || 16;
     const travel = track.clientWidth - 2 * TRACK_PADDING - PRESSED_THUMB * rem;
@@ -105,7 +121,6 @@ export class HySwitch implements FormCheckboxControl {
     // Decided in logical position, so it is the same in both directions.
     const on = press.pos > press.travel / 2;
     if (cancelled) {
-      this.checked.set(on);
       return;
     }
     // The release also clicks the label. That click applies the drag
@@ -113,15 +128,16 @@ export class HySwitch implements FormCheckboxControl {
     this.landed = on;
     setTimeout(() => {
       if (this.landed === null) return;
-      this.checked.set(this.landed);
+      this.request(this.landed);
       this.landed = null;
     });
   }
 
   protected onClick(event: MouseEvent): void {
+    if (this.effectiveDisabled()) { event.preventDefault(); return; }
     if (this.landed === null) return;
     event.preventDefault();
-    this.checked.set(this.landed);
+    this.request(this.landed);
     this.landed = null;
   }
 }

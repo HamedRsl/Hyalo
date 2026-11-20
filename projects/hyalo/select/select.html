@@ -2,7 +2,7 @@
   class="hy-select__native"
   [hidden]="!useNative()"
   [id]="nativeId"
-  [disabled]="disabled() || !useNative()"
+  [disabled]="effectiveDisabled() || !useNative()"
   [required]="required()"
   [name]="useNative() ? name() : undefined"
   [attr.aria-describedby]="field?.describedBy() ?? null"
@@ -19,10 +19,10 @@
         @for (item of group.options; track item.key) {
           <option
             [value]="item.key"
-            [selected]="item.option.value === value()"
+            [selected]="isSelected(item.option.value)"
             [disabled]="item.disabled"
           >
-            {{ item.option.label }}
+            {{ optionLabel(item.option) }}
           </option>
         }
       </optgroup>
@@ -30,10 +30,10 @@
       @for (item of group.options; track item.key) {
         <option
           [value]="item.key"
-          [selected]="item.option.value === value()"
+          [selected]="isSelected(item.option.value)"
           [disabled]="item.disabled"
         >
-          {{ item.option.label }}
+          {{ optionLabel(item.option) }}
         </option>
       }
     }
@@ -50,8 +50,9 @@
   class="hy-select__trigger"
   [hidden]="useNative()"
   [id]="triggerId"
-  [disabled]="disabled() || useNative()"
+  [disabled]="effectiveDisabled() || useNative()"
   [expanded]="expanded()"
+  (keydown)="virtualKeys($event)"
   (expandedChange)="setExpanded($event)"
   [attr.aria-labelledby]="field ? field.labelId + ' ' + triggerId : null"
   [attr.aria-describedby]="field?.describedBy() ?? null"
@@ -59,9 +60,22 @@
   [attr.aria-required]="required() || null"
   (blur)="touch.emit()"
 >
-  <span class="hy-select__value" [class.hy-select__placeholder]="!selectedOption()">{{
-    selectedOption()?.label ?? placeholder()
-  }}</span>
+  <span class="hy-select__value" [class.hy-select__placeholder]="!selectedOption()">
+    @if (selectedTemplate(); as template) {
+      <ng-container
+        [ngTemplateOutlet]="template"
+        [ngTemplateOutletContext]="{ $implicit: value(), option: selectedOption() }"
+      />
+    } @else {
+      {{
+        selectedOption()
+          ? optionLabel(selectedOption()!)
+          : value() !== undefined && displayWith()
+            ? displayWith()!(value()!)
+            : placeholder()
+      }}
+    }
+  </span>
   <hy-icon class="hy-select__chevron" name="chevron-down" />
 </button>
 <ng-template ngComboboxPopup [combobox]="combobox">
@@ -69,9 +83,13 @@
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="origin"
     [cdkConnectedOverlayOpen]="rendered() && !useNative()"
-    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayPositions]="overlayPositions() ?? positions"
+    [cdkConnectedOverlayWidth]="popupWidth() ?? ''"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
+    [cdkConnectedOverlayOffsetX]="offsetX()"
+    [cdkConnectedOverlayOffsetY]="offsetY()"
     [cdkConnectedOverlayMinWidth]="panelWidth()"
-    cdkConnectedOverlayPanelClass="hy-select-overlay"
+    [cdkConnectedOverlayPanelClass]="panelClass()"
     cdkConnectedOverlayTransformOriginOn=".hy-select__panel"
     (attach)="onAttach()"
     (overlayOutsideClick)="expanded.set(false)"
@@ -86,39 +104,99 @@
       data-material="frosted"
       focusMode="activedescendant"
       selectionMode="explicit"
-      [activeDescendant]="listbox.activeDescendant()"
+      [activeDescendant]="virtualized() ? virtualActiveId() : listbox.activeDescendant()"
+      [typeaheadDelay]="typeaheadDelay()"
+      [wrap]="wrap()"
+      [style.max-block-size.px]="viewportHeight()"
+      (scroll)="scrollOptions($event)"
       [value]="listValue()"
       (valueChange)="pick($event)"
       (click)="onPanelClick($event)"
       (keydown.enter)="close()"
       (keydown.space)="close()"
     >
-      @for (group of groups(); track group.key) {
-        <div role="group" [attr.aria-label]="group.label || null">
-          @if (group.label) {
-            <div class="hy-select__group-label">{{ group.label }}</div>
-          }
-          @for (item of group.options; track item.key) {
-            <div
-              ngOption
-              class="hy-select__option"
-              [value]="item.option.value"
-              [label]="item.option.label"
-              [disabled]="item.disabled"
-            >
-              @if (optionTemplate(); as template) {
-                <ng-container
-                  [ngTemplateOutlet]="template"
-                  [ngTemplateOutletContext]="item.context"
-                />
-              } @else {
-                <span>{{ item.option.label }}</span>
-              }
-              <hy-icon class="hy-select__check" name="check" />
-            </div>
-          }
-        </div>
+      <ng-container [ngTemplateOutlet]="headerTemplate() ?? null" />
+      @if (createValue()) {
+        <input
+          type="text"
+          [attr.aria-label]="customValueLabel()"
+          [value]="customText()"
+          (input)="customText.set($any($event.target).value)"
+          (keydown)="commitCustom($event)"
+        /><button type="button" (click)="commitCustom($event)">{{ customValueLabel() }}</button>
       }
+      @if (virtualized()) {
+        <div role="presentation" [style.block-size.px]="virtualRange().start * itemHeight()"></div>
+        @for (item of visibleOptions(); track item.key) {
+          <div
+            ngOption
+            class="hy-select__option"
+            [id]="triggerId + '-option-' + item.index"
+            [value]="item.option.value"
+            [label]="optionLabel(item.option)"
+            [disabled]="item.disabled || (item.option.value === null && !canSelectNullable())"
+            [attr.aria-setsize]="virtualRange().total"
+            [attr.aria-posinset]="item.index + 1"
+            [style.block-size.px]="itemHeight()"
+          >
+            @if (optionTemplate(); as template) {
+              <ng-container
+                [ngTemplateOutlet]="template"
+                [ngTemplateOutletContext]="item.context"
+              />
+            } @else {
+              {{ optionLabel(item.option) }}
+            }
+          </div>
+        }
+        <div
+          role="presentation"
+          [style.block-size.px]="(virtualRange().total - virtualRange().end) * itemHeight()"
+        ></div>
+      } @else {
+        @for (group of groups(); track group.key) {
+          <div role="group" [attr.aria-label]="group.label || null">
+            @if (group.label) {
+              <div class="hy-select__group-label">
+                @if (groupTemplate(); as template) {
+                  <ng-container
+                    [ngTemplateOutlet]="template"
+                    [ngTemplateOutletContext]="{ $implicit: group.label }"
+                  />
+                } @else {
+                  {{ group.label }}
+                }
+              </div>
+            }
+            @for (item of group.options; track item.key) {
+              <div
+                ngOption
+                class="hy-select__option"
+                [value]="item.option.value"
+                [label]="optionLabel(item.option)"
+                [disabled]="item.disabled"
+              >
+                @if (optionTemplate(); as template) {
+                  <ng-container
+                    [ngTemplateOutlet]="template"
+                    [ngTemplateOutletContext]="item.context"
+                  />
+                } @else {
+                  <span>{{ optionLabel(item.option) }}</span>
+                }
+                <hy-icon class="hy-select__check" name="check" />
+              </div>
+            }
+          </div>
+        }
+      }
+      @if (pageBusy()) {
+        <span role="status">Loading</span>
+      }
+      @if (pageFailed()) {
+        <button type="button" (click)="retry()">Retry</button>
+      }
+      <ng-container [ngTemplateOutlet]="footerTemplate() ?? null" />
     </div>
   </ng-template>
 </ng-template>

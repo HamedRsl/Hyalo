@@ -4,6 +4,33 @@
   flex-direction: column;
   gap: var(--hy-space-2);
   min-inline-size: 0;
+  position: relative;
+}
+
+:host([data-subscript='fixed']) { padding-block-end: 1.5em; }
+:host([data-subscript='fixed']) .hy-field__hint,
+:host([data-subscript='fixed']) .hy-field__error { position: absolute; inset-block-end: 0; }
+:host([data-status='warning']) .hy-field__box { border-color: var(--hy-warning); }
+:host([data-status='success']) .hy-field__box { border-color: var(--hy-success); }
+:host([data-float-label='auto']),
+:host([data-float-label='always']) { padding-block-start: 0.5em; }
+:host([data-float-label='auto']) .hy-field__label,
+:host([data-float-label='always']) .hy-field__label {
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: var(--hy-space-3);
+  inset-block-start: calc(var(--_h) / 2);
+  transition: transform var(--hy-dur-quick) var(--hy-ease-out);
+  pointer-events: none;
+}
+:host([data-float-label='always']) .hy-field__label,
+:host([data-float-label='auto']:focus-within) .hy-field__label,
+:host([data-float-label='auto'][data-filled]) .hy-field__label,
+:host([data-float-label='auto']:has(input[placeholder]:not(:placeholder-shown))) .hy-field__label {
+  transform: translateY(calc(var(--_h) / -2)) scale(0.85);
+  transform-origin: inline-start;
+  background: var(--hy-surface-1);
+  padding-inline: 0.2em;
 }
 
 :host([data-size='sm']) {

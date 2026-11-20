@@ -10,11 +10,20 @@ import {
   model,
   viewChild,
   viewChildren,
+  Directive, TemplateRef, contentChild, DestroyRef, effect, output, signal, afterNextRender, Injector,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Router } from '@angular/router';
 import { Tab, TabList, TabPanel, Tabs } from '@angular/aria/tabs';
 import { HyIcon } from '@hyalo/angular/icon';
 
 import { ɵtrackIndicator as trackIndicator } from '@hyalo/angular/core';
+
+@Directive({ selector: 'ng-template[hyTabContent]' })
+export class HyTabContent { readonly template = inject(TemplateRef<unknown>); }
+@Directive({ selector: 'ng-template[hyTabHeader]' })
+export class HyTabHeader { readonly template = inject(TemplateRef<unknown>); }
+export interface HyTabTransition { readonly previous: string | undefined; readonly next: string; }
 
 /**
  * One tab and its panel. The panel content is rendered up front and hidden
@@ -25,10 +34,12 @@ import { ɵtrackIndicator as trackIndicator } from '@hyalo/angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [{ directive: TabPanel, inputs: ['value'] }],
   host: { class: 'hy-tab-panel' },
-  template: `<ng-content />`,
+  imports: [NgTemplateOutlet],
+  template: `<ng-content />@if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }`,
   styleUrl: './tab.css',
 })
 export class HyTab {
+  private readonly parent = inject(HyTabs);
   readonly panel = inject(TabPanel);
   /** Text of the tab button. */
   readonly label = input.required<string>();
@@ -36,6 +47,20 @@ export class HyTab {
   readonly icon = input<string>();
   /** Disables this tab. Arrow keys skip it. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  readonly destroyOnHide = input(false, { transform: booleanAttribute });
+  readonly closable = input(false, { transform: booleanAttribute });
+  readonly badge = input<string | number>();
+  readonly compactLabel = input('');
+  readonly route = input<string>();
+  readonly header = contentChild(HyTabHeader);
+  protected readonly lazy = contentChild(HyTabContent);
+  protected readonly created = signal(false);
+  constructor() {
+    effect(() => {
+      if (this.parent.isActive(this.panel.value())) this.created.set(true);
+      else if (this.destroyOnHide()) this.created.set(false);
+    });
+  }
 }
 
 /**
@@ -55,16 +80,21 @@ export class HyTab {
  */
 @Component({
   selector: 'hy-tabs',
-  imports: [TabList, Tab, HyIcon],
+  imports: [TabList, Tab, HyIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   hostDirectives: [Tabs],
-  host: { class: 'hy-tabs', '[attr.data-stretch]': 'stretch() || null' },
+  host: { class: 'hy-tabs', '[attr.data-stretch]': 'stretch() || null', '[attr.data-placement]': 'placement()', '[attr.aria-busy]': 'pending() || null' },
   templateUrl: './tabs.html',
   styleUrl: './tabs.css',
 })
 export class HyTabs {
   protected readonly tabs = contentChildren(HyTab);
   private readonly list = viewChild<ElementRef<HTMLElement>>('list');
+  private readonly tabList = viewChild(TabList);
+  private readonly injector = inject(Injector);
+  private readonly router = inject(Router, { optional: true });
+  private generation = 0;
+  private destroyed = false;
   private readonly tabEls = viewChildren('tabEl', { read: ElementRef<HTMLElement> });
 
   /** Accessible name for the tab list. */
@@ -75,6 +105,49 @@ export class HyTabs {
   readonly selectionMode = input<'follow' | 'explicit'>('follow');
   /** Stretch tabs to fill the row. */
   readonly stretch = input(false, { transform: booleanAttribute });
+  readonly placement = input<'top' | 'bottom' | 'start' | 'end'>('top');
+  readonly beforeChange = input<(transition: HyTabTransition) => boolean | Promise<boolean>>();
+  readonly pending = signal(false);
+  readonly selectionChange = output<HyTabTransition>();
+  readonly transitionError = output<unknown>();
+  readonly transitionComplete = output<string>();
+  readonly focused = output<string>();
+  readonly addRequested = output<void>();
+  readonly closeRequested = output<string>();
+  readonly editable = input(false, { transform: booleanAttribute });
+  readonly addLabel = input('Add tab');
+  readonly closeLabel = input('Close tab');
+  readonly overflow = input<'scroll' | 'paginator' | 'dropdown'>('scroll');
+  readonly overflowLabel = input('Choose tab');
+  readonly previousLabel = input('Previous tabs');
+  readonly nextLabel = input('Next tabs');
+  constructor() { inject(DestroyRef).onDestroy(() => { this.destroyed = true; this.generation++; }); }
+  isActive(value: string): boolean { return this.current() === value; }
+  select(next: string | undefined): void {
+    if (!next || next === this.current() || !this.tabs().some((tab) => tab.panel.value() === next && !tab.disabled())) return;
+    this.tabList()?.selectedTab.set(this.current());
+    const transition = { previous: this.current(), next };
+    const generation = ++this.generation;
+    const accept = (approved: boolean): void => {
+      if (this.destroyed || generation !== this.generation) return;
+      this.pending.set(false);
+      if (!approved) return;
+      this.selected.set(next);
+      this.selectionChange.emit(transition);
+      const route = this.tabs().find((tab) => tab.panel.value() === next)?.route();
+      if (route) void this.router?.navigateByUrl(route);
+      afterNextRender(() => { if (!this.destroyed && generation === this.generation) this.transitionComplete.emit(next); }, { injector: this.injector });
+    };
+    try {
+      const result = this.beforeChange()?.(transition) ?? true;
+      if (typeof result === 'boolean') accept(result);
+      else { this.pending.set(true); void result.then(accept, (error: unknown) => { if (generation === this.generation && !this.destroyed) { this.pending.set(false); this.transitionError.emit(error); } }); }
+    } catch (error) { this.pending.set(false); this.transitionError.emit(error); }
+  }
+  protected scroll(direction: number): void {
+    const list = this.list()?.nativeElement;
+    list?.scrollBy({ left: direction * list.clientWidth, behavior: 'smooth' });
+  }
 
   /** The selected value, falling back to the first enabled tab. */
   protected readonly current = computed(
@@ -92,4 +165,4 @@ export class HyTabs {
 }
 
 /** Everything needed to build tabs. */
-export const HY_TABS = [HyTabs, HyTab] as const;
+export const HY_TABS = [HyTabs, HyTab, HyTabContent, HyTabHeader] as const;

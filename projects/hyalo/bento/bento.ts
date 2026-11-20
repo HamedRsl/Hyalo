@@ -4,24 +4,49 @@ import {
   Directive,
   input,
   numberAttribute,
+  model,
+  output,
+  contentChildren,
+  afterRenderEffect,
+  ElementRef,
+  inject,
 } from '@angular/core';
+import { injectId } from '@hyalo/angular/core';
 @Component({
   selector: 'hy-bento',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './bento.html',
   styleUrl: './bento.css',
 })
-export class HyBento {}
+export class HyBento {
+  readonly order = model<readonly string[]>([]); readonly reorderable = input(false); readonly reordered = output<readonly string[]>();
+  private readonly tiles = contentChildren(HyBentoTile); private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private dragged: string | null = null;
+  constructor() { afterRenderEffect(() => { const tiles = this.tiles(), order = this.order(), grid = this.element.querySelector(".grid"); if (!grid || !order.length) return; const sorted = [...tiles].sort((a,b) => { const ai = order.indexOf(a.tileId()),bi = order.indexOf(b.tileId()); return (ai < 0 ? order.length : ai)-(bi < 0 ? order.length : bi); }); for (const tile of sorted) grid.appendChild(tile.element); }); }
+  move(id: string,index: number): void { const current = this.order().length ? [...this.order()] : this.tiles().map(tile => tile.tileId()); const from = current.indexOf(id); if (from < 0) return; current.splice(from,1); current.splice(Math.max(0,Math.min(current.length,index)),0,id); this.order.set(current); this.reordered.emit(current); }
+  start(event: DragEvent,id: string): void { if (!this.reorderable()) return; this.dragged = id; event.dataTransfer?.setData("text/plain",id); }
+  drop(event: DragEvent,id: string): void { event.preventDefault(); if (this.reorderable() && this.dragged) { const order = this.order().length ? this.order() : this.tiles().map(tile => tile.tileId()); this.move(this.dragged,order.indexOf(id)); } this.dragged = null; }
+  key(event: KeyboardEvent,id: string): void { if (!this.reorderable() || !event.altKey || !["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(event.key)) return; event.preventDefault(); const order = this.order().length ? this.order() : this.tiles().map(tile => tile.tileId()); this.move(id,order.indexOf(id)+(["ArrowUp","ArrowLeft"].includes(event.key) ? -1 : 1)); }
+}
 @Directive({
   selector: '[hyBentoTile]',
   host: {
     '[style.--hy-bento-columns]': 'safeColumns',
+    '[attr.draggable]': 'bento?.reorderable() || null',
+    '[attr.tabindex]': 'bento?.reorderable() ? 0 : null',
+    '(dragstart)': 'bento?.start($event,tileId())',
+    '(dragover)': '$event.preventDefault()',
+    '(drop)': 'bento?.drop($event,tileId())',
+    '(keydown)': 'bento?.key($event,tileId())',
     '[style.grid-row]': '"span "+safeRows',
     '[style.grid-column]': '"span var(--hy-bento-span, "+safeColumns+")"',
     '[style.min-inline-size]': '"0"',
   },
 })
 export class HyBentoTile {
+  readonly tileId = input(injectId("tile"));
+  readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly bento = inject(HyBento,{optional:true});
   readonly columns = input(1, { transform: numberAttribute });
   readonly rows = input(1, { transform: numberAttribute });
   get safeColumns(): number {

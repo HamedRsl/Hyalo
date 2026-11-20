@@ -11,6 +11,8 @@ import {
   numberAttribute,
   booleanAttribute,
   signal,
+  output,
+  effect,
 } from '@angular/core';
 import { PlatformLocation } from '@angular/common';
 import { HyMotion } from '@hyalo/angular/motion';
@@ -35,7 +37,7 @@ interface ChapterScroll {
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chapter-nav.html',
   styleUrl: './chapter-nav.css',
-  host: { '[attr.data-sticky]': 'sticky()', '[style.--hy-chapter-sticky-top]': 'stickyTop()' },
+  host: { '[attr.data-orientation]': 'orientation()', '[attr.data-sticky]': 'sticky()', '[style.--hy-chapter-sticky-top]': 'stickyTop()' },
 })
 export class HyChapterNav {
   private readonly document = inject(DOCUMENT);
@@ -48,6 +50,10 @@ export class HyChapterNav {
   private dispose: (() => void) | undefined;
   readonly chapters = input.required<readonly HyChapter[]>();
   readonly label = input('On this page');
+  readonly orientation = input<'vertical' | 'horizontal'>('vertical');
+  readonly chapterClick = output<{ readonly id: string; readonly event: MouseEvent }>();
+  readonly activeChange = output<string>();
+  readonly scrolled = output<{ readonly id: string; readonly position: number }>();
   readonly sticky = input(false, { transform: booleanAttribute });
   readonly stickyTop = input('6rem');
   readonly scrollBehavior = input<'smooth' | 'instant'>('smooth');
@@ -68,6 +74,7 @@ export class HyChapterNav {
   });
 
   constructor() {
+    effect(() => this.activeChange.emit(this.active()));
     afterNextRender(() => this.ready.set(true));
     afterRenderEffect(() => {
       this.chapters();
@@ -98,6 +105,7 @@ export class HyChapterNav {
       const settled = (): void => {
         if (this.navigation && Math.abs(this.scrollPosition() - this.navigation.destination) <= 1) {
           this.navigation.settled = true;
+          this.scrolled.emit({id:this.navigation.id,position:this.scrollPosition()});
         }
       };
       const history = (): void => {
@@ -155,6 +163,7 @@ export class HyChapterNav {
     )
       return;
     event.preventDefault();
+    this.chapterClick.emit({id,event});
     this.goTo(id);
   }
 
@@ -219,6 +228,7 @@ export class HyChapterNav {
     const options: ScrollToOptions = { top: destination, behavior: smooth ? 'smooth' : 'instant' };
     if (root) root.scrollTo(options);
     else window.scrollTo(options);
+    if (!smooth) this.scrolled.emit({id,position:destination});
     return true;
   }
   private track(): void {
