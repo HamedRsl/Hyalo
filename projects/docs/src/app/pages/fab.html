@@ -1,0 +1,35 @@
+<docs-page
+  heading="FAB and speed dial"
+  lead="A floating action button that expands into a keyboard-accessible action group."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <div class="fab-stage">
+        <hy-fab
+          label="Create"
+          direction="down"
+          [actions]="actions"
+          (selected)="selection.set($event.label)"
+        />
+      </div>
+      <p role="status">{{ selection() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyFab &#125; from '@hyalo/angular/fab';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    With no actions, activated emits for a single FAB. With actions, ArrowUp or ArrowDown opens and
+    focuses the first enabled action; arrows, Home and End move focus. Escape closes and restores
+    focus. Linear, circle, semicircle and quarter-circle layouts share the same data model. Mask and
+    outside dismissal are optional. Keep radial groups inside a viewport area large enough for their
+    configured radius.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

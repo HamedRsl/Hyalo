@@ -1,0 +1,39 @@
+<section [attr.aria-label]="heading()" [attr.aria-busy]="state() === 'loading'">
+  <h2>{{ heading() }}</h2>
+  <label class="recipient"
+    >{{ recipientLabel()
+    }}<input
+      type="text"
+      autocomplete="off"
+      [value]="recipient()"
+      [disabled]="state() === 'loading' || state() === 'success'"
+      #recipientInput
+      (input)="recipient.set(recipientInput.value)"
+  /></label>
+  <hy-numeric-keypad
+    [label]="amountLabel() + ' (' + currency() + ')'"
+    [(value)]="amount"
+    [locale]="locale()"
+    [decimal]="true"
+    [disabled]="state() === 'loading' || state() === 'success'"
+  />
+  @if (state() === 'error' && error()) {
+    <p role="alert">{{ error() }}</p>
+  }
+  @if (state() === 'loading') {
+    <p role="status">{{ loadingLabel() }}</p>
+  }
+  @if (state() === 'success') {
+    <p role="status">{{ successLabel() }}</p>
+  }
+  <hy-slide-confirm
+    [label]="confirmLabel()"
+    [confirmLabel]="confirmLabel()"
+    [completedLabel]="successLabel()"
+    [(value)]="confirmed"
+    [disabled]="!valid() || state() === 'success'"
+    [loading]="state() === 'loading'"
+    (confirmed)="submit()"
+  />
+  <ng-content select="[hyTransferDetails]" />
+</section>

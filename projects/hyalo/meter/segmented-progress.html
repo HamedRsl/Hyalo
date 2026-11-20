@@ -1,0 +1,24 @@
+<div
+  class="sr"
+  role="progressbar"
+  [attr.aria-label]="label()"
+  aria-valuemin="0"
+  [attr.aria-valuemax]="steps().length || 1"
+  [attr.aria-valuenow]="complete()"
+  [attr.aria-valuetext]="valueText() || null"
+></div>
+<ol class="steps" [attr.aria-label]="label()">
+  @for (step of steps(); track step.id; let index = $index) {
+    <li [attr.data-state]="step.state" [attr.aria-current]="current() === step.id ? 'step' : null">
+      @if (stepTemplate(); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: step, index }"
+        />
+      } @else {
+        <span class="step-track" aria-hidden="true"></span><strong>{{ step.label }}</strong
+        ><span>{{ stateLabels()[step.state] }}</span>
+      }
+    </li>
+  }
+</ol>

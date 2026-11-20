@@ -23,6 +23,8 @@ export interface HyIconDef {
  * Copyright (c) Lucide Icons and Contributors), https://lucide.dev.
  */
 export const HY_BUILTIN_ICONS: Readonly<Record<string, HyIconDef>> = {
+  plus: { node: [['path', { d: 'M12 5v14M5 12h14' }]] },
+  'arrow-end': { node: [['path', { d: 'M4 12h16m-6-6 6 6-6 6' }]], mirrorRtl: true },
   home: { node: [['path', { d: 'm3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z' }]] },
   grid: {
     node: [

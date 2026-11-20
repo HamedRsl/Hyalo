@@ -1,0 +1,7 @@
+@for(item of items();track item.id){@if(!item.hidden){
+@if(item.separator){<div role="separator" class="separator"></div>}
+@else if(item.children?.length){<button type="button" cdkMenuItem [cdkMenuTriggerFor]="submenu" [cdkMenuItemDisabled]="!!item.disabled">@if(item.icon){<hy-icon [name]="item.icon" />}{{item.label}} <span aria-hidden="true">›</span></button><ng-template #submenu><hy-context-menu [items]="item.children" [context]="context()" [label]="item.label" [itemTemplate]="itemTemplate()" (activated)="activated.emit($event)" /></ng-template>}
+@else if(item.role==='checkbox'){<button type="button" cdkMenuItemCheckbox [cdkMenuItemChecked]="!!item.checked" [cdkMenuItemDisabled]="!!item.disabled" (cdkMenuItemTriggered)="activate(item)">@if(item.icon){<hy-icon [name]="item.icon" />}{{item.label}} <span>{{item.checked?'Selected':''}}</span></button>}
+@else if(item.role==='radio'){<button type="button" cdkMenuItemRadio [cdkMenuItemChecked]="!!item.checked" [cdkMenuItemDisabled]="!!item.disabled" (cdkMenuItemTriggered)="activate(item)">@if(item.icon){<hy-icon [name]="item.icon" />}{{item.label}}</button>}
+@else{<button type="button" cdkMenuItem [cdkMenuItemDisabled]="!!item.disabled" (cdkMenuItemTriggered)="activate(item)">@if(itemTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{$implicit:item,context:context()}" />}@else{<span>@if(item.icon){<hy-icon [name]="item.icon" />}{{item.label}}</span>@if(item.shortcut){<kbd>{{item.shortcut}}</kbd>}}</button>}
+}}<ng-content />

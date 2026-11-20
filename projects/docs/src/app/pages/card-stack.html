@@ -1,0 +1,37 @@
+<docs-page
+  heading="3D card stack"
+  lead="A bounded stack with native previous/next controls and a static low-motion fallback."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-card-stack #stack label="Accounts" [items]="items" [itemKey]="key" [loop]="true"
+        ><ng-template [hyStackItem]="stack" let-item let-active="active"
+          ><article class="account-preview">
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.detail }}</p>
+            @if (active) {
+              <button hyButton type="button" variant="ghost">Account details</button>
+            }
+          </article></ng-template
+        ></hy-card-stack
+      >
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_CARD_STACK &#125; from '@hyalo/angular/card-stack';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Only the active card is exposed to keyboard and assistive technology; decorative cards are inert
+    and aria-hidden. Visible count is bounded to five. Native controls change activeIndex and emit
+    the selected item. Reduced motion and low fidelity remove depth transforms while preserving the
+    same content and controls.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['cardStack']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

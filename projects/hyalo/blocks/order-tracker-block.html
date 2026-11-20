@@ -1,0 +1,37 @@
+<ng-template #sheetContent>
+  <section [attr.aria-busy]="loading()">
+    <h2>{{ heading() }}</h2>
+    @if (detail()) {
+      <p>{{ detail() }}</p>
+    }
+    <ng-content select="[hyOrderRoute]" />
+    <hy-segmented-progress [label]="heading()" [steps]="steps()" />
+    @if (loading()) {
+      <p role="status">{{ loadingLabel() }}</p>
+    }
+    @if (error()) {
+      <p role="alert">{{ error() }}</p>
+      <button hyButton type="button" variant="ghost" [disabled]="loading()" (click)="retry.emit()">
+        {{ retryLabel() }}
+      </button>
+    }
+    @if (action(); as item) {
+      <button
+        hyButton
+        type="button"
+        [tone]="item.tone ?? 'primary'"
+        [disabled]="loading() || !!item.disabled"
+        (click)="selected.emit(item)"
+      >
+        {{ item.label }}
+      </button>
+    }
+    <ng-content />
+  </section>
+</ng-template>
+<hy-bottom-sheet
+  [(open)]="open"
+  [label]="heading()"
+  [options]="options()"
+  [content]="sheetContent"
+/>

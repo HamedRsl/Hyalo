@@ -1,0 +1,100 @@
+<section [attr.aria-label]="heading()" [attr.aria-busy]="loading() || loadingMore()">
+  <header>
+    <h2 tabindex="-1">{{ heading() }}</h2>
+    <span>{{ unread() }}</span>
+  </header>
+  <div class="actions">
+    <button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || loading()"
+      [attr.aria-pressed]="filter() === 'all'"
+      (click)="filter.set('all')"
+    >
+      {{ allLabel() }}</button
+    ><button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || loading()"
+      [attr.aria-pressed]="filter() === 'unread'"
+      (click)="filter.set('unread')"
+    >
+      {{ unreadLabel() }}
+    </button>
+  </div>
+  @if (loading()) {
+    <p role="status">{{ loadingLabel() }}</p>
+  }
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+    <button
+      hyButton
+      type="button"
+      [disabled]="disabled() || loading()"
+      (click)="retryRequested.emit()"
+    >
+      {{ retryLabel() }}
+    </button>
+  }
+  @if (visible().length) {
+    <ul class="notification-list">
+      @for (notification of visible(); track notification.id; let index = $index) {
+        <li>
+          @if (itemTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template"
+              [ngTemplateOutletContext]="{ $implicit: notification, index }"
+            />
+          } @else {
+            <hy-notification-card
+              [notification]="notification"
+              [disabled]="disabled() || loading()"
+              [dateFormat]="dateFormat()"
+              [locale]="locale()"
+              [timeZone]="timeZone()"
+              [readLabel]="readLabel()"
+              [dismissLabel]="dismissLabel()"
+              (readRequested)="request($event, 'read')"
+              (dismissed)="request($event, 'dismiss')"
+              (action)="action.emit($event)"
+            />
+          }
+        </li>
+      }
+    </ul>
+  } @else if (!loading() && !error()) {
+    <hy-empty-state [heading]="emptyLabel()" [headingLevel]="3" />
+  }
+  @if (hasMore()) {
+    <button
+      hyButton
+      type="button"
+      [disabled]="disabled() || loading() || loadingMore()"
+      [loading]="loadingMore()"
+      (click)="requestMore()"
+    >
+      {{ loadMoreLabel() }}
+    </button>
+  }
+  <footer class="actions">
+    <button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || loading() || !unread()"
+      (click)="requestMarkAllRead()"
+    >
+      {{ markAllLabel() }}</button
+    ><button
+      hyButton
+      type="button"
+      variant="ghost"
+      [disabled]="disabled() || loading() || !notifications().length"
+      (click)="requestClear()"
+    >
+      {{ clearLabel() }}
+    </button>
+  </footer>
+</section>

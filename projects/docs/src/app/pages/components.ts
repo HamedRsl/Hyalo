@@ -1,3 +1,15 @@
+import { HyTabBar } from '@hyalo/angular/tab-bar';
+import { HyFab } from '@hyalo/angular/fab';
+import { HySlideConfirm } from '@hyalo/angular/slide-confirm';
+import { HyNumericKeypad } from '@hyalo/angular/keypad';
+import { HyPullRefresh } from '@hyalo/angular/pull-refresh';
+import { HySwipeActions } from '@hyalo/angular/swipe-actions';
+import { HY_SWIPE_DECK } from '@hyalo/angular/swipe-deck';
+import { HY_CARD_STACK } from '@hyalo/angular/card-stack';
+import { HyNotificationCard } from '@hyalo/angular/notification-center';
+import { HyChatBubble } from '@hyalo/angular/chat';
+import { HyDock } from '@hyalo/angular/dock';
+import { HyStatusIsland } from '@hyalo/angular/status-island';
 import { HyMeter } from '@hyalo/angular/meter';
 import { HyGauge } from '@hyalo/angular/gauge';
 import { HyErrorState } from '@hyalo/angular/state';
@@ -66,6 +78,43 @@ import { HyLink } from '@hyalo/angular/link';
 
 /** What each card says under its preview, keyed by route. */
 const SUMMARIES: Record<string, string> = {
+"/components/data-grid":"Editable data with stable keys, explicit query state, grouping, and native scrolling.",
+"/components/tree":"Hierarchical navigation, lazy expansion, cascading checks, and stable-key selection.",
+"/components/tree-table":"A data grid that preserves parent-child structure while filtering, sorting, and editing.",
+"/components/virtual-scroller":"Bounded DOM rendering for long lists with a stable server-rendered fallback.",
+"/components/kanban":"Move work between columns and swimlanes with WIP limits and asynchronous approval.",
+"/components/splitter":"Resizable panes with bounded percentages, collapse controls, and pointer cancellation.",
+"/components/dashboard-layout":"A saved grid of movable and resizable tiles with explicit collision rules.",
+"/components/context-menu":"Contextual actions with CDK focus, keyboard navigation, and nested menus.",
+"/components/scheduler":"Month, week, day, and agenda views through a lazy FullCalendar adapter.",
+"/components/rich-text":"A JSON-valued Signal Forms control with a lazy TipTap engine and complete extension hooks.",
+  '/components/bottom-sheet':
+    'Snap-point sheets with focus trapping, scrollable content, and a keyboard resize handle.',
+  '/components/action-sheet':
+    'A mobile action list with destructive and cancel roles on the existing sheet surface.',
+  '/components/tab-bar':
+    'Persistent app navigation with native links, badges, logical layout, and safe-area spacing.',
+  '/components/fab':
+    'A floating action button that expands into a keyboard-accessible action group.',
+  '/components/slide-confirm':
+    'An explicit confirmation gesture with an equally available native button action.',
+  '/components/keypad':
+    'Localized digit entry with canonical string values and preserved leading zeros.',
+  '/components/pull-refresh': 'Refresh intent from a deliberate downward pull or a visible button.',
+  '/components/swipe-actions':
+    'Logical start and end actions behind a row, with an always-available disclosure button.',
+  '/components/swipe-deck':
+    'A controlled decision deck with typed card templates, pass/keep buttons, and undo.',
+  '/components/card-stack':
+    'A bounded stack with native previous/next controls and a static low-motion fallback.',
+  '/components/notification-center':
+    'Persistent notifications and push-style cards with controlled read and dismiss actions.',
+  '/components/chat':
+    'Text-safe bubbles, delivery states, attachments, and a scroll-aware conversation log.',
+  '/components/dock':
+    'App destinations in a glass surface, with optional fine-pointer magnification.',
+  '/components/status-island':
+    'A compact activity summary with priority selection and accessible task details.',
   '/components/meter': 'Bounded measurements with accessible units and threshold tones.',
   '/components/state': 'Clear waiting and failure messages with application-owned retry actions.',
   '/components/gauge': 'Radial and semicircular measurements without a chart engine.',
@@ -178,6 +227,18 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
 @Component({
   selector: 'docs-components-page',
   imports: [
+    HyTabBar,
+    HyFab,
+    HySlideConfirm,
+    HyNumericKeypad,
+    HyPullRefresh,
+    HySwipeActions,
+    HY_SWIPE_DECK,
+    HY_CARD_STACK,
+    HyNotificationCard,
+    HyChatBubble,
+    HyDock,
+    HyStatusIsland,
     HyMeter,
     HyGauge,
     HyErrorState,
@@ -251,6 +312,17 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
   styleUrls: ['./components.css', './phase3-previews.css'],
 })
 export default class ComponentsPage {
+  protected readonly mobileNavigation = [
+    { id: 'home', label: 'Home', href: '/components', icon: 'home' },
+    { id: 'messages', label: 'Messages', href: '/components/chat', icon: 'message-circle' },
+  ];
+  protected readonly mobileCards = [
+    { id: 1, label: 'Everyday account' },
+    { id: 2, label: 'Savings' },
+    { id: 3, label: 'Travel' },
+  ];
+  protected readonly mobileKey = (item: { id: number }): number => item.id;
+
   protected readonly previewEvents = Array.from({ length: 100 }, (_, id) => ({
     id,
     label: 'Event ' + (id + 1),

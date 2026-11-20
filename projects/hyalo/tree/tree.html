@@ -1,0 +1,19 @@
+@if(loading()){<p class="message" role="status">Loading tree</p>}
+<ul ngTree #tree="ngTree" [value]="selection()" (valueChange)="pick($event)" [multi]="multi()" [disabled]="disabled()" [attr.aria-label]="label()" selectionMode="explicit" focusMode="roving" [attr.aria-busy]="loading() || null" [class.lines]="showLines()">
+<ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{nodes:view(),parent:tree}" />
+</ul>
+<ng-template #branch let-nodes="nodes" let-parent="parent">
+@for(item of nodes;track item.node.key){
+<li ngTreeItem #treeItem="ngTreeItem" [id]="item.id" [parent]="parent" [value]="item.node.key" [label]="item.node.label" [disabled]="!!item.node.disabled" [selectable]="selectionMode()!=='none'&&(selectionMode()==='checkbox'?item.node.checkable!==false:item.node.selectable!==false)" [expanded]="item.expanded" (expandedChange)="toggle(item.node.key,$event)" [attr.aria-checked]="selectionMode()==='checkbox'?(item.indeterminate?'mixed':item.checked):null" (dblclick)="activate(item.node,$event)" (contextmenu)="context(item.node,$event)" (keydown)="moveKeys($event,item.node)">
+<div class="node" [style.padding-inline-start.px]="(item.level-1)*indent()" [class.selected]="item.selected||item.checked" [draggable]="draggable()&&!disabled()&&!item.node.disabled" (dragstart)="dragStart($event,item.node)" (dragend)="dragEnd()" (dragover)="dragOver($event,item.node)" (drop)="drop($event,item.node)">
+@if(item.expandable){<button type="button" tabindex="-1" [disabled]="disabled()||item.node.disabled" [attr.aria-label]="(item.expanded?'Collapse ':'Expand ')+item.node.label" (click)="toggle(item.node.key);$event.stopPropagation()"><span aria-hidden="true">{{item.expanded?'−':'+'}}</span></button>}@else{<span class="spacer" aria-hidden="true"></span>}
+@if(selectionMode()==='checkbox'){<span class="check" aria-hidden="true">{{item.indeterminate?'Some':item.checked?'Selected':'Select'}}</span>}
+@if(item.node.icon){<hy-icon [name]="item.node.icon" />} @if(nodeTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="item" />}@else{<span>{{item.node.label}}</span>}
+@if(item.loading){<span class="message" role="status">Loading</span>}
+</div>
+@if(item.expandable){<ul role="group"><ng-template ngTreeItemGroup [ownedBy]="treeItem" #group="ngTreeItemGroup"><ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{nodes:item.children,parent:group}" /></ng-template></ul>}
+</li>
+}
+</ng-template>
+@if(!view().length&&!loading()){<p class="message" role="status">{{emptyLabel()}}</p>}
+@for(error of errors();track error.key){<p class="error" role="status">{{error.message}} <button type="button" (click)="load(error.key)">Retry</button></p>}

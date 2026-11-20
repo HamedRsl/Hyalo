@@ -1,0 +1,51 @@
+:host {
+  display: grid;
+  gap: var(--hy-space-3);
+  inline-size: min(100%, var(--hy-keypad-width, 22rem));
+}
+input {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 3rem;
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  font: inherit;
+  font-size: var(--hy-step-2);
+  padding: var(--hy-space-3);
+  text-align: end;
+  direction: ltr;
+}
+.keys {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--hy-space-2);
+  direction: ltr;
+}
+button {
+  min-block-size: var(--hy-keypad-key-height, 3.5rem);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+  color: var(--hy-ink);
+  font: inherit;
+  cursor: pointer;
+}
+button:active {
+  background: var(--hy-surface-3);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+.submit {
+  background: var(--hy-primary);
+  color: var(--hy-primary-ink);
+}

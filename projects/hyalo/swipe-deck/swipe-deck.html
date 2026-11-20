@@ -1,0 +1,40 @@
+<section [attr.aria-label]="label()" class="deck">
+  @if (current() !== undefined) {
+    <div #surface class="card">
+      <ng-container
+        [ngTemplateOutlet]="template().template"
+        [ngTemplateOutletContext]="{ $implicit: current()!, index: position() }"
+      />
+    </div>
+  } @else {
+    <p>{{ emptyLabel() }}</p>
+  }
+  <div class="actions">
+    <button
+      hyButton
+      variant="ghost"
+      type="button"
+      [disabled]="disabled() || busy() || current() === undefined"
+      (click)="choose('start')"
+    >
+      {{ startLabel() }}</button
+    ><button
+      hyButton
+      type="button"
+      [disabled]="disabled() || busy() || current() === undefined"
+      (click)="choose('end')"
+    >
+      {{ endLabel() }}
+    </button>
+  </div>
+  <button
+    hyButton
+    type="button"
+    variant="ghost"
+    [disabled]="disabled() || busy() || !allowUndo() || position() <= 0"
+    (click)="undo()"
+  >
+    {{ undoLabel() }}
+  </button>
+  <span class="sr" role="status">{{ announcement() }}</span>
+</section>

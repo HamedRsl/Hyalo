@@ -1,0 +1,19 @@
+
+<section [attr.aria-label]="label()" [attr.aria-busy]="loading()||pending()||null" cdkDropListGroup>
+@if(loading()){<p role="status">Loading board</p>}@if(error()){<p role="alert">{{error()}} <button type="button" (click)="retryRequested.emit()">Retry</button></p>}
+@for(group of view();track group.lane.id){
+@if(group.lane.label){<h3>{{group.lane.label}}</h3>}
+<div class="board">
+@for(item of group.columns;track item.column.id){
+<section class="column surface" [attr.aria-label]="item.column.label">
+<header>@if(columnTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{$implicit:item.column}" />}@else{<h4>{{item.column.label}}</h4>}<span class="message">{{item.column.cards.length}}{{item.column.limit!==undefined?' / '+item.column.limit:''}}</span></header>
+<ul cdkDropList [id]="item.id" [cdkDropListData]="{column:item.column.id,lane:group.lane.id,cards:item.cards}" [cdkDropListDisabled]="blocked()||item.column.disabled||!!filter()" (cdkDropListDropped)="drop($event,item.column,group.lane.id,item.cards)">
+@for(card of item.cards;track card.id;let index=$index){<li cdkDrag [cdkDragData]="card" (cdkDragStarted)="dragStarted()" [cdkDragDisabled]="blocked()||item.column.disabled||card.disabled||!!filter()" [cdkDragStartDelay]="{touch:dragDelay(),mouse:0}" class="card" [attr.data-card-id]="card.id" [attr.data-tone]="card.tone??'neutral'">
+<div class="card-heading"><button cdkDragHandle type="button" [disabled]="blocked()||item.column.disabled||card.disabled||!!filter()" [attr.aria-label]="'Drag '+card.label">Move</button><button type="button" class="card-title" [disabled]="disabled()||card.disabled" (click)="activate(card)">{{card.label}}</button></div>
+@if(cardTemplate();as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(card,item.column,index)" />}@else if(card.description){<p>{{card.description}}</p>}
+<div class="actions"><button type="button" [disabled]="blocked()||card.disabled||item.column.disabled||index===0||!!filter()" [attr.aria-label]="'Move '+card.label+' earlier'" (click)="shift(card,item.column,-1)">Earlier</button><button type="button" [disabled]="blocked()||card.disabled||item.column.disabled||index===item.cards.length-1||!!filter()" [attr.aria-label]="'Move '+card.label+' later'" (click)="shift(card,item.column,1)">Later</button><select [disabled]="blocked()||card.disabled||item.column.disabled" [attr.aria-label]="'Move '+card.label+' to column'" (change)="destination($event,card)"><option value="">Move to</option>@for(column of columns();track column.id){<option [value]="column.id" [disabled]="column.disabled||(column.id!==item.column.id&&column.limit!==undefined&&column.cards.length>=column.limit)">{{column.label}}</option>}</select>@if(lanes().length){<select [disabled]="blocked()||card.disabled||item.column.disabled" [attr.aria-label]="'Move '+card.label+' to lane'" (change)="laneDestination($event,card,item.column)"><option value="">Change lane</option>@for(lane of lanes();track lane.id){<option [value]="lane.id">{{lane.label}}</option>}</select>}</div>
+</li>}@empty{<li class="message">{{emptyLabel()}}</li>}
+</ul></section>}
+</div>}
+<p class="sr-only" role="status" aria-live="polite">{{announcement()}}</p>
+</section>

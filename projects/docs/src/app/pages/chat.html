@@ -1,0 +1,34 @@
+<docs-page
+  heading="Chat and message list"
+  lead="Text-safe bubbles, delivery states, attachments, and a scroll-aware conversation log."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-message-list
+        [messages]="messages()"
+        label="Conversation with support"
+        height="20rem"
+        (retry)="retry($event)"
+        ><hy-chat-composer (submitted)="send($event)"
+      /></hy-message-list></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import
+    code="import &#123; HyChatComposer, HyMessageList, type HyChatMessage, type HyChatSubmission &#125; from '@hyalo/angular/chat';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Messages are rendered as text, never HTML. Native attachment links and retry buttons remain
+    keyboard accessible. Near-bottom autoscroll preserves a reader browsing history, offers a New
+    messages button, and compensates for prepended history. Live announcements are off by default to
+    avoid replaying server-rendered history. Use HyChatComposer or project a custom composer through
+    hyChatComposer; transport, uploads and message persistence remain application responsibilities.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['chat']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

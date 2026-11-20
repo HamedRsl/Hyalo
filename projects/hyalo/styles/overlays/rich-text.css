@@ -1,0 +1,11 @@
+@layer hy.utilities {
+  .hy-rich-text-content { min-block-size: inherit; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; padding: .75rem; }
+  .hy-rich-text-content:focus-visible { outline: 2px solid var(--hy-primary); outline-offset: -2px; border-radius: var(--hy-radius-s); }
+  .hy-rich-text-content > * + * { margin-block-start: .75rem; }
+  .hy-rich-text-content ul, .hy-rich-text-content ol { padding-inline-start: 1.5rem; }
+  .hy-rich-text-content blockquote { border-inline-start: 3px solid var(--hy-primary); padding-inline-start: 1rem; color: var(--hy-ink-2); }
+  .hy-rich-text-content pre { white-space: pre-wrap; background: var(--hy-surface-2); padding: .75rem; border-radius: var(--hy-radius-s); }
+  .hy-rich-text-content img { max-inline-size: 100%; block-size: auto; }
+  .hy-rich-text-content a { color: var(--hy-primary); text-decoration: underline; }
+  .hy-rich-text-content p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: inline-start; block-size: 0; color: var(--hy-ink-3); pointer-events: none; }
+}

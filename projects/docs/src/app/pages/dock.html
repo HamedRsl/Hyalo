@@ -1,0 +1,32 @@
+<docs-page
+  heading="Glass dock"
+  lead="App destinations in a glass surface, with optional fine-pointer magnification."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-dock
+        label="Workspace dock"
+        [items]="items"
+        [activeId]="active()"
+        (selected)="active.set($event.id)"
+        (click)="$event.preventDefault()"
+        [magnify]="true"
+      /></div
+  ></docs-example>
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyDock &#125; from '@hyalo/angular/dock';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    The dock reuses tab-bar link semantics and keyboard navigation. Magnification is opt-in and
+    limited to fine hover pointers; touch, reduced motion and low fidelity keep stable icons. Link
+    hit targets never scale. Fixed positioning follows logical edges and safe areas. Leave room for
+    fixed chrome in the application layout.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

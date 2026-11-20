@@ -1,0 +1,39 @@
+<docs-page
+  heading="Numeric keypad"
+  lead="Localized digit entry with canonical string values and preserved leading zeros."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-numeric-keypad
+        label="Transfer amount"
+        [(value)]="amount"
+        [decimal]="true"
+        locale="fa-IR"
+        submitLabel="Review amount"
+        (submitted)="review.set($event)"
+      />
+      <p>
+        Canonical value: <bdi>{{ amount() || 'empty' }}</bdi>
+      </p>
+      <p role="status">{{ review() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HyNumericKeypad &#125; from '@hyalo/angular/keypad';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Persian and Arabic digits normalize to ASCII; values stay strings, preserving leading zeros.
+    Native typing, paste, composition, backspace and keypad buttons share validation. Decimal and
+    negative entry are opt-in. Max length includes sign and separator. Masking changes presentation
+    and does not secure payment or PIN data. This is a Signal Forms value control, with shared field
+    metadata and touch/focus behavior.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['keypad']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

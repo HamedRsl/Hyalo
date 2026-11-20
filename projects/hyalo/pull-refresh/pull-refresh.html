@@ -1,0 +1,18 @@
+<div #indicator class="indicator" aria-hidden="true">
+  {{ refreshing() ? refreshingLabel() : ready() ? releaseLabel() : pullLabel() }}
+</div>
+<div #content class="content"><ng-content /></div>
+<button
+  hyButton
+  type="button"
+  variant="ghost"
+  [disabled]="disabled()"
+  [loading]="refreshing()"
+  [attr.aria-label]="refreshLabel()"
+  (click)="request()"
+>
+  {{ refreshLabel() }}
+</button>
+<span class="sr" role="status">{{
+  refreshing() ? refreshingLabel() : ready() ? releaseLabel() : ''
+}}</span>

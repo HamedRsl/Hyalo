@@ -18,6 +18,7 @@ export type HyDrawerSide = 'start' | 'end' | 'bottom' | 'top';
 /** Options for {@link HyDrawer.open}. */
 export interface HyDrawerConfig<D = unknown> extends HySurfaceConfig<D> {
   readonly side?: HyDrawerSide;
+  readonly draggable?: boolean;
   /** Any CSS length. Width for side drawers, height for the bottom sheet. */
   readonly size?: string;
 }
@@ -56,12 +57,15 @@ export class HyDrawer {
     else position.end('0').top('0');
 
     const vertical = side === 'top' || side === 'bottom';
-    return this.registry.track(openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
-      panelClass: ['hy-drawer-pane', `hy-drawer--${side}`],
-      positionStrategy: position,
-      width: vertical ? '100%' : (config.size ?? 'min(24rem, 100vw - 2.5rem)'),
-      height: vertical ? (config.size ?? 'auto') : '100%',
-      sheet: side,
-    }));
+    return this.registry.track(
+      openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
+        panelClass: ['hy-drawer-pane', `hy-drawer--${side}`],
+        positionStrategy: position,
+        width: vertical ? '100%' : (config.size ?? 'min(24rem, 100vw - 2.5rem)'),
+        height: vertical ? (config.size ?? 'auto') : '100%',
+        sheet: side,
+        draggable: config.draggable,
+      }),
+    );
   }
 }

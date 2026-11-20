@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  { path: 'mobile-patterns', loadComponent: () => import('./pages/mobile-patterns') },
   { path: '', loadComponent: () => import('./pages/home') },
   { path: 'foundations', loadComponent: () => import('./pages/foundations') },
   { path: 'theming', loadComponent: () => import('./pages/theming') },
@@ -12,6 +13,30 @@ export const routes: Routes = [
   {
     path: 'components',
     children: [
+      {path:'data-grid',loadComponent:()=>import('./pages/data-grid')},
+      {path:'tree',loadComponent:()=>import('./pages/tree')},
+      {path:'tree-table',loadComponent:()=>import('./pages/tree-table')},
+      {path:'virtual-scroller',loadComponent:()=>import('./pages/virtual-scroller')},
+      {path:'kanban',loadComponent:()=>import('./pages/kanban')},
+      {path:'splitter',loadComponent:()=>import('./pages/splitter')},
+      {path:'dashboard-layout',loadComponent:()=>import('./pages/dashboard-layout')},
+      {path:'context-menu',loadComponent:()=>import('./pages/context-menu')},
+      {path:'scheduler',loadComponent:()=>import('./pages/scheduler')},
+      {path:'rich-text',loadComponent:()=>import('./pages/rich-text')},
+      { path: 'bottom-sheet', loadComponent: () => import('./pages/bottom-sheet') },
+      { path: 'action-sheet', loadComponent: () => import('./pages/action-sheet') },
+      { path: 'tab-bar', loadComponent: () => import('./pages/tab-bar') },
+      { path: 'fab', loadComponent: () => import('./pages/fab') },
+      { path: 'slide-confirm', loadComponent: () => import('./pages/slide-confirm') },
+      { path: 'keypad', loadComponent: () => import('./pages/keypad') },
+      { path: 'pull-refresh', loadComponent: () => import('./pages/pull-refresh') },
+      { path: 'swipe-actions', loadComponent: () => import('./pages/swipe-actions') },
+      { path: 'swipe-deck', loadComponent: () => import('./pages/swipe-deck') },
+      { path: 'card-stack', loadComponent: () => import('./pages/card-stack') },
+      { path: 'notification-center', loadComponent: () => import('./pages/notification-center') },
+      { path: 'chat', loadComponent: () => import('./pages/chat') },
+      { path: 'dock', loadComponent: () => import('./pages/dock') },
+      { path: 'status-island', loadComponent: () => import('./pages/status-island') },
       { path: 'meter', loadComponent: () => import('./pages/meter') },
       { path: 'state', loadComponent: () => import('./pages/state') },
       { path: 'gauge', loadComponent: () => import('./pages/gauge') },

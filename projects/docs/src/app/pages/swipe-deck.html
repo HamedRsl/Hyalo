@@ -1,0 +1,40 @@
+<docs-page
+  heading="Swipe deck"
+  lead="A controlled decision deck with typed card templates, pass/keep buttons, and undo."
+  ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
+    ><div class="mobile-demo">
+      <hy-swipe-deck
+        #deck
+        label="Discover listings"
+        [items]="items"
+        [itemKey]="key"
+        (decided)="decision.set($event.item.name + ': ' + $event.direction)"
+        ><ng-template [hySwipeItem]="deck" let-item
+          ><article class="sample-card">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.detail }}</p>
+          </article></ng-template
+        ></hy-swipe-deck
+      >
+      <p role="status">{{ decision() }}</p>
+    </div></docs-example
+  >
+  <h2>Import</h2>
+  <docs-import code="import &#123; HY_SWIPE_DECK &#125; from '@hyalo/angular/swipe-deck';" />
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Only a committed gesture or native action button emits a decision. Cancellation and lost pointer
+    capture do not advance. Index is controlled; Undo changes the index, so applications must
+    reverse their own business actions if required. Stable item keys prevent stale spring
+    completions from choosing a replaced item. Embedded interactive content remains usable.
+  </p>
+  <h2>Design tokens</h2>
+  <p>
+    Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override
+    local component variables on the host; reduced motion, forced colors and fidelity retain
+    functional controls.
+  </p>
+  <docs-tokens [groups]="['swipeDeck']" />
+  <h2>API</h2>
+  <docs-api-table [rows]="apiRows"
+/></docs-page>

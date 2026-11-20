@@ -1,0 +1,96 @@
+.mobile-demo {
+  display: grid;
+  gap: var(--hy-space-4);
+  inline-size: 100%;
+  max-inline-size: 34rem;
+  margin-inline: auto;
+  min-inline-size: 0;
+  color: var(--hy-ink);
+}
+.sample-card {
+  padding: var(--hy-space-6);
+  min-block-size: 10rem;
+  background: var(--hy-surface-2);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-l);
+}
+.sample-card h3 {
+  margin-block-start: 0;
+}
+.fab-stage {
+  min-block-size: 15rem;
+  display: flex;
+  justify-content: center;
+  padding-block-start: var(--hy-space-4);
+}
+.composer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--hy-space-2);
+  padding-block-start: var(--hy-space-3);
+}
+.composer label {
+  display: grid;
+  gap: var(--hy-space-2);
+  flex: 1;
+}
+.composer input {
+  font: inherit;
+  background: var(--hy-surface-1);
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line-strong);
+  border-radius: var(--hy-radius-m);
+  padding: var(--hy-space-3);
+  block-size: var(--hy-control-md, 44px);
+  box-sizing: border-box;
+  min-block-size: 44px;
+  min-inline-size: 0;
+}
+.composer input:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+
+.composer > button {
+  block-size: var(--hy-control-md, 44px);
+  flex: 0 0 auto;
+}
+
+.account-preview {
+  display: grid;
+  gap: var(--hy-space-4);
+  min-block-size: 9rem;
+}
+.account-preview h3,
+.account-preview p {
+  margin: 0;
+}
+.account-preview button {
+  justify-self: start;
+}
+.composer > button {
+  min-block-size: 44px;
+}
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--hy-space-2);
+}
+.activity-list li {
+  padding: var(--hy-space-3);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+}
+.refresh-count {
+  margin-block: 0 var(--hy-space-3);
+  color: var(--hy-ink-2);
+}
+
+.account-preview h2 {
+  margin: 0;
+  font-size: var(--hy-step-1);
+}

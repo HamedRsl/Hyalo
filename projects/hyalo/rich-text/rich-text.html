@@ -1,0 +1,13 @@
+
+<div class="surface editor" [class.invalid]="showsError()" [attr.aria-busy]="status()==='loading'||null">
+@if(showToolbar()){<div class="toolbar" role="group" aria-label="Text formatting">
+@for(action of actions();track action.command){<button type="button" [disabled]="!action.available" [attr.aria-pressed]="action.active" (mousedown)="$event.preventDefault()" (click)="run(action.command)">{{action.label}}</button>}
+@if(links()){<button type="button" [disabled]="blocked()||status()!=='ready'" (mousedown)="$event.preventDefault()" (click)="editUrl('link')">Link</button>}
+@if(images()){<button type="button" [disabled]="blocked()||status()!=='ready'" (mousedown)="$event.preventDefault()" (click)="editUrl('image')">Image</button>}
+</div>}
+@if(urlEditor()){<div class="toolbar"><label>{{urlEditor()==='link'?'Link URL':'Image URL'}} <input type="url" [value]="url()" (input)="updateUrl($event)" (keydown.enter)="applyUrl();$event.preventDefault()" /></label><button type="button" [disabled]="blocked()" (click)="applyUrl()">Apply</button><button type="button" (click)="urlEditor.set(null)">Cancel</button></div>@if(urlError()){<p class="error" role="alert">{{urlError()}}</p>}}
+<div #mount class="mount" [style.min-block-size]="minHeight()" [style.max-block-size]="maxHeight()"></div>
+@if(status()!=='ready'){<div class="fallback" [attr.aria-label]="label()">{{fallback()}}</div>}
+@if(status()==='loading'){<p class="message" role="status">Loading editor</p>}@if(status()==='error'){<p class="error" role="alert">Editor could not load. <button type="button" (click)="retry()">Retry</button></p>}
+@if(showCount()){<p class="count message" aria-live="polite">{{characters()}} characters{{characterLimit()!==null?' / '+characterLimit():''}}</p>}
+</div>

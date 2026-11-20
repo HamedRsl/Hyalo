@@ -156,6 +156,21 @@ export class App {
     this.pagesRef = openPagesDrawer(this.injector, this.pagesTemplate());
   }
 
+  protected revealNavLink(link: HTMLAnchorElement): void {
+    afterNextRender(
+      () => {
+        if (!link.isConnected) return;
+        const nav = link.closest<HTMLElement>('nav');
+        if (!nav || nav.scrollHeight <= nav.clientHeight) return;
+        const bounds = nav.getBoundingClientRect(),
+          selected = link.getBoundingClientRect();
+        if (selected.top < bounds.top || selected.bottom > bounds.bottom)
+          nav.scrollTop += selected.top - bounds.top - (nav.clientHeight - selected.height) / 2;
+      },
+      { injector: this.injector },
+    );
+  }
+
   protected closePages(): void {
     this.pagesRef?.close();
     this.pagesRef = null;

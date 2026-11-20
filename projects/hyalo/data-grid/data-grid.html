@@ -1,0 +1,57 @@
+<section>
+<h3 class="caption">{{caption()}}</h3>
+@if(options().showToolbar){<div class="toolbar">
+<label>{{options().searchLabel}} <input type="search" [value]="search()" [disabled]="disabled()" (input)="searchInput($event)" (compositionend)="searchInput($event)" /></label>
+<button type="button" [disabled]="disabled()" (click)="reset()">Reset</button>
+<button type="button" [disabled]="disabled()||loading()" (click)="exportCsv({download:true})">Export CSV</button>
+@if(options().columnPicker){<details><summary>Columns</summary><div class="column-picker">@for(column of columns();track column.id){<label><input type="checkbox" [checked]="!hiddenColumns().includes(column.id)" [disabled]="disabled()" (change)="setColumnVisible(column.id,$any($event.target).checked)" />{{column.header}}</label><div><button type="button" [disabled]="disabled()||hiddenColumns().includes(column.id)||column.reorderable===false||!options().reorderColumns" [attr.aria-label]="'Move '+column.header+' earlier'" (click)="shiftColumn(column.id,-1)">Earlier</button><button type="button" [disabled]="disabled()||hiddenColumns().includes(column.id)||column.reorderable===false||!options().reorderColumns" [attr.aria-label]="'Move '+column.header+' later'" (click)="shiftColumn(column.id,1)">Later</button></div>}</div></details>}
+<span class="message" role="status">{{total()}} rows</span>
+</div>}
+@if(error()){<p class="error" role="alert">{{error()}} <button type="button" (click)="retryRequested.emit()">Retry</button></p>}
+@if(loading()){<p class="message" role="status">{{options().loadingLabel}}</p>}
+<div ngGrid class="grid surface" [attr.role]="treeGrid()?'treegrid':'grid'" [attr.aria-label]="caption()" [attr.aria-rowcount]="total()+1" [attr.aria-colcount]="visibleColumns().length+(selectionEnabled()?1:0)" [attr.aria-busy]="loading()||null" [disabled]="disabled()" [enableSelection]="false" focusMode="roving" rowWrap="nowrap" colWrap="nowrap">
+<div #header class="header-clip">
+<div ngGridRow class="grid-row header" [rowIndex]="1" [style.grid-template-columns]="columnsStyle()" [style.inline-size.px]="columnsWidth()" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListDisabled]="disabled()||!options().reorderColumns" (cdkDropListDropped)="reorder($event)">
+@if(selectionEnabled()){<div ngGridCell role="columnheader" class="cell select-cell">@if(options().selectionMode==='multiple'){<input ngGridCellWidget widgetType="simple" type="checkbox" [attr.aria-label]="options().selectionLabel" [checked]="allSelected()" [indeterminate]="someSelected()" [disabled]="disabled()" (change)="toggleAll()" />}</div>}
+@for(column of visibleColumns();track column.id;let index=$index){
+<div ngGridCell role="columnheader" class="cell column-header" [class.pinned]="!!column.pinned" [style.position]="column.pinned?'sticky':null" [style.inset-inline-start.px]="headerPins()[column.id]?.start" [style.inset-inline-end.px]="headerPins()[column.id]?.end" [colIndex]="index+1+(selectionEnabled()?1:0)" [attr.aria-sort]="headerSorts()[column.id]??'none'" cdkDrag [cdkDragData]="column" (cdkDragStarted)="dragStarted()" [cdkDragDisabled]="disabled()||column.reorderable===false||!options().reorderColumns">
+<div class="column-title">
+@if(options().reorderColumns&&column.reorderable!==false){<button ngGridCellWidget widgetType="simple" cdkDragHandle type="button" [disabled]="disabled()" [attr.aria-label]="'Drag '+column.header" class="drag-handle">⋮</button>}
+<button ngGridCellWidget widgetType="simple" type="button" [disabled]="disabled()||!column.sortable" (click)="toggleSort(column.id,$event.shiftKey)">{{column.header}} <span aria-hidden="true">{{headerSorts()[column.id]==='ascending'?'↑':headerSorts()[column.id]==='descending'?'↓':''}}</span></button>
+@if(options().resizeColumns&&column.resizable!==false){<div role="separator" tabindex="0" aria-orientation="vertical" [attr.aria-label]="'Resize '+column.header" [attr.aria-valuemin]="column.minWidth??80" [attr.aria-valuemax]="column.maxWidth??1000" [attr.aria-valuenow]="column.width" class="column-resizer" (pointerdown)="widthStart($event,column.id,column.width)" (pointermove)="widthMove($event)" (pointerup)="widthEnd($event)" (pointercancel)="cancelResize()" (lostpointercapture)="cancelResize()" (keydown)="widthKeys($event,column.id,column.width)"></div>}
+</div>
+@if(options().showFilters&&column.filterable!==false){<input ngGridCellWidget widgetType="editable" type="search" [attr.aria-label]="'Filter '+column.header" [value]="filterValues()[column.id]??''" [disabled]="disabled()" (input)="filterInput($event,column.id)" />}
+</div>}
+</div></div>
+@if(options().virtualScroll){
+<cdk-virtual-scroll-viewport class="body" [itemSize]="options().rowHeight" [minBufferPx]="options().minBufferPx" [maxBufferPx]="options().maxBufferPx" [style.block-size.px]="options().height" (scroll)="syncScroll($event)">
+<ng-container *cdkVirtualFor="let row of viewRows();let index=index;trackBy:rowTrack"><ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{$implicit:row,index}" /></ng-container>
+</cdk-virtual-scroll-viewport>
+}@else{<div class="body" [style.max-block-size.px]="options().height" (scroll)="syncScroll($event)">@for(row of viewRows();track row.key;let index=$index){<ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{$implicit:row,index}" />}</div>}
+<ng-template #rowTemplate let-row let-index="index">
+<div ngGridRow [tabindex]="-1" (dblclick)="row.kind==='row'&&activate(row.row)" (keydown.enter)="row.kind==='row'&&activate(row.row)" class="grid-row" [class.group]="row.kind==='group'" [class.selected]="row.selected" [rowIndex]="index+2+(currentPage()-1)*size()" [attr.aria-selected]="selectionEnabled()&&row.kind==='row'?row.selected:null" [attr.aria-level]="treeGrid()||row.kind==='group'?row.level:null" [attr.aria-expanded]="row.kind==='group'||treeGrid()?row.expanded??null:null" [attr.aria-posinset]="row.position??null" [attr.aria-setsize]="row.siblingCount??null" [style.grid-template-columns]="columnsStyle()" [style.inline-size.px]="columnsWidth()" [style.min-block-size.px]="options().rowHeight" [style.block-size.px]="options().virtualScroll?(options().rowHeight):null" [class.fixed-row]="options().virtualScroll" [attr.data-row-key]="row.domKey">
+@if(row.kind==='group'){<div ngGridCell [colSpan]="visibleColumns().length+(selectionEnabled()?1:0)" class="cell group-label"><button ngGridCellWidget widgetType="simple" type="button" [attr.aria-expanded]="row.expanded" [disabled]="disabled()" (click)="toggleGroup(row.groupId)">{{row.expanded?'Collapse':'Expand'}} {{row.label}} ({{row.count}})</button>@for(cell of row.cells;track cell.column.id){@if(cell.text){<span>{{cell.column.header}}: {{cell.text}}</span>}}</div>}
+@else{
+@if(selectionEnabled()){<div ngGridCell class="cell select-cell"><input ngGridCellWidget widgetType="simple" type="checkbox" [checked]="row.selected" [disabled]="disabled()||row.disabled" [attr.aria-label]="'Select '+row.label" (change)="toggleRow(row.rowKey)" /></div>}
+@for(cell of row.cells;track cell.column.id;let columnIndex=$index){
+<div ngGridCell [tabindex]="undefined" class="cell" [colIndex]="columnIndex+1+(selectionEnabled()?1:0)" [style.text-align]="cell.column.align??'start'" [style.position]="cell.pinStart!==null||cell.pinEnd!==null?'sticky':null" [style.inset-inline-start.px]="cell.pinStart" [style.inset-inline-end.px]="cell.pinEnd" [class.pinned]="cell.pinStart!==null||cell.pinEnd!==null" [attr.data-column]="cell.column.id" (dblclick)="beginEdit(row.row,cell.column.id)" (keydown)="cellKeys($event,row.row,cell.column.id)" (contextmenu)="context(row.row,$event)">
+@if(editing()?.key===row.rowKey&&(editing()?.column===null||editing()?.column===cell.column.id)&&cell.column.write){
+@if(cell.column.editorTemplate;as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="cell.editorContext" />}
+@else if(cell.column.editor==='checkbox'){<input ngGridCellWidget widgetType="simple" data-grid-editor type="checkbox" [attr.aria-label]="cell.column.header" [checked]="editing()?.values[cell.column.id]===true" [disabled]="saving()" (change)="editorInput($event,cell.column)" (keydown)="editKeys($event)" />}
+@else if(cell.column.editor==='select'){<select ngGridCellWidget widgetType="editable" data-grid-editor [attr.aria-label]="cell.column.header" [disabled]="saving()" (change)="editorInput($event,cell.column)" (keydown)="editKeys($event)">@for(option of cell.column.options;track $index;let index=$index){<option [value]="index" [selected]="option.value===editing()?.values[cell.column.id]">{{option.label}}</option>}</select>}
+@else{<input ngGridCellWidget widgetType="editable" data-grid-editor type="text" [attr.inputmode]="cell.column.editor==='number'?'decimal':null" [attr.aria-label]="cell.column.header" [value]="editing()?.values[cell.column.id]??''" [disabled]="saving()" (input)="editorInput($event,cell.column)" (keydown)="editKeys($event)" />}
+}
+@else if(cell.column.template;as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="cell.context" />}
+@else{<span>{{cell.text}}</span>}
+</div>}
+}
+</div>
+@if(row.kind==='row'&&rowDetailTemplate()&&!options().virtualScroll&&expandedRows().includes(row.rowKey)){<div class="row-detail"><ng-container [ngTemplateOutlet]="rowDetailTemplate()" [ngTemplateOutletContext]="{$implicit:row.row}" /></div>}
+</ng-template>
+
+</div>
+@if(!viewRows().length&&!loading()&&!error()){<p class="message" role="status">{{options().emptyLabel}}</p>}
+@if(editMessage()){<p class="error" role="alert">{{editMessage()}}</p>}
+@if(editing()){<div class="toolbar"><button type="button" [disabled]="saving()||disabled()" (click)="commitEdit()">{{saving()?'Saving':'Save edit'}}</button><button type="button" (click)="cancelEdit()">Cancel edit</button></div>}
+@if(options().pagination){<nav class="toolbar pager" aria-label="Grid pages"><button type="button" [disabled]="disabled()||currentPage()<=1" (click)="setPage(1)">First</button><button type="button" [disabled]="disabled()||currentPage()<=1" (click)="setPage(currentPage()-1)">Previous</button><span>Page {{currentPage()}} of {{pageCount()}}</span><button type="button" [disabled]="disabled()||currentPage()>=pageCount()" (click)="setPage(currentPage()+1)">Next</button><button type="button" [disabled]="disabled()||currentPage()>=pageCount()" (click)="setPage(pageCount())">Last</button><label>Rows <select [value]="size()" [disabled]="disabled()" (change)="pageSizeInput($event)">@for(size of options().pageSizes;track size){<option [value]="size">{{size}}</option>}</select></label></nav>}
+</section>

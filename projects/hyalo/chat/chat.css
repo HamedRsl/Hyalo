@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+.viewport {
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--hy-space-4);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-chat-radius, var(--hy-radius-l));
+  background: var(--hy-surface-1);
+}
+.viewport:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--hy-space-3);
+}
+article {
+  max-inline-size: 85%;
+  inline-size: fit-content;
+  padding: var(--hy-space-3) var(--hy-space-4);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+  background: var(--hy-surface-2);
+}
+p {
+  margin-block: var(--hy-space-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+strong {
+  font-size: var(--hy-step--1);
+}
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hy-space-2);
+  font-size: var(--hy-step--1);
+  color: var(--hy-ink-2);
+}
+blockquote {
+  margin: var(--hy-space-2) 0;
+  padding-inline-start: var(--hy-space-3);
+  border-inline-start: 2px solid var(--hy-line-strong);
+  color: var(--hy-ink-2);
+}
+:host([data-direction='outgoing']) article {
+  margin-inline-start: auto;
+  background: var(--hy-primary-wash);
+}
+a {
+  color: var(--hy-primary);
+  overflow-wrap: anywhere;
+}
+
+.avatar {
+  object-fit: cover;
+  border-radius: var(--hy-radius-pill);
+  vertical-align: middle;
+  margin-inline-end: var(--hy-space-2);
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--hy-space-2);
+  padding-block: var(--hy-space-3);
+}
+.composer textarea {
+  grid-column: 1;
+  grid-row: 1;
+  box-sizing: content-box;
+  inline-size: auto;
+  min-inline-size: 0;
+  resize: none;
+  block-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: max(var(--hy-space-2), calc((44px - 1.5rem - 2px) / 2)) var(--hy-space-3);
+  font: inherit;
+  line-height: 1.5rem;
+  color: var(--hy-ink);
+  background: var(--hy-surface-1);
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-radius-m);
+}
+.composer textarea:focus-visible {
+  outline: 2px solid var(--hy-primary);
+  outline-offset: 2px;
+}
+.composer label {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--hy-space-2);
+}
+
+.composer > button[type='submit'] {
+  grid-column: 2;
+  grid-row: 1;
+  min-block-size: 44px;
+}
+.composer > ul {
+  grid-column: 1 / -1;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+.composer > ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hy-space-2);
+  overflow-wrap: anywhere;
+}

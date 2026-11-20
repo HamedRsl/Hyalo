@@ -1,0 +1,51 @@
+<section [attr.aria-label]="heading()" [attr.aria-busy]="loading()">
+  <h2>{{ heading() }}</h2>
+  @if (loading()) {
+    <p role="status">{{ loadingLabel() }}</p>
+  }
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+    <button hyButton type="button" variant="ghost" [disabled]="loading()" (click)="retry.emit()">
+      {{ retryLabel() }}
+    </button>
+  }
+  @if (accounts().length) {
+    <hy-card-stack
+      #stack
+      [label]="accountsLabel()"
+      [items]="cards()"
+      [itemKey]="key"
+      [(activeIndex)]="activeIndex"
+      [disabled]="loading()"
+    >
+      <ng-template [hyStackItem]="stack" let-account
+        ><article class="wallet-card">
+          <h3>{{ account.label }}</h3>
+          <p class="balance">
+            <bdi>{{ account.formatted }}</bdi>
+          </p>
+          @if (account.detail) {
+            <p>{{ account.detail }}</p>
+          }
+        </article></ng-template
+      >
+    </hy-card-stack>
+  } @else if (!loading()) {
+    <p>{{ emptyLabel() }}</p>
+  }
+  <div class="quick-actions">
+    @for (action of actions(); track action.id) {
+      <button
+        hyButton
+        type="button"
+        variant="soft"
+        [tone]="action.tone ?? 'primary'"
+        [disabled]="loading() || !!action.disabled"
+        (click)="choose(action)"
+      >
+        {{ action.label }}
+      </button>
+    }
+  </div>
+  <ng-content select="[hyWalletContent]" />
+</section>

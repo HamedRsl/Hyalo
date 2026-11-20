@@ -1,4 +1,4 @@
-import { FocusTrapFactory } from '@angular/cdk/a11y';
+import type { FocusTrapFactory } from '@angular/cdk/a11y';
 import { take } from 'rxjs';
 import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import {
@@ -20,7 +20,7 @@ import {
   type HyPlacement,
   ɵHyPresence as HyPresence,
 } from '@hyalo/angular/overlay';
-import { loadOverlay } from './load-overlay';
+import { loadPopoverOverlay as loadOverlay } from './load-overlay';
 
 /**
  * A non-modal glass panel anchored to a trigger, for content that does not
@@ -54,7 +54,6 @@ export class HyPopover {
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly viewContainer = inject(ViewContainerRef);
-  private readonly focusTraps = inject(FocusTrapFactory);
   private readonly fidelity = inject(HyFidelity);
   protected readonly panelId = injectId('popover');
   private overlayRef: OverlayRef | null = null;
@@ -110,6 +109,7 @@ export class HyPopover {
     }
     // It may have been closed again while the code loaded.
     if (!this.open()) return;
+    const focusTraps = this.injector.get(kit.FocusTrapFactory);
     const {
       TemplatePortal,
       createFlexibleConnectedPositionStrategy,
@@ -139,7 +139,8 @@ export class HyPopover {
     }
     if (this.overlayRef.hasAttached()) {
       // Reopened while fading out: turn the exit around.
-      if (this.presence.leaving && this.positioned) this.reveal(this.overlayRef.overlayElement);
+      if (this.presence.leaving && this.positioned)
+        this.reveal(this.overlayRef.overlayElement, focusTraps);
       return;
     }
     // Read on every open, so a changed placement applies next time.
@@ -160,15 +161,15 @@ export class HyPopover {
     this.position?.positionChanges.pipe(take(1)).subscribe(() => {
       this.positioned = true;
       if (this.destroyed || !this.open() || !this.overlayRef?.hasAttached()) return;
-      this.reveal(pane);
+      this.reveal(pane, focusTraps);
     });
     this.overlayRef.attach(new TemplatePortal(this.content(), this.viewContainer));
   }
 
-  private reveal(pane: HTMLElement): void {
+  private reveal(pane: HTMLElement, focusTraps: FocusTrapFactory): void {
     pane.style.removeProperty('visibility');
     this.presence.enter(pane);
-    const trap = this.focusTraps.create(pane);
+    const trap = focusTraps.create(pane);
     void trap.focusFirstTabbableElementWhenReady().then((found) => {
       if (!found && this.open() && !this.destroyed) {
         pane.tabIndex = -1;

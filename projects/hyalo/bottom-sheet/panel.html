@@ -1,0 +1,30 @@
+<header>
+  @if (context.config.handle !== false) {
+    <button
+      type="button"
+      data-hy-sheet-handle
+      [attr.aria-label]="context.config.handleLabel ?? 'Resize sheet'"
+      (click)="cycle()"
+      (keydown)="keys($event)"
+    >
+      <span aria-hidden="true"></span><span class="sr">{{ context.snap() * 100 }}%</span>
+    </button>
+  }
+  <button type="button" class="close" (click)="close()">
+    {{ context.config.closeLabel ?? 'Close' }}
+  </button>
+</header>
+<div
+  class="body"
+  [style.max-block-size.px]="bodyHeight()"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="context.config.label ?? 'Sheet content'"
+>
+  @if (template) {
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="templateContext" />
+  }
+  @if (component) {
+    <ng-container [hySheetComponent]="component" [hySheetInjector]="contentInjector" />
+  }
+</div>

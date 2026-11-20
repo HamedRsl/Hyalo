@@ -134,6 +134,8 @@
       @for (item of group.items; track item.path) {
         <li>
           <a
+            #navLink
+            (isActiveChange)="$event && revealNavLink(navLink)"
             [routerLink]="item.path"
             routerLinkActive="active"
             ariaCurrentWhenActive="page"

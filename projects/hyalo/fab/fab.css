@@ -1,0 +1,56 @@
+:host {
+  display: inline-block;
+  position: relative;
+  z-index: var(--hy-z-sticky);
+}
+.dial {
+  position: relative;
+  inline-size: fit-content;
+}
+.actions {
+  position: absolute;
+  display: flex;
+  gap: var(--hy-space-2);
+  inline-size: max-content;
+}
+:host([data-direction='up']) .actions {
+  flex-direction: column-reverse;
+  inset-block-end: calc(100% + var(--hy-space-2));
+  inset-inline-end: 0;
+}
+:host([data-direction='down']) .actions {
+  flex-direction: column;
+  inset-block-start: calc(100% + var(--hy-space-2));
+  inset-inline-end: 0;
+}
+:host([data-direction='start']) .actions {
+  flex-direction: row-reverse;
+  inset-inline-end: calc(100% + var(--hy-space-2));
+  inset-block-start: 0;
+}
+:host([data-direction='end']) .actions {
+  inset-inline-start: calc(100% + var(--hy-space-2));
+  inset-block-start: 0;
+}
+:host(:not([data-layout='linear'])) .actions {
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+:host(:not([data-layout='linear'])) .actions button {
+  position: absolute;
+  pointer-events: auto;
+}
+.mask {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  background: var(--hy-scrim);
+  z-index: -1;
+  cursor: default;
+}
+
+:host(:dir(rtl)) {
+  --_hy-direction: -1;
+}

@@ -1,0 +1,15 @@
+h2 {
+  margin-block: 0 var(--hy-space-2);
+  font-size: var(--hy-step-2);
+}
+p {
+  color: var(--hy-ink-2);
+}
+.actions {
+  display: grid;
+  gap: var(--hy-space-2);
+}
+.actions button {
+  justify-content: start;
+  inline-size: 100%;
+}

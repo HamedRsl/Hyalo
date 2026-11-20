@@ -1,0 +1,32 @@
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+:host([data-fixed='true']) {
+  position: fixed;
+  z-index: var(--hy-z-sticky);
+}
+:host([data-fixed='true'][data-position='bottom']) {
+  inset-block-end: max(var(--hy-space-3), env(safe-area-inset-bottom));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+:host([data-fixed='true'][data-position='top']) {
+  inset-block-start: max(var(--hy-space-3), env(safe-area-inset-top));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+}
+:host([data-fixed='true'][data-position='start']) {
+  inset-inline-start: var(--hy-space-3);
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+:host([data-fixed='true'][data-position='end']) {
+  inset-inline-end: var(--hy-space-3);
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+:host:dir(rtl)[data-position='top'],
+:host:dir(rtl)[data-position='bottom'] {
+  translate: 50% 0;
+}

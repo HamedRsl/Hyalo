@@ -1,0 +1,44 @@
+<div class="row" role="group" tabindex="-1" [attr.aria-label]="label()" (keydown.escape)="close()">
+  <div
+    class="action-side start"
+    [inert]="open() !== 'start'"
+    [attr.aria-hidden]="open() !== 'start'"
+  >
+    @for (action of startActions(); track action.id) {
+      <button
+        hyButton
+        variant="soft"
+        type="button"
+        [disabled]="disabled() || (action.disabled ?? false)"
+        [tone]="action.tone ?? 'primary'"
+        (click)="choose(action, 'start')"
+      >
+        {{ action.label }}
+      </button>
+    }
+  </div>
+  <div class="action-side end" [inert]="open() !== 'end'" [attr.aria-hidden]="open() !== 'end'">
+    @for (action of endActions(); track action.id) {
+      <button
+        hyButton
+        variant="soft"
+        type="button"
+        [disabled]="disabled() || (action.disabled ?? false)"
+        [tone]="action.tone ?? 'primary'"
+        (click)="choose(action, 'end')"
+      >
+        {{ action.label }}
+      </button>
+    }
+  </div>
+  <div #surface class="surface"><ng-content /></div>
+</div>
+<button
+  class="toggle"
+  type="button"
+  [disabled]="disabled() || (!startActions().length && !endActions().length)"
+  [attr.aria-expanded]="!!open()"
+  (click)="toggle()"
+>
+  {{ open() ? closeLabel() : actionsLabel() }}
+</button>

@@ -1,0 +1,6 @@
+<div class="splitter surface" [class.vertical]="orientation()==='vertical'" [class.dragging]="dragging()" [style.block-size]="height()" role="group" [attr.aria-label]="label()">
+@for(item of view();track item.pane.id;let last=$last){
+<section class="pane" [id]="item.id" [style.flex-basis.%]="item.size" [hidden]="item.collapsed" [inert]="item.collapsed" [attr.aria-label]="item.pane.label">@if(item.template;as template){<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="item.context" />}@else{<p>{{item.pane.label}}</p>}</section>
+@if(!last){<div class="gutter" role="separator" [tabindex]="disabled()?-1:0" [attr.aria-label]="'Resize '+item.pane.label" [attr.aria-orientation]="orientation()==='horizontal'?'vertical':'horizontal'" [attr.aria-valuenow]="item.size" [attr.aria-valuemin]="item.min" [attr.aria-valuemax]="item.max" [attr.aria-controls]="item.id" [attr.aria-disabled]="disabled()" [style.flex-basis.px]="gutterSize()" (pointerdown)="start($event,item.index)" (pointermove)="move($event)" (pointerup)="finish($event)" (pointercancel)="cancel()" (lostpointercapture)="cancel()" (keydown)="keys($event,item.index)"><span aria-hidden="true"></span></div>}
+}
+</div>

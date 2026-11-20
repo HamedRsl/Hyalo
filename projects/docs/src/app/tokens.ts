@@ -12,6 +12,63 @@ export interface TokenRow {
  * Keep this list in step with the component stylesheets.
  */
 export const COMPONENT_TOKENS = {
+  tabBar: [
+    {
+      name: '--hy-tab-bar-radius',
+      default: 'var(--hy-radius-l)',
+      description: 'Navigation surface radius.',
+    },
+  ],
+  keypad: [
+    { name: '--hy-keypad-width', default: '22rem', description: 'Maximum keypad width.' },
+    { name: '--hy-keypad-key-height', default: '3.5rem', description: 'Native key height.' },
+  ],
+  slideConfirm: [
+    {
+      name: '--hy-slide-height',
+      default: '3.5rem',
+      description: 'Confirmation track and handle height.',
+    },
+  ],
+  swipeDeck: [
+    {
+      name: '--hy-swipe-radius',
+      default: 'var(--hy-radius-l)',
+      description: 'Decision card radius.',
+    },
+  ],
+  swipeActions: [
+    {
+      name: '--hy-swipe-action-width',
+      default: '88px',
+      description: 'Set by actionWidth to match gesture bounds and action widths.',
+    },
+  ],
+  cardStack: [
+    {
+      name: '--hy-stack-radius',
+      default: 'var(--hy-radius-l)',
+      description: 'Stack surface radius.',
+    },
+  ],
+  notifications: [
+    {
+      name: '--hy-notification-radius',
+      default: 'var(--hy-radius-l)',
+      description: 'Center surface radius.',
+    },
+    {
+      name: '--hy-notification-accent',
+      default: 'semantic tone',
+      description: 'Unread card indicator color.',
+    },
+  ],
+  chat: [
+    { name: '--hy-chat-radius', default: 'var(--hy-radius-l)', description: 'Bubble radius.' },
+  ],
+  statusIsland: [
+    { name: '--hy-island-width', default: '20rem', description: 'Maximum details-popover width.' },
+  ],
   meter: [
     {
       name: '--hy-meter-radius',
@@ -228,6 +285,15 @@ export type ComponentTokenGroup = keyof typeof COMPONENT_TOKENS;
 
 /** Where each group is documented. Groups that share a page share a path. */
 export const COMPONENT_TOKEN_PAGES: Record<ComponentTokenGroup, { title: string; path: string }> = {
+  tabBar: { title: 'Mobile tab bar', path: '/components/tab-bar' },
+  keypad: { title: 'Numeric keypad', path: '/components/keypad' },
+  slideConfirm: { title: 'Slide to confirm', path: '/components/slide-confirm' },
+  swipeDeck: { title: 'Swipe deck', path: '/components/swipe-deck' },
+  swipeActions: { title: 'Swipe actions', path: '/components/swipe-actions' },
+  cardStack: { title: '3D card stack', path: '/components/card-stack' },
+  notifications: { title: 'Notification center', path: '/components/notification-center' },
+  chat: { title: 'Chat and message list', path: '/components/chat' },
+  statusIsland: { title: 'Dynamic status island', path: '/components/status-island' },
   meter: { title: 'Meter', path: '/components/meter' },
   state: { title: 'Error and loading states', path: '/components/state' },
   gauge: { title: 'Gauge', path: '/components/gauge' },

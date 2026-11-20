@@ -1,0 +1,42 @@
+<ng-template #sheetContent>
+  <h2>{{ heading() }}</h2>
+  @if (description()) {
+    <p>{{ description() }}</p>
+  }
+  <div class="actions">
+    @for (action of ordered(); track action.id) {
+      <button
+        hyButton
+        type="button"
+        variant="ghost"
+        [tone]="action.role === 'destructive' ? 'danger' : (action.tone ?? 'primary')"
+        [disabled]="disabled() || pending() !== null || (action.disabled ?? false)"
+        [attr.aria-busy]="pending() === action.id"
+        (click)="choose(action)"
+      >
+        @if (action.icon) {
+          <hy-icon [name]="action.icon" />
+        }
+        {{ action.label }}
+      </button>
+    }
+    @if (!hasCancel()) {
+      <button
+        hyButton
+        type="button"
+        variant="soft"
+        [disabled]="pending() !== null || disabled()"
+        (click)="open.set(false)"
+      >
+        {{ cancelLabel() }}
+      </button>
+    }
+  </div>
+</ng-template>
+<hy-bottom-sheet
+  [(open)]="open"
+  [label]="heading()"
+  [options]="options()"
+  (closed)="dismissed.emit()"
+  [content]="sheetContent"
+/>

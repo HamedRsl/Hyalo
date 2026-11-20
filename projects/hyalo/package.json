@@ -1,6 +1,6 @@
 {
   "name": "@hyalo/angular",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Liquid glass components for Angular. Signals, zoneless, SSR-safe, accessible, RTL-ready.",
   "license": "MIT",
   "author": "HamedRsl",
@@ -32,7 +32,20 @@
     "rxjs": "^7.4.0",
     "chart.js": "^4.6.1",
     "highlight.js": "^11.11.1",
-    "jalaali-js": "^1.2.8"
+    "jalaali-js": "^1.2.8",
+    "@fullcalendar/core": "^6.1.22",
+    "@fullcalendar/daygrid": "^6.1.22",
+    "@fullcalendar/timegrid": "^6.1.22",
+    "@fullcalendar/list": "^6.1.22",
+    "@fullcalendar/interaction": "^6.1.22",
+    "@fullcalendar/luxon3": "^6.1.22",
+    "luxon": "^3.7.2",
+    "@tiptap/core": "^3.34.0",
+    "@tiptap/pm": "^3.34.0",
+    "@tiptap/starter-kit": "^3.34.0",
+    "@tiptap/extension-image": "^3.34.0",
+    "@tiptap/extension-placeholder": "^3.34.0",
+    "@tiptap/extension-character-count": "^3.34.0"
   },
   "peerDependenciesMeta": {
     "jalaali-js": {
@@ -45,6 +58,45 @@
       "optional": true
     },
     "highlight.js": {
+      "optional": true
+    },
+    "@fullcalendar/core": {
+      "optional": true
+    },
+    "@fullcalendar/daygrid": {
+      "optional": true
+    },
+    "@fullcalendar/timegrid": {
+      "optional": true
+    },
+    "@fullcalendar/list": {
+      "optional": true
+    },
+    "@fullcalendar/interaction": {
+      "optional": true
+    },
+    "@fullcalendar/luxon3": {
+      "optional": true
+    },
+    "luxon": {
+      "optional": true
+    },
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "@tiptap/extension-image": {
+      "optional": true
+    },
+    "@tiptap/extension-placeholder": {
+      "optional": true
+    },
+    "@tiptap/extension-character-count": {
       "optional": true
     }
   },

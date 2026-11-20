@@ -1,0 +1,13 @@
+<hy-tab-bar
+  [items]="items()"
+  [disabled]="disabled()"
+  [showLabels]="showLabels()"
+  [itemTemplate]="itemTemplate()"
+  [material]="material()"
+  [label]="label()"
+  [activeId]="activeId()"
+  [orientation]="
+    !compact() && (position() === 'start' || position() === 'end') ? 'vertical' : 'horizontal'
+  "
+  (selected)="selected.emit($event)"
+/>

@@ -1,0 +1,60 @@
+:host {
+  display: block;
+  color: var(--hy-ink);
+}
+section {
+  border: 1px solid var(--hy-line);
+  border-radius: var(--hy-notification-radius, var(--hy-radius-l));
+  background: var(--hy-surface-1);
+  padding: var(--hy-space-4);
+}
+header,
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--hy-space-3);
+  flex-wrap: wrap;
+}
+h2,
+p {
+  margin-block: 0 var(--hy-space-2);
+}
+h2 {
+  font-size: var(--hy-step-2);
+}
+p,
+time {
+  color: var(--hy-ink-2);
+}
+time {
+  font-size: var(--hy-step--1);
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+article {
+  padding: var(--hy-space-4);
+  border-block-end: 1px solid var(--hy-line);
+}
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--hy-space-2);
+}
+:host([data-read='false']) article {
+  border-inline-start: 3px solid var(--hy-notification-accent, var(--hy-primary));
+}
+
+:host([data-tone='success']) {
+  --hy-notification-accent: var(--hy-success);
+}
+:host([data-tone='warning']) {
+  --hy-notification-accent: var(--hy-warning);
+}
+:host([data-tone='danger']) {
+  --hy-notification-accent: var(--hy-danger);
+}

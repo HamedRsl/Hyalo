@@ -1,0 +1,48 @@
+@if (open() && mask()) {
+  <button class="mask" type="button" [attr.aria-label]="closeLabel()" (click)="close()"></button>
+}
+<div class="dial" role="group" tabindex="-1" [attr.aria-label]="label()" (keydown)="keys($event)">
+  <button
+    #trigger
+    hyButton
+    type="button"
+    variant="solid"
+    [size]="size()"
+    [tone]="tone()"
+    iconOnly
+    [disabled]="disabled()"
+    [attr.aria-label]="label()"
+    [attr.aria-expanded]="actions().length ? open() : null"
+    [attr.aria-controls]="open() ? listId : null"
+    (click)="toggle()"
+  >
+    <hy-icon [name]="open() && closeIcon() ? closeIcon() : icon()" />
+  </button>
+  @if (open()) {
+    <div class="actions" [id]="listId" role="group" [attr.aria-label]="label()">
+      @for (item of positioned(); track item.action.id; let index = $index) {
+        <button
+          hyButton
+          type="button"
+          variant="glass"
+          [disabled]="item.action.disabled ?? false"
+          [tone]="item.action.tone ?? tone()"
+          [style.transform]="item.transform"
+          (click)="choose(item.action)"
+        >
+          @if (itemTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template"
+              [ngTemplateOutletContext]="{ $implicit: item.action, index }"
+            />
+          } @else {
+            @if (item.action.icon) {
+              <hy-icon [name]="item.action.icon" />
+            }
+            {{ item.action.label }}
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,7 @@
+@if(loading()){<p class="message" role="status">{{loadingLabel()}}</p>}
+@if(error()){<p class="message error" role="alert">{{error()}}</p><button type="button" (click)="retryRequested.emit()">Retry</button>}
+<ul [hidden]="ready()" [attr.aria-label]="label()">@for(item of baseline();track item.key){<li>{{item.label}}</li>}</ul>
+<cdk-virtual-scroll-viewport [hidden]="!ready()" [itemSize]="size()" [minBufferPx]="minBufferPx()" [maxBufferPx]="maxBufferPx()" [orientation]="orientation()" [appendOnly]="appendOnly()" [style.block-size.px]="height()" role="list" [attr.aria-label]="label()" [attr.aria-busy]="loading() || null" tabindex="0" (scrolledIndexChange)="indexChanged.emit($event)">
+<div *cdkVirtualFor="let item of items(); let index=index;let count=count;let first=first;let last=last;let even=even;let odd=odd;trackBy:key();templateCacheSize:templateCacheSize()" role="listitem" [style.block-size.px]="orientation()==='vertical'?size():null" [style.inline-size.px]="orientation()==='horizontal'?size():null" [attr.aria-posinset]="index+1" [attr.aria-setsize]="items().length"><ng-container [ngTemplateOutlet]="itemTemplate()" [ngTemplateOutletContext]="{$implicit:item,index,count,first,last,even,odd}" /></div>
+</cdk-virtual-scroll-viewport>
+@if(!items().length&&!loading()&&!error()){<p class="message" role="status">{{emptyLabel()}}</p>}
