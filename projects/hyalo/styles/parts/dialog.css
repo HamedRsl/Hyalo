@@ -55,6 +55,22 @@
   max-block-size: calc(100dvh - 2 * var(--hy-space-6));
 }
 
+.hy-dialog-maximized {
+  position: fixed !important;
+  inset: 0 !important;
+  margin: 0 !important;
+}
+
+.hy-dialog-maximized > .cdk-dialog-container {
+  max-block-size: none;
+  border-radius: 0;
+}
+
+.hy-dialog__drag-handle {
+  touch-action: none;
+  cursor: grab;
+}
+
 @media (max-width: 40rem) {
   .hy-dialog--full {
     inline-size: 100vw;

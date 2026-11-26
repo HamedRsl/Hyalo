@@ -11,20 +11,30 @@
   <ng-content />
   <ng-content select="[hySuffix]" />
 </div>
-@if ((hint() || hintTemplate()) && !errorText()) {
-  <p class="hy-field__hint" [id]="hintId">
-    @if (hintTemplate(); as template) {
+<div class="hy-field__subscript">
+  @if ((hint() || hintTemplate()) && !errorText()) {
+    <p class="hy-field__hint" [id]="hintId">
+      @if (hintTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
+      } @else {
+        {{ hint() }}
+      }
+    </p>
+  }
+  <p class="hy-field__error" [id]="errorId" aria-live="polite">
+    @if (errorText() && errorTemplate(); as template) {
       <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
-    } @else { {{ hint() }} }
+    } @else {
+      {{ errorText() }}
+    }
   </p>
-}
-<p class="hy-field__error" [id]="errorId" aria-live="polite">@if (errorText() && errorTemplate(); as template) {
-  <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
-} @else { {{ errorText() }} }</p>
+</div>
 @if (statusText() || feedbackTemplate()) {
   <p class="hy-field__hint" [id]="hintId + '-status'" role="status">
     @if (feedbackTemplate(); as template) {
       <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="feedbackContext()" />
-    } @else { {{ statusText() }} }
+    } @else {
+      {{ statusText() }}
+    }
   </p>
 }

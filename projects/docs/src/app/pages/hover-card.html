@@ -4,12 +4,15 @@
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="phase3-demo">
+      <div #profilePanels class="profile-panels"></div>
       <button
         hyButton
         variant="glass"
         type="button"
         [hyHoverCard]="profile"
         hoverCardLabel="Mina Rahimi profile"
+        hoverCardPanelClass="team-profile-pane"
+        [hoverCardContainer]="profilePanels"
       >
         Mina Rahimi</button
       ><ng-template #profile

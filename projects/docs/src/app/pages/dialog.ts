@@ -1,5 +1,13 @@
 import { EXAMPLES } from './examples/dialog';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  TemplateRef,
+  inject,
+  signal,
+} from '@angular/core';
+import { createGlobalPositionStrategy } from '@angular/cdk/overlay';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_DIALOG_DATA, HY_DIALOG_PARTS, HyDialog, HyDialogRef } from '@hyalo/angular/dialog';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
@@ -22,7 +30,7 @@ class RenameDialog {
 
 @Component({
   selector: 'docs-dialog-page',
-  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton],
+  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HyButton, HY_DIALOG_PARTS],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog.html',
 })
@@ -30,8 +38,45 @@ export default class DialogPage {
   protected readonly examples = EXAMPLES;
 
   private readonly dialog = inject(HyDialog);
+  private readonly injector = inject(Injector);
   protected readonly confirmResult = signal('');
   protected readonly collection = signal('Autumn picks');
+  protected readonly geometry = signal<HyDialogRef | null>(null);
+  protected readonly geometryState = signal('');
+
+  protected openGeometry(content: TemplateRef<unknown>): void {
+    const ref = this.dialog.open(content, {
+      id: 'geometry-dialog',
+      templateContext: { $implicit: 'Dimensions update on the same panel.' },
+      width: 'min(22rem, 90vw)',
+      maxHeight: '85dvh',
+      positionStrategy: createGlobalPositionStrategy(this.injector)
+        .centerHorizontally()
+        .centerVertically(),
+      autoFocus: '#geometry-resize',
+      autoFocusTiming: 'opened',
+      restoreFocus: '#geometry-trigger',
+      ariaDescribedBy: 'geometry-description',
+      panelClass: 'docs-geometry-pane',
+      backdropClass: 'docs-geometry-backdrop',
+      closeOnEscape: false,
+      closeOnBackdrop: true,
+    });
+    this.geometry.set(ref);
+    ref.opened.subscribe(() => this.geometryState.set('Geometry dialog opened'));
+    ref.beforeClosed.subscribe(({ reason }) => this.geometryState.set('Closed by ' + reason));
+    void ref.closed.then(() => this.geometry.set(null));
+  }
+
+  protected resizeGeometry(): void {
+    this.geometry()?.updateGeometry({ width: 'min(30rem, 94vw)' });
+  }
+
+  protected positionGeometry(): void {
+    this.geometry()?.updatePosition(
+      createGlobalPositionStrategy(this.injector).centerHorizontally().top('24px'),
+    );
+  }
 
   protected async remove(): Promise<void> {
     const ok = await this.dialog.confirm({
@@ -41,6 +86,10 @@ export default class DialogPage {
       tone: 'danger',
     });
     this.confirmResult.set(ok ? 'Deleted.' : 'Kept.');
+  }
+  protected toggleMaximized(): void {
+    const ref = this.geometry();
+    if (ref) ref.setMaximized(!ref.maximized());
   }
 
   protected async rename(): Promise<void> {
@@ -61,6 +110,18 @@ export default class DialogPage {
     },
     { name: 'data', type: 'D', description: 'Injected with HY_DIALOG_DATA.' },
     { name: 'label', type: 'string', description: 'Accessible name when there is no title.' },
+    {
+      name: 'autoFocusTiming',
+      type: "'attach' | 'opened'",
+      default: "'attach'",
+      description: 'Wait for entry before moving focus from the dialog to the autoFocus target.',
+    },
+    {
+      name: 'restoreFocus',
+      type: 'boolean | string | HTMLElement',
+      default: 'true',
+      description: 'Restore focus to the opener, a selector, or an element after close.',
+    },
     {
       name: 'dismissible',
       type: 'boolean',

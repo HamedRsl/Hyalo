@@ -4,9 +4,26 @@
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="phase3-demo">
+      <div class="demo-row" role="group" aria-label="Preview table state">
+        <button hyButton type="button" variant="ghost" (click)="preview.set('loading')">
+          Loading preview
+        </button>
+        <button hyButton type="button" variant="ghost" (click)="preview.set('empty')">
+          Empty preview
+        </button>
+        <button hyButton type="button" variant="ghost" (click)="preview.set('data')">
+          Show projects
+        </button>
+      </div>
+      <ng-template #loading><span>Fetching project records</span></ng-template>
+      <ng-template #empty><span>No projects match</span></ng-template>
       <hy-table
         caption="Recent projects"
-        [data]="projects"
+        [data]="preview() === 'data' ? projects : []"
+        [loading]="preview() === 'loading'"
+        [loadingTemplate]="loading"
+        [emptyTemplate]="empty"
+        [sortCycle]="cycle"
         [columns]="columns"
         [rowKey]="key"
         [rowLabel]="rowLabel"
@@ -17,14 +34,44 @@
       <p class="demo-note" role="status">{{ selected().length }} selected</p>
     </div></docs-example
   >
+  <h2>Reorder columns and rows</h2>
+  <hy-table caption="Drag to reorder projects" [data]="reorderedProjects()" [columns]="columns"
+    [rowKey]="key" [reorderableColumns]="true" [reorderableRows]="true"
+    (rowsReordered)="reorderedProjects.set($event)" />
+  <h2>Grouped headers</h2>
+  <hy-table caption="Project allocation" [data]="projects" [columns]="columns" [rowKey]="key" [headerRows]="groupedHeaders" [headerRowsIncludeControls]="false" selectable />
+  <p>Group rows accept colspan and rowspan within the group header area. Data cells link each
+    spanning group and their own column header. Set headerRowsIncludeControls to false when a
+    group spans only data columns.</p>
+  <h2>Frozen rows and columns</h2>
+  <hy-table caption="Pinned project register" [data]="pinnedProjects" [columns]="pinnedColumns"
+    [rowKey]="key" [headerRows]="pinnedHeaders" stickyHeader [frozenRows]="2" [virtual]="true"
+    [rowHeight]="48" maxHeight="18rem" minWidth="70rem" />
+  <p>Use <code>frozenRows</code> to keep the first rows mounted while the rest of the table scrolls.
+    Set a column's <code>frozen</code> to <code>start</code> or <code>end</code> to pin its logical edge.</p>
+  <h2>Virtual groups and details</h2>
+  <ng-template #batch let-group let-rows="rows">
+    <span>{{ group }} · {{ rows.length }} projects</span>
+  </ng-template>
+  <ng-template #projectDetails let-row>
+    <div style="min-block-size: 7rem">Delivery notes for {{ row.name }}</div>
+  </ng-template>
+  <hy-table caption="Grouped project register" [data]="pinnedProjects" [columns]="columns"
+    [rowKey]="key" [groupBy]="projectGroup" [groupTemplate]="batch" [rowTemplate]="projectDetails"
+    [(expanded)]="expandedProjects" stickyHeader [frozenRows]="1" [virtual]="true"
+    [rowHeight]="64" maxHeight="22rem" />
+  <p>Keep each group contiguous in the supplied row order. With group or detail templates,
+    the virtual table measures mounted rows and estimates the space for rows it has yet to render.</p>
   <h2>Import</h2>
   <docs-import code="import &#123; HyTable, HyTableColumn &#125; from '@hyalo/angular/table';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Sorting never mutates supplied data. Header buttons expose aria-sort on their column. Select-all
     applies to visible rows and preserves selections on other pages. Provide meaningful rowLabel
-    text. Use pagination for large datasets; virtualization and editable grids belong to a later
-    phase.
+    text. Use <code>sortCycle</code> to choose the direction sequence. This example starts with
+    descending order. Use <code>loadingTemplate</code> and <code>emptyTemplate</code> to customize
+    replacement rows while keeping the native table structure. Use <code>column.footer</code> for
+    per-column labels or <code>footerTemplate</code> for a summary across the table.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

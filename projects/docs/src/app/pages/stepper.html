@@ -3,7 +3,13 @@
   lead="A guided flow with completion gates and native navigation buttons."
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><hy-stepper #intake label="Consultation intake" [(selected)]="step">
+    ><hy-stepper
+      #intake
+      label="Consultation intake"
+      [(selected)]="step"
+      [animationDuration]="260"
+      (transitionComplete)="finished.set($event)"
+    >
       <hy-step label="Your details" [completed]="detailsDone()">
         <h3>Tell us about yourself</h3>
         <label for="intake-name">Full name</label>
@@ -37,15 +43,20 @@
         <p>Review the details before submitting your request.</p>
         <button hyButton type="button" (click)="intake.previous()">Back</button></hy-step
       >
-    </hy-stepper></docs-example
-  >
+    </hy-stepper>
+    @if (finished() !== null) {
+      <output>Step {{ (finished() ?? 0) + 1 }} ready</output>
+    }
+  </docs-example>
   <h2>Import</h2>
   <docs-import code="import &#123; HY_STEPPER &#125; from '@hyalo/angular/stepper';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Current navigation uses aria-current="step". Arrow keys, Home and End move focus among available
     buttons; Enter or Space selects. Hidden panels are inert. Applications own form validation and
-    completion state.
+    completion state. Set animationDuration in milliseconds to fade an incoming panel. The
+    transitionComplete event fires after the latest accepted animation or immediately after render
+    when motion is reduced.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

@@ -41,7 +41,33 @@
     <hy-field label="Coupon" error="This code has expired" forceError>
       <input hyInput value="SUMMER24" />
     </hy-field>
+    <hy-field
+      label="Order reference"
+      floatLabel="auto"
+      subscriptSizing="fixed"
+      [error]="showFeedback() ? 'Enter the full order reference.' : undefined"
+    >
+      <input hyInput />
+    </hy-field>
+    <button hyButton type="button" variant="ghost" (click)="showFeedback.set(!showFeedback())">
+      Toggle reference feedback
+    </button>
+    <hy-field label="Notes that grow">
+      <textarea
+        hyInput
+        cdkTextareaAutosize
+        rows="1"
+        [cdkAutosizeMinRows]="1"
+        [cdkAutosizeMaxRows]="5"
+      ></textarea>
+    </hy-field>
   </docs-example>
+  <p>
+    Set <code>floatLabel="auto"</code> to raise the label on focus or when the control has a value.
+    Set <code>subscriptSizing="fixed"</code> to reserve one line of feedback space initially.
+    Compose <code>hyInput</code> with Angular CDK <code>cdkTextareaAutosize</code> for growing
+    textareas.
+  </p>
 
   <h2>Accessibility</h2>
   <ul>

@@ -34,6 +34,7 @@ import { HyOptionQuery } from './query';
 export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<T | null> {
   constructor() {
     super();
+    this.installOptionKeyboard((value) => this.choose([value]));
     afterRenderEffect(() =>
       this.element
         .querySelector<HTMLInputElement>('input')
@@ -45,6 +46,8 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
   readonly createValue = input<(text: string) => T>();
   readonly requireExactMatch = input(false);
   readonly hint = input('');
+  readonly clearable = input(true);
+  readonly clearLabel = input('Clear selection');
   readonly valueCommitted = output<T | null>();
   protected readonly positions = hyDropdownPositions();
   protected readonly selection = computed(() => {
@@ -67,9 +70,6 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
         ? ''
         : (this.displayWith()?.(value) ?? '');
   });
-  protected virtualKey(event: KeyboardEvent): void {
-    this.virtualKeys(event, (values) => this.choose(values), this.selection());
-  }
   protected commitText(event: KeyboardEvent): void {
     if (event.key !== 'Enter' || this.blocked() || !this.query().trim()) return;
     const exact = this.results().find((item) => !item.disabled && item.label === this.query());
@@ -97,11 +97,12 @@ export class HyCombobox<T> extends HyOptionQuery<T> implements FormValueControl<
     this.query.set('');
     this.focus();
   }
-  protected clear(): void {
-    if (!this.blocked()) {
-      this.value.set(null);
-      this.query.set('');
-      this.focus();
-    }
+  /** Clear the committed value and return focus to the input. */
+  clear(): void {
+    if (this.blocked() || this.value() === null) return;
+    this.value.set(null);
+    this.valueCommitted.emit(null);
+    this.query.set('');
+    this.focus();
   }
 }

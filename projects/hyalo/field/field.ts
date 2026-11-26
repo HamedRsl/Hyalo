@@ -64,7 +64,7 @@ export class HySuffix {}
     '[attr.data-composite]': 'control()?.composite || null',
     '[attr.data-status]': 'currentStatus()',
     '[attr.data-float-label]': 'floatLabel()',
-    '[attr.data-filled]': 'filled() || null',
+    '[attr.data-filled]': 'filled() || control()?.filled?.() || null',
     '[attr.data-subscript]': 'subscriptSizing()',
     '[attr.aria-busy]': 'currentStatus() === "pending" || null',
   },

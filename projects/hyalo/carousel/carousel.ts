@@ -174,6 +174,9 @@ export class HyCarousel {
   private viewportWidth = 0;
   private scrollFrame = 0;
   private scrollTarget: number | null = null;
+  private nativeScrolling = false;
+  private userSettleTimer?: ReturnType<typeof setTimeout>;
+  private fadeTimer?: ReturnType<typeof setTimeout>;
   private settleTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
@@ -199,13 +202,17 @@ export class HyCarousel {
         this.ready() &&
         (current !== this.syncedIndex || mode !== this.syncedMode || visible !== this.syncedVisible)
       ) {
+        if (this.syncedIndex >= 0 && this.syncedIndex !== current) this.pendingCompletion = current;
         this.syncedIndex = current;
         this.syncedMode = mode;
         this.syncedVisible = visible;
         this.animated.set(false);
         this.scrollToSlide(false);
       }
-      if (this.ready() && (!this.animated() || !this.motion.enabled())) this.completeTransition();
+      if (!this.ready() || this.pendingCompletion === null) return;
+      if (!this.nativeScrolling && (!this.animated() || !this.motion.enabled()))
+        this.completeTransition();
+      else if (mode === 'fade') this.scheduleFadeCompletion();
     });
     afterNextRender(() => {
       const viewport = this.viewport().nativeElement;
@@ -234,11 +241,16 @@ export class HyCarousel {
         viewport.ownerDocument.defaultView?.cancelAnimationFrame(this.scrollFrame);
         resize?.disconnect();
         clearTimeout(this.settleTimer);
+        clearTimeout(this.userSettleTimer);
+        clearTimeout(this.fadeTimer);
       });
     });
   }
 
   goTo(index: number, smooth = true): void {
+    clearTimeout(this.userSettleTimer);
+    clearTimeout(this.fadeTimer);
+    this.nativeScrolling = false;
     const count = this.lastIndex() + 1;
     const requested = Number.isFinite(index) ? Math.trunc(index) : 0;
     const previous = this.current();
@@ -274,6 +286,7 @@ export class HyCarousel {
     if (this.scrollTarget !== null)
       this.settleTimer = setTimeout(() => {
         this.scrollToSlide(false);
+        this.completeTransition();
       }, 800);
     viewport.scrollBy?.({
       ...(this.orientation() === 'vertical' ? { top: delta } : { left: delta }),
@@ -309,17 +322,23 @@ export class HyCarousel {
             Math.round(Math.abs(vertical ? viewport.scrollTop : viewport.scrollLeft) / width),
           ),
         );
+        this.nativeScrolling = true;
+        if (this.current() !== closest) this.pendingCompletion = closest;
         this.syncedIndex = closest;
         this.index.set(closest);
+        clearTimeout(this.userSettleTimer);
+        this.userSettleTimer = setTimeout(() => this.onScrollEnd(), 150);
       }) ?? 0;
   }
   protected onScrollEnd(): void {
+    this.nativeScrolling = false;
     if (this.scrollTarget === null && this.pendingCompletion === null) return;
     const viewport = this.viewport().nativeElement;
     const slide = viewport.children[this.scrollTarget ?? this.current()];
     if (slide && Math.abs(this.slideDelta(viewport, slide)) > 1) return;
     this.scrollTarget = null;
     clearTimeout(this.settleTimer);
+    clearTimeout(this.userSettleTimer);
     this.completeTransition();
   }
 
@@ -332,7 +351,25 @@ export class HyCarousel {
       this.completeTransition();
   }
 
+  private scheduleFadeCompletion(): void {
+    clearTimeout(this.fadeTimer);
+    const viewport = this.viewport().nativeElement;
+    const slide = viewport.children[this.current()];
+    const duration =
+      slide && viewport.ownerDocument.defaultView?.getComputedStyle(slide).transitionDuration;
+    const milliseconds =
+      typeof duration === 'string' && duration
+        ? Math.max(
+            ...duration
+              .split(',')
+              .map((value) => (parseFloat(value) || 0) * (value.includes('ms') ? 1 : 1000)),
+          )
+        : 400;
+    this.fadeTimer = setTimeout(() => this.completeTransition(), milliseconds + 32);
+  }
+
   private completeTransition(): void {
+    clearTimeout(this.fadeTimer);
     if (this.pendingCompletion === null) return;
     const index = this.pendingCompletion;
     this.pendingCompletion = null;
@@ -361,6 +398,7 @@ export class HyCarousel {
     this.suppressClick = false;
     this.scrollTarget = null;
     clearTimeout(this.settleTimer);
+    clearTimeout(this.userSettleTimer);
     if (
       (event.pointerType !== 'mouse' && this.mode() !== 'fade') ||
       event.button !== 0 ||

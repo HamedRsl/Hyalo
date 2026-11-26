@@ -16,6 +16,62 @@
     <code>[hyDialogClose]</code> or <code>HyDialogRef.close()</code>.
   </p>
 
+  <h2>Live geometry and dismissal</h2>
+  <docs-example [code]="examples[2].html" [tsCode]="examples[2].ts" [cssCode]="examples[2].css">
+    <button hyButton type="button" id="geometry-trigger" (click)="openGeometry(geometryContent)">
+      Open geometry dialog
+    </button>
+    <span role="status">{{ geometryState() }}</span>
+    <ng-template #geometryContent let-description>
+      <h2 hyDialogTitle>Dialog geometry</h2>
+      <p hyDialogContent id="geometry-description">{{ description }}</p>
+      <div hyDialogActions>
+        <button hyButton type="button" id="geometry-resize" (click)="resizeGeometry()">
+          Widen
+        </button>
+        <button hyButton type="button" (click)="positionGeometry()">Move toward top</button>
+        <button hyButton hyDialogDragHandle variant="ghost">Move with arrow keys or drag</button>
+        <button hyButton type="button" (click)="toggleMaximized()">
+          {{ geometry()?.maximized() ? 'Restore size' : 'Maximize' }}
+        </button>
+        <button hyButton hyDialogClose>Close geometry dialog</button>
+      </div>
+    </ng-template>
+  </docs-example>
+  <p>
+    Use <code>width</code>, <code>height</code>, <code>minWidth</code>, <code>maxWidth</code>,
+    <code>minHeight</code>, <code>maxHeight</code> and <code>positionStrategy</code> for the initial
+    geometry. Update it with <code>updateGeometry()</code> and <code>updatePosition()</code>.
+    While it enters, focus stays trapped on the dialog. It moves to Widen when entry finishes,
+    unless the user has already moved focus within the dialog. Dismissal restores focus to the
+    configured trigger.
+    <code>closeOnEscape</code>, <code>closeOnBackdrop</code> and <code>hasBackdrop</code> are
+    independent. Add <code>hyDialogDragHandle</code> to a button to enable pointer and arrow-key
+    movement. Call <code>setMaximized()</code> to fill the viewport and restore the previous
+    geometry.
+  </p>
+  <p>
+    <code>opened</code> and <code>beforeClosed</code> report entry and accepted closing.
+    <code>backdropClick</code>, <code>keydownEvents</code> and
+    <code>outsidePointerEvents</code> expose interactions. Use <code>getById()</code>,
+    <code>openDialogs</code>, <code>closeAll()</code> and <code>afterAllClosed</code> to manage
+    dialogs and drawers together.
+  </p>
+  <p>
+    Use <code>injector</code> or <code>viewContainerRef</code> to control creation context, and
+    <code>bindings</code> for component inputs or <code>templateContext</code> for template locals.
+    <code>autoFocus</code> selects the initial focus target and <code>restoreFocus</code> selects
+    the destination on close. Use <code>ariaLabelledBy</code> and <code>ariaDescribedBy</code> for
+    existing element IDs. <code>closeOnNavigation</code> follows browser history traversal and
+    <code>closeOnScroll</code> observes scrolling outside the dialog. Both pass through
+    <code>closeGuard</code>.
+  </p>
+  <p>
+    For asynchronous confirmation, pass <code>confirm</code> and optionally
+    <code>errorMessage</code>. A pending action disables both buttons. Returning false leaves the
+    confirmation open, and a rejected action announces the error and allows a retry.
+  </p>
+
   <h2>Accessibility</h2>
   <ul>
     <li>Focus moves into the dialog, stays there, and returns to the trigger on close.</li>

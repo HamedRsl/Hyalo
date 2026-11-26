@@ -1,7 +1,10 @@
 <docs-page heading="Divider" lead="A quiet hairline between related content.">
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><p>Hand-finished in small batches.</p>
-    <hy-divider />
+    <hy-divider inset="1.5rem" />
+    <div class="docs-row" style="display: flex; align-items: stretch">
+      <span>Design</span><hy-divider orientation="vertical" inset="1.5rem" /><span>Build</span>
+    </div>
     <p>Designed for a lifetime of use.</p></docs-example
   >
   <h2>Import</h2>
@@ -9,7 +12,8 @@
   <h2>Behavior and accessibility</h2>
   <p>
     A separator communicates a boundary to screen readers. A vertical divider stretches inside a
-    flex row.
+    flex row. Use <code>inset</code> to reserve spacing at the logical inline start in both
+    directions.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

@@ -11,6 +11,12 @@
     <hy-field label="Verification code"
       ><hy-otp [(value)]="pin" (complete)="result.set('Code ready to verify')"
     /></hy-field>
+    <hy-field label="Example PIN">
+      <hy-otp value="12" [length]="4" [masked]="true" [cellTemplate]="decoratedCell" />
+    </hy-field>
+    <ng-template #decoratedCell let-character let-index="index">
+      <span class="demo-pin-cell" [attr.data-index]="index">{{ character || '–' }}</span>
+    </ng-template>
     <p role="status">{{ result() }}</p>
   </docs-example>
   <h2>Behavior and accessibility</h2>
@@ -19,6 +25,7 @@
     identity. Use your backend to verify the code and enforce expiry and rate limits.
   </p>
   <h2>API</h2>
+  <p>Use cellTemplate to style each decorative slot. The template receives the masked character and index.</p>
   <p><code>value: string, length (1..12), complete: output&lt;string&gt;</code></p>
   <p>
     All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,

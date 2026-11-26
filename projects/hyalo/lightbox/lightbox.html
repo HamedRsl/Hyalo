@@ -1,15 +1,36 @@
 <div class="controls">
   <button hyButton type="button" variant="ghost" (click)="ref.close()">
-    {{ data.closeLabel ?? 'Close gallery' }}
+    {{ data().closeLabel ?? 'Close gallery' }}
   </button>
   <button hyButton type="button" variant="ghost" (click)="zoomIn()">
-    {{ data.zoomInLabel ?? 'Zoom in' }}
+    {{ data().zoomInLabel ?? 'Zoom in' }}
   </button>
   <button hyButton type="button" variant="ghost" (click)="zoomOut()">
-    {{ data.zoomOutLabel ?? 'Zoom out' }}
+    {{ data().zoomOutLabel ?? 'Zoom out' }}
   </button>
   <button hyButton type="button" variant="ghost" (click)="rotate()">
-    {{ data.rotateLabel ?? 'Rotate image' }}
+    {{ data().rotateLabel ?? 'Rotate image' }}
+  </button>
+  <button
+    hyButton
+    type="button"
+    variant="ghost"
+    (click)="flipHorizontal()"
+    [attr.aria-pressed]="transform().flipX"
+  >
+    {{ data().flipHorizontalLabel ?? 'Flip horizontally' }}
+  </button>
+  <button
+    hyButton
+    type="button"
+    variant="ghost"
+    (click)="flipVertical()"
+    [attr.aria-pressed]="transform().flipY"
+  >
+    {{ data().flipVerticalLabel ?? 'Flip vertically' }}
+  </button>
+  <button hyButton type="button" variant="ghost" (click)="resetTransform()">
+    {{ data().resetLabel ?? 'Reset image' }}
   </button>
   <button
     hyButton
@@ -19,33 +40,62 @@
     [attr.aria-pressed]="playing()"
     (click)="playing() ? pause() : play()"
   >
-    {{ playing() ? (data.pauseLabel ?? 'Pause slideshow') : (data.playLabel ?? 'Play slideshow') }}
+    {{
+      playing() ? (data().pauseLabel ?? 'Pause slideshow') : (data().playLabel ?? 'Play slideshow')
+    }}
   </button>
 </div>
-@if (image(); as image) {
+@if (contentContext(); as context) {
   <figure>
-    <img
-      [src]="image.src"
-      [alt]="image.alt"
-      [style.transform]="'scale(' + scale() + ') rotate(' + rotation() + 'deg)'"
-    />
-    @if (image.caption) {
-      <figcaption>{{ image.caption }}</figcaption>
+    <div
+      #stage
+      class="stage"
+      role="group"
+      [attr.aria-label]="data().panLabel ?? 'Pan zoomed image with arrow keys'"
+      [attr.tabindex]="transform().scale > 1 ? 0 : null"
+      [attr.data-zoomed]="transform().scale > 1 || null"
+      [attr.data-dragging]="dragging() || null"
+      (keydown)="panWithKey($event)"
+      (pointerdown)="startPan($event)"
+      (pointermove)="movePan($event)"
+      (pointerup)="stopPan($event)"
+      (pointercancel)="stopPan($event)"
+      (lostpointercapture)="stopPan($event)"
+    >
+      <div data-lightbox-media>
+        @if (data().contentTemplate; as template) {
+          <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context" />
+        } @else {
+          <img
+            [src]="context.$implicit.src"
+            [alt]="context.$implicit.alt"
+            [style.transform]="context.transformStyle"
+            draggable="false"
+          />
+        }
+      </div>
+    </div>
+    @if (data().captionTemplate; as template) {
+      <figcaption>
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context" />
+      </figcaption>
+    } @else if (context.$implicit.caption) {
+      <figcaption>{{ context.$implicit.caption }}</figcaption>
     }
   </figure>
 }
 <div class="controls">
   <button hyButton type="button" variant="glass" [disabled]="index() === 0" (click)="move(-1)">
-    {{ data.previousLabel ?? 'Previous image' }}
+    {{ data().previousLabel ?? 'Previous image' }}
   </button>
-  <span aria-live="polite" aria-atomic="true">{{ index() + 1 }} / {{ data.images.length }}</span>
+  <span aria-live="polite" aria-atomic="true">{{ index() + 1 }} / {{ data().images.length }}</span>
   <button
     hyButton
     type="button"
     variant="glass"
-    [disabled]="index() === data.images.length - 1"
+    [disabled]="index() === data().images.length - 1"
     (click)="move(1)"
   >
-    {{ data.nextLabel ?? 'Next image' }}
+    {{ data().nextLabel ?? 'Next image' }}
   </button>
 </div>

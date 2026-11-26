@@ -18,30 +18,58 @@
       ngTab
       class="hy-tabs__tab"
       [value]="tab.panel.value()"
+      [attr.aria-label]="!tab.header() && tab.compactLabel() ? tab.label() : null"
       [disabled]="tab.disabled()"
       (focus)="focused.emit(tab.panel.value())"
     >
       @if (tab.icon(); as icon) {
         <hy-icon [name]="icon" />
       }
-      @if (tab.header(); as header) { <ng-container [ngTemplateOutlet]="header.template" /> }
-      @else { <span [class.hy-tabs__full-label]="!!tab.compactLabel()">{{ tab.label() }}</span>
-        @if (tab.compactLabel()) { <span class="hy-tabs__compact-label">{{ tab.compactLabel() }}</span> }
+      @if (tab.header(); as header) {
+        <ng-container [ngTemplateOutlet]="header.template" />
+      } @else {
+        <span [class.hy-tabs__full-label]="!!tab.compactLabel()">{{ tab.label() }}</span>
+        @if (tab.compactLabel()) {
+          <span class="hy-tabs__compact-label">{{ tab.compactLabel() }}</span>
+        }
       }
-      @if (tab.badge() !== undefined) { <span class="hy-tabs__badge">{{ tab.badge() }}</span> }
+      @if (tab.badge() !== undefined) {
+        <span class="hy-tabs__badge">{{ tab.badge() }}</span>
+      }
     </button>
     @if (editable() && tab.closable()) {
-      <button type="button" [attr.aria-label]="closeLabel() + ': ' + tab.label()" (click)="closeRequested.emit(tab.panel.value())">×</button>
+      <button
+        type="button"
+        [attr.aria-label]="closeLabel() + ': ' + tab.label()"
+        (click)="closeRequested.emit(tab.panel.value())"
+      >
+        ×
+      </button>
     }
   }
 </div>
 @if (overflow() === 'paginator') {
-  <div><button type="button" [attr.aria-label]="previousLabel()" (click)="scroll(-1)">‹</button><button type="button" [attr.aria-label]="nextLabel()" (click)="scroll(1)">›</button></div>
+  <div>
+    <button type="button" [attr.aria-label]="previousLabel()" (click)="scroll(-1)">‹</button
+    ><button type="button" [attr.aria-label]="nextLabel()" (click)="scroll(1)">›</button>
+  </div>
 }
 @if (overflow() === 'dropdown') {
-  <select [attr.aria-label]="overflowLabel()" [value]="current()" (change)="select($any($event.target).value)">
-    @for (tab of tabs(); track tab.panel.value()) { <option [value]="tab.panel.value()" [disabled]="tab.disabled()">{{ tab.label() }}</option> }
+  <select
+    [attr.aria-label]="overflowLabel()"
+    [value]="current()"
+    (change)="select($any($event.target).value)"
+  >
+    @for (tab of tabs(); track tab.panel.value()) {
+      <option [value]="tab.panel.value()" [disabled]="tab.disabled()">{{ tab.label() }}</option>
+    }
   </select>
 }
-@if (editable()) { <button type="button" (click)="addRequested.emit()">{{ addLabel() }}</button> }
-<div class="hy-tabs__panels"><ng-content /></div>
+@if (editable()) {
+  <button type="button" (click)="addRequested.emit()">{{ addLabel() }}</button>
+}
+<div class="hy-tabs__panels">
+  <div #panelViewport>
+    <div #panelContent [class.hy-tabs__measured-content]="dynamicHeight()"><ng-content /></div>
+  </div>
+</div>

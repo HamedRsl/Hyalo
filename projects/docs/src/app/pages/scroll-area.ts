@@ -29,6 +29,11 @@ export default class ScrollAreaPage {
   protected readonly rows: ApiRow[] = [
     { name: 'label', type: 'string', default: 'required', description: 'Accessible region name.' },
     {
+      name: 'scrollHost',
+      type: 'HTMLElement | null',
+      description: 'Optional native viewport for scrollTo and scrolled.',
+    },
+    {
       name: 'maxHeight',
       type: 'string',
       default: '20rem',

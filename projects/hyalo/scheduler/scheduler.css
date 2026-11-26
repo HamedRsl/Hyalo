@@ -14,3 +14,28 @@ button:active:not(:disabled),button[aria-pressed=true]{background:var(--hy-prima
 
 :host{--fc-border-color:var(--hy-line);--fc-page-bg-color:var(--hy-surface-1);--fc-neutral-bg-color:var(--hy-surface-2);--fc-neutral-text-color:var(--hy-ink-2);--fc-today-bg-color:var(--hy-primary-wash);--fc-event-bg-color:var(--hy-primary);--fc-event-border-color:var(--hy-primary);--fc-event-text-color:var(--hy-on-primary);--fc-list-event-hover-bg-color:var(--hy-surface-2);--fc-highlight-color:var(--hy-primary-wash)}
 .calendar{min-block-size:12rem;overflow:auto}.toolbar h3{flex:1;min-inline-size:10rem;font-size:var(--hy-step-1);margin:0}.agenda{margin-block-start:1rem}.agenda time{font-variant-numeric:tabular-nums}.agenda li{margin-block:.5rem}
+
+.view-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hy-space-2);
+  max-inline-size: 100%;
+}
+.view-select {
+  position: relative;
+  display: inline-grid;
+  min-inline-size: 0;
+}
+.view-select select {
+  appearance: none;
+  padding-inline-end: 2.5rem;
+  color-scheme: light dark;
+  cursor: pointer;
+}
+.view-select hy-icon {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+}

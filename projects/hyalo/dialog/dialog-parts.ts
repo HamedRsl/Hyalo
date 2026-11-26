@@ -16,9 +16,16 @@ export class HyDialogTitle {
 
   constructor() {
     const el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-    afterNextRender(() =>
-      el.closest('[role="dialog"], [role="alertdialog"]')?.setAttribute('aria-labelledby', this.id),
-    );
+    afterNextRender(() => {
+      const container = el.closest('[role="dialog"], [role="alertdialog"]');
+      if (
+        container &&
+        !container.hasAttribute('aria-label') &&
+        !container.hasAttribute('aria-labelledby')
+      ) {
+        container.setAttribute('aria-labelledby', this.id);
+      }
+    });
   }
 }
 
@@ -43,10 +50,65 @@ export class HyDialogClose {
   });
 }
 
+/** Opt-in drag handle for a dialog window. Arrow keys move it in 16px steps. */
+@Directive({
+  selector: 'button[hyDialogDragHandle]',
+  host: {
+    type: 'button',
+    class: 'hy-dialog__drag-handle',
+    '(pointerdown)': 'start($event)',
+    '(pointermove)': 'move($event)',
+    '(pointerup)': 'stop($event)',
+    '(pointercancel)': 'stop($event)',
+    '(lostpointercapture)': 'stop($event)',
+    '(keydown)': 'keys($event)',
+  },
+})
+export class HyDialogDragHandle {
+  private readonly element = inject<ElementRef<HTMLButtonElement>>(ElementRef).nativeElement;
+  private readonly ref = inject(HyDialogRef, { optional: true });
+  private pointer: { id: number; x: number; y: number } | undefined;
+
+  protected start(event: PointerEvent): void {
+    if (!this.ref || this.ref.maximized() || event.button !== 0 || !event.isPrimary) return;
+    this.pointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    this.element.setPointerCapture(event.pointerId);
+  }
+
+  protected move(event: PointerEvent): void {
+    const pointer = this.pointer;
+    if (!pointer || pointer.id !== event.pointerId) return;
+    this.ref?.moveBy(event.clientX - pointer.x, event.clientY - pointer.y);
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+  }
+
+  protected stop(event: PointerEvent): void {
+    if (this.pointer?.id === event.pointerId) this.pointer = undefined;
+  }
+
+  protected keys(event: KeyboardEvent): void {
+    if (!this.ref || this.ref.maximized() || event.altKey || event.ctrlKey || event.metaKey) return;
+    const step = event.shiftKey ? 48 : 16;
+    const offsets: Readonly<Record<string, readonly [number, number]>> = {
+      ArrowDown: [0, step],
+      ArrowUp: [0, -step],
+      ArrowLeft: [-step, 0],
+      ArrowRight: [step, 0],
+    };
+    const offset = offsets[event.key];
+    if (event.key === 'Home') this.ref.resetPosition();
+    else if (offset) this.ref.moveBy(...offset);
+    else return;
+    event.preventDefault();
+  }
+}
+
 /** Everything needed to lay out dialog or drawer content. */
 export const HY_DIALOG_PARTS = [
   HyDialogTitle,
   HyDialogContent,
   HyDialogActions,
   HyDialogClose,
+  HyDialogDragHandle,
 ] as const;

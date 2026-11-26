@@ -34,6 +34,7 @@ import { HyOptionQuery } from '@hyalo/angular/combobox';
 export class HyMultiSelect<T> extends HyOptionQuery<T> implements FormValueControl<readonly T[]> {
   constructor() {
     super();
+    this.installOptionKeyboard((value) => this.toggleVirtualValue(value));
     afterRenderEffect(() => {
       const message = this.required() && !this.value().length ? 'Select at least one option.' : '';
       this.element.querySelector<HTMLInputElement>('input')?.setCustomValidity(message);
@@ -50,27 +51,52 @@ export class HyMultiSelect<T> extends HyOptionQuery<T> implements FormValueContr
   readonly removed = output<T>();
   protected readonly positions = hyDropdownPositions();
   protected readonly selection = computed(() =>
-    this.value().map(
-      (value) =>
-        this.results().find((item) => this.same(item.option.value, value))?.option.value ?? value,
-    ),
+    this.visibleResults()
+      .map((item) => item.option.value)
+      .filter((candidate) => this.value().some((value) => this.same(candidate, value))),
   );
   protected readonly selected = computed(() => {
     const values = this.value();
     if (!values.length) return [];
     const options = this.knownOptions();
-    return values.map((value) => options.find((option) => this.same(value, option.value)) ?? {
-      value,
-      label: this.displayWith()?.(value) ?? String(value),
-    });
+    return values.map(
+      (value) =>
+        options.find((option) => this.same(value, option.value)) ?? {
+          value,
+          label: this.displayWith()?.(value) ?? String(value),
+        },
+    );
   });
   protected readonly selectedLabel = computed(() => this.selected()[0]?.label ?? '');
   protected readonly visibleChips = computed(() => {
     const max = this.maxVisibleChips();
     return this.selected().slice(0, max === undefined ? undefined : Math.max(0, max));
   });
-  protected virtualKey(event: KeyboardEvent): void {
-    this.virtualKeys(event, (values) => this.choose(values), this.selection());
+  private toggleVirtualValue(candidate: T): void {
+    const current = this.value();
+    this.choose(
+      current.some((value) => this.same(value, candidate))
+        ? current.filter((value) => !this.same(value, candidate))
+        : [...current, candidate],
+    );
+  }
+  protected chooseFromList(chosen: readonly T[]): void {
+    const visible = this.visibleResults();
+    const isVisible = (value: T): boolean => visible.some((item) => this.same(item.option.value, value));
+    const nextVisible = chosen.filter(isVisible);
+    const selectedVisible = this.selection();
+    if (
+      nextVisible.length === selectedVisible.length &&
+      nextVisible.every((value) => selectedVisible.some((selected) => this.same(value, selected)))
+    )
+      return;
+    const current = this.value();
+    this.choose([
+      ...current.filter(
+        (value) => !isVisible(value) || nextVisible.some((option) => this.same(option, value)),
+      ),
+      ...nextVisible.filter((option) => !current.some((value) => this.same(value, option))),
+    ]);
   }
   selectAll(): void {
     this.choose([

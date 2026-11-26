@@ -1,5 +1,9 @@
 import { AriaDescriber } from '@angular/cdk/a11y';
-import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
+import type {
+  FlexibleConnectedPositionStrategy,
+  FlexibleConnectedPositionStrategyOrigin,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -75,6 +79,7 @@ export class HyTooltip {
   readonly message = input('', { alias: 'hyTooltip' });
   /** Preferred side. Flips when there is no room. */
   readonly tooltipPlacement = input<HyPlacement>('top');
+  readonly tooltipOrigin = input<FlexibleConnectedPositionStrategyOrigin>();
   /** Hover delay in milliseconds. Focus shows it right away. */
   readonly tooltipDelay = input(this.policy?.showDelay ?? 400, { transform: numberAttribute });
   /** Pointer-leave delay; focusout and Escape dismiss immediately. */
@@ -162,7 +167,9 @@ export class HyTooltip {
       return;
     }
     // Read on every show, so a changed placement applies next time.
-    this.position?.withPositions(hyConnectedPositions(this.tooltipPlacement()));
+    this.position
+      ?.setOrigin(this.tooltipOrigin() ?? this.host)
+      .withPositions(hyConnectedPositions(this.tooltipPlacement()));
     const ref = this.overlayRef.attach(new ComponentPortal(HyTooltipPanel, null, this.injector));
     this.panel = ref.instance;
     this.panel.message.set(this.message());

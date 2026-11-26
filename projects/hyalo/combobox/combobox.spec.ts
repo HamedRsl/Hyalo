@@ -6,8 +6,18 @@ import { HyMultiSelect } from '@hyalo/angular/multi-select';
 describe('async selection', () => {
   it('renders bounded virtual suggestions with comparator display and keyboard navigation', async () => {
     const fixture = TestBed.createComponent(HyCombobox<{ id: number }>);
-    fixture.componentRef.setInput('options', Array.from({ length: 1000 }, (_, id) => ({ key: String(id), value: { id }, label: 'Duplicate' })));
-    fixture.componentRef.setInput('compareWith', (a: { id: number }, b: { id: number }) => a.id === b.id);
+    fixture.componentRef.setInput(
+      'options',
+      Array.from({ length: 1000 }, (_, id) => ({
+        key: String(id),
+        value: { id },
+        label: 'Duplicate',
+      })),
+    );
+    fixture.componentRef.setInput(
+      'compareWith',
+      (a: { id: number }, b: { id: number }) => a.id === b.id,
+    );
     fixture.componentRef.setInput('displayWith', (value: { id: number }) => `Record ${value.id}`);
     fixture.componentRef.setInput('value', { id: 999 });
     fixture.componentRef.setInput('virtualized', true);
@@ -52,6 +62,31 @@ describe('async selection', () => {
     await fixture.whenStable();
     expect(fixture.componentInstance.value()).toBe('tehran');
     expect((fixture.nativeElement.querySelector('input') as HTMLInputElement).value).toBe('Tehran');
+  });
+  it('allows consumers to label, hide and observe clearing a committed selection', async () => {
+    const fixture = TestBed.createComponent(HyCombobox<string>);
+    const component = fixture.componentInstance;
+    fixture.componentRef.setInput('clearLabel', 'Remove city');
+    fixture.componentRef.setInput('options', [{ value: 'tehran', label: 'Tehran' }]);
+    fixture.componentRef.setInput('value', 'tehran');
+    fixture.componentRef.setInput('clearable', false);
+    const committed: (string | null)[] = [];
+    component.valueCommitted.subscribe((value) => committed.push(value));
+    await fixture.whenStable();
+    const root: HTMLElement = fixture.nativeElement;
+    expect(root.querySelectorAll('button')).toHaveLength(1);
+    fixture.componentRef.setInput('clearable', true);
+    await fixture.whenStable();
+    const clear = [...root.querySelectorAll('button')].find((button) =>
+      button.textContent?.includes('Remove city'),
+    )!;
+    clear.click();
+    await fixture.whenStable();
+    component.clear();
+    expect(committed).toEqual([null]);
+    expect(component.value()).toBeNull();
+    expect(root.querySelector('input')?.value).toBe('');
+    expect(document.activeElement).toBe(root.querySelector('input'));
   });
   it('cancels obsolete requests and never shows stale results', async () => {
     const signals: AbortSignal[] = [];

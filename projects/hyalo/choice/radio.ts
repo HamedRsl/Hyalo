@@ -77,6 +77,7 @@ export class HyRadioGroup<T> implements FormValueControl<T | undefined> {
     class: 'hy-choice hy-radio',
     '[attr.data-checked]': 'checked() || null',
     '[attr.data-disabled]': 'isDisabled() || null',
+    '[attr.data-label-position]': 'labelPosition()',
   },
   templateUrl: './radio.html',
   styleUrl: './choice.css',
@@ -95,5 +96,15 @@ export class HyRadio<T> {
 
   protected readonly checked = computed(() => this.group.value() === this.value());
   protected readonly isDisabled = computed(() => this.disabled() || this.group.effectiveDisabled());
-  protected guard(event: MouseEvent): void { if (this.isDisabled()) event.preventDefault(); }
+  protected guard(event: MouseEvent): void {
+    if (this.isDisabled()) event.preventDefault();
+  }
+
+  protected choose(event: Event): void {
+    if (this.isDisabled()) {
+      (event.target as HTMLInputElement).checked = this.checked();
+      return;
+    }
+    this.group.value.set(this.value());
+  }
 }

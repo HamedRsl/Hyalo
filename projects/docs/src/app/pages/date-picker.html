@@ -9,8 +9,15 @@
     column
   >
     <hy-field label="Appointment date"
-      ><hy-date-picker [(value)]="date" referenceDate="2026-11-16"
+      ><hy-date-picker #appointment [(value)]="date" referenceDate="2026-11-16"
+        [touchUi]="appointmentTouch()"
+        (openedPanel)="appointmentStatus.set('Calendar attached')"
+        (closedPanel)="appointmentStatus.set('Calendar detached')"
     /></hy-field>
+    <button type="button" (click)="appointment.toggle()">Toggle appointment calendar</button>
+    <label><input #touchToggle type="checkbox" [checked]="appointmentTouch()"
+      (change)="appointmentTouch.set(touchToggle.checked)" /> Use touch calendar layout</label>
+    <p role="status">{{ appointmentStatus() }}</p>
     <div dir="rtl" lang="fa">
       <hy-field label="تاریخ ملاقات"
         ><hy-date-picker
@@ -24,6 +31,19 @@
       ><hy-date-range [(value)]="range" referenceDate="2026-11-16"
     /></hy-field>
   </docs-example>
+  <h2>Calendar presentation</h2>
+  <button type="button" (click)="outside.set('visible')">Show adjacent dates</button>
+  <button type="button" (click)="outside.set('hidden')">Hide adjacent dates</button>
+  <hy-calendar
+    referenceDate="2026-11-16" [months]="2" [outsideDays]="outside()"
+    [comparisonRange]="comparison" [cellTemplate]="dayContent"
+    (selected)="date.set($event)"
+  />
+  <ng-template #dayContent let-date let-comparison="comparison">
+    <span>{{ date.slice(-2) }}</span>
+    @if (comparison) { <span class="comparison-mark" aria-hidden="true">·</span> }
+  </ng-template>
+  <p role="status">Calendar selection {{ date() }}</p>
   <h2>Behavior and accessibility</h2>
   <p>
     Type YYYY/MM/DD in the selected calendar, or open Calendar. Arrow keys move by day or week;

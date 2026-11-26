@@ -1,6 +1,6 @@
 # Phase 5: mobile and app patterns
 
-Implemented on `develop`. Package version: 0.5.0.
+Introduced in version 0.5.0.
 
 ### Scope correction: application compositions
 

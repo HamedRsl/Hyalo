@@ -44,6 +44,8 @@ export class HyHotspot {
   readonly mode = input<HyHotspotMode>('label');
   readonly open = model(false);
   readonly placement = input<HyPlacement>('top');
+  /** Optional DOM parent for this hotspot's detail overlay. */
+  readonly panelContainer = input<HTMLElement>();
   readonly closeLabel = input('Close details');
   readonly activated = output<void>();
   protected readonly visible = computed(

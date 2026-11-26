@@ -3,12 +3,14 @@
   flex-direction: column;
 }
 :host([data-orientation='horizontal']) {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(12rem, 100%), 1fr);
+  grid-template-rows: auto auto;
   overflow-inline: auto;
 }
-:host([data-orientation='horizontal'][data-alignment='end']) {
-  align-items: end;
+:host([data-orientation='horizontal']) .pending {
+  grid-row: 2;
 }
 .pending {
   padding: var(--hy-space-4);

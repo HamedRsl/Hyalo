@@ -1,9 +1,46 @@
-<docs-page heading="Masked and phone input" lead="Readable numeric identifiers with canonical string values and preserved leading zeros.">
-<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
-<hy-field label="Iranian mobile"><hy-phone-input [(value)]="phone" /></hy-field>
-<hy-field label="Reference number"><hy-masked-input [(value)]="identifier" mask="###-###-####" /></hy-field>
-</docs-example>
-<h2>Behavior and accessibility</h2><p>Masks are presentation only. Persian and Eastern Arabic digits normalize to ASCII. Composition and paste are supported. A phone mask does not prove a valid or owned number; validate on the server.</p>
-<h2>API</h2><p><code>value: string; HyMaskedInput.mask (# means a digit), autocomplete; HyPhoneInput accepts 09, +98, and 0098</code></p>
-<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+<docs-page
+  heading="Masked and phone input"
+  lead="Readable numeric identifiers with canonical string values and preserved leading zeros."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="Iranian mobile"><hy-phone-input [(value)]="phone" /></hy-field>
+    <hy-field label="Reference number"
+      ><hy-masked-input [(value)]="identifier" mask="###-###-####"
+    /></hy-field>
+    <hy-field label="Deferred reference">
+      <hy-masked-input [(value)]="deferred" mask="##-##" commitOn="blur" />
+    </hy-field>
+    <p role="status">Saved reference {{ deferred() || 'empty' }}</p>
+    <hy-field label="Alphabetic reference">
+      <hy-masked-input mask="AA-AA" [tokens]="referenceLetters" value="abcd" />
+    </hy-field>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Masks are presentation only. Persian and Eastern Arabic digits normalize to ASCII. Composition
+    and paste are supported. A phone mask does not prove a valid or owned number; validate on the
+    server.
+  </p>
+  <h2>API</h2>
+  <p>
+    Use commitOn to publish on input, on blur, or when the mask is complete. On blur,
+    incompletePolicy can clear the field.
+  </p>
+  <p>
+    <code
+      >value: string; HyMaskedInput.mask (# means a digit), autocomplete; HyPhoneInput accepts 09,
+      +98, and 0098</code
+    >
+  </p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
 </docs-page>

@@ -11,10 +11,13 @@
           [menu]="actions"
           menuLabel="Export options"
           (activated)="message.set('Export started')"
-        /><span role="status">{{ message() }}</span>
+        /><button hyButton type="button" [hyMenuTriggerFor]="actions" [restoreFocus]="summary">
+          Actions with return target
+        </button><button type="button" #summary>Project summary</button
+        ><span role="status">{{ message() }}</span>
       </div>
       <ng-template #actions
-        ><hy-menu aria-label="Project actions"
+        ><hy-menu aria-label="Project actions" panelClass="project-menu" hasBackdrop backdropClass="project-menu-backdrop"
           ><button hyMenuItem (triggered)="message.set('Report opened')">Open report</button
           ><button hyMenuCheckbox [checked]="pinned()" (triggered)="pinned.update(toggle)">
             Pin project</button
@@ -37,6 +40,9 @@
     menus for actions. Website destinations belong in navigation. Keep checked values in application
     state.
   </p>
+  <p>For pointer-positioned actions or a recursive data model, use <a href="/components/context-menu">HyContextMenu</a>.</p>
+  <p>Set <code>panelClass</code> to style the menu and <code>hasBackdrop</code> to consume the outside click that closes it.</p>
+  <p>Bind <code>restoreFocus</code> to a focusable element to return there, or set it to <code>false</code> when the application manages focus.</p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />
   <h2>Themes and fidelity</h2>

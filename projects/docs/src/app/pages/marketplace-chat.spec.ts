@@ -168,4 +168,65 @@ describe('copyable marketplace conversation', () => {
     expect(host.querySelector('hy-message-list, hy-chat-composer, hy-chat-bubble')).toBeNull();
     expect(conversation!.querySelector('[role="log"]')).toBeNull();
   });
+
+  it('replies through the message menu and forwards into a different conversation', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(Page);
+    await fixture.whenStable();
+    const host = fixture.nativeElement as HTMLElement;
+    const openMenu = async (id: string) => {
+      const message = host.querySelector<HTMLElement>(
+        `[data-message-id="${id}"] .marketplace-bubble`,
+      )!;
+      message.dispatchEvent(
+        new MouseEvent('contextmenu', {
+          button: 2,
+          bubbles: true,
+          cancelable: true,
+          clientX: 50,
+          clientY: 50,
+        }),
+      );
+      await fixture.whenStable();
+    };
+    const named = (root: ParentNode, selector: string, text: string) =>
+      [...root.querySelectorAll<HTMLButtonElement>(selector)].find(
+        (item) => item.textContent?.trim() === text,
+      )!;
+    await openMenu('seller-1');
+    expect(document.activeElement?.textContent?.trim()).toBe('Reply');
+    named(document, 'button[role="menuitem"]', 'Reply').click();
+    await fixture.whenStable();
+    expect(host.querySelector('.marketplace-composer-quote')?.textContent).toContain(
+      'Replying to Maya Chen',
+    );
+    const input = host.querySelector('textarea')!;
+    input.value = 'Can you confirm pickup?';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await fixture.whenStable();
+    host.querySelector<HTMLButtonElement>('.marketplace-composer button[type="submit"]')!.click();
+    await fixture.whenStable();
+    expect(
+      host.querySelector('[data-message-id="local-1"] .marketplace-quote')?.textContent,
+    ).toContain('original oak finish');
+    await openMenu('local-1');
+    named(document, 'button[role="menuitem"]', 'Forward').click();
+    await fixture.whenStable();
+    named(host, '.marketplace-action-panel button', 'Nora Patel').click();
+    const nora = [...host.querySelectorAll<HTMLButtonElement>('.marketplace-thread')].find((item) =>
+      item.textContent?.includes('Nora Patel'),
+    )!;
+    nora.click();
+    await fixture.whenStable();
+    expect(host.querySelector('.marketplace-header')?.textContent).toContain('Nora Patel');
+    expect(host.querySelector('[data-message-id="nora-1"]')?.textContent).toContain('more photos');
+    expect(host.querySelector('[data-message-id="local-2"]')?.textContent).toContain(
+      'Forwarded from You',
+    );
+    expect(host.querySelector('[data-message-id="local-2"]')?.textContent).toContain(
+      'Can you confirm pickup?',
+    );
+    expect(nora.querySelector('.marketplace-unread')).toBeNull();
+    fixture.destroy();
+  });
 });

@@ -3,8 +3,10 @@
     class="hy-choice__control hy-switch__track"
     (pointerdown)="onDown($event)"
     (pointermove)="onMove($event)"
-    (pointerup)="onUp()"
-    (pointercancel)="onUp(true)"
+    (pointerleave)="onLeave($event)"
+    (pointerup)="onUp($event)"
+    (pointercancel)="onUp($event, true)"
+    (lostpointercapture)="onUp($event, true)"
   >
     <input
       type="checkbox"

@@ -27,6 +27,23 @@ export default class MenuPage {
       description: 'Anchors a menu, with collision handling and focus restoration.',
     },
     {
+      name: 'HyMenuTrigger.restoreFocus',
+      type: 'boolean | HTMLElement',
+      default: 'true',
+      description: 'Returns focus to the trigger or a supplied element, or leaves it to the application.',
+    },
+    {
+      name: 'HyMenu.panelClass, backdropClass',
+      type: 'string | readonly string[]',
+      description: 'Classes on the menu panel and optional backdrop.',
+    },
+    {
+      name: 'HyMenu.hasBackdrop',
+      type: 'boolean',
+      default: 'false',
+      description: 'Captures outside clicks while the menu is open.',
+    },
+    {
       name: 'HyMenuItem.disabled',
       type: 'boolean',
       default: 'false',

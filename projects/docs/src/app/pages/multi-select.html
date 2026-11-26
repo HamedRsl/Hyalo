@@ -1,8 +1,59 @@
-<docs-page heading="Multi-select" lead="Search a list and collect an immutable selection with removable chips.">
-<docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
-<hy-field label="Teams"><hy-multi-select [(value)]="values" [options]="options" /></hy-field>
-</docs-example>
-<h2>Behavior and accessibility</h2><p>Selections stay in the host model while the query changes. Chip removal is a labeled button. An empty selection is an empty array. Disabled options cannot be newly selected.</p>
-<h2>API</h2><p><code>value: readonly T[], options, loadOptions, locale, placeholder</code></p>
-<p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
+<docs-page
+  heading="Multi-select"
+  lead="Search a list and collect an immutable selection with removable chips."
+>
+  <docs-example
+    [code]="examples[0].html"
+    [tsCode]="examples[0].ts"
+    [cssCode]="examples[0].css"
+    column
+  >
+    <hy-field label="Teams"><hy-multi-select [(value)]="values" [options]="options" /></hy-field>
+  </docs-example>
+  <h2>Paged team search</h2>
+  <docs-example
+    [code]="examples[1].html"
+    [tsCode]="examples[1].ts"
+    [cssCode]="examples[1].css"
+    column
+  >
+    <hy-field label="Search teams">
+      <hy-multi-select
+        [(value)]="remoteTeams"
+        panelClass="docs-team-panel" [panelWidth]="260" [offsetX]="8" [offsetY]="-6"
+        [overlayPositions]="popupPosition" [scrollStrategy]="popupScroll" [closeOnOutside]="false"
+        (panelAttached)="popupStatus.set('Popup mounted')" (panelDetached)="popupStatus.set('Popup detached')"
+        [loadPage]="loadTeams"
+        [pageSize]="2"
+        [virtualized]="true"
+        loadMoreLabel="Load more teams"
+      />
+    </hy-field>
+    <p role="status">{{ popupStatus() }}</p>
+    <p class="hy-muted">
+      Use Page Down or Load more teams to request another page. Selected teams stay visible while
+      you search.
+    </p>
+  </docs-example>
+  <h2>Behavior and accessibility</h2>
+  <p>
+    Selections stay in the host model while the query changes. Chip removal is a labeled button. An
+    empty selection is an empty array. Disabled options cannot be newly selected.
+  </p>
+  <p>The remote example shows a fixed width, explicit position and offsets, and a scroll strategy
+    that keeps the panel in place. Use Escape to close it when outside pointer dismissal is disabled.
+    The panelAttached and panelDetached outputs report when the popup actually mounts and unmounts.</p>
+  <h2>API</h2>
+  <p>
+    <code
+      >value: readonly T[], options, loadOptions, loadPage, pageSize, loadMore(), loadMoreLabel,
+      locale, placeholder</code
+    >
+  </p>
+  <p>
+    All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch,
+    and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use
+    Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm
+    and bind its resulting field with FormField.
+  </p>
 </docs-page>

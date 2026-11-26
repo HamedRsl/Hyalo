@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  DestroyRef,
+  numberAttribute,
   Injector,
   afterNextRender,
   booleanAttribute,
@@ -28,17 +30,24 @@ export interface HyStepControl {
   reset?(): void;
 }
 @Directive({ selector: 'ng-template[hyStepContent]' })
-export class HyStepContent { readonly template = inject(TemplateRef<unknown>); }
+export class HyStepContent {
+  readonly template = inject(TemplateRef<unknown>);
+}
 @Directive({ selector: 'ng-template[hyStepLabel]' })
-export class HyStepLabel { readonly template = inject(TemplateRef<unknown>); }
+export class HyStepLabel {
+  readonly template = inject(TemplateRef<unknown>);
+}
 @Directive({ selector: 'ng-template[hyStepIndicator]' })
-export class HyStepIndicator { readonly template = inject(TemplateRef<unknown>); }
+export class HyStepIndicator {
+  readonly template = inject(TemplateRef<unknown>);
+}
 
 @Component({
   selector: 'hy-step',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet],
-  template: '<ng-content />@if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }',
+  template:
+    '<ng-content />@if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }',
   host: {
     role: 'group',
     '[id]': 'id + "-panel"',
@@ -70,7 +79,9 @@ export class HyStep {
   readonly isComplete = computed(() => {
     this.controlRevision();
     const control = this.control();
-    return this.completionOverride() ?? (control ? control.valid && !control.pending : this.completed());
+    return (
+      this.completionOverride() ?? (control ? control.valid && !control.pending : this.completed())
+    );
   });
   readonly id = injectId('step');
   protected readonly active = computed(
@@ -90,7 +101,10 @@ export class HyStep {
       else if (this.destroyOnHide()) this.created.set(false);
     });
   }
-  reset(): void { this.control()?.reset?.(); this.resetRequested.emit(); }
+  reset(): void {
+    this.control()?.reset?.();
+    this.resetRequested.emit();
+  }
 }
 
 /** Linear steps require each preceding step to be completed before advancing. */
@@ -112,13 +126,30 @@ export class HyStepper {
   readonly headerNavigation = input(true, { transform: booleanAttribute });
   readonly progress = input<'number' | 'dot'>('number');
   readonly selectionChange = output<{ previous: number; current: number }>();
+  /** Incoming panel fade duration in milliseconds. Zero disables animation. */
+  readonly animationDuration = input(0, { transform: numberAttribute });
   readonly transitionComplete = output<number>();
+  private transitionGeneration = 0;
+  private transition?: Animation;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      this.transitionGeneration++;
+      this.transition?.cancel();
+    });
+    effect(() => {
+      this.activeIndex();
+      this.transition?.cancel();
+    });
+  }
   readonly steps = contentChildren(HyStep);
   protected readonly available = computed(() =>
     this.steps().map(
       (step, i, steps) =>
-        !step.disabled() && !step.hidden() &&
-        (!this.linear() || steps.slice(0, i).every((previous) => previous.hidden() || previous.isComplete())),
+        !step.disabled() &&
+        !step.hidden() &&
+        (!this.linear() ||
+          steps.slice(0, i).every((previous) => previous.hidden() || previous.isComplete())),
     ),
   );
   readonly activeIndex = computed(() => {
@@ -131,16 +162,49 @@ export class HyStepper {
     if (!this.available()[index]) return;
     const previous = this.activeIndex();
     if (previous === index) return;
+    this.cancelTransition();
+    const generation = this.transitionGeneration;
     this.selected.set(index);
     this.selectionChange.emit({ previous, current: index });
     afterNextRender(
       () => {
-        this.el.querySelector<HTMLButtonElement>(`nav button[data-step="${index}"]`)?.focus();
-        this.transitionComplete.emit(index);
+        if (generation !== this.transitionGeneration || this.activeIndex() !== index) return;
+        const header = this.el.querySelector<HTMLButtonElement>(
+          'nav button[data-step="' + index + '"]',
+        );
+        header?.focus();
+        const panelId = header?.getAttribute('aria-controls');
+        const panel = panelId ? this.el.ownerDocument.getElementById(panelId) : null;
+        const duration = this.animationDuration();
+        const reduced = this.el.ownerDocument.defaultView?.matchMedia?.(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        if (!panel?.animate || !(duration > 0) || !Number.isFinite(duration) || reduced) {
+          this.transitionComplete.emit(index);
+          return;
+        }
+        const animation = panel.animate([{ opacity: 0 }, { opacity: 1 }], { duration });
+        this.transition = animation;
+        void animation.finished.then(
+          () => {
+            if (this.transition !== animation || this.activeIndex() !== index) return;
+            this.transition = undefined;
+            this.transitionComplete.emit(index);
+          },
+          () => {
+            if (this.transition === animation) this.transition = undefined;
+          },
+        );
       },
       { injector: this.injector },
     );
   }
+  private cancelTransition(): void {
+    this.transitionGeneration++;
+    this.transition?.cancel();
+    this.transition = undefined;
+  }
+
   next(): void {
     this.select(this.activeIndex() + 1);
   }
@@ -148,6 +212,7 @@ export class HyStepper {
     this.select(this.activeIndex() - 1);
   }
   reset(): void {
+    this.cancelTransition();
     for (const step of this.steps()) step.reset();
     this.selected.set(0);
   }

@@ -37,6 +37,18 @@ class Host {
 }
 
 describe('API-003 through API-007 field rendering', () => {
+  it('recognizes a legacy form value for automatic floating without a placeholder', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const field = (fixture.nativeElement as HTMLElement).querySelector('hy-field')!;
+    expect(field.hasAttribute('data-filled')).toBe(false);
+    fixture.componentInstance.control.setValue('Ada');
+    await fixture.whenStable();
+    expect(field.hasAttribute('data-filled')).toBe(true);
+    fixture.componentInstance.control.reset();
+    await fixture.whenStable();
+    expect(field.hasAttribute('data-filled')).toBe(false);
+  });
   it('renders rich feedback with linked IDs and keeps required validity when its marker is hidden', async () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();

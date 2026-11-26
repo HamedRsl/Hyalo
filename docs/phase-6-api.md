@@ -402,6 +402,8 @@ export function moveHyKanbanCard<T>(columns:readonly HyKanbanColumn<T>[],id:stri
 - `HyScheduler.disabled`: `false` (default: `false`) - Input.
 - `HyScheduler.height`: `number | string` (default: `'auto'`) - Input.
 - `HyScheduler.showToolbar`: `true` (default: `true`) - Input.
+- `HyScheduler.viewLabel`: `'View'` (default: `'View'`) - Input.
+- `HyScheduler.views`: `readonly HySchedulerViewOption[]` (default: `[     { value: 'dayGridMonth', label: 'Month' },     { value: 'timeGridWeek', label: 'Week' },     { value: 'timeGridDay', label: 'Day' },     { value: 'listWeek', label: 'Agenda' },   ]`) - Input.
 - `HyScheduler.showAgenda`: `true` (default: `true`) - Input.
 - `HyScheduler.agendaLabel`: `'Event summary'` (default: `'Event summary'`) - Input.
 - `HyScheduler.emptyLabel`: `'No events'` (default: `'No events'`) - Input.
@@ -429,6 +431,13 @@ export function moveHyKanbanCard<T>(columns:readonly HyKanbanColumn<T>[],id:stri
 
 ~~~ts
 export type HySchedulerView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
+~~~
+
+~~~ts
+export interface HySchedulerViewOption {
+  readonly value: string;
+  readonly label: string;
+}
 ~~~
 
 ~~~ts
@@ -569,10 +578,13 @@ export function compactHyDashboardLayout(layout:readonly HyTileRect[]):readonly 
 
 ## context-menu
 
-- `HyContextMenuTrigger.openAt`: `openAt(point:{readonly x:number;readonly y:number}):void{i` - Public method.
-- `HyContextMenuTrigger.open`: `open():void{c` - Public method.
-- `HyContextMenuTrigger.close`: `close():void{t` - Public method.
-- `HyContextMenuTrigger.isOpen`: `isOpen():boolean{r` - Public method.
+- `HyContextMenuTrigger.longPressDelay`: `0` (default: `0`) - Touch hold duration in milliseconds. Zero leaves native touch handling in place.
+- `HyContextMenuTrigger.restoreFocus`: `boolean | HTMLElement` (default: `true`) - Restore focus on keyboard dismissal. May target a separate action button.
+- `HyContextMenuTrigger.openAt`: `openAt(point: { readonly x: number; readonly y: number }): void {` - Public method.
+- `HyContextMenuTrigger.openFromEvent`: `openFromEvent(event: MouseEvent): void {     const view = this.element.ownerDocument.defaultView;     if (!view || this.` - Opens this trigger at a context-menu event that originated elsewhere.
+- `HyContextMenuTrigger.open`: `open(): void {` - Public method.
+- `HyContextMenuTrigger.close`: `close(): void {` - Public method.
+- `HyContextMenuTrigger.isOpen`: `isOpen(): boolean {` - Public method.
 - `HyContextMenuTrigger.hyContextMenuTriggerFor`: `cdkContextMenuTriggerFor` - Forwarded inputs from the CDK/material host directive.
 - `HyContextMenuTrigger.hyContextMenuData`: `cdkContextMenuTriggerData` - Forwarded inputs from the CDK/material host directive.
 - `HyContextMenuTrigger.positions`: `cdkContextMenuPosition` - Forwarded inputs from the CDK/material host directive.
@@ -580,19 +592,34 @@ export function compactHyDashboardLayout(layout:readonly HyTileRect[]):readonly 
 - `HyContextMenuTrigger.opened`: `cdkContextMenuOpened` - Forwarded outputs from the CDK/material host directive.
 - `HyContextMenuTrigger.closed`: `cdkContextMenuClosed` - Forwarded outputs from the CDK/material host directive.
 - `HyContextMenu.items`: `readonly HyContextAction<T>[]` (default: `[]`) - Input.
-- `HyContextMenu.context`: `T|null` (default: `null`) - Input.
+- `HyContextMenu.context`: `T | null` (default: `null`) - Input.
 - `HyContextMenu.label`: `'Context actions'` (default: `'Context actions'`) - Input.
-- `HyContextMenu.itemTemplate`: `TemplateRef<{$implicit:HyContextAction<T>;context:T|null}>` - Input.
+- `HyContextMenu.itemTemplate`: `TemplateRef<{ $implicit: HyContextAction<T>; context: T | null }>` - Input.
 - `HyContextMenu.activated`: `HyContextActionEvent<T>` - Typed event.
-- `HyContextMenu.activate`: `activate(action:HyContextAction<T>):void{i` - Public method.
+- `HyContextMenu.activate`: `activate(action: HyContextAction<T>): void {` - Public method.
 - `HyContextMenu.material`: `hyMaterial` - Forwarded inputs from the CDK/material host directive.
 
 ~~~ts
-export interface HyContextAction<T=unknown>{readonly id:string;readonly label:string;readonly icon?:string;readonly shortcut?:string;readonly disabled?:boolean;readonly hidden?:boolean;readonly separator?:boolean;readonly checked?:boolean;readonly role?:'item'|'checkbox'|'radio';readonly children?:readonly HyContextAction<T>[];readonly data?:T;}
+export interface HyContextAction<T = unknown> {
+  readonly id: string;
+  readonly label: string;
+  readonly icon?: string;
+  readonly shortcut?: string;
+  readonly disabled?: boolean;
+  readonly hidden?: boolean;
+  readonly separator?: boolean;
+  readonly checked?: boolean;
+  readonly role?: 'item' | 'checkbox' | 'radio';
+  readonly children?: readonly HyContextAction<T>[];
+  readonly data?: T;
+}
 ~~~
 
 ~~~ts
-export interface HyContextActionEvent<T>{readonly action:HyContextAction<T>;readonly context:T|null;}
+export interface HyContextActionEvent<T> {
+  readonly action: HyContextAction<T>;
+  readonly context: T | null;
+}
 ~~~
 
 ## rich-text

@@ -18,6 +18,16 @@ export default class ToastPage {
 
   protected readonly toaster = inject(HyToaster);
 
+  protected readonly responsive = this.toaster.channel('responsive-example', {
+    position: 'top-center',
+    width: '20rem',
+    breakpoints: [{ maxWidth: 560, position: 'bottom-center', width: '18rem' }],
+  });
+
+  protected showResponsive(): void {
+    this.responsive.show({ message: 'Responsive position', duration: 0 });
+  }
+
   protected saved(): void {
     this.toaster.success('Your changes are live.', 'Saved');
   }

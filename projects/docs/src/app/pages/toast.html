@@ -1,6 +1,7 @@
 <docs-page heading="Toast" lead="Short, temporary messages that stack in a corner.">
   <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton variant="glass" (click)="saved()">Success</button>
+    <button hyButton variant="glass" (click)="showResponsive()">Responsive toast</button>
     <button hyButton variant="glass" (click)="failed()">Error</button>
     <button hyButton variant="glass" (click)="archived()">With undo</button>
     <button hyButton variant="ghost" tone="neutral" (click)="toaster.dismissAll()">
@@ -18,6 +19,10 @@
     <li>Swipe a toast sideways to dismiss it on touch screens.</li>
   </ul>
 
+  <p>
+    Use a named channel to set stack width and placement. The responsive example moves from top
+    center to bottom center at 560 CSS pixels. A breakpoint can override either field.
+  </p>
   <h2>Accessibility</h2>
   <ul>
     <li>Messages go through a live region. Danger toasts are assertive, the rest are polite.</li>

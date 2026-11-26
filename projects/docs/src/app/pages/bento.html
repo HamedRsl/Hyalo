@@ -1,16 +1,16 @@
 <docs-page heading="Bento grid" lead="Responsive dashboard tiles with a consistent spacing rhythm.">
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="phase3-demo">
-      <hy-bento
+      <hy-bento [reorderable]="true"
         ><hy-stat
-          hyBentoTile
+          hyBentoTile tileId="revenue"
           [columns]="2"
           label="Revenue"
           [value]="48250"
           prefix="$"
           trend="Up 12.8%"
-        /><hy-stat hyBentoTile label="Active projects" [value]="24" trend="4 launched this month" />
-        <div hyBentoTile [columns]="3" class="demo-panel">
+        /><hy-stat hyBentoTile tileId="projects" label="Active projects" [value]="24" trend="4 launched this month" />
+        <div hyBentoTile tileId="activity" [columns]="3" class="demo-panel">
           A full-width activity panel. Tile spans collapse to one column when the container gets
           narrow.
         </div></hy-bento

@@ -18,7 +18,8 @@
     (expandedChange)="expand($event)"
     (input)="type($event)"
     (compositionend)="type($event)"
-    (keydown)="virtualKey($event); commitText($event)"
+    [attr.aria-keyshortcuts]="canLoadMore() ? 'PageDown' : null"
+    (keydown)="commitText($event)"
   />
   <button
     type="button"
@@ -29,9 +30,9 @@
   >
     Options
   </button>
-  @if (value() !== null) {
-    <button type="button" aria-label="Clear selection" [disabled]="blocked()" (click)="clear()">
-      Clear
+  @if (clearable() && value() !== null) {
+    <button type="button" [disabled]="blocked()" (click)="clear()">
+      {{ clearLabel() }}
     </button>
   }
 </div>
@@ -62,7 +63,8 @@
     [cdkConnectedOverlayOffsetY]="offsetY()"
     [cdkConnectedOverlayWidth]="panelWidth() ?? origin.elementRef.nativeElement.offsetWidth"
     (overlayOutsideClick)="closeOnOutside() && hide()"
-    (detach)="dismiss()"
+    (attach)="panelAttached.emit()"
+    (detach)="dismiss(); panelDetached.emit()"
   >
     <div
       class="options"
@@ -123,6 +125,7 @@
             }
           </div>
         }
+        <div role="presentation" [style.block-size.px]="afterSize()"></div>
       </div>
       <ng-container [ngTemplateOutlet]="footerTemplate() ?? null" />
       @if (busy()) {
@@ -130,6 +133,15 @@
       } @else if (failed()) {
         <p class="message error" role="status">{{ errorLabel() }}</p>
         <button type="button" (click)="retry()">Retry</button>
+      } @else if (canLoadMore()) {
+        <button
+          type="button"
+          tabindex="-1"
+          (mousedown)="$event.preventDefault()"
+          (click)="loadMore(); focus()"
+        >
+          {{ loadMoreLabel() }}
+        </button>
       } @else if (!results().length) {
         <p class="message" role="status">{{ emptyLabel() }}</p>
       }

@@ -10,6 +10,30 @@
   >
     <hy-field label="City"><hy-combobox [(value)]="value" [options]="options" /></hy-field>
   </docs-example>
+  <h2>Remote search and clear</h2>
+  <docs-example
+    [code]="examples[1].html"
+    [tsCode]="examples[1].ts"
+    [cssCode]="examples[1].css"
+    column
+  >
+    <hy-field label="Search cities">
+      <hy-combobox
+        [(value)]="remoteCity"
+        panelClass="docs-city-panel" [panelWidth]="260" [offsetX]="8" [offsetY]="-6"
+        [overlayPositions]="popupPosition" [scrollStrategy]="popupScroll" [closeOnOutside]="false"
+        (panelAttached)="popupStatus.set('Popup mounted')" (panelDetached)="popupStatus.set('Popup detached')"
+        [loadOptions]="loadCities"
+        [minQueryLength]="2"
+        [debounce]="120"
+        clearLabel="Clear city"
+      />
+    </hy-field>
+    <p role="status">{{ popupStatus() }}</p>
+    <p class="hy-muted">
+      Search for at least two letters. Enter unavailable to preview a failed request.
+    </p>
+  </docs-example>
   <h2>Behavior and accessibility</h2>
   <p>
     Arrow keys navigate results; Enter selects; Escape closes. Local matching normalizes Persian and
@@ -17,11 +41,15 @@
     loadOptions(query, signal), and pass the signal to your request. Obsolete requests are
     cancelled; loading, retry, and empty states are separate from the selection.
   </p>
+  <p>The remote example shows a fixed width, explicit position and offsets, and a scroll strategy
+    that keeps the panel in place. Use Escape to close it when outside pointer dismissal is disabled.
+    The panelAttached and panelDetached outputs report when the popup actually mounts and unmounts.</p>
   <h2>API</h2>
   <p>
     <code
-      >value: T | undefined, options: HySelectOption&lt;T&gt;[], loadOptions: (query, AbortSignal)
-      =&gt; Promise&lt;options&gt;, locale, placeholder</code
+      >value: T | null, options: HySelectOption&lt;T&gt;[], loadOptions: (query, AbortSignal) =&gt;
+      Promise&lt;options&gt;, clearable, clearLabel, clear(), valueCommitted, locale,
+      placeholder</code
     >
   </p>
   <p>

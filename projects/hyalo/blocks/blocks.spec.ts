@@ -22,7 +22,7 @@ import {
       <a hyBlockActions href="/learn">بیشتر بدانید</a>
       <img hyBlockMedia src="example.jpg" alt="نمای محصول" />
     </hy-hero-block>
-    <hy-dashboard-block>
+    <hy-dashboard-block maxHeight="36rem" contentLabel="Report content">
       <nav hyBlockSidebar aria-label="Workspace"><a href="/overview">Overview</a></nav>
       <div hyBlockToolbar><button type="button">Refresh</button></div>
       <main><h2>Report</h2></main>
@@ -63,6 +63,13 @@ describe('marketing and data block contracts', () => {
     expect(shell.querySelector('aside nav a')?.textContent).toBe('Overview');
     expect(shell.querySelector('header button')?.textContent).toBe('Refresh');
     expect(shell.querySelector('.main main h2')?.textContent).toBe('Report');
+    expect(shell.querySelector('.main')?.getAttribute('aria-label')).toBe('Report content');
+    expect(shell.querySelector<HTMLElement>('.main')?.tabIndex).toBe(0);
+    expect(
+      shell
+        .querySelector<HTMLElement>('.shell')
+        ?.style.getPropertyValue('--hy-dashboard-block-max-height'),
+    ).toBe('36rem');
     expect([...shell.querySelectorAll('a,button')].map((el) => el.textContent)).toEqual([
       'Overview',
       'Refresh',

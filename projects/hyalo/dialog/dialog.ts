@@ -1,6 +1,13 @@
 import { Dialog } from '@angular/cdk/dialog';
 import type { ComponentType } from '@angular/cdk/portal';
-import { ChangeDetectionStrategy, Component, Injectable, TemplateRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injectable,
+  TemplateRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 
 import { HyFidelity, type HyTone } from '@hyalo/angular/core';
@@ -55,9 +62,13 @@ class HyConfirmDialog {
     if (this.pending()) return;
     this.pending.set(true);
     this.failed.set(false);
-    try { if ((await this.data.confirm?.()) !== false) this.ref.close(true, 'action'); }
-    catch { this.failed.set(true); }
-    finally { this.pending.set(false); }
+    try {
+      if ((await this.data.confirm?.()) !== false && (await this.ref.requestClose(true, 'action')))
+        return;
+    } catch {
+      this.failed.set(true);
+    }
+    this.pending.set(false);
   }
 }
 
@@ -87,8 +98,12 @@ export class HyDialog {
   private readonly registry = inject(HyDialogRegistry);
   readonly openDialogs = this.registry.openDialogs;
   readonly afterAllClosed = this.registry.afterAllClosed;
-  getById(id: string): HyDialogRef | undefined { return this.registry.getById(id); }
-  closeAll(): void { this.registry.closeAll(); }
+  getById(id: string): HyDialogRef | undefined {
+    return this.registry.getById(id);
+  }
+  closeAll(): void {
+    this.registry.closeAll();
+  }
 
   /** Opens a component or template as a dialog. */
   open<R = unknown, D = unknown>(
@@ -96,10 +111,12 @@ export class HyDialog {
     config: HyDialogConfig<D> = {},
   ): HyDialogRef<R> {
     const size = config.size ?? 'md';
-    return this.registry.track(openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
-      panelClass: ['hy-dialog-pane', `hy-dialog--${size}`],
-      maxWidth: MAX_WIDTH[size],
-    }));
+    return this.registry.track(
+      openSurface<R, D>(this.cdk, this.motion, this.fidelity, content, config, {
+        panelClass: ['hy-dialog-pane', `hy-dialog--${size}`],
+        maxWidth: MAX_WIDTH[size],
+      }),
+    );
   }
 
   /** Asks a yes or no question. Resolves to true only when confirmed. */

@@ -5,7 +5,9 @@
   <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css">
     <button hyButton variant="glass" (click)="open('start')">From start</button>
     <button hyButton variant="glass" (click)="open('end')">From end</button>
+    <button hyButton variant="glass" (click)="open('top')">From top</button>
     <button hyButton variant="glass" (click)="open('bottom')">Bottom sheet</button>
+    <button hyButton variant="glass" (click)="open('bottom', true)">Guarded sheet</button>
   </docs-example>
   <p>
     <code>start</code> and <code>end</code> follow the text direction. Switch the page to RTL in the
@@ -15,6 +17,7 @@
   <ng-template #filters>
     <h2 hyDialogTitle>Filters</h2>
     <div hyDialogContent>
+      <p role="status">{{ drawerNotice() }}</p>
       <div class="docs-stack">
         <hy-checkbox>In stock</hy-checkbox>
         <hy-checkbox>On sale</hy-checkbox>
@@ -26,6 +29,41 @@
       <button hyButton [hyDialogClose]="true">Show 24 results</button>
     </div>
   </ng-template>
+
+  <h2>Docked layout</h2>
+  <docs-example [code]="examples[1].html" [tsCode]="examples[1].ts" [cssCode]="examples[1].css" column>
+    <div class="docs-row" role="group" aria-label="Drawer mode">
+      @for (mode of modes; track mode) {
+        <button hyButton type="button" variant="soft" [attr.aria-pressed]="dockedMode() === mode" (click)="dockedMode.set(mode)">
+          {{ mode }}
+        </button>
+      }
+    </div>
+    <div class="docs-row" role="group" aria-label="Drawer side">
+      @for (side of sides; track side) {
+        <button hyButton type="button" variant="soft" [attr.aria-pressed]="dockedSide() === side" (click)="dockedSide.set(side)">
+          {{ side }}
+        </button>
+      }
+    </div>
+    <hy-drawer-layout class="drawer-demo" #layout [(opened)]="dockedOpen" [mode]="dockedMode()" [side]="dockedSide()" size="min(8rem, 42%)">
+      <hy-docked-drawer id="docked-filters" class="drawer-demo-panel" label="Docked filters">
+        <hy-checkbox>In stock</hy-checkbox>
+        <button hyButton type="button" variant="ghost" (click)="layout.close()">Close filters</button>
+      </hy-docked-drawer>
+      <div class="drawer-demo-content">
+        <button hyButton type="button" (click)="layout.toggle()" [attr.aria-expanded]="dockedOpen()" aria-controls="docked-filters">
+          Toggle filters
+        </button>
+        <p>Search results</p>
+      </div>
+    </hy-drawer-layout>
+  </docs-example>
+  <p>
+    Use side to resize the content region, push to move it, or over to cover it. Backdrops block
+    interaction with this layout's content while the surrounding page stays available.
+  </p>
+  <docs-api-table [rows]="layoutRows" />
 
   <h2>Accessibility</h2>
   <ul>

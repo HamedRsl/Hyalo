@@ -1,4 +1,4 @@
-<label class="hy-choice__row" [style.flex-direction]="labelPosition() === 'before' ? 'row-reverse' : null">
+<label class="hy-choice__row">
   <span class="hy-choice__control hy-radio__circle">
     <input
       type="radio"
@@ -9,7 +9,7 @@
       [attr.aria-disabled]="isDisabled() || null"
       (click)="guard($event)"
       [attr.aria-describedby]="description() ? descriptionId : null"
-      (change)="group.value.set(value())"
+      (change)="choose($event)"
       (blur)="group.touch.emit()"
     />
     <span class="hy-radio__dot" aria-hidden="true"></span>

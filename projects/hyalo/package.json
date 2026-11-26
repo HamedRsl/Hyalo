@@ -1,6 +1,6 @@
 {
   "name": "@hyalo/angular",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Liquid glass components for Angular. Signals, zoneless, SSR-safe, accessible, RTL-ready.",
   "license": "MIT",
   "author": "HamedRsl",

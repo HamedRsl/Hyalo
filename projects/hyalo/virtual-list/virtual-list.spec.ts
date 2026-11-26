@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HY_VIRTUAL_LIST } from './virtual-list';
+import { By } from '@angular/platform-browser';
+import { HY_VIRTUAL_LIST, HyVirtualList, type HyVirtualRange } from './virtual-list';
 import { expectNoAxeViolations } from '../src/testing/axe';
 
 @Component({
@@ -12,6 +13,13 @@ import { expectNoAxeViolations } from '../src/testing/axe';
     [itemKey]="key"
     [rowHeight]="20"
     [overscan]="2"
+    [orientation]="orientation()"
+    [columnCount]="columns()"
+    [columnWidth]="100"
+    [virtual]="virtual()"
+    [appendOnly]="appendOnly()"
+    [loadRange]="loader()"
+    (rangeChange)="ranges.push($event)"
   >
     <ng-template [hyVirtualItem]="list" let-item let-index="index"
       >{{ index + 1 }}: {{ item.name }}</ng-template
@@ -21,6 +29,14 @@ import { expectNoAxeViolations } from '../src/testing/axe';
 class Host {
   readonly items = signal(Array.from({ length: 1000 }, (_, id) => ({ id, name: 'Event ' + id })));
   readonly key = (item: { id: number }): number => item.id;
+  readonly orientation = signal<'vertical' | 'horizontal' | 'grid'>('vertical');
+  readonly columns = signal(25);
+  readonly virtual = signal(true);
+  readonly appendOnly = signal(false);
+  readonly ranges: HyVirtualRange[] = [];
+  readonly loader = signal<
+    ((range: HyVirtualRange, signal: AbortSignal) => Promise<void>) | undefined
+  >(undefined);
 }
 describe('HyVirtualList', () => {
   it('renders a bounded slice with item positions and disconnects observers', async () => {
@@ -83,5 +99,82 @@ describe('HyVirtualList', () => {
     await f.whenStable();
     expect((document.activeElement as HTMLElement).getAttribute('aria-posinset')).toBe('1');
     await expectNoAxeViolations(f.nativeElement);
+  });
+
+  it('deduplicates rendered ranges and cancels stale loads across scroll, resize and retries', async () => {
+    const fixture = TestBed.createComponent(Host);
+    const host = fixture.componentInstance;
+    const request = vi.fn<(range: HyVirtualRange, signal: AbortSignal) => Promise<void>>();
+    const completions: { finish(): void; fail(reason: unknown): void }[] = [];
+    request.mockImplementation(
+      () =>
+        new Promise<void>((resolve, reject) => {
+          completions.push({ finish: resolve, fail: reject });
+        }),
+    );
+    host.loader.set(request);
+    await fixture.whenStable();
+    const target = fixture.debugElement.query(By.directive(HyVirtualList));
+    const list = target.componentInstance as HyVirtualList<unknown>;
+    const node = target.nativeElement as HTMLElement;
+    expect(request).toHaveBeenCalledOnce();
+    expect(host.ranges).toEqual([{ start: 0, end: 12 }]);
+    list.scrollTo({ top: 1 });
+    await fixture.whenStable();
+    expect(request).toHaveBeenCalledOnce();
+    list.scrollTo({ top: 400 });
+    await fixture.whenStable();
+    expect(host.ranges.at(-1)).toEqual({ start: 18, end: 32 });
+    expect(request.mock.calls[0]![1].aborted).toBe(true);
+    completions[0]?.finish();
+    await fixture.whenStable();
+    expect(list.loading()).toBe(true);
+    completions[1]?.fail(new Error('offline'));
+    await vi.waitFor(() => expect(list.error()).toEqual(new Error('offline')));
+    list.retry();
+    await fixture.whenStable();
+    completions[2]?.finish();
+    await vi.waitFor(() => expect(list.loading()).toBe(false));
+    expect(list.error()).toBeNull();
+    Object.defineProperty(node, 'clientHeight', { value: 40 });
+    window.dispatchEvent(new Event('resize'));
+    await fixture.whenStable();
+    expect(host.ranges.at(-1)).toEqual({ start: 18, end: 25 });
+    host.items.set(host.items().slice(0, 3));
+    await fixture.whenStable();
+    expect(host.ranges.at(-1)).toEqual({ start: 0, end: 3 });
+    const last = request.mock.calls.at(-1);
+    fixture.destroy();
+    expect(last?.[1].aborted).toBe(true);
+  });
+
+  it('bounds both grid axes and resets retained rows after bypass or replacement', async () => {
+    const fixture = TestBed.createComponent(Host);
+    const host = fixture.componentInstance;
+    host.orientation.set('grid');
+    host.appendOnly.set(true);
+    await fixture.whenStable();
+    const target = fixture.debugElement.query(By.directive(HyVirtualList));
+    const list = target.componentInstance as HyVirtualList<unknown>;
+    const node = target.nativeElement as HTMLElement;
+    Object.defineProperties(node, { clientWidth: { value: 200 }, clientHeight: { value: 40 } });
+    window.dispatchEvent(new Event('resize'));
+    await fixture.whenStable();
+    expect(node.querySelectorAll('[role=listitem]')).toHaveLength(60);
+    list.scrollToIndex(255, { align: 'center' });
+    await fixture.whenStable();
+    expect(node.scrollTop).toBe(190);
+    expect(node.scrollLeft).toBe(450);
+    expect(node.querySelector('[data-hy-virtual-index="255"]')).not.toBeNull();
+    expect(list.renderedRange().start).toBe(0);
+    host.virtual.set(false);
+    await fixture.whenStable();
+    expect(node.querySelectorAll('[role=listitem]')).toHaveLength(1000);
+    host.virtual.set(true);
+    await fixture.whenStable();
+    expect(list.renderedRange().start).toBe(175);
+    host.items.set(host.items().slice(0, 12));
+    await fixture.whenStable();
+    expect(list.renderedRange()).toEqual({ start: 0, end: 12 });
   });
 });

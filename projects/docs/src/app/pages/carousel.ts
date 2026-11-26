@@ -120,6 +120,7 @@ export default class ShowcasePage {
     },
   ];
   protected readonly index = signal(0);
+  protected readonly settled = signal<number | null>(null);
   protected readonly mode = signal<HyCarouselMode | undefined>('slide');
   protected readonly loop = signal(false);
   protected readonly navigation = signal<HyCarouselNavigationMode | undefined>('icons');

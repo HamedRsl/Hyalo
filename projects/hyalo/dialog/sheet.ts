@@ -10,6 +10,7 @@ const INTERACTIVE =
 /** @internal What a drawer needs from its HyDialogRef. */
 export interface HySheetHost {
   readonly dismissible: boolean;
+  opened(): void;
   close(): void;
   cancelClose(): void;
 }
@@ -60,13 +61,14 @@ export function driveSheet(
   };
 
   const spring = new HySpring(0, paint);
+  const settleOpen = (): void => spring.to(0, { ...SPRINGS.settle, onRest: host.opened });
   // Start out of view without measuring yet; the content has not rendered.
   panel.style.translate = vertical ? `0 ${sign * 100}%` : `${sign * 100}% 0`;
   if (backdrop) backdrop.style.opacity = '0';
   let enterFrame = requestAnimationFrame(() => {
     enterFrame = 0;
     spring.set(size());
-    spring.to(0, SPRINGS.settle);
+    settleOpen();
   });
 
   let closing = false;
@@ -108,6 +110,7 @@ export function driveSheet(
     dragging: boolean;
   }
   let press: Press | null = null;
+  let dragFocus: HTMLElement | null = null;
   const tracker = new HyVelocityTracker();
   const along = (e: PointerEvent): number => (vertical ? e.clientY : e.clientX) * sign;
   const across = (e: PointerEvent): number => (vertical ? e.clientX : e.clientY);
@@ -141,6 +144,10 @@ export function driveSheet(
       const onGrabber = !!target.closest('.hy-drawer__grabber');
       if (!onGrabber && target.closest(INTERACTIVE)) return;
       if (vertical && !onGrabber && panel.scrollTop > 0) return;
+      const active = panel.ownerDocument.activeElement;
+      dragFocus =
+        active && panel.contains(active) && 'focus' in active ? (active as HTMLElement) : null;
+      if (onGrabber) e.preventDefault();
       const p: Press = {
         id: e.pointerId,
         x: along(e),
@@ -196,21 +203,31 @@ export function driveSheet(
     clearTimeout(clickTimer);
     clickTimer = setTimeout(() => panel.removeEventListener('click', swallow, { capture: true }));
 
-    const velocity = e.type === 'pointercancel' ? 0 : tracker.velocity();
+    if (e.type === 'pointercancel') {
+      settleOpen();
+      return;
+    }
+    const velocity = tracker.velocity();
     const full = size();
     const landing = spring.value + project(velocity);
     // A clear flick decides by its direction, a slow release by where it lands.
     const out = Math.abs(velocity) > 400 ? velocity > 0 : landing > full / 2;
     spring.velocity = velocity;
     if (out && host.dismissible) host.close();
-    else spring.to(0, SPRINGS.settle);
+    else settleOpen();
   };
   panel.addEventListener('pointerup', release, { signal: lifetime.signal });
   panel.addEventListener('pointercancel', release, { signal: lifetime.signal });
 
   return {
     exit,
-    restore: () => { closing = false; spring.to(0, SPRINGS.settle); },
+    restore: () => {
+      closing = false;
+      settleOpen();
+      if (dragFocus?.isConnected && !panel.contains(panel.ownerDocument.activeElement)) {
+        dragFocus.focus({ preventScroll: true });
+      }
+    },
     destroy: () => {
       if (disposed) return;
       disposed = true;

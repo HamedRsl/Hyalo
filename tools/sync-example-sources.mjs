@@ -39,8 +39,6 @@ const singleExamplePages = new Set([
   'advanced-forms',
   'date-picker',
   'time-picker',
-  'combobox',
-  'multi-select',
   'search-field',
   'number-input',
   'password',

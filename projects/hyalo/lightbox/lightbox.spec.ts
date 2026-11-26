@@ -31,11 +31,11 @@ describe('lightbox viewer controls', () => {
     fixture.componentInstance.rotate();
     await fixture.whenStable();
     const image: HTMLImageElement = fixture.nativeElement.querySelector('img');
-    expect(image.style.transform).toBe('scale(1.25) rotate(90deg)');
+    expect(image.style.transform).toBe('translate(0px, 0px) rotate(90deg) scale(1.25, 1.25)');
     fixture.componentInstance.goTo(1);
     await fixture.whenStable();
     expect(image.src).toContain('two.jpg');
-    expect(image.style.transform).toBe('scale(1) rotate(0deg)');
+    expect(image.style.transform).toBe('translate(0px, 0px) rotate(0deg) scale(1, 1)');
     expect(indexChange).toHaveBeenLastCalledWith(1);
   });
   it('advances slideshow and stops at the last image and on destruction', async () => {

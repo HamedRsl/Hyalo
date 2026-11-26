@@ -10,7 +10,7 @@ const { chromium, firefox, webkit } = require('playwright');
 const { expect } = require('playwright/test');
 const { default: AxeBuilder } = require('@axe-core/playwright');
 const base = process.env.HYALO_BASE_URL ?? 'http://127.0.0.1:4200';
-const out = resolve(process.env.HYALO_BROWSER_OUTPUT ?? 'docs/verification/browser');
+const out = resolve(process.env.HYALO_BROWSER_OUTPUT ?? 'tmp/verification/browser');
 mkdirSync(out, { recursive: true });
 const results = [];
 const modes = [

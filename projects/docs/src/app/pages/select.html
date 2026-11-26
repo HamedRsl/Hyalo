@@ -8,11 +8,37 @@
     <hy-field label="Strap" hint="Rubber is sold out this week.">
       <hy-select [options]="straps" [formField]="f.strap" placeholder="Choose a strap" />
     </hy-field>
+    <hy-field label="Virtual country">
+      <hy-select [options]="countries" [virtualized]="true" [wrap]="false" [typeaheadDelay]="120" />
+    </hy-field>
+    <hy-field label="Standard country">
+      <hy-select [options]="countries" [wrap]="false" [typeaheadDelay]="120" />
+    </hy-field>
+    <hy-field label="Resettable material">
+      <hy-select [options]="resetChoices" value="steel" placeholder="Choose material" />
+    </hy-field>
+    <hy-field label="Native resettable material">
+      <hy-select native [options]="resetChoices" value="steel" placeholder="Choose material" />
+    </hy-field>
+    <div #selectPanels class="select-panels"></div>
+    <hy-field label="Select with custom panel mount">
+      <hy-select [options]="countries" [panelContainer]="selectPanels" [offsetX]="12" />
+    </hy-field>
     <hy-field label="Case size">
       <hy-select [options]="sizes" [(value)]="size" />
     </hy-field>
     <hy-field label="Country (native)">
       <hy-select native [options]="countries" [(value)]="country" />
+    </hy-field>
+    <hy-field label="Custom tag" [hint]="draftFeedback()">
+      <hy-select
+        [options]="[]"
+        [loadPage]="loadTags"
+        [createValue]="createTag"
+        emptyLabel="No saved tags"
+        (customValueRejected)="draftFeedback.set('Use at least three characters.')"
+        (valueChange)="draftFeedback.set('')"
+      />
     </hy-field>
   </docs-example>
 
@@ -22,18 +48,30 @@
     <code>&lt;select&gt;</code> with the same look. Phones then get their own picker, which is often
     the better experience for long lists.
   </p>
+  <p>Call <code>open()</code> from a user gesture to request the platform picker where the browser supports it.
+    The native picker owns dismissal and visibility. The open state and panel events describe the custom dropdown.</p>
 
   <h2>Accessibility</h2>
   <ul>
     <li>Follows the APG select-only combobox pattern. Enter, Space or Down open the list.</li>
-    <li>Typing a letter jumps to the next option that starts with it.</li>
+    <li>Typing a letter jumps to the next option that starts with it. Use typeaheadDelay to
+      set the search window and wrap to control what arrow keys do at the list edges.</li>
     <li>Escape closes without changing the value. Focus stays on the trigger the whole time.</li>
     <li>
-      For more than about 15 options, or when people need to search, use a combobox instead. It is
-      planned for phase 4.
+      Use <a routerLink="/components/combobox">Combobox</a> when people need editable search, clear
+      or query-based loading. Use <a routerLink="/components/multi-select">Multi-select</a> to
+      select multiple values.
     </li>
   </ul>
+  <p>
+    Custom panels accept <code>loadPage</code> and show <code>emptyLabel</code> when the loaded list
+    has no options. A <code>createValue</code> callback may return undefined to reject the draft.
+    Rejections and exceptions are reported through <code>customValueRejected</code>, and the draft
+    remains editable.
+  </p>
 
+  <p>Use clear() to restore the placeholder when the field is optional. An undefined option is
+    a reset action. A null option can carry its own label.</p>
   <h2>API</h2>
   <p><code>hy-select</code></p>
   <docs-api-table [rows]="rows" />

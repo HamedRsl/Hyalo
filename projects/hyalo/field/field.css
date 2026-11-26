@@ -7,9 +7,12 @@
   position: relative;
 }
 
-:host([data-subscript='fixed']) { padding-block-end: 1.5em; }
-:host([data-subscript='fixed']) .hy-field__hint,
-:host([data-subscript='fixed']) .hy-field__error { position: absolute; inset-block-end: 0; }
+.hy-field__subscript { display: contents; }
+:host([data-subscript='fixed']) .hy-field__subscript {
+  display: block;
+  font-size: var(--hy-step--1);
+  min-block-size: 1lh;
+}
 :host([data-status='warning']) .hy-field__box { border-color: var(--hy-warning); }
 :host([data-status='success']) .hy-field__box { border-color: var(--hy-success); }
 :host([data-float-label='auto']),
@@ -26,12 +29,13 @@
 :host([data-float-label='always']) .hy-field__label,
 :host([data-float-label='auto']:focus-within) .hy-field__label,
 :host([data-float-label='auto'][data-filled]) .hy-field__label,
-:host([data-float-label='auto']:has(input[placeholder]:not(:placeholder-shown))) .hy-field__label {
+:host([data-float-label='auto']:has(:is(input, textarea):autofill)) .hy-field__label {
   transform: translateY(calc(var(--_h) / -2)) scale(0.85);
-  transform-origin: inline-start;
+  transform-origin: 0 50%;
   background: var(--hy-surface-1);
   padding-inline: 0.2em;
 }
+:host(:dir(rtl)) .hy-field__label { transform-origin: 100% 50%; }
 
 :host([data-size='sm']) {
   --_h: var(--hy-control-sm);

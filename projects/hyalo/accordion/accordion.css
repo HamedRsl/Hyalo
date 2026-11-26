@@ -89,7 +89,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hy-accordion__chevron {
+  .hy-accordion__chevron,
+  .hy-accordion__body,
+  .hy-accordion__panel[inert] .hy-accordion__content {
     transition: none;
   }
 }

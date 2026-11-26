@@ -15,6 +15,8 @@
       <button hyButton type="button" variant="ghost" (click)="chipVisible.set(true)">
         Reset filter
       </button>
+      <span hyBadgeHost dir="ltr">Inbox <hy-notification-badge [count]="3" label="3 unread" /></span>
+      <span hyBadgeHost dir="rtl" lang="fa">صندوق پیام <hy-notification-badge [count]="3" label="۳ خوانده‌نشده" direction="rtl" /></span>
     </div></docs-example
   >
   <h2>Selectable filters</h2>
@@ -27,13 +29,14 @@
     ><hy-chip disabled>Ceramic</hy-chip>
   </docs-example>
   <h2>Import</h2>
-  <docs-import code="import &#123; HyBadge, HyChip, HyStatus &#125; from '@hyalo/angular/badge';" />
+  <docs-import code="import &#123; HyBadge, HyBadgeHost, HyChip, HyNotificationBadge, HyStatus &#125; from '@hyalo/angular/badge';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Use visible text to describe status rather than color alone. Removal emits an event and keeps
     ownership of the collection in your app. When removing the focused chip, move focus to the next
     chip or its filter field.
   </p>
+  <p>Attach HyNotificationBadge inside a hyBadgeHost element. Use logical position values such as top-end, and set direction to match the host direction.</p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />
   <h2>Themes and fidelity</h2>

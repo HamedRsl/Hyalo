@@ -1,7 +1,63 @@
-
-<section [attr.aria-label]="label()" [attr.aria-busy]="status()==='loading'||pending()>0||null">
-@if(showToolbar()){<div class="toolbar"><button type="button" [disabled]="disabled()||status()!=='ready'" aria-label="Previous calendar range" (click)="previous()">Previous</button><button type="button" [disabled]="disabled()||status()!=='ready'" (click)="today()">Today</button><button type="button" [disabled]="disabled()||status()!=='ready'" aria-label="Next calendar range" (click)="next()">Next</button><h3 aria-live="polite">{{title()||label()}}</h3><label>View <select [disabled]="disabled()||status()!=='ready'" [value]="view()" (change)="chooseView($event)"><option value="dayGridMonth">Month</option><option value="timeGridWeek">Week</option><option value="timeGridDay">Day</option><option value="listWeek">Agenda</option></select></label></div>}
-@if(status()==='loading'){<p role="status">{{loadingLabel()}}</p>}@if(status()==='error'){<p role="alert">Calendar could not load. <button type="button" (click)="retry()">Retry</button></p>}
-<div #mount class="calendar surface" [attr.aria-label]="label()"></div>
-@if(showAgenda()){<details class="agenda"><summary>{{agendaLabel()}}</summary><ul>@for(event of agenda();track event.id){<li><time>{{event.start}}</time> {{event.title}}</li>}@empty{<li>{{emptyLabel()}}</li>}</ul></details>}
+<section
+  [attr.aria-label]="label()"
+  [attr.aria-busy]="status() === 'loading' || pending() > 0 || null"
+>
+  @if (showToolbar()) {
+    <div class="toolbar">
+      <button
+        type="button"
+        [disabled]="disabled() || status() !== 'ready'"
+        aria-label="Previous calendar range"
+        (click)="previous()"
+      >
+        Previous</button
+      ><button type="button" [disabled]="disabled() || status() !== 'ready'" (click)="today()">
+        Today</button
+      ><button
+        type="button"
+        [disabled]="disabled() || status() !== 'ready'"
+        aria-label="Next calendar range"
+        (click)="next()"
+      >
+        Next
+      </button>
+      <h3 aria-live="polite">{{ title() || label() }}</h3>
+      <label class="view-control">
+        {{ viewLabel() }}
+        <span class="view-select">
+          <select [disabled]="disabled() || status() !== 'ready'" (change)="chooseView($event)">
+            @for (option of viewOptions(); track option.value) {
+              <option [value]="option.value" [selected]="view() === option.value">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+          <hy-icon name="chevron-down" aria-hidden="true" />
+        </span>
+      </label>
+    </div>
+  }
+  @if (status() === 'loading') {
+    <p role="status">{{ loadingLabel() }}</p>
+  }
+  @if (status() === 'error') {
+    <p role="alert">
+      Calendar could not load. <button type="button" (click)="retry()">Retry</button>
+    </p>
+  }
+  <div #mount class="calendar surface" [attr.aria-label]="label()"></div>
+  @if (showAgenda()) {
+    <details class="agenda">
+      <summary>{{ agendaLabel() }}</summary>
+      <ul>
+        @for (event of agenda(); track event.id) {
+          <li>
+            <time>{{ event.start }}</time> {{ event.title }}
+          </li>
+        } @empty {
+          <li>{{ emptyLabel() }}</li>
+        }
+      </ul>
+    </details>
+  }
 </section>

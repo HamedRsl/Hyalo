@@ -35,6 +35,8 @@ export default class TooltipPopoverPage {
 
   protected readonly open = signal(false);
   protected readonly isPublic = signal(false);
+  protected readonly detailsState = signal('Details closed');
+  protected readonly detailsPolicy = { outsidePointer: false, focusOut: false };
 
   protected readonly tooltipRows: ApiRow[] = [
     { name: 'hyTooltip', type: 'string', description: 'The text. Empty means no tooltip.' },

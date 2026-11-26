@@ -1,6 +1,10 @@
 import type { FocusTrapFactory } from '@angular/cdk/a11y';
 import { take } from 'rxjs';
-import type { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
+import type {
+  FlexibleConnectedPositionStrategy,
+  FlexibleConnectedPositionStrategyOrigin,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import {
   DestroyRef,
   Directive,
@@ -11,6 +15,7 @@ import {
   inject,
   input,
   model,
+  output,
   effect,
   untracked,
 } from '@angular/core';
@@ -21,6 +26,12 @@ import {
   ɵHyPresence as HyPresence,
 } from '@hyalo/angular/overlay';
 import { loadPopoverOverlay as loadOverlay } from './load-overlay';
+
+export interface HyPopoverDismissal {
+  readonly escape?: boolean;
+  readonly outsidePointer?: boolean;
+  readonly focusOut?: boolean;
+}
 
 /**
  * A non-modal glass panel anchored to a trigger, for content that does not
@@ -46,8 +57,10 @@ import { loadPopoverOverlay as loadOverlay } from './load-overlay';
     '[attr.aria-controls]': 'open() ? panelId : null',
     '(click)': 'onTriggerClick()',
     // Fetch the overlay code as soon as the user heads for the trigger.
-    '(pointerenter)': 'preload()',
+    '(pointerenter)': 'onPointerEnter($event)',
+    '(pointerleave)': 'onPointerLeave($event)',
     '(focusin)': 'preload()',
+    '(keydown.escape)': 'onHostEscape($event)',
   },
 })
 export class HyPopover {
@@ -61,6 +74,10 @@ export class HyPopover {
   private readonly presence = new HyPresence();
   private destroyed = false;
   private positioned = false;
+  private mount: HTMLElement | undefined;
+  private entrySequence = 0;
+  private preserveFocus = false;
+  private hoverDismissal: AbortController | undefined;
   private resizeObserver: ResizeObserver | null = null;
   private positionFrame = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
@@ -68,9 +85,9 @@ export class HyPopover {
   /** The content. */
   readonly content = input.required<TemplateRef<unknown>>({ alias: 'hyPopover' });
   readonly popoverContext = input<unknown>();
-  readonly popoverTrigger = input<'click' | 'manual'>('click');
+  readonly popoverTrigger = input<'click' | 'manual' | 'hover'>('click');
   /** False keeps the panel open on Escape, outside pointer and focus exit. */
-  readonly popoverAutoClose = input(true);
+  readonly popoverAutoClose = input<boolean | HyPopoverDismissal>(true);
   readonly popoverShowDelay = input(0);
   readonly popoverHideDelay = input(0);
   /** Accessible name of the panel. */
@@ -79,6 +96,12 @@ export class HyPopover {
   readonly popoverMaterial = input<HyMaterial>('frosted');
   /** Preferred side. Flips when there is no room. */
   readonly popoverPlacement = input<HyPlacement>('bottom');
+  readonly popoverOrigin = input<FlexibleConnectedPositionStrategyOrigin>();
+  readonly popoverOffset = input(10);
+  /** Optional native top-layer parent. Applied when the next panel attaches. */
+  readonly popoverContainer = input<HTMLElement>();
+  readonly popoverOpened = output<void>();
+  readonly popoverClosed = output<void>();
   /** Whether the panel is open. Two-way bindable as `[(popoverOpen)]`. */
   readonly open = model(false, { alias: 'popoverOpen' });
 
@@ -90,6 +113,7 @@ export class HyPopover {
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
       clearTimeout(this.timer);
+      this.hoverDismissal?.abort();
       this.stopPositionTracking();
       this.overlayRef?.dispose();
     });
@@ -101,12 +125,55 @@ export class HyPopover {
   }
 
   protected onTriggerClick(): void {
-    if (this.popoverTrigger() === 'click') this.toggle();
+    if (this.popoverTrigger() === 'manual') return;
+    if (this.open() && this.preserveFocus) {
+      this.preserveFocus = false;
+      clearTimeout(this.timer);
+      void this.attach(true);
+    } else this.toggle();
+  }
+
+  protected onPointerEnter(event: PointerEvent): void {
+    this.preload();
+    if (this.popoverTrigger() === 'hover' && event.pointerType !== 'touch') {
+      if (this.hoverDismissal) return;
+      if (this.open()) clearTimeout(this.timer);
+      else this.scheduleShow(true);
+    }
+  }
+
+  protected onPointerLeave(event: PointerEvent): void {
+    if (this.popoverTrigger() === 'hover' && event.pointerType !== 'touch') {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(
+        () => {
+          const pane = this.overlayRef?.overlayElement;
+          if (!pane?.contains(pane.ownerDocument.activeElement)) this.close(false);
+        },
+        Math.max(120, this.popoverHideDelay()),
+      );
+    }
+  }
+
+  private autoClose(reason: keyof HyPopoverDismissal): boolean {
+    const policy = this.popoverAutoClose();
+    return typeof policy === 'boolean' ? policy : (policy[reason] ?? true);
+  }
+
+  protected onHostEscape(event: Event): void {
+    if (!this.open() || !this.autoClose('escape')) return;
+    event.preventDefault();
+    this.close();
   }
 
   show(): void {
+    this.scheduleShow(false);
+  }
+
+  private scheduleShow(preserveFocus: boolean): void {
     clearTimeout(this.timer);
     if (this.destroyed) return;
+    this.preserveFocus = preserveFocus;
     const delay = Math.max(0, this.popoverShowDelay());
     if (!delay) this.open.set(true);
     else this.timer = setTimeout(() => this.open.set(true), delay);
@@ -124,15 +191,30 @@ export class HyPopover {
   close(restoreFocus = true): void {
     clearTimeout(this.timer);
     if (!this.open()) return;
+    if (restoreFocus && this.preserveFocus) this.waitForHoverExit();
     this.open.set(false);
     if (restoreFocus) this.host.nativeElement.focus();
+  }
+
+  private waitForHoverExit(): void {
+    this.hoverDismissal?.abort();
+    const controller = new AbortController();
+    this.hoverDismissal = controller;
+    const host = this.host.nativeElement;
+    host.ownerDocument.addEventListener('pointermove', (event) => {
+      const rect = host.getBoundingClientRect();
+      if (event.clientX >= rect.left && event.clientX <= rect.right &&
+          event.clientY >= rect.top && event.clientY <= rect.bottom) return;
+      controller.abort();
+      this.hoverDismissal = undefined;
+    }, { capture: true, signal: controller.signal });
   }
 
   protected preload(): void {
     loadOverlay().catch(() => undefined);
   }
 
-  private async attach(): Promise<void> {
+  private async attach(transferFocus = false): Promise<void> {
     const kit = await loadOverlay().catch(() => null);
     if (this.destroyed) return;
     if (!kit) {
@@ -149,8 +231,17 @@ export class HyPopover {
       createOverlayRef,
       createRepositionScrollStrategy,
     } = kit;
+    const parent = this.popoverContainer();
+    if (this.overlayRef && !this.overlayRef.hasAttached() && this.mount !== parent) {
+      this.overlayRef.dispose();
+      this.overlayRef = null;
+    }
     if (!this.overlayRef) {
-      this.position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
+      this.mount = parent;
+      this.position = createFlexibleConnectedPositionStrategy(
+        this.injector,
+        this.popoverOrigin() ?? this.host,
+      )
         .withViewportMargin(12)
         // Content owns its scroll bounds. A flexible-fit box can be shorter
         // than the actual panel and put its heading above the viewport.
@@ -158,10 +249,12 @@ export class HyPopover {
         .withPush(true)
         // The panel grows out of its trigger, not out of its own centre.
         .withTransformOriginOn('.hy-popover');
+      if (parent) this.position.withPopoverLocation({ type: 'parent', element: parent });
       this.overlayRef = createOverlayRef(this.injector, {
         positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: 'hy-popover-pane',
+        ...(parent ? { usePopover: true } : {}),
       });
       this.overlayRef.overlayElement.addEventListener('transitionend', (event) => {
         if (
@@ -173,15 +266,20 @@ export class HyPopover {
         }
       });
       this.overlayRef.keydownEvents().subscribe((event) => {
-        if (event.key === 'Escape' && this.popoverAutoClose()) {
+        if (event.key === 'Escape' && this.autoClose('escape')) {
           event.preventDefault();
           this.close();
         }
       });
       this.overlayRef.outsidePointerEvents().subscribe((event) => {
-        if (this.popoverAutoClose() && !this.host.nativeElement.contains(event.target as Node))
+        if (
+          this.autoClose('outsidePointer') &&
+          !this.host.nativeElement.contains(event.target as Node)
+        )
           this.close(false);
       });
+      this.overlayRef.overlayElement.addEventListener('pointerenter', this.keepHoverOpen);
+      this.overlayRef.overlayElement.addEventListener('pointerleave', this.leaveHoverPanel);
     }
     if (this.overlayRef.hasAttached()) {
       const pane = this.overlayRef.overlayElement;
@@ -190,10 +288,13 @@ export class HyPopover {
       // Reopened while fading out: turn the exit around.
       if (this.presence.leaving && this.positioned)
         this.reveal(this.overlayRef.overlayElement, focusTraps);
+      else if (transferFocus && this.positioned) this.focusInside(pane, focusTraps);
       return;
     }
     // Read on every open, so a changed placement applies next time.
-    this.position?.withPositions(hyConnectedPositions(this.popoverPlacement(), 10));
+    this.position
+      ?.setOrigin(this.popoverOrigin() ?? this.host)
+      .withPositions(hyConnectedPositions(this.popoverPlacement(), this.popoverOffset()));
     const pane = this.overlayRef.overlayElement;
     pane.id = this.panelId;
     pane.setAttribute('role', 'dialog');
@@ -219,6 +320,7 @@ export class HyPopover {
   }
 
   private startPositionTracking(pane: HTMLElement): void {
+    if (this.mount) pane.ownerDocument.addEventListener('fullscreenchange', this.followFullscreen);
     // Lazy tabs/templates can change the panel size after CDK's initial
     // measurement. Reposition on actual size changes, not a guessed timer.
     if (typeof ResizeObserver === 'function') {
@@ -237,15 +339,59 @@ export class HyPopover {
   }
 
   private stopPositionTracking(): void {
+    this.host.nativeElement.ownerDocument.removeEventListener('fullscreenchange', this.followFullscreen);
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.host.nativeElement.ownerDocument.defaultView?.cancelAnimationFrame?.(this.positionFrame);
     this.positionFrame = 0;
   }
 
+  private readonly followFullscreen = (): void => {
+    const ref = this.overlayRef;
+    if (!ref?.hasAttached() || !this.open()) return;
+    const host = ref.hostElement;
+    const document = host.ownerDocument;
+    if (!host.isConnected || !host.hasAttribute('popover') ||
+      (document.fullscreenElement && !document.fullscreenElement.contains(host))) return;
+
+    const pane = ref.overlayElement;
+    const active = document.activeElement;
+    pane.removeEventListener('focusout', this.onFocusOut);
+    // Entering fullscreen can move the scene above an already open top-layer host.
+    host.hidePopover();
+    host.showPopover();
+    ref.updatePosition();
+    if (active instanceof HTMLElement && pane.contains(active)) active.focus();
+    pane.addEventListener('focusout', this.onFocusOut);
+  };
+
   private reveal(pane: HTMLElement, focusTraps: FocusTrapFactory): void {
     pane.style.removeProperty('visibility');
     this.presence.enter(pane);
+    const sequence = ++this.entrySequence;
+    const transitions =
+      pane
+        .getAnimations?.()
+        .filter(
+          (animation) =>
+            'transitionProperty' in animation && animation.transitionProperty === 'opacity',
+        ) ?? [];
+    void Promise.allSettled(transitions.map((transition) => transition.finished)).then(
+      (results) => {
+        if (
+          sequence === this.entrySequence &&
+          this.open() &&
+          !this.destroyed &&
+          results.every((result) => result.status === 'fulfilled')
+        )
+          this.popoverOpened.emit();
+      },
+    );
+    if (this.preserveFocus) return;
+    this.focusInside(pane, focusTraps);
+  }
+
+  private focusInside(pane: HTMLElement, focusTraps: FocusTrapFactory): void {
     const trap = focusTraps.create(pane);
     void trap.focusFirstTabbableElementWhenReady().then((found) => {
       if (!found && this.open() && !this.destroyed) {
@@ -257,17 +403,26 @@ export class HyPopover {
   }
 
   private detach(): void {
+    this.entrySequence++;
     this.stopPositionTracking();
     const ref = this.overlayRef;
     if (!ref?.hasAttached()) return;
     ref.overlayElement.removeEventListener('focusout', this.onFocusOut);
-    this.presence.leave(ref.overlayElement, () => ref.detach());
+    this.presence.leave(ref.overlayElement, () => {
+      if (this.destroyed) return;
+      ref.detach();
+      this.popoverClosed.emit();
+    });
   }
 
+  private readonly keepHoverOpen = (): void => {
+    if (this.popoverTrigger() === 'hover') clearTimeout(this.timer);
+  };
+  private readonly leaveHoverPanel = (event: PointerEvent): void => this.onPointerLeave(event);
   private readonly onFocusOut = (event: FocusEvent): void => {
     const next = event.relatedTarget as Node | null;
     if (
-      this.popoverAutoClose() &&
+      this.autoClose('focusOut') &&
       next &&
       !this.overlayRef?.overlayElement.contains(next) &&
       next !== this.host.nativeElement

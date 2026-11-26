@@ -21,6 +21,16 @@
       </hy-tab>
       <hy-tab value="reviews" label="Reviews" disabled>Nothing yet.</hy-tab>
     </hy-tabs>
+    <hy-tabs label="Delivery settings" placement="start">
+      <hy-tab value="shipping" label="Shipping details" compactLabel="Shipping" badge="2">
+        <p>Delivery options</p>
+      </hy-tab>
+      <hy-tab value="pickup" label="Pickup locations"><p>Available locations</p></hy-tab>
+    </hy-tabs>
+    <hy-tabs label="Account view" placement="bottom">
+      <hy-tab value="summary" label="Summary"><p>Account summary</p></hy-tab>
+      <hy-tab value="history" label="History"><p>Account history</p></hy-tab>
+    </hy-tabs>
     <p class="hy-muted">Selected: {{ tab() ?? 'first enabled tab' }}</p>
   </docs-example>
 
@@ -35,6 +45,46 @@
     with
     <code>[formField]</code>.
   </p>
+
+  <h2>Animated panel height and overflow</h2>
+  <docs-example
+    [code]="examples[2].html"
+    [tsCode]="examples[2].ts"
+    [cssCode]="examples[2].css"
+    column
+  >
+    <hy-tabs
+      label="Release stages"
+      style="inline-size: 100%"
+      overflow="paginator"
+      dynamicHeight
+      [animationDuration]="420"
+      [(selected)]="releaseTab"
+      (transitionComplete)="completedTab.set($event)"
+    >
+      <hy-tab value="overview" label="Overview">
+        <p>The release schedule is ready for review.</p>
+      </hy-tab>
+      <hy-tab value="checklist" label="Checklist">
+        <ul>
+          @for (milestone of milestones; track milestone) {
+            <li>{{ milestone }}</li>
+          }
+        </ul>
+      </hy-tab>
+      @for (milestone of milestones; track milestone) {
+        <hy-tab [value]="milestone" [label]="milestone">
+          <p>{{ milestone }} details.</p>
+        </hy-tab>
+      }
+    </hy-tabs>
+    <button hyButton variant="ghost" type="button" (click)="releaseTab.set('overview')">
+      Show overview
+    </button>
+    @if (completedTab(); as completed) {
+      <p role="status">Finished: {{ completed }}</p>
+    }
+  </docs-example>
 
   <h2>Accessibility</h2>
   <ul>

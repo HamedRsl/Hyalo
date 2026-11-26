@@ -1,5 +1,8 @@
 import {
+  DestroyRef,
   Directive,
+  afterNextRender,
+  inject,
   TemplateRef,
   computed,
   effect,
@@ -53,6 +56,7 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
   readonly placeholder = input('Search options');
   readonly emptyLabel = input('No matching options');
   readonly loadingLabel = input('Loading options');
+  readonly loadMoreLabel = input('Load more options');
   readonly errorLabel = input('Could not load options');
   readonly optionTemplate = input<TemplateRef<HyOptionRenderContext<T>>>();
   readonly selectedTemplate = input<TemplateRef<HyOptionRenderContext<T>>>();
@@ -73,6 +77,10 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
   readonly visibilityChange = output<boolean>();
   readonly openedPanel = output<void>();
   readonly closedPanel = output<void>();
+  /** The overlay pane and its content are mounted. */
+  readonly panelAttached = output<void>();
+  /** The mounted overlay was detached. */
+  readonly panelDetached = output<void>();
   readonly queryChange = output<string>();
   readonly renderedRangeChange = output<HyOptionRange>();
   protected readonly expanded = this.opened;
@@ -107,6 +115,7 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
         query = this.search();
       return this.expanded() &&
         !this.blocked() &&
+        query === this.query() &&
         query.length >= this.minQueryLength() &&
         (load || paged)
         ? {
@@ -138,11 +147,21 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
           },
   });
   protected readonly busy = computed(() => this.request.isLoading());
+  protected readonly canLoadMore = computed(() => {
+    const page = this.pageCache();
+    return (
+      this.expanded() &&
+      !this.blocked() &&
+      !!this.loadPage() &&
+      page.query === this.query() &&
+      page.hasMore
+    );
+  });
   protected readonly failed = computed(() => this.request.status() === 'error');
   protected readonly results = computed(() => {
     const cache = this.pageCache(),
       remote = !!(this.loadOptions() || this.loadPage());
-    const options = remote ? (cache.query === this.search() ? cache.options : []) : this.options();
+    const options = remote ? (cache.query === this.query() ? cache.options : []) : this.options();
     const query = normalizeSearch(this.query(), this.locale());
     if (this.query().length < this.minQueryLength()) return [];
     const keys = new Set<string>();
@@ -224,9 +243,9 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
         query: page.query,
         options:
           page.offset && cache.query === page.query
-            ? [...cache.options, ...page.options]
+            ? [...cache.options.slice(0, page.offset), ...page.options]
             : page.options,
-        hasMore: page.hasMore,
+        hasMore: page.hasMore && page.options.length > 0,
       }));
     });
     let wasOpen = false;
@@ -251,6 +270,9 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
     this.query.set((event.target as HTMLInputElement).value);
     this.expand(true);
   }
+  override focus(): void {
+    this.element.querySelector('input')?.focus();
+  }
   show(): void {
     this.expand(true);
   }
@@ -272,8 +294,24 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
     this.request.reload();
   }
   loadMore(): void {
-    const page = this.pageCache();
-    if (!this.busy() && page.hasMore && this.loadPage()) this.pageOffset.set(page.options.length);
+    if (this.canLoadMore() && !this.busy() && !this.failed()) {
+      this.pageOffset.set(this.pageCache().options.length);
+    }
+  }
+  private pageKey(event: KeyboardEvent): void {
+    if (
+      event.key !== 'PageDown' ||
+      !this.canLoadMore() ||
+      event.isComposing ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey
+    )
+      return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.loadMore();
   }
   protected scrollOptions(event: Event): void {
     const host = event.target as HTMLElement;
@@ -284,12 +322,22 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
     )
       this.loadMore();
   }
-  protected virtualKeys(
-    event: KeyboardEvent,
-    choose: (values: readonly T[]) => void,
-    values: readonly T[],
-  ): void {
-    if (!this.virtualized() || this.blocked()) return;
+  protected installOptionKeyboard(activate: (value: T) => void): void {
+    const destroy = inject(DestroyRef);
+    afterNextRender(() => {
+      const input = this.element.querySelector('input');
+      if (!input) return;
+      const onKey = (event: KeyboardEvent): void => {
+        this.pageKey(event);
+        if (!event.defaultPrevented) this.virtualKeys(event, activate);
+      };
+      // Capture keys owned by the paging or virtual viewport before Angular Aria relays them.
+      input.addEventListener('keydown', onKey, true);
+      destroy.onDestroy(() => input.removeEventListener('keydown', onKey, true));
+    });
+  }
+  private virtualKeys(event: KeyboardEvent, activate: (value: T) => void): void {
+    if (!this.virtualized() || this.blocked() || event.isComposing) return;
     const items = this.results();
     if (!['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', 'Escape'].includes(event.key)) return;
     event.preventDefault();
@@ -300,7 +348,7 @@ export abstract class HyOptionQuery<T> extends HyValueControl {
     }
     if (event.key === 'Enter') {
       const item = items[this.activeIndex()];
-      if (item && !item.disabled) choose([...values, item.option.value]);
+      if (item && !item.disabled) activate(item.option.value);
       return;
     }
     this.expand(true);

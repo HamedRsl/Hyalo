@@ -43,6 +43,11 @@ export default class ShowcasePage {
       description: 'Preferred popover placement. Flips at viewport edges.',
     },
     {
+      name: 'panelContainer',
+      type: 'HTMLElement',
+      description: 'Optional DOM parent for the detail overlay on browsers with Popover support.',
+    },
+    {
       name: 'closeLabel',
       type: 'string',
       default: 'Close details',

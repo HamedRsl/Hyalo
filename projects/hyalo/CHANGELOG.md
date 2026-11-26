@@ -2,6 +2,32 @@
 
 All notable changes to `@hyalo/angular` are listed here. The format follows [Keep a Changelog](https://keepachangelog.com), and versions follow [Semantic Versioning](https://semver.org). Until 1.0, a minor version can include breaking changes.
 
+## 0.6.0 (2026-11-26)
+
+### Data and workspace components
+
+- Added a data grid, tree, tree table, virtual scroller, Kanban board, scheduler,
+  splitter, dashboard layout, context menu, and rich-text editor.
+- Added grouped and frozen rows and columns to tables. Virtual tables measure
+  mounted group and detail rows and keep pinned rows mounted while scrolling.
+- Added a docked drawer layout, configurable dialog focus and geometry, and
+  per-instance overlay parents for Select, Hover Card, and Hotspot.
+
+### Interaction and accessibility
+
+- Fixed dashboard scrolling and the scheduler's view picker. Expanded the chat
+  demo with conversations, replies, forwarding, reactions, and media.
+- Added nullable Select reset, nested folder uploads, configurable input commit
+  timing, and lightbox transforms.
+- Centered the touch calendar in both reading directions and fixed focus return
+  after date and menu actions.
+
+## 0.5.0
+
+- Added mobile navigation, sheets, floating actions, keypad and gesture controls,
+  card stacks, notifications, chat, meters, the dock, and the status island.
+- Added wallet, transfer, and order-tracking examples.
+
 ## 0.4.0 (2026-11-16)
 
 ### Advanced forms

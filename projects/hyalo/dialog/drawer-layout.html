@@ -1,0 +1,9 @@
+<div class="content" #content tabindex="-1" [inert]="showBackdrop()" (focusin)="rememberFocus($event)">
+  <ng-content />
+</div>
+@if (showBackdrop()) {
+  <div class="backdrop" aria-hidden="true" (click)="dismissible() && close()"></div>
+}
+<div class="drawer" #panel tabindex="-1" [hidden]="!opened()" (focusin)="onPanelFocus()">
+  <ng-content select="hy-docked-drawer" />
+</div>

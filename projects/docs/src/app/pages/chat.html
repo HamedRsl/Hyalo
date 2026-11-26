@@ -1,30 +1,144 @@
 <docs-page
   heading="Marketplace chat"
-  lead="09 / A buyer–seller conversation, composed from primitives you can rearrange."
+  lead="Switch conversations, reply to messages, and preview a buyer–seller chat built with Hyalo components."
 >
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column>
     <section class="marketplace-chat" aria-label="Marketplace conversation demo">
-      <hy-card material="solid" padding="none">
-        <header class="marketplace-header">
-          <hy-avatar name="Maya Chen" />
-          <div>
-            <h3>Maya Chen</h3>
-            <p>Seller · Portland, Oregon</p>
+      <button
+        hyButton
+        type="button"
+        variant="soft"
+        class="marketplace-list-toggle"
+        aria-controls="marketplace-conversations"
+        [attr.aria-expanded]="listOpen()"
+        (click)="listOpen.set(!listOpen())"
+      >
+        Conversations
+      </button>
+      <hy-card
+        material="solid"
+        padding="none"
+        class="marketplace-conversations"
+        id="marketplace-conversations"
+        [attr.data-list-open]="listOpen() || null"
+      >
+        <div class="marketplace-sidebar">
+          <div class="marketplace-sidebar-heading">
+            <h3>Conversations</h3>
+            <button
+              hyButton
+              type="button"
+              size="sm"
+              variant="soft"
+              [attr.aria-expanded]="directoryOpen()"
+              (click)="directoryOpen.set(!directoryOpen())"
+            >
+              New chat
+            </button>
           </div>
-          <span class="marketplace-tag">Marketplace</span>
+          @if (directoryOpen()) {
+            <section class="marketplace-directory" aria-label="Start a conversation">
+              @for (contact of contacts(); track contact.id) {
+                <button hyButton type="button" variant="ghost" (click)="startConversation(contact)">
+                  <hy-avatar [name]="contact.name" size="sm" /> {{ contact.name }}
+                </button>
+              } @empty {
+                <small>All demo contacts already have a conversation.</small>
+              }
+            </section>
+          }
+          <hy-field label="Find a conversation">
+            <input
+              #conversationSearch
+              hyInput
+              type="search"
+              placeholder="Name or listing"
+              [value]="search()"
+              (input)="search.set(conversationSearch.value)"
+            />
+          </hy-field>
+          <div class="marketplace-filters" role="group" aria-label="Filter conversations">
+            @for (option of filters; track option.value) {
+              <button
+                hyButton
+                type="button"
+                variant="ghost"
+                [attr.aria-pressed]="filter() === option.value"
+                (click)="filter.set(option.value)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+          <hy-scroll-area label="Conversation list" maxHeight="17rem">
+            <ul class="marketplace-threads">
+              @for (chat of visibleConversations(); track chat.id) {
+                <li>
+                  <button
+                    hyButton
+                    type="button"
+                    variant="ghost"
+                    class="marketplace-thread"
+                    [attr.aria-current]="chat.id === conversationId() ? 'true' : null"
+                    (click)="selectConversation(chat)"
+                  >
+                    <span class="marketplace-thread-row">
+                      <hy-avatar [name]="chat.name" size="sm" />
+                      <span class="marketplace-thread-copy">
+                        <strong>{{ chat.name }}</strong>
+                        <small>{{ chat.muted ? 'Muted · ' : '' }}{{ chat.preview }}</small>
+                      </span>
+                      @if (chat.unread) {
+                        <span
+                          class="marketplace-unread"
+                          [attr.aria-label]="chat.unread + ' unread'"
+                          >{{ chat.unread }}</span
+                        >
+                      }
+                    </span>
+                  </button>
+                </li>
+              } @empty {
+                <li class="marketplace-empty">No matching conversations.</li>
+              }
+            </ul>
+          </hy-scroll-area>
+        </div>
+      </hy-card>
+      <hy-card material="solid" padding="none" class="marketplace-thread-card">
+        <header class="marketplace-header">
+          <hy-avatar [name]="conversation().name" />
+          <div>
+            <h3 #conversationHeading tabindex="-1">{{ conversation().name }}</h3>
+            <p>
+              {{
+                conversation().kind === 'direct'
+                  ? conversation().online
+                    ? 'Seller · Online'
+                    : 'Seller · Marketplace'
+                  : conversation().kind === 'group'
+                    ? 'Group chat'
+                    : 'Forum'
+              }}
+            </p>
+          </div>
         </header>
         <div class="marketplace-listing">
-          <span class="marketplace-listing-icon" aria-hidden="true">09</span>
           <div>
-            <strong>Oak lounge chair</strong>
-            <p>Original finish · Local collection</p>
+            <strong>{{ conversation().listing }}</strong>
+            @if (conversation().price) {
+              <p>Local collection</p>
+            }
           </div>
-          <strong>$240</strong>
+          @if (conversation().price) {
+            <strong>{{ conversation().price }}</strong>
+          }
         </div>
         <hy-scroll-area
+          #history
           class="marketplace-history"
-          label="Conversation with Maya Chen"
-          maxHeight="25rem"
+          [label]="'Conversation with ' + conversation().name"
+          maxHeight="clamp(14rem, 46dvh, 24rem)"
         >
           <p class="marketplace-date">17 November 2026 · UTC</p>
           <ol class="marketplace-messages">
@@ -33,13 +147,64 @@
                 class="marketplace-message"
                 [attr.data-own]="message.own"
                 [attr.data-message-id]="message.id"
+                (contextmenu)="openMessageMenu($event, menuTrigger)"
               >
                 <hy-avatar [name]="message.sender" size="sm" />
                 <div class="marketplace-message-content">
                   <strong class="marketplace-sender">{{ message.sender }}</strong>
-                  <p class="marketplace-bubble" dir="auto">{{ message.text }}</p>
+                  @if (message.forwardedFrom) {
+                    <p class="marketplace-meta">Forwarded from {{ message.forwardedFrom }}</p>
+                  }
+                  @if (message.reply; as reply) {
+                    <button
+                      hyButton
+                      type="button"
+                      variant="ghost"
+                      class="marketplace-quote"
+                      (click)="jumpToReply(reply.id)"
+                    >
+                      <strong>{{ reply.sender }}</strong
+                      ><span dir="auto">{{ reply.text }}</span>
+                    </button>
+                  }
+                  @if (message.text) {
+                    <p class="marketplace-bubble" dir="auto">{{ message.text }}</p>
+                  }
                   @for (attachment of message.attachments; track $index) {
-                    @if (safeAttachmentUrl(attachment.url); as url) {
+                    @if (isLocalAttachment(attachment.url)) {
+                      @if (
+                        attachment.type?.startsWith('image/') && attachment.type !== 'image/svg+xml'
+                      ) {
+                        <img
+                          class="marketplace-media"
+                          [src]="attachment.url"
+                          [alt]="attachment.name"
+                          loading="lazy"
+                        />
+                      } @else if (attachment.type?.startsWith('video/')) {
+                        <video
+                          class="marketplace-media"
+                          [src]="attachment.url"
+                          [attr.aria-label]="attachment.name"
+                          controls
+                          preload="metadata"
+                        ></video>
+                      } @else if (attachment.type?.startsWith('audio/')) {
+                        <audio
+                          class="marketplace-media"
+                          [src]="attachment.url"
+                          [attr.aria-label]="attachment.name"
+                          controls
+                          preload="metadata"
+                        ></audio>
+                      }
+                      <a
+                        class="marketplace-attachment"
+                        [href]="attachment.url"
+                        [download]="attachment.name"
+                        >{{ attachment.name }}</a
+                      >
+                    } @else if (safeAttachmentUrl(attachment.url); as url) {
                       <a
                         class="marketplace-attachment"
                         [href]="url"
@@ -53,6 +218,23 @@
                         >{{ attachment.name }} · Link unavailable</span
                       >
                     }
+                  }
+                  @if (message.reactions?.length) {
+                    <div class="marketplace-reactions" aria-label="Message reactions" role="group">
+                      @for (value of message.reactions; track value) {
+                        <button
+                          hyButton
+                          type="button"
+                          size="sm"
+                          variant="soft"
+                          aria-pressed="true"
+                          [attr.aria-label]="'Remove reaction ' + value"
+                          (click)="toggleReaction(message, value)"
+                        >
+                          {{ value }} 1
+                        </button>
+                      }
+                    </div>
                   }
                   @if (
                     message.delivery === 'local' ||
@@ -116,19 +298,90 @@
                       }
                     </div>
                   }
-                  <p class="marketplace-meta">
-                    <time [attr.datetime]="message.instant">{{ formatTime(message.instant) }}</time>
-                    · {{ deliveryLabels[message.delivery] }}
-                  </p>
+                  <div class="marketplace-message-footer">
+                    <p class="marketplace-meta">
+                      <time [attr.datetime]="message.instant">{{
+                        formatTime(message.instant)
+                      }}</time>
+                      · {{ deliveryLabels[message.delivery] }}
+                      @if (message.edited) {
+                        · Edited
+                      }
+                    </p>
+                    <button
+                      hyButton
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      [hyContextMenuTriggerFor]="messageMenu"
+                      #menuTrigger="hyContextMenuTrigger"
+                      (click)="menuTrigger.open()"
+                      aria-haspopup="menu"
+                      [attr.aria-expanded]="menuTrigger.isOpen()"
+                      [attr.aria-label]="'Actions for message from ' + message.sender"
+                    >
+                      <hy-icon name="menu" aria-hidden="true" /> Actions
+                    </button>
+                  </div>
+                  <ng-template #messageMenu>
+                    <hy-context-menu
+                      label="Message actions"
+                      [items]="actionsFor(message)"
+                      (activated)="messageAction($event.action.id, message)"
+                    />
+                  </ng-template>
                 </div>
               </li>
+            } @empty {
+              <li class="marketplace-empty">No messages yet.</li>
             }
           </ol>
         </hy-scroll-area>
+        @if (forwarding()) {
+          <section class="marketplace-action-panel" aria-label="Forward message">
+            <strong>Forward to</strong>
+            @for (chat of conversations(); track chat.id) {
+              @if (chat.id !== conversationId()) {
+                <button hyButton type="button" variant="soft" (click)="forward(chat)">
+                  {{ chat.name }}
+                </button>
+              }
+            }
+            <button hyButton type="button" variant="ghost" (click)="forwarding.set(null)">
+              Cancel forward
+            </button>
+          </section>
+        }
+        @if (deleting()) {
+          <section class="marketplace-action-panel" aria-label="Delete local draft">
+            <strong>Delete this local draft?</strong>
+            <button hyButton type="button" variant="soft" (click)="deleteDraft()">
+              Delete draft
+            </button>
+            <button hyButton type="button" variant="ghost" (click)="deleting.set(null)">
+              Keep draft
+            </button>
+          </section>
+        }
         <form class="marketplace-composer" [attr.aria-busy]="pending()" (submit)="submit($event)">
+          @if (!editingId() && replying(); as reply) {
+            <div class="marketplace-composer-quote">
+              <p>
+                <strong>Replying to {{ reply.sender }}</strong
+                ><span dir="auto">{{ reply.text || 'Attachment' }}</span>
+              </p>
+              <button
+                hyButton
+                type="button"
+                variant="ghost"
+                (click)="replying.set(null); composer.focus()"
+              >
+                Cancel reply
+              </button>
+            </div>
+          }
           <hy-field
-            label="Message Maya"
-            hint="Enter inserts a new line. Use the button to add a local draft."
+            [label]="'Message ' + conversation().name"
             [error]="composerError()"
             [forceError]="!!composerError()"
           >
@@ -142,9 +395,189 @@
               (input)="updateDraft(composer.value)"
             ></textarea>
           </hy-field>
+          @if (emojiOpen()) {
+            <div class="marketplace-emoji" role="group" aria-label="Insert emoji">
+              <hy-field label="Search emoji">
+                <input
+                  #emojiSearch
+                  hyInput
+                  type="search"
+                  [value]="emojiQuery()"
+                  (input)="emojiQuery.set(emojiSearch.value)"
+                />
+              </hy-field>
+              <div class="marketplace-action-panel">
+                @for (item of emoji(); track item.value) {
+                  <button
+                    hyButton
+                    type="button"
+                    variant="ghost"
+                    [attr.aria-label]="item.label"
+                    (click)="insertEmoji(item.value)"
+                  >
+                    {{ item.value }}
+                  </button>
+                } @empty {
+                  <small>No matching emoji.</small>
+                }
+              </div>
+            </div>
+          }
+          @if (attachmentsOpen() && !editingId()) {
+            <div class="marketplace-uploads">
+              <hy-file-upload
+                #upload
+                label="Choose attachments"
+                [multiple]="true"
+                [value]="files()"
+                (valueChange)="updateFiles($event)"
+                [fileTemplate]="attachmentItem"
+                [disabled]="pending()"
+              />
+              <ng-template #attachmentItem let-file>
+                <span>{{ file.name }}</span>
+                @if (canEditPhoto(file)) {
+                  <button
+                    hyButton
+                    type="button"
+                    variant="ghost"
+                    [disabled]="pending()"
+                    (click)="editPhoto(file)"
+                  >
+                    Edit photo
+                  </button>
+                }
+              </ng-template>
+              <input
+                #camera
+                type="file"
+                accept="image/*"
+                capture="environment"
+                hidden
+                (change)="addPhoto(camera, upload)"
+              />
+              <button
+                hyButton
+                type="button"
+                variant="ghost"
+                [disabled]="pending()"
+                (click)="camera.click()"
+              >
+                Take photo
+              </button>
+              @if (photo(); as edit) {
+                <section
+                  class="marketplace-photo"
+                  aria-label="Photo editor"
+                  [attr.aria-busy]="savingPhoto()"
+                >
+                  <canvas
+                    #photoPreview
+                    role="img"
+                    [attr.aria-label]="'Edited preview of ' + edit.file.name"
+                  ></canvas>
+                  <div class="marketplace-action-panel" role="group" aria-label="Crop photo">
+                    @for (ratio of ratios; track ratio.value) {
+                      <button
+                        hyButton
+                        type="button"
+                        variant="ghost"
+                        [disabled]="savingPhoto()"
+                        [attr.aria-pressed]="ratio.value === edit.ratio"
+                        (click)="changePhoto(ratio.value)"
+                      >
+                        {{ ratio.label }}
+                      </button>
+                    }
+                  </div>
+                  <div class="marketplace-action-panel">
+                    <button
+                      hyButton
+                      type="button"
+                      variant="ghost"
+                      [disabled]="savingPhoto()"
+                      (click)="changePhoto(edit.ratio, true)"
+                    >
+                      Rotate photo
+                    </button>
+                    <button
+                      hyButton
+                      type="button"
+                      variant="ghost"
+                      (click)="closePhoto(); composer.focus()"
+                    >
+                      Cancel photo edit
+                    </button>
+                    <button
+                      hyButton
+                      type="button"
+                      variant="soft"
+                      [loading]="savingPhoto()"
+                      (click)="savePhoto()"
+                    >
+                      Use edited photo
+                    </button>
+                  </div>
+                </section>
+              }
+            </div>
+          }
           <div class="marketplace-actions">
-            <small>Demo only · Nothing is sent</small
-            ><button hyButton type="submit" [disabled]="pending() || !draft().trim()">
+            <button
+              hyButton
+              type="button"
+              variant="ghost"
+              size="sm"
+              [disabled]="pending()"
+              [attr.aria-expanded]="emojiOpen()"
+              (click)="emojiOpen.set(!emojiOpen())"
+            >
+              Emoji
+            </button>
+            @if (!editingId()) {
+              <button
+                hyButton
+                type="button"
+                variant="ghost"
+                size="sm"
+                [disabled]="pending()"
+                [attr.aria-expanded]="attachmentsOpen()"
+                (click)="attachmentsOpen.set(!attachmentsOpen()); closePhoto()"
+              >
+                Attach{{ files().length ? ' (' + files().length + ')' : '' }}
+              </button>
+              @if (recording() === 'idle') {
+                <button
+                  hyButton
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  [disabled]="pending() || !!photo()"
+                  (click)="startRecording()"
+                >
+                  Record voice
+                </button>
+              } @else {
+                @if (recording() === 'active') {
+                  <button hyButton type="button" variant="soft" (click)="finishRecording()">
+                    Stop recording
+                  </button>
+                }
+                <button hyButton type="button" variant="ghost" (click)="cancelRecording()">
+                  Cancel recording
+                </button>
+              }
+            }
+            <button
+              hyButton
+              type="submit"
+              [disabled]="
+                pending() ||
+                !!photo() ||
+                recording() !== 'idle' ||
+                (!draft().trim() && (!!editingId() || !files().length))
+              "
+            >
               {{ editingId() ? 'Save edit' : 'Add local draft' }}
             </button>
           </div>
@@ -158,12 +591,10 @@
       </hy-card>
     </section>
   </docs-example>
-  <h2>Compose, don’t configure a chat kit</h2>
+  <h2>Try the conversation</h2>
   <p>
-    Scroll area contains a native ordered history. Card supplies the solid content surface; Avatar,
-    Text field and Button supply the rest. Change the listing, sender layout, bubbles or delivery
-    labels directly in your template and local records. There is no conversation API or AI
-    dependency.
+    Search or filter conversations, then use Actions, right-click, or Shift+F10 on a message’s
+    Actions button to reply, react, forward, or copy. You can edit and delete your local drafts.
   </p>
   <h2>Import the primitives</h2>
   <docs-import
@@ -171,24 +602,22 @@
 import &#123; HyButton &#125; from '@hyalo/angular/button';
 import &#123; HyCard &#125; from '@hyalo/angular/card';
 import &#123; HY_TEXT_FIELD &#125; from '@hyalo/angular/field';
-import &#123; HyScrollArea &#125; from '@hyalo/angular/scroll-area';"
+import &#123; HyScrollArea &#125; from '@hyalo/angular/scroll-area';
+import &#123; HyContextMenu, HyContextMenuTrigger &#125; from '@hyalo/angular/context-menu';
+import &#123; HyFileUpload &#125; from '@hyalo/angular/file-upload';
+import &#123; HyIcon &#125; from '@hyalo/angular/icon';"
   />
   <h2>Application boundaries</h2>
   <p>
-    This is local demo state, not a transport. Add and edit local drafts, then use the explicit
-    preview buttons to inspect pending, failure and retry. Pending blocks the composer until you
-    choose a result; it never advances on a timer. The fixed demo date also applies to new drafts.
-    Attachment URLs accept absolute HTTP or HTTPS links; unsafe or malformed destinations render as
-    unavailable text. The sample PDF is a public dummy file, not listing evidence. Validate and
-    authorize uploads on your server. Connect your own persistence, authorization, upload validation
-    and delivery acknowledgements. Render messages as plain text; never pass untrusted messages into
-    HTML. ISO instants are displayed with en-GB and UTC explicitly, rather than the visitor’s
-    machine defaults.
+    The demo keeps messages, drafts, reactions and attachments in this tab until you leave the page.
+    Attach a photo to crop or rotate it before adding it to the conversation. Pending and failed
+    delivery are explicit previews. Record voice uses your browser’s microphone permission. Add your
+    own transport, storage, and delivery acknowledgements when integrating the example.
   </p>
   <h2>Keyboard and reading order</h2>
   <p>
-    The named scroll region is keyboard focusable. History is not a live region and does not
-    autoscroll or steal focus while you read. The labelled textarea keeps Enter and IME composition
-    native; submit with the button. Logical CSS follows the page direction.
+    The conversation list and history are keyboard-scrollable. Enter adds a line in the composer.
+    Use Add local draft to submit. Selecting a quoted reply jumps to its original message when it is
+    available.
   </p>
 </docs-page>

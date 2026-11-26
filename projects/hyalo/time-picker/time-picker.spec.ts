@@ -20,6 +20,33 @@ class FormHost {
   });
 }
 
+@Component({
+  imports: [HyTimePicker],
+  template: `<hy-time-picker [(value)]="value" [confirmSelection]="true" [slots]="slots" [footerTemplate]="footer" />
+    <ng-template #footer let-picker let-draft="draft">
+      <output>{{ draft }}</output>
+      <button id="custom-confirm" type="button" (click)="picker.confirm()">Apply time</button>
+    </ng-template>`,
+})
+class FooterHost {
+  readonly value = signal('09:00');
+  readonly slots = [{ value: '09:00' }, { value: '11:00' }];
+}
+
+it('renders a custom footer with the draft and live picker instance', async () => {
+  const fixture = TestBed.createComponent(FooterHost);
+  await fixture.whenStable();
+  const root: HTMLElement = fixture.nativeElement;
+  const slot = Array.from(root.querySelectorAll('button')).find((button) => button.textContent?.trim() === '11:00');
+  slot!.click();
+  await fixture.whenStable();
+  expect(root.querySelector('output')?.textContent?.trim()).toBe('11:00');
+  expect(fixture.componentInstance.value()).toBe('09:00');
+  root.querySelector<HTMLButtonElement>('#custom-confirm')!.click();
+  await fixture.whenStable();
+  expect(fixture.componentInstance.value()).toBe('11:00');
+});
+
 function setup() {
   const fixture = TestBed.createComponent(HyTimePicker);
   const element: HTMLElement = fixture.nativeElement;

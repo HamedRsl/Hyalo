@@ -63,7 +63,7 @@
   {
     "id": "API-003",
     "family": "field",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -71,22 +71,27 @@
         "detail": "Floating label; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 13: API-003 | Existing API characterized; visual acceptance open | `field/presentation.audit.spec.ts` renders floating-label mode; CSS implements focused/filled floating. Pixel/focus CSS behavior is not proven by jsdom."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/field/field.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/field/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Classic form value and reset update the field filled state."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Native label moves on focus and stays above a populated input without a placeholder."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Floating label. Scoped evidence/limitations: API-003 | Existing API characterized; visual acceptance open | `field/presentation.audit.spec.ts` renders floating-label mode; CSS implements focused/filled floating. Pixel/focus CSS behavior is not proven by jsdom."
+    "remaining": ""
   },
   {
     "id": "API-004",
@@ -147,7 +152,7 @@
   {
     "id": "API-006",
     "family": "field",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -155,22 +160,27 @@
         "detail": "Fixed/dynamic subscript space; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 16: API-006 | Existing API characterized; visual acceptance open | Same test renders fixed subscript mode; actual reserved geometry requires browser measurement."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/field/field.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/field/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Rich hint and error select the fixed subscript mode while preserving feedback associations."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "One-line error replacement retains the measured field height."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Fixed/dynamic subscript space. Scoped evidence/limitations: API-006 | Existing API characterized; visual acceptance open | Same test renders fixed subscript mode; actual reserved geometry requires browser measurement."
+    "remaining": ""
   },
   {
     "id": "API-007",
@@ -203,7 +213,7 @@
   {
     "id": "API-008",
     "family": "field",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -211,22 +221,27 @@
         "detail": "Textarea autosizing; original classification: composable"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 18: API-008 | Supported composition verified | `field/autosize.audit.spec.ts`: `HyInput` plus CDK `TextFieldModule`/`cdkTextareaAutosize`, native naming, resize controller and multiline edits. Actual resized pixel heights remain browser-only."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/field/field.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/field/autosize.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "HyInput integrates with CDK textarea autosizing in field/autosize.audit.spec.ts."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Multiline input increases the measured textarea height."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Textarea autosizing. Scoped evidence/limitations: API-008 | Supported composition verified | `field/autosize.audit.spec.ts`: `HyInput` plus CDK `TextFieldModule`/`cdkTextareaAutosize`, native naming, resize controller and multiline edits. Actual resized pixel heights remain browser-only."
+    "remaining": ""
   },
   {
     "id": "API-009",
@@ -399,7 +414,7 @@
   {
     "id": "API-015",
     "family": "accordion",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -407,22 +422,27 @@
         "detail": "Animation-complete events; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 24: API-015 | Verified event boundary | Same test rejects descendant/wrong-property transition events and accepts body grid transition completion. Reduced-motion no-transition completion semantics remain open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/accordion/accordion.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/accordion/accordion.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Only the accordion body grid transition completes the pending expansion once."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Opening completes with reduced motion and closing completes with animated motion."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Animation-complete events. Scoped evidence/limitations: API-015 | Verified event boundary | Same test rejects descendant/wrong-property transition events and accepts body grid transition completion. Reduced-motion no-transition completion semantics remain open."
+    "remaining": ""
   },
   {
     "id": "API-016",
@@ -483,7 +503,7 @@
   {
     "id": "API-018",
     "family": "alert",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -491,22 +511,27 @@
         "detail": "Banner preset; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 15: API-018 | Fixed and verified (CSS contract) | `alert/alert.css` consumes banner | `alert/audit.spec.ts`: square borderless-inline strip; toggling off restores card radius. Browser layout not certified"
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/alert/alert.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/alert/alert.css",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/alert/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Banner mode uses the square strip presentation and restores the card styling when disabled."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Compares computed banner and card geometry in three browser engines."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Banner preset. Scoped evidence/limitations: API-018 | Fixed and verified (CSS contract) | `alert/alert.css` consumes banner | `alert/audit.spec.ts`: square borderless-inline strip; toggling off restores card radius. Browser layout not certified"
+    "remaining": ""
   },
   {
     "id": "API-019",
@@ -735,7 +760,7 @@
   {
     "id": "API-027",
     "family": "badge",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -743,22 +768,27 @@
         "detail": "Host-relative badge position; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 24: API-027 | Partial, not signed off | `badge/notification.ts` HyBadgeHost establishes relative positioning | No host-relative browser geometry test in this batch"
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/badge/badge.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/badge/notification.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/badge/notification.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Notification overlap follows the logical corner."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures the notification relative to the bounds of both LTR and RTL hosts."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Host-relative badge position. Scoped evidence/limitations: API-027 | Partial, not signed off | `badge/notification.ts` HyBadgeHost establishes relative positioning | No host-relative browser geometry test in this batch"
+    "remaining": ""
   },
   {
     "id": "API-028",
@@ -819,7 +849,7 @@
   {
     "id": "API-030",
     "family": "bento",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -827,22 +857,27 @@
         "detail": "Tile reordering model; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 27: API-030 | Fixed and partially verified | `bento/bento.ts` normalized partial order before moves | `bento/audit.spec.ts`: Alt-arrow moves unlisted tile, updates model and actual DOM reading order; disabled reorder blocked. Synthetic drag-event regression now verifies shared normalized ordering and disabled drop suppression; trusted browser drag/drop and hydration review remain open"
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/bento/bento.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/bento/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Verifies normalization of partial order and keyboard and pointer guards."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks SSR tile order, post-hydration keyboard order and restored focus, and trusted drag-and-drop."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Tile reordering model. Scoped evidence/limitations: API-030 | Fixed and partially verified | `bento/bento.ts` normalized partial order before moves | `bento/audit.spec.ts`: Alt-arrow moves unlisted tile, updates model and actual DOM reading order; disabled reorder blocked. Synthetic drag-event regression now verifies shared normalized ordering and disabled drop suppression; trusted browser drag/drop and hydration review remain open"
+    "remaining": ""
   },
   {
     "id": "API-031",
@@ -903,7 +938,7 @@
   {
     "id": "API-033",
     "family": "breadcrumb",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -911,22 +946,22 @@
         "detail": "Router command metadata; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 30: API-033 | Verified existing for absolute commands | `breadcrumb/breadcrumb.ts` router metadata | `breadcrumb/audit.spec.ts`: actual URL and Location state; Ctrl-click not intercepted. Relative commands and every modifier not separately certified"
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/breadcrumb/breadcrumb.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/breadcrumb/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Real Angular Router verifies absolute and relative routes, URL metadata, history state, and native modifier and auxiliary click behavior."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Router command metadata. Scoped evidence/limitations: API-033 | Verified existing for absolute commands | `breadcrumb/breadcrumb.ts` router metadata | `breadcrumb/audit.spec.ts`: actual URL and Location state; Ctrl-click not intercepted. Relative commands and every modifier not separately certified"
+    "remaining": ""
   },
   {
     "id": "API-034",
@@ -1158,14 +1193,19 @@
         "kind": "test",
         "path": "projects/hyalo/carousel/audit.spec.ts",
         "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Vertical keyboard navigation, scroll and snap position are exercised in Chromium, Firefox and WebKit."
       }
     ],
-    "remaining": "Complete and independently verify Vertical carousel. Scoped evidence/limitations: API-041 | Partial | `orientation` controls vertical CSS snap/viewport height, scroll geometry, mouse drag, native scroll indexing and Up/Down keys. DOM geometry/key test passes; real-browser vertical touch/inertia acceptance remains."
+    "remaining": "Physical touch swipe and momentum remain unverified."
   },
   {
     "id": "API-042",
     "family": "carousel",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1173,27 +1213,27 @@
         "detail": "Transition lifecycle events; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 16: API-042 | Partial | `transitionCompleted` reports imperative slide navigation on aligned scrollend, active-slide opacity transitionend for fade, and nonanimated changes after render. Tests reject premature/duplicate completion. External index writes, free native scrolling and canceled/missing fade-end handling remain incomplete; do not claim universal completion."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/carousel/carousel.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/carousel/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Covers canceled or missing fade completion, repeated targets and actual settling."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/carousel/audit.spec.ts",
-        "detail": "Repeated animated target requests preserve pending completion for slide and fade, emitting once at the actual settled/opacity boundary."
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies model writes and native viewport scrolling each publish the settled slide."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "External index writes, free native scrolling and canceled/missing fade-end completion remain incomplete; universal completion is not claimed."
+    "remaining": ""
   },
   {
     "id": "API-043",
@@ -1226,7 +1266,7 @@
   {
     "id": "API-044",
     "family": "chapter-nav",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1234,22 +1274,27 @@
         "detail": "Horizontal chapter-nav mode; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 36: API-044 | Verified DOM/CSS contract; browser review pending | `chapter-nav/chapter-nav.css` horizontal row | `chapter-nav.spec.ts`: nav/list flex and vertical thread hidden; viewport overflow geometry not certified"
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/chapter-nav/chapter-nav.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/chapter-nav/chapter-nav.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Horizontal navigation applies the row layout and hides the vertical thread."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures horizontal link layout and verifies overflow scrolls the constrained navigation."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Horizontal chapter-nav mode. Scoped evidence/limitations: API-044 | Verified DOM/CSS contract; browser review pending | `chapter-nav/chapter-nav.css` horizontal row | `chapter-nav.spec.ts`: nav/list flex and vertical thread hidden; viewport overflow geometry not certified"
+    "remaining": ""
   },
   {
     "id": "API-045",
@@ -1556,7 +1601,7 @@
   {
     "id": "API-054",
     "family": "choice",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1564,22 +1609,32 @@
         "detail": "Choice label placement; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 40: API-054 | Partial, not signed off | Choice labelPosition and CSS | Checkbox binding verified; all three visual placements need browser evidence"
+        "kind": "implementation",
+        "path": "projects/hyalo/choice/choice.css",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/choice/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The checkbox input accepts labelPosition and exposes it to the host stylesheet."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks control, label and description pixel alignment for checkbox, radio and switch in LTR and RTL."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Choice label placement. Scoped evidence/limitations: API-054 | Partial, not signed off | Choice labelPosition and CSS | Checkbox binding verified; all three visual placements need browser evidence"
+    "remaining": ""
   },
   {
     "id": "API-055",
     "family": "choice",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1587,22 +1642,32 @@
         "detail": "Focusable disabled choices; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 41: API-055 | Partial, not signed off | Checkbox/radio/switch disabledFocusable | Checkbox activation blocked with enabled native input in `choice/audit.spec.ts`; radio/switch keyboard coverage still required"
+        "kind": "implementation",
+        "path": "projects/hyalo/choice/radio.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/choice/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Focusable disabled checkbox retains native focusability while rejecting clicks."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Focuses disabled checkbox, radio and switch and checks that Space does not activate any of them. Also checks radio group arrow navigation."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Focusable disabled choices. Scoped evidence/limitations: API-055 | Partial, not signed off | Checkbox/radio/switch disabledFocusable | Checkbox activation blocked with enabled native input in `choice/audit.spec.ts`; radio/switch keyboard coverage still required"
+    "remaining": ""
   },
   {
     "id": "API-056",
     "family": "choice",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1610,17 +1675,27 @@
         "detail": "Pending/controlled switch behavior; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 42: API-056 | Verified existing for native click | `choice/switch.ts` controlled/pending/toggleRequested | `choice/audit.spec.ts`: request without model/native mutation, external update, pending suppression; pointer-drag race coverage remains open"
+        "kind": "implementation",
+        "path": "projects/hyalo/choice/switch.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/choice/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Controlled click emits a proposed value and pending disables changes."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies a valid pointer drag emits once, a pending transition cancels an active drag, and the next drag after clearing pending succeeds."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Pending/controlled switch behavior. Scoped evidence/limitations: API-056 | Verified existing for native click | `choice/switch.ts` controlled/pending/toggleRequested | `choice/audit.spec.ts`: request without model/native mutation, external update, pending suppression; pointer-drag race coverage remains open"
+    "remaining": ""
   },
   {
     "id": "API-057",
@@ -1755,7 +1830,7 @@
   {
     "id": "API-062",
     "family": "combobox",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1763,22 +1838,27 @@
         "detail": "Query threshold/debounce policy; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 26: API-062 | Partial | Same test verifies query threshold. Debounce cancellation is implemented with effect cleanup but no timer-boundary regression added here."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/combobox/combobox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/combobox/query.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/combobox/query.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "A deterministic clock checks minimum query length, cancellation of a replaced debounce timer, the exact boundary, and clearing pending work."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Searches a debounced remote combobox in the browser."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Query threshold/debounce policy. Scoped evidence/limitations: API-062 | Partial | Same test verifies query threshold. Debounce cancellation is implemented with effect cleanup but no timer-boundary regression added here."
+    "remaining": ""
   },
   {
     "id": "API-063",
@@ -1867,7 +1947,7 @@
   {
     "id": "API-066",
     "family": "combobox",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -1875,22 +1955,27 @@
         "detail": "Suggestion overlay customization; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 30: API-066 | Partial | `combobox/templates.audit.spec.ts` verifies actual overlay panel class/width and templates; positions/scroll strategy/offset collision geometry not browser-verified here."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/combobox/combobox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/combobox/templates.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Suggestion template test verifies custom class and width."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures explicit position and offsets and validates the outside dismissal opt-out."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Suggestion overlay customization. Scoped evidence/limitations: API-066 | Partial | `combobox/templates.audit.spec.ts` verifies actual overlay panel class/width and templates; positions/scroll strategy/offset collision geometry not browser-verified here."
+    "remaining": ""
   },
   {
     "id": "API-067",
@@ -1998,7 +2083,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-id-verification.md",
+        "path": "docs/verification/id-hydration.md",
         "detail": "Application-scoped ID follow-up supersedes earlier ID defect, but is not per-component default-policy acceptance."
       },
       {
@@ -2177,7 +2262,7 @@
   {
     "id": "API-076",
     "family": "dates",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2185,22 +2270,27 @@
         "detail": "Date-cell content templates; original classification: missing"
       },
       {
-        "kind": "test",
-        "path": "projects/hyalo/dates/calendar.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-dates-final.md",
-        "detail": "Existing `cellTemplate` renders date/selected/preview/comparison/outside context inside the native semantic button. Audit checks selected/comparison/outside context and clicks a templated day to change the model. | No pixel certification."
+        "kind": "implementation",
+        "path": "projects/hyalo/dates/calendar.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Date cell template receives semantic context."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies the projected marker is visible in its labeled date button."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Verify date-cell template pixel presentation in a real browser; the semantic native button, template context and selection are tested."
+    "remaining": ""
   },
   {
     "id": "API-077",
@@ -2254,9 +2344,19 @@
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
         "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+      },
+      {
+        "kind": "implementation",
+        "path": "projects/hyalo/dates/date-picker.css",
+        "detail": "Touch dialog centers within the viewport with direction-independent CSS and uses a connected strategy without transform offsets."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures centered geometry in LTR and RTL and chooses a date with touch input at a narrow viewport in Chromium, Firefox and WebKit."
       }
     ],
-    "remaining": "Physical iOS/Android modal touch acceptance, virtual keyboard, viewport and touch ergonomics remain open; jsdom proves overlay/backdrop/dialog semantics only."
+    "remaining": "Physical iOS and Android virtual keyboard, viewport and touch ergonomics remain unverified."
   },
   {
     "id": "API-079",
@@ -2282,9 +2382,14 @@
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
         "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Two months appear side by side at desktop width and stack at 390 CSS pixels."
       }
     ],
-    "remaining": "Multiple-month rendering and cross-month range are tested; responsive layout and physical-device geometry remain unaccepted."
+    "remaining": "Desktop and narrow viewport layout verified across three engines, with cross-month range selection covered by unit tests. Physical-device geometry remains unverified."
   },
   {
     "id": "API-080",
@@ -2450,14 +2555,19 @@
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
         "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The public date picker toggle focuses the active date and reports attachment and detachment, and Escape restores the date input."
       }
     ],
-    "remaining": "Controller attachment/detachment, visibility and disabled veto are tested; native browser focus/animation timing and AT announcement acceptance remain open."
+    "remaining": "Screen-reader announcement acceptance remains unverified."
   },
   {
     "id": "API-086",
     "family": "dates",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2465,27 +2575,32 @@
         "detail": "Comparison-range overlay; original classification: missing"
       },
       {
-        "kind": "test",
-        "path": "projects/hyalo/dates/calendar.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-dates-final.md",
-        "detail": "Existing `comparisonRange` renders independent `data-comparison` overlays without changing selected value. Audit checks inclusive comparison cells, template context and persistence after selecting another date. | Pixel/contrast acceptance not certified."
+        "kind": "implementation",
+        "path": "projects/hyalo/dates/calendar.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Comparison range retains its own model and template context."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies the comparison mark and separate rendered comparison indicator."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Comparison range model isolation and template context are tested; pixel/contrast acceptance remains open."
+    "remaining": ""
   },
   {
     "id": "API-087",
     "family": "dates",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2493,22 +2608,27 @@
         "detail": "Adjacent-month day policy; original classification: missing"
       },
       {
-        "kind": "test",
-        "path": "projects/hyalo/dates/calendar.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-dates-final.md",
-        "detail": "Existing `outsideDays: visible / hidden / disabled`. Parameterized audit checks visibility, aria-disabled, non-tab-stop semantics and allowed/rejected clicks. | Physical browser visibility/hit-testing acceptance not certified."
+        "kind": "implementation",
+        "path": "projects/hyalo/dates/calendar.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dates/capabilities.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-dates-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Exercises visibility, disabled, click and tab-stop policies."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks disabled hit handling, display changes, and real pointer selection after enabling adjacent cells."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Outside-day visibility, disabled/tab-stop state and click policy are tested in jsdom; physical browser visibility/hit-testing remains open."
+    "remaining": ""
   },
   {
     "id": "API-088",
@@ -2627,7 +2747,7 @@
   {
     "id": "API-091",
     "family": "description-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2635,22 +2755,27 @@
         "detail": "Responsive columns/layout; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 45: API-091 | Verified existing at DOM/CSS contract layer | `description-list/description-list.{ts,css,html}` responsive columns/layout | `description-list/description-list.spec.ts`: compact/wide variables and stacked class; container-query browser check remains advisable"
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/description-list/description-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/description-list/description-list.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Responsive counts and stacked item semantics are exercised."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures column changes and stacked label alignment as the container narrows."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Responsive columns/layout. Scoped evidence/limitations: API-091 | Verified existing at DOM/CSS contract layer | `description-list/description-list.{ts,css,html}` responsive columns/layout | `description-list/description-list.spec.ts`: compact/wide variables and stacked class; container-query browser check remains advisable"
+    "remaining": ""
   },
   {
     "id": "API-092",
@@ -2711,7 +2836,7 @@
   {
     "id": "API-094",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2720,21 +2845,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Typed width, height, limits and explicit position strategy are applied to the overlay."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Panel displays the configured initial size."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Arbitrary geometry; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-095",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2743,21 +2878,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Geometry updates retain omitted dimensions and change strategy without recreating content."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Live resize, reposition, maximize and restore are measured."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Runtime geometry updates; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-096",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2766,21 +2911,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Open is replayable and scope completes. Reentrant close cannot replace the accepted result."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Open and accepted close reasons appear in the example."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Open/before-close lifecycle; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-097",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2789,21 +2944,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Keyboard, backdrop and outside-pointer streams are observable independently of configured dismissal. Inside clicks do not emit an outside event."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Keyboard and backdrop interact with the same open surface."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Interaction event streams; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-098",
     "family": "dialog",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2811,27 +2976,32 @@
         "detail": "Universal close predicate/veto; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 15: API-098 | Partial; event routes verified and scroll defect fixed | `dialog.spec.ts` drives programmatic/action/Escape/backdrop/navigation/window-scroll vetoes and asserts the same connected surface and focus. Window scroll previously threw when passed to Node.contains; `open-surface.ts` now uses the container document's Node constructor before containment checks. Actual drawer gesture-veto animation/focus integration remains open."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Guard vetoes all normal dismissal reasons, and preserves the surface and focus."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "An actual drawer drag reaches the guard, restores the panel and retains focus."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Universal close predicate/veto. Scoped evidence/limitations: API-098 | Partial; event routes verified and scroll defect fixed | `dialog.spec.ts` drives programmatic/action/Escape/backdrop/navigation/window-scroll vetoes and asserts the same connected surface and focus. Window scroll previously threw when passed to Node.contains; `open-surface.ts` now uses the container document's Node constructor before containment checks. Actual drawer gesture-veto animation/focus integration remains open."
+    "remaining": ""
   },
   {
     "id": "API-099",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2840,21 +3010,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Escape, backdrop dismissal and backdrop presence are independent."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Escape leaves the configured dialog open and a backdrop click closes it."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Independent dismissal/backdrop policies; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-100",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2863,21 +3043,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "A custom injector and live component input bindings reach the projected component."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Template context is rendered as the dialog description."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Creation context configuration; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-101",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2886,21 +3076,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Custom classes reach the overlay and its backdrop. Panel classes update at runtime."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "A custom backdrop selector addresses the configured surface."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Panel/backdrop classes; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-102",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2909,21 +3109,26 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The service tracks dialogs and drawers by identity and emits one all-closed event."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Service-wide registry/controller; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-103",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2932,21 +3137,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/open-surface.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Checks attachment focus, actual entry boundary, existing focus within the dialog, and restoration to an explicit element after exit."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks focus on the container during entry, tab wrapping, deferred target, explicit restoration and reduced motion."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Focus-restore/trap timing policies; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-104",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2955,21 +3170,26 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Internal scroll is ignored. Opt-in outside scrolling and history traversal close through their reasons."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Scroll/navigation closing policy; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-105",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -2978,21 +3198,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Explicit accessible name and description references are preserved along with modal state."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Browser resolves the dialog name and description."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Accessible reference configuration; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-106",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3001,21 +3231,26 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Async confirmation suppresses duplicate actions, reports failure and permits a successful retry."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Async confirm actions; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-107",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3024,21 +3259,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The opt-in move handle and maximize contract are documented."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Pointer movement, arrow movement, reset, viewport maximize and size restore are measured."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Draggable/maximizable windows; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-108",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3047,21 +3292,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/drawer-layout.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/dialog/drawer-layout.spec.ts",
+        "detail": "Layout retains projected state and checks inert content, backdrop override, Escape policy and focus restoration."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures side, push and over layouts, verifies logical edge geometry in RTL and exercises keyboard and backdrop dismissal."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Docked push/side/over drawer; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-109",
     "family": "dialog",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3070,16 +3325,26 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/dialog/dialog.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/dialog/dialog-ref.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/dialog/dialog.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The top position is registered on the shared drawer surface with dedicated CSS entry and exit."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Top drawer anchors at the viewport top and closes normally."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement or independently disprove and behaviorally verify Top drawer placement; add public usage documentation. No per-ID acceptance evidence was established in this consolidation."
+    "remaining": ""
   },
   {
     "id": "API-110",
@@ -3112,7 +3377,7 @@
   {
     "id": "API-111",
     "family": "divider",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3120,22 +3385,27 @@
         "detail": "Inset divider; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-primitives-resolution.md",
-        "detail": "Line 48: API-111 | Verified existing inset binding | `divider/divider.ts` logical inline inset | `divider/audit.spec.ts`: rendered 12px inline-start margin retained in labeled layout; vertical browser geometry remains unverified"
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/divider/divider.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/divider/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Logical inset is retained in the rendered divider styles."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Vertical inset geometry mirrors in LTR and RTL."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Inset divider. Scoped evidence/limitations: API-111 | Verified existing inset binding | `divider/divider.ts` logical inline inset | `divider/audit.spec.ts`: rendered 12px inline-start margin retained in labeled layout; vertical browser geometry remains unverified"
+    "remaining": ""
   },
   {
     "id": "API-112",
@@ -3196,7 +3466,7 @@
   {
     "id": "API-114",
     "family": "file-upload",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3204,22 +3474,27 @@
         "detail": "Transport workflow; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 17: API-114 | Existing transport core verified; full workflow UI not signed off | `file-upload.spec.ts` exercises consumer uploader progress, AbortSignal cancellation, stale progress/result suppression after retry, failure and retry success, destruction abort, and unchanged File[] value. No endpoint or transport dependency added. Built-in progress/status/retry UI is not established by these tests."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/file-upload/file-upload.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/file-upload/file-upload.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Abortable upload, stale progress exclusion, failure, retry and successful settlement remain covered."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The transfer UI progresses, cancels and retries a selected file."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Transport workflow. Scoped evidence/limitations: API-114 | Existing transport core verified; full workflow UI not signed off | `file-upload.spec.ts` exercises consumer uploader progress, AbortSignal cancellation, stale progress/result suppression after retry, failure and retry success, destruction abort, and unchanged File[] value. No endpoint or transport dependency added. Built-in progress/status/retry UI is not established by these tests."
+    "remaining": ""
   },
   {
     "id": "API-115",
@@ -3308,7 +3583,7 @@
   {
     "id": "API-118",
     "family": "file-upload",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3316,27 +3591,32 @@
         "detail": "Transport lifecycle outputs; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 66: API-118 | Partial | Prior transport regression verifies state, not every lifecycle output payload/order."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/file-upload/file-upload.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/file-upload/file-upload.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Tests assert start, progress, cancel, failed and completed output payloads in sequence."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The transfer UI follows the corresponding states."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Transport lifecycle outputs. Scoped evidence/limitations: API-118 | Partial | Prior transport regression verifies state, not every lifecycle output payload/order."
+    "remaining": ""
   },
   {
     "id": "API-119",
     "family": "file-upload",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3344,22 +3624,27 @@
         "detail": "Directory selection; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 67: API-119 | Partial | `webkitdirectory` attribute verified; actual directory chooser/drop traversal requires browser/device testing."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/file-upload/file-upload.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/file-upload/file-upload.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Traverses multiple directory-entry batches and preserves nested relative paths on identically named files."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Exercises the directory input with real nested files and verifies relative paths in each browser."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Directory selection. Scoped evidence/limitations: API-119 | Partial | `webkitdirectory` attribute verified; actual directory chooser/drop traversal requires browser/device testing."
+    "remaining": ""
   },
   {
     "id": "API-120",
@@ -3420,7 +3705,7 @@
   {
     "id": "API-122",
     "family": "file-upload",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3428,27 +3713,27 @@
         "detail": "File-list/toolbar templates; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 70: API-122 | Open | File/toolbar/empty TemplateRef inputs exist, but their consumer template contexts are not exercised in this continuation."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/file-upload/file-upload.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/file-upload/file-upload.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Empty, item and toolbar templates render their typed context and the toolbar controller starts transport."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify File-list/toolbar templates. Scoped evidence/limitations: API-122 | Open | File/toolbar/empty TemplateRef inputs exist, but their consumer template contexts are not exercised in this continuation."
+    "remaining": ""
   },
   {
     "id": "API-123",
     "family": "file-upload",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3456,22 +3741,27 @@
         "detail": "Localized UI/error options; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 71: API-123 | Partial | Custom remove text/accessible name verified. Full translated status/error catalogue not signed off."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/file-upload/file-upload.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/file-upload/file-upload.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Localized progress labels, status announcements and cancel or retry labels render in the queue."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Default labels and accessible progress are exercised."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Localized UI/error options. Scoped evidence/limitations: API-123 | Partial | Custom remove text/accessible name verified. Full translated status/error catalogue not signed off."
+    "remaining": ""
   },
   {
     "id": "API-124",
@@ -3560,7 +3850,7 @@
   {
     "id": "API-127",
     "family": "hotspot",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3568,27 +3858,27 @@
         "detail": "Overlay container option; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 36: API-127 | Open | Hotspot forwards placement but has no independently configurable overlay container. Shared popover is outside this agent's ownership; no fake forwarding input added."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/hotspot/hotspot.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-chart-mapping-final.md",
-        "detail": "Partial: supported scoped container mapping verified; per-hotspot input still open | `hotspot/mapping.audit.spec.ts` supplies CDK OverlayContainer, clicks real hotspot trigger, waits for lazy popover load, asserts actual named dialog/content under custom container and synchronous disposal on teardown. Thus scoped dependency-injection container policy already works without touching shared popover. There is still **no independently bindable hotspot container input**; provider governs the injector scope, not each hotspot instance. Custom-container positioning, fullscreen and browser geometry remain unverified. Do not mark fully resolved if inventory requires per-instance binding."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/hotspot/mapping.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-chart-mapping-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "The scoped container fallback and overlay disposal remain covered."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "A scene-owned overlay preserves the hotspot anchor and can be dismissed."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Scoped OverlayContainer dependency-injection mapping is tested, but an independently bindable per-hotspot container input is still absent. Custom-container positioning, fullscreen and browser geometry remain unverified."
+    "remaining": ""
   },
   {
     "id": "API-128",
@@ -3621,7 +3911,7 @@
   {
     "id": "API-129",
     "family": "hover-card",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3629,27 +3919,32 @@
         "detail": "Panel class/container options; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 18: API-129 | Partial | Panel class is applied and tested. Custom container remains open; CDK default overlay container is retained."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/hover-card/hover-card.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/hover-card/hover-card.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The hover-card test covers class names, timing, keyboard transfer, Escape, and teardown."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "A card with a custom parent preserves its class, focus transfer, and cleanup."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Panel class/container options. Scoped evidence/limitations: API-129 | Partial | Panel class is applied and tested. Custom container remains open; CDK default overlay container is retained."
+    "remaining": ""
   },
   {
     "id": "API-130",
     "family": "icon",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3657,17 +3952,27 @@
         "detail": "Remote/namespaced SVG loading; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 19: API-130 | Open | Icon registry supports locally registered names (including namespaced strings), not remote SVG loading. Remote SVG security and cancellation require separate implementation."
+        "kind": "implementation",
+        "path": "projects/hyalo/icon/remote-icon.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
-        "kind": "implementation",
-        "path": "projects/hyalo/icon/icon.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "kind": "test",
+        "path": "projects/hyalo/icon/remote-icon.spec.ts",
+        "detail": "Shares and caches validated geometry, aborts an unused fetch, reports failures, rejects unsupported content, and retries."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Loads a local SVG over HTTP and verifies accessible name, viewBox and paint in three engines."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement optional remote/namespaced SVG loading with security, cancellation, failure and cache tests; local registry namespaces alone are insufficient."
+    "remaining": ""
   },
   {
     "id": "API-131",
@@ -3937,7 +4242,7 @@
   {
     "id": "API-141",
     "family": "lightbox",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3945,27 +4250,32 @@
         "detail": "Viewer image transforms; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 30: API-141 | Partial | Rendered zoom/rotation, bounded zoom and navigation reset are tested. Pan/flip contracts are not implemented."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/lightbox/lightbox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/lightbox/lightbox.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/lightbox/gallery.spec.ts",
+        "detail": "Viewer state exposes flips, rotation, scale, and reset."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Keyboard and pointer pan move the rendered image. Matrix and pressed-state assertions verify horizontal flip and reset."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Viewer image transforms. Scoped evidence/limitations: API-141 | Partial | Rendered zoom/rotation, bounded zoom and navigation reset are tested. Pan/flip contracts are not implemented."
+    "remaining": ""
   },
   {
     "id": "API-142",
     "family": "lightbox",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -3973,27 +4283,32 @@
         "detail": "Viewer content templates; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 31: API-142 | Open | Viewer content templates remain absent."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/lightbox/lightbox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/lightbox/lightbox.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/lightbox/gallery.spec.ts",
+        "detail": "Gallery and lightbox render typed thumbnail and content templates with the current image and index."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks custom content, caption, accessible name, item navigation, and focus restoration."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test typed lightbox content templates and their context/accessibility."
+    "remaining": ""
   },
   {
     "id": "API-143",
     "family": "lightbox",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4001,22 +4316,27 @@
         "detail": "Thumbnail layout/breakpoints; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 32: API-143 | Open | Thumbnail breakpoints/layout configuration remains absent."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/lightbox/lightbox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/lightbox/lightbox.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/lightbox/gallery.spec.ts",
+        "detail": "Gallery exposes logical thumbnail settings and projects caller-supplied thumbnail templates."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures two-column geometry and the configured gap, then one column under a narrow container."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test thumbnail layout/breakpoint configuration, including actual responsive geometry."
+    "remaining": ""
   },
   {
     "id": "API-144",
@@ -4049,7 +4369,7 @@
   {
     "id": "API-145",
     "family": "lightbox",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4057,27 +4377,27 @@
         "detail": "Live index/visibility models; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 34: API-145 | Partial | Gallery `index`/`visible` models synchronize external writes, viewer navigation and dialog closure (`gallery.spec.ts`). `indexChange` callback retained. Reopen-during-close and changing images/options while already open need explicit generation/reconfiguration policy and tests."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/lightbox/lightbox.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/lightbox/gallery.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Changing images and options applies while open, clamps index, preserves dialog identity, and closes on an empty collection."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/lightbox/gallery.spec.ts",
-        "detail": "Parameterized model/viewer-close regressions defer exit, request reopen at latest index and verify one replacement viewer plus synchronized visibility/index."
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "A controlled image-list change while the dialog is open replaces the image and updates the live count."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Changing images/options while open still requires explicit generation/reconfiguration policy and tests; reopen-during-close is now covered."
+    "remaining": ""
   },
   {
     "id": "API-146",
@@ -4174,9 +4494,14 @@
         "kind": "test",
         "path": "projects/hyalo/masked-input/policies.spec.ts",
         "detail": "Raw/masked custom-token separator forward deletion prevents default, preserves letters, updates the correct model and retains caret across successive deletions."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Native keyboard input tests forward, backward and selection deletion for an alphabetic custom mask."
       }
     ],
-    "remaining": "Broader custom deletion directions, selection and physical IME/browser acceptance remain open; the tested custom-token separator deletion no longer falls through native reparse."
+    "remaining": "Physical IME acceptance remains unverified."
   },
   {
     "id": "API-149",
@@ -4209,7 +4534,7 @@
   {
     "id": "API-150",
     "family": "masked-input",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4217,22 +4542,27 @@
         "detail": "Incomplete-input buffer policy; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 37: API-150 | Partial | `incompletePolicy=\"clear\"` clears incomplete edits on blur; default retain preserves compatibility. Test verifies actual input/model clearing. Partial edits still publish during typing; deferred model/buffer commit policy is not implemented."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/masked-input/masked-input.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/masked-input/policies.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Verifies blur and completion commit policies, cancellation by external updates, and clearing an incomplete field."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Real text entry stays in the field buffer until keyboard focus leaves."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Incomplete-input buffer policy. Scoped evidence/limitations: API-150 | Partial | `incompletePolicy=\"clear\"` clears incomplete edits on blur; default retain preserves compatibility. Test verifies actual input/model clearing. Partial edits still publish during typing; deferred model/buffer commit policy is not implemented."
+    "remaining": ""
   },
   {
     "id": "API-151",
@@ -4265,7 +4595,7 @@
   {
     "id": "API-152",
     "family": "menu",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4273,22 +4603,27 @@
         "detail": "Context/right-click/long-press trigger; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 39: API-152 | Open | Context/right-click/long-press trigger remains absent."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/menu/menu.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/context-menu/context-menu.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/menu/menu.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/context-menu/context-menu.spec.ts",
+        "detail": "Long press opens after its configured delay and ignores displaced or canceled gestures."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks right-click and Shift+F10 in three engines and uses Chromium touch emulation for long press and release."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test contextmenu/right-click/long-press triggering, cancellation and keyboard/accessibility behavior."
+    "remaining": ""
   },
   {
     "id": "API-153",
@@ -4321,7 +4656,7 @@
   {
     "id": "API-154",
     "family": "menu",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4329,27 +4664,32 @@
         "detail": "Focus restore policy; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 41: API-154 | Partial | Existing Escape focus restoration verified in `menu.spec.ts`; configurable restore policy remains absent."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/menu/menu.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/menu/menu.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Projected menus retain default focus return, support a supplied target, and release focus when opted out."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Escape returns to the default trigger or the supplied target."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Focus restore policy. Scoped evidence/limitations: API-154 | Partial | Existing Escape focus restoration verified in `menu.spec.ts`; configurable restore policy remains absent."
+    "remaining": ""
   },
   {
     "id": "API-155",
     "family": "menu",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4357,27 +4697,32 @@
         "detail": "Panel/backdrop policy; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 42: API-155 | Open | Configurable panel/backdrop policy remains absent."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/menu/menu.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/menu/menu.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Checks default no backdrop, custom menu panel class, runtime backdrop updates, and cleanup on close."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks outside click consumption, underlying action activation after close, and Escape focus restoration."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test configurable menu panel/backdrop policies."
+    "remaining": ""
   },
   {
     "id": "API-156",
     "family": "menu",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4385,22 +4730,27 @@
         "detail": "Recursive data menu model; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-media-overlay-resolution.md",
-        "detail": "Line 43: API-156 | Open | Recursive data menu model remains absent; existing projected CDK menus preserved."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/menu/menu.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/context-menu/context-menu.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/menu/menu.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/context-menu/context-menu.spec.ts",
+        "detail": "A recursive typed menu opens a submenu and dispatches the selected leaf."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Uses keyboard submenu navigation and pointer leaf activation."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test recursive data-driven menu rendering while preserving projected CDK menus."
+    "remaining": ""
   },
   {
     "id": "API-157",
@@ -4517,7 +4867,7 @@
   {
     "id": "API-161",
     "family": "multi-select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4525,22 +4875,27 @@
         "detail": "Paged option loading; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 39: API-161 | Shared implementation, partial evidence | Multi-select inherits the same page loader tested via combobox. No separate multi-select paged integration test; do not count inherited declaration alone as full acceptance."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/multi-select/multi-select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/multi-select/policies.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/multi-select/multi-select.spec.ts",
+        "detail": "Multi-select loads pages independently, appends options, and keeps prior selections on a new query."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Loads a second page, selects with the keyboard and retains earlier choices across a new query."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Paged option loading. Scoped evidence/limitations: API-161 | Shared implementation, partial evidence | Multi-select inherits the same page loader tested via combobox. No separate multi-select paged integration test; do not count inherited declaration alone as full acceptance."
+    "remaining": ""
   },
   {
     "id": "API-162",
@@ -4741,7 +5096,7 @@
   {
     "id": "API-169",
     "family": "multi-select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4749,27 +5104,32 @@
         "detail": "Overlay policies; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 47: API-169 | Partial | Template integration verifies panel width/class; full overlay positions/scroll/outside geometry remain integration gates."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/multi-select/multi-select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/multi-select/policies.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/multi-select/multi-select.spec.ts",
+        "detail": "Multi-select renders the overlay through the common connected overlay options."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures above-origin placement, offsets and width, and exercises click-versus-Escape dismissal."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Overlay policies. Scoped evidence/limitations: API-169 | Partial | Template integration verifies panel width/class; full overlay positions/scroll/outside geometry remain integration gates."
+    "remaining": ""
   },
   {
     "id": "API-170",
     "family": "multi-select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -4777,22 +5137,27 @@
         "detail": "Fine-grained lifecycle events; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 48: API-170 | Partial | Policy test verifies selection/removal/visibility emissions; fine-grained timing/attachment-completion is not certified."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/multi-select/multi-select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/multi-select/policies.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/multi-select/multi-select.spec.ts",
+        "detail": "Checks actual DOM presence at attachment and absence at detachment."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies mount and detach notifications around keyboard opening and Escape."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Fine-grained lifecycle events. Scoped evidence/limitations: API-170 | Partial | Policy test verifies selection/removal/visibility emissions; fine-grained timing/attachment-completion is not certified."
+    "remaining": ""
   },
   {
     "id": "API-171",
@@ -5217,7 +5582,7 @@
   {
     "id": "API-186",
     "family": "otp",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -5225,22 +5590,27 @@
         "detail": "Custom cell template; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-navigation-input-resolution.md",
-        "detail": "Line 84: API-186 | Partial: `otp.composition.spec.ts` verifies masked cell/index context, aria-hidden decorations and single labeled native input. Dedicated SSR/hydration template execution remains open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/otp/otp.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/otp/otp.composition.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Checks masked cell context and single native input semantics."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies cells in the SSR response and reuses a single accessible control after hydration."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Custom cell template. Scoped evidence/limitations: API-186 | Partial: `otp.composition.spec.ts` verifies masked cell/index context, aria-hidden decorations and single labeled native input. Dedicated SSR/hydration template execution remains open."
+    "remaining": ""
   },
   {
     "id": "API-187",
@@ -5698,7 +6068,7 @@
         "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
       }
     ],
-    "remaining": "Opt-in synthetic touch opens the overlay. Custom pointer-position/alternate tooltip origin is absent; physical touch-device acceptance remains open."
+    "remaining": "Alternate tooltip origins and explicit positioning are implemented. Synthetic touch verifies opt-in activation. Physical touch-device acceptance remains open."
   },
   {
     "id": "API-203",
@@ -5769,7 +6139,7 @@
   {
     "id": "API-205",
     "family": "popover",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -5779,30 +6149,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/popover/popover.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/popover/popover.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Implemented bounded configuration; verified | `popoverTrigger: 'click' \\| 'manual'` and `popoverAutoClose` boolean. Policy spec proves click suppression in manual mode and Escape suppression when auto-close is false; existing tests prove default Escape/focus restoration. Independent per-dismissal-reason switches and hover triggers are not offered."
+        "detail": "Existing click and manual behavior is retained alongside independent dismissal options and hover."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/popover/popover.policies.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Hover opens without moving focus and Escape dismisses."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Click/manual trigger and boolean auto-close policies are tested. Independent per-dismissal-reason switches and hover triggers are not provided."
+    "remaining": ""
   },
   {
     "id": "API-206",
     "family": "popover",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -5812,25 +6182,25 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/popover/popover.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/popover/popover.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Open beyond existing placement | Existing `popoverPlacement`, collision fallback and resize repositioning remain; `popover.spec.ts` exercises reposition update scheduling/cleanup. No custom container/anchor/offset public API added. Browser collision geometry not certified."
+        "detail": "Existing placement and resize observer coverage is retained with custom mount, origin and offset inputs."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/popover/popover.policies.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "A real alternate anchor and top-layer parent render at the measured offset."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Existing placement and resize scheduling remain supported; custom container/anchor/offset APIs and browser collision geometry remain open."
+    "remaining": ""
   },
   {
     "id": "API-207",
@@ -5868,7 +6238,7 @@
   {
     "id": "API-208",
     "family": "popover",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -5878,25 +6248,25 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/popover/popover.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/popover/popover.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Open | No public post-transition lifecycle outputs. Existing presence/timeout behavior must not be relabeled as lifecycle acceptance; reduced-motion and canceled-transition output semantics still need design and tests."
+        "detail": "A post-entry output and post-detachment output are exposed with interruption guards."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/popover/popover.policies.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Opened and closed announcements track reduced-motion entry and actual detachment."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Public post-transition lifecycle outputs remain absent. Reduced-motion and canceled-transition semantics require design and executable acceptance."
+    "remaining": ""
   },
   {
     "id": "API-209",
@@ -6354,7 +6724,7 @@
   {
     "id": "API-225",
     "family": "scroll-area",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6362,22 +6732,27 @@
         "detail": "Delegate/customize scroll host; original classification: review"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-navigation-input-resolution.md",
-        "detail": "Line 95: API-225 | Resolved native boundary: host remains sole scroll viewport; scrollTo delegates to host and scrolled emits top/left. `scroll-area.audit.spec.ts`. Customize host styles/attributes/native scrollbar CSS; external viewport substitution is unsupported."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/scroll-area/scroll-area.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/scroll-area/scroll-area.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Reassigns scroll commands and listeners when the external element changes and clears them on destruction."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures programmatic and keyboard scrolling on the external element."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Delegate/customize scroll host. Scoped evidence/limitations: API-225 | Resolved native boundary: host remains sole scroll viewport; scrollTo delegates to host and scrolled emits top/left. `scroll-area.audit.spec.ts`. Customize host styles/attributes/native scrollbar CSS; external viewport substitution is unsupported."
+    "remaining": ""
   },
   {
     "id": "API-226",
@@ -6569,7 +6944,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
+        "path": "docs/verification/select-hydration.md",
         "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
       },
       {
@@ -6607,7 +6982,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
+        "path": "docs/verification/select-hydration.md",
         "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
       },
       {
@@ -6645,7 +7020,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
+        "path": "docs/verification/select-hydration.md",
         "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
       },
       {
@@ -6664,7 +7039,7 @@
   {
     "id": "API-235",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6674,35 +7049,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Fixed abort; partial broader acceptance | `select/select.loader.audit.spec.ts` uses deferred consumer promises, checks no request before open, loading DOM, page-size/offset, dismissal AbortSignal, stale result exclusion, error Retry DOM, successful append and hasMore stop. Angular resource in this version does not itself abort when params become undefined; explicit consumer controller fixes dismissal/destroy while preserving resource stale-result checks. Empty-state rendering and dedicated server-loader acceptance remain open."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/select/select.loader.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Remote options load on open and cover append, stale exclusion, retry and empty results."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The empty response displays an accessible replacement message."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Loading/page offsets, explicit dismissal/destroy abort, stale exclusion, retry/append and hasMore stop are tested. Empty-state rendering and dedicated server-loader acceptance remain open."
+    "remaining": ""
   },
   {
     "id": "API-236",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6712,35 +7082,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/select/select.loader.audit.spec.ts",
+        "detail": "Rejecting conversion or throwing retains the draft. IME Enter is ignored and successful conversion commits."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The empty panel accepts typing and correction, including a space."
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Existing API characterized; partial rejection contract | `select.contracts.audit.spec.ts` commits trimmed text through real input/Enter, checks factory/model and draft reset, and ignores empty commits. No new rejection callback/exception handling added. Native chooser cannot enter arbitrary text; use custom mode or a combobox."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Trimmed creation, empty input and draft reset are tested. Rejection callback/exception handling remains unimplemented; native chooser cannot enter arbitrary text."
+    "remaining": ""
   },
   {
     "id": "API-237",
     "family": "select",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6749,36 +7114,31 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/combobox/combobox.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/combobox/combobox.spec.ts",
+        "detail": "Combobox exercises remote search and clear."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Searches remotely, observes loading and error, selects a result and clears the field."
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Open runtime mapping | Search/loading/clear mapping to combobox is not independently integration-tested in this scope. No search/clear feature added to the single-choice select merely to mimic another control."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Runtime integration mapping for search/loading/clear to combobox remains unverified; single-choice select has not gained these features."
+    "remaining": ""
   },
   {
     "id": "API-238",
     "family": "select",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6787,31 +7147,26 @@
       },
       {
         "kind": "implementation",
-        "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/multi-select/multi-select.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/multi-select/multi-select.spec.ts",
+        "detail": "Multi-select exposes a typed array model and retains values across search and paging."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Exercises selecting multiple values and removing one from the rendered selection."
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Open runtime mapping | Multi-select remains the multiple-value surface. This scope does not claim a new integrated mapping regression."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Runtime integration mapping to multi-select remains unverified; select remains single-value."
+    "remaining": ""
   },
   {
     "id": "API-239",
@@ -6835,7 +7190,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
+        "path": "docs/verification/select-hydration.md",
         "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
       },
       {
@@ -6846,15 +7201,15 @@
       {
         "kind": "test",
         "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests. Native open delegates to showPicker and safely handles browser refusal without emitting a custom panel lifecycle."
       }
     ],
-    "remaining": "Custom open/close/toggle state, output, focus, disabled and destruction are tested. Native OS-popup controller acceptance remains open."
+    "remaining": "Physical platform picker behavior under trusted gestures remains unverified."
   },
   {
     "id": "API-240",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6864,35 +7219,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/select/select.loader.audit.spec.ts",
+        "detail": "Runtime sizing observes the trigger while open and retains the configured width rules."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Panel width follows a measured trigger resize."
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Existing API characterized; responsive geometry open | Actual `.audit-pane` gets width 320px, selected through panelClass. Trigger-width capture exists; resize-driven min-width/browser geometry not newly verified. Native chooser width/class is OS-owned."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Actual panel width/class are tested. Trigger resize-driven minimum width and browser geometry remain unverified; native chooser geometry is OS-owned."
+    "remaining": ""
   },
   {
     "id": "API-241",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6902,35 +7252,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Partial | Existing positions/scrollStrategy/offset inputs retained. No custom container implementation or real collision/scroll geometry acceptance added."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "The custom select keeps its panel class and explicit width while opening and selecting an item."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Custom parent, viewport collision, connected offset, and keyboard selection run in three engines."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Positions/scrollStrategy/offset inputs exist, but custom container and real collision/scroll geometry acceptance remain open."
+    "remaining": ""
   },
   {
     "id": "API-242",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6940,35 +7285,30 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/select/select.contracts.audit.spec.ts",
+        "detail": "Times virtual typeahead prefix expiration and checks arrow boundaries."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Tests typing and nonwrapping arrows in both virtual and standard modes."
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Partial | Injected typeaheadDelay/wrap default and explicit input precedence are verified. Configurable actual timed typeahead, wrap edges and virtual-vs-nonvirtual policy parity remain open (virtual navigation currently has its own bounded keyboard path)."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.policies.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Injected delay/wrap defaults and explicit precedence are tested. Actual timed typeahead, wrap edges and virtual/nonvirtual policy parity remain open."
+    "remaining": ""
   },
   {
     "id": "API-243",
     "family": "select",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -6978,30 +7318,25 @@
       {
         "kind": "implementation",
         "path": "projects/hyalo/select/select.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
-      },
-      {
-        "kind": "test",
-        "path": "projects/hyalo/select/select.baseline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
-      },
-      {
-        "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
-        "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-select-policy-final.md",
-        "detail": "Fixed DOM inconsistency; partial full nullable acceptance | Previously nonvirtual/native options appeared enabled even when nullable selection was rejected. Shared keyed-option disabled state now applies the policy to both surfaces. Regression verifies both native disabled and custom aria-disabled. Placeholder/reset and undefined-option identity semantics are not signed off; null object options still require explicit stable key."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/select/select.policies.audit.spec.ts",
-        "detail": "Per-ID behavioral assertions and limitations are described in docs/api-audit-select-policy-final.md; this ledger reconciliation does not rerun component tests."
+        "detail": "Optional select distinguishes null from reset, clears metadata, and preserves required and disabled values."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Exercises native and custom null selection and reset."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Nullable disabled-state parity is fixed for native/custom options. Placeholder/reset and undefined-option identity remain unaccepted; null object options require explicit stable key."
+    "remaining": ""
   },
   {
     "id": "API-244",
@@ -7025,7 +7360,7 @@
       },
       {
         "kind": "context",
-        "path": "docs/roadmap-select-verification.md",
+        "path": "docs/verification/select-hydration.md",
         "detail": "Native/SSR baseline evidence; not acceptance of untested comparator/templates/loading policies. Later ID fix is separate."
       },
       {
@@ -7240,7 +7575,7 @@
   {
     "id": "API-252",
     "family": "skeleton",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -7248,22 +7583,27 @@
         "detail": "Structured skeleton preset; original classification: composable"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 31: API-252 | Existing composition, not new preset                 | Compose `HySkeleton` shapes inside `HySkeletonRegion`, place aria-busy on the real loading region. Existing skeleton tests run; no dedicated structured preset introduced."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/skeleton/skeleton.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/skeleton/skeleton-region.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/skeleton/skeleton-region.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Four shaped decorative placeholders coexist with one status announcement."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The structured placeholder is measured and replaced by the loaded profile."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Add a dedicated structured multi-placeholder skeleton composition/mapping test and usage reference; existing single-placeholder region test is insufficient."
+    "remaining": ""
   },
   {
     "id": "API-253",
@@ -7665,7 +8005,7 @@
   {
     "id": "API-267",
     "family": "stepper",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -7673,22 +8013,27 @@
         "detail": "Transition timing/completion; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 53: API-267 | Partial | Same test verifies selection/after-render completion; no configurable transition duration or animation-boundary completion implemented."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/stepper/stepper.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/stepper/stepper.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/stepper/stepper.spec.ts",
+        "detail": "Mocks two panel animations and verifies interrupted completion is discarded."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures a real animation before completion and verifies the newest selection and reduced-motion completion."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Transition timing/completion. Scoped evidence/limitations: API-267 | Partial | Same test verifies selection/after-render completion; no configurable transition duration or animation-boundary completion implemented."
+    "remaining": ""
   },
   {
     "id": "API-268",
@@ -7917,7 +8262,7 @@
   {
     "id": "API-276",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -7925,22 +8270,27 @@
         "detail": "Integrated virtual rows; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 21: API-276 | Bounded fixed-row virtualization verified | Large-data test renders two data rows in a 96px viewport, exposes absolute row index and still renders the matching row after filtering. Variable-height expanded/grouped/frozen row interaction and real browser geometry remain open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/table.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/workflow.spec.ts",
+        "detail": "A scrolled virtual table retains pinned rows in a bounded moving window."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Scrolls through measured group and expanded detail rows and confirms bounded mounting."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Integrated virtual rows. Scoped evidence/limitations: API-276 | Bounded fixed-row virtualization verified | Large-data test renders two data rows in a 96px viewport, exposes absolute row index and still renders the matching row after filtering. Variable-height expanded/grouped/frozen row interaction and real browser geometry remain open."
+    "remaining": ""
   },
   {
     "id": "API-277",
@@ -7973,7 +8323,7 @@
   {
     "id": "API-278",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -7981,22 +8331,27 @@
         "detail": "Frozen columns/rows; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 73: API-278 | Partial | Frozen start-column offsets respond to widths/reorder. Sticky geometry/frozen rows under real scrolling remain open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Checks pinned-row retention, configurable sizes, and updated logical column offsets."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures sticky header, rows and both logical column edges while scrolling in LTR and RTL."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Frozen columns/rows. Scoped evidence/limitations: API-278 | Partial | Frozen start-column offsets respond to widths/reorder. Sticky geometry/frozen rows under real scrolling remain open."
+    "remaining": ""
   },
   {
     "id": "API-279",
@@ -8057,7 +8412,7 @@
   {
     "id": "API-281",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8065,27 +8420,32 @@
         "detail": "Column reordering; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 76: API-281 | Partial | `moveColumn` updates actual rendered header order, frozen offsets and exported order; draggable attribute verified. Physical drag/drop remains open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Workflow tests exercise moveColumn and verify rendered order and frozen offsets."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Performs trusted pointer drag-and-drop and verifies header order in every browser."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Column reordering. Scoped evidence/limitations: API-281 | Partial | `moveColumn` updates actual rendered header order, frozen offsets and exported order; draggable attribute verified. Physical drag/drop remains open."
+    "remaining": ""
   },
   {
     "id": "API-282",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8093,22 +8453,27 @@
         "detail": "Row drag reordering; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 77: API-282 | Partial | `moveRow` emits reordered copy, leaves frozen caller array intact, ignores unknown keys/noninteger indices. Physical drag/drop remains open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Workflow tests exercise the immutable row reorder result and invalid arguments."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Performs trusted pointer drag-and-drop and verifies that applying the emitted data reorders the rendered rows."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Row drag reordering. Scoped evidence/limitations: API-282 | Partial | `moveRow` emits reordered copy, leaves frozen caller array intact, ignores unknown keys/noninteger indices. Physical drag/drop remains open."
+    "remaining": ""
   },
   {
     "id": "API-283",
@@ -8141,7 +8506,7 @@
   {
     "id": "API-284",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8149,27 +8514,32 @@
         "detail": "Grouped rows; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 79: API-284 | Regression fixed; partial | Group template previously received all page rows (`A:3/B:3`); now receives actual group members (`A:2/B:1`). Group membership is indexed once per view, not scanned per rendered cell. Noncontiguous input is not automatically regrouped; consumers supply group-contiguous order. Virtual group headers remain open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Grouped rows expose exactly the matching page members to projected headings."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Verifies group headings and membership while scrolling a virtual table."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Grouped rows. Scoped evidence/limitations: API-284 | Regression fixed; partial | Group template previously received all page rows (`A:3/B:3`); now receives actual group members (`A:2/B:1`). Group membership is indexed once per view, not scanned per rendered cell. Noncontiguous input is not automatically regrouped; consumers supply group-contiguous order. Virtual group headers remain open."
+    "remaining": ""
   },
   {
     "id": "API-285",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8177,22 +8547,22 @@
         "detail": "Row/cell editing lifecycle; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 80: API-285 | Existing lifecycle verified, partial | Start/commit/cancel payloads and reset verified; commit does not mutate consumer data. Consumer editTemplate rendering/validation remains open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/table.spec.ts",
+        "detail": "The edit template mounts with row/value context, invalid writes remain editable, and successful edits leave caller rows unchanged."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Row/cell editing lifecycle. Scoped evidence/limitations: API-285 | Existing lifecycle verified, partial | Start/commit/cancel payloads and reset verified; commit does not mutate consumer data. Consumer editTemplate rendering/validation remains open."
+    "remaining": ""
   },
   {
     "id": "API-286",
@@ -8337,7 +8707,7 @@
   {
     "id": "API-291",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8345,27 +8715,32 @@
         "detail": "Footer/summary/multilevel headers; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 86: API-291 | Existing contract partly verified | Multilevel header colspan and footer row context rendered; complex rowspan accessibility and per-column `footer` option remain unverified."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/table.spec.ts",
+        "detail": "Verifies header references, spans, ARIA row counts, footer rendering, and positional compatibility."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures aligned spanning headers and resolves each referenced header to its rendered label."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Footer/summary/multilevel headers. Scoped evidence/limitations: API-291 | Existing contract partly verified | Multilevel header colspan and footer row context rendered; complex rowspan accessibility and per-column `footer` option remain unverified."
+    "remaining": ""
   },
   {
     "id": "API-292",
     "family": "table",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8373,27 +8748,32 @@
         "detail": "Loading/empty content templates; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 87: API-292 | Open | Template inputs exist, but custom loading/empty templates are not exercised. Prior default empty/loading DOM regression remains green."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/table.spec.ts",
+        "detail": "Loading/empty templates occupy a native table row with the correct colspan."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The example renders distinct loading and empty replacements."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Loading/empty content templates. Scoped evidence/limitations: API-292 | Open | Template inputs exist, but custom loading/empty templates are not exercised. Prior default empty/loading DOM regression remains green."
+    "remaining": ""
   },
   {
     "id": "API-293",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8401,27 +8781,27 @@
         "detail": "Granular action events; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 88: API-293 | Partial | Existing actions emitted from API methods; exhaustive action payload/order matrix remains open."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/table.spec.ts",
+        "detail": "Sort, selection, select-all, context, expansion, resize, column and row movement events have identifying payloads."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Granular action events. Scoped evidence/limitations: API-293 | Partial | Existing actions emitted from API methods; exhaustive action payload/order matrix remains open."
+    "remaining": ""
   },
   {
     "id": "API-294",
     "family": "table",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8429,22 +8809,27 @@
         "detail": "Sort direction cycle policy; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 89: API-294 | Partial | Existing default sort cycle covered; custom cycle policy remains unverified."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/table/table.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/table/workflow.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/table/table.spec.ts",
+        "detail": "Custom descending-first cycles deduplicate directions and return to unsorted."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Native header activation updates aria-sort through the three states."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Sort direction cycle policy. Scoped evidence/limitations: API-294 | Partial | Existing default sort cycle covered; custom cycle policy remains unverified."
+    "remaining": ""
   },
   {
     "id": "API-295",
@@ -8584,7 +8969,7 @@
   {
     "id": "API-300",
     "family": "tabs",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8592,27 +8977,32 @@
         "detail": "Overflow paginator controls; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 62: API-300 | Verified DOM/controller contract | Same test clicks paginator and verifies viewport scroll distance. Actual overflow geometry remains browser gate."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/tabs/tabs.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/tabs/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Clicking the next paginator addresses the actual tablist viewport."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures the overflowing tablist before and after activating both paginator controls."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Overflow paginator controls. Scoped evidence/limitations: API-300 | Verified DOM/controller contract | Same test clicks paginator and verifies viewport scroll distance. Actual overflow geometry remains browser gate."
+    "remaining": ""
   },
   {
     "id": "API-301",
     "family": "tabs",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8620,27 +9010,32 @@
         "detail": "Animated active-panel height; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 63: API-301 | Open | No animated active-panel height implementation; no input-only claim."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/tabs/tabs.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/tabs/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/tabs/tabs.lifecycle.spec.ts",
+        "detail": "Tab height transitions track selection, report only the latest accepted transition, and clean up animation on interruption and destroy."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures animated height, controlled selection and reduced-motion geometry in three engines."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Implement and test animated active-panel height, including interruption, reduced motion and cleanup."
+    "remaining": ""
   },
   {
     "id": "API-302",
     "family": "tabs",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8648,22 +9043,27 @@
         "detail": "Vertical/bottom tab placement; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 64: API-302 | Verified DOM contract | Same test vertical ARIA orientation and bottom-placement state; pixel layout remains browser gate."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/tabs/tabs.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/tabs/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Tests vertical orientation and bottom placement application."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures panel and tab-list positions for vertical and bottom layouts and checks vertical keyboard navigation."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Vertical/bottom tab placement. Scoped evidence/limitations: API-302 | Verified DOM contract | Same test vertical ARIA orientation and bottom-placement state; pixel layout remains browser gate."
+    "remaining": ""
   },
   {
     "id": "API-303",
@@ -8734,7 +9134,7 @@
   {
     "id": "API-305",
     "family": "tabs",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8742,22 +9142,27 @@
         "detail": "Focus/animation outputs; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 67: API-305 | Partial | Presentation test verifies focus output; completion is after-render rather than actual CSS transition-end."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/tabs/tabs.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/tabs/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "The presentation test checks focus events and the lifecycle test checks that accepted transitions emit at completion and canceled transitions emit nothing."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks selection completion with real panel height motion and reduced motion."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Focus/animation outputs. Scoped evidence/limitations: API-305 | Partial | Presentation test verifies focus output; completion is after-render rather than actual CSS transition-end."
+    "remaining": ""
   },
   {
     "id": "API-306",
@@ -8790,7 +9195,7 @@
   {
     "id": "API-307",
     "family": "tabs",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8798,22 +9203,27 @@
         "detail": "Tab badge/responsive labels; original classification: component-only"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 69: API-307 | Partial | Presentation test verifies badge/custom header. Responsive compact-label pixel behavior not browser-verified."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/tabs/tabs.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/tabs/presentation.audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Tests custom header and badge projection."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks default and narrow labels, badge visibility, and stable accessible name in each engine."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Tab badge/responsive labels. Scoped evidence/limitations: API-307 | Partial | Presentation test verifies badge/custom header. Responsive compact-label pixel behavior not browser-verified."
+    "remaining": ""
   },
   {
     "id": "API-308",
@@ -8912,7 +9322,7 @@
   {
     "id": "API-311",
     "family": "time-picker",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8920,22 +9330,27 @@
         "detail": "Confirmation/footer content; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-content-remaining-resolution.md",
-        "detail": "Line 73: API-311 | Partial | Time suite verifies confirmation transaction/reset/empty values; footerTemplate exists but custom footer integration not separately tested here."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/time-picker/time-picker.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/time-picker/time-picker.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Custom template receives both current draft and live picker. Custom action publishes the draft on confirmation only."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Checks that a keyboard selection changes the template draft and commits only on confirmation."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Confirmation/footer content. Scoped evidence/limitations: API-311 | Partial | Time suite verifies confirmation transaction/reset/empty values; footerTemplate exists but custom footer integration not separately tested here."
+    "remaining": ""
   },
   {
     "id": "API-312",
@@ -8968,7 +9383,7 @@
   {
     "id": "API-313",
     "family": "timeline",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -8976,22 +9391,27 @@
         "detail": "Timeline alignment/orientation; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 36: API-313 | Partial                                              | Existing horizontal/start/end preserved; alternate layout added. Template regression checks config. Horizontal alternate/end-side combinations still need browser review."
-      },
-      {
         "kind": "implementation",
-        "path": "projects/hyalo/timeline/timeline.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "path": "projects/hyalo/timeline/timeline-item.css",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/timeline/timeline.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Model integration verifies horizontal orientation and end alignment along with vertical alternating item contracts."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Measures a shared rail and per-item placement in LTR and RTL."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Timeline alignment/orientation. Scoped evidence/limitations: API-313 | Partial                                              | Existing horizontal/start/end preserved; alternate layout added. Template regression checks config. Horizontal alternate/end-side combinations still need browser review."
+    "remaining": ""
   },
   {
     "id": "API-314",
@@ -9080,7 +9500,7 @@
   {
     "id": "API-317",
     "family": "toast",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9088,17 +9508,27 @@
         "detail": "Position/responsive configuration; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 40: API-317 | Implemented for four corners and fluid width         | Channel position top/bottom + logical start/end; width capped by viewport. Regression checks top placement and normalized CSS width. No arbitrary breakpoint configuration or center positions."
+        "kind": "implementation",
+        "path": "projects/hyalo/toast/toaster.ts",
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
         "path": "projects/hyalo/toast/toast.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "detail": "Unsorted breakpoints choose the nearest matching limit and update one mounted stack."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Resizes a browser viewport and measures live movement between top and bottom center, width, and message identity."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Position/responsive configuration. Scoped evidence/limitations: API-317 | Implemented for four corners and fluid width         | Channel position top/bottom + logical start/end; width capped by viewport. Regression checks top placement and normalized CSS width. No arbitrary breakpoint configuration or center positions."
+    "remaining": ""
   },
   {
     "id": "API-318",
@@ -9241,7 +9671,7 @@
   {
     "id": "API-324",
     "family": "virtual-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9249,32 +9679,32 @@
         "detail": "Horizontal/two-axis virtualization; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 22: API-324 | Existing horizontal/grid range behavior verified, partial acceptance | New `virtual-list/audit.spec.ts` uses 10,000 items, scrolls to the last item, bounds mounted DOM and checks aria-posinset. RTL horizontal scrolling, focus behavior on both axes, resize geometry and invalid numeric configuration remain open."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 47: API-324 | Outside owned virtual-scroller scope                 | Inventory refers to virtual-list. Existing `HyVirtualScroller` stays bounded; no claim for two-axis virtualization."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Two-axis grid window stays bounded, resets on item replacement, and horizontal frame is covered in audit.spec.ts."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Horizontal keyboard focus and two-axis RTL geometry use native scrolling."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Horizontal/two-axis virtualization. Scoped evidence/limitations: API-324 | Outside owned virtual-scroller scope                 | Inventory refers to virtual-list. Existing `HyVirtualScroller` stays bounded; no claim for two-axis virtualization."
+    "remaining": ""
   },
   {
     "id": "API-325",
     "family": "virtual-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9282,37 +9712,32 @@
         "detail": "Viewport-range loading; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 23: API-325 | SSR request defect fixed; async lifecycle verified, partial acceptance | `virtual-list.ts` now gates automatic loading and retry on browser platform. Test failed because SSR invoked the consumer loader, then passed. Tests verify replaced-request abort, stale failure suppression, current error, retry, success and destruction abort. Loading/error/empty content presentation and two-axis loader granularity remain open."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-data-workflow-resolution.md",
-        "detail": "Line 90: API-325 | Two deferred cancellation regressions fixed | Initial load and retry queued just before destruction previously still invoked consumer callback with an aborted signal. Both tests observed a callback, now observe none. Existing SSR/no-load, race, retry/error tests remain green. Two-axis granularity/presentation remain open."
-      },
-      {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 48: API-325 | Outside owned virtual-scroller scope                 | virtual-list loading ownership remains separate."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Equal ranges deduplicate requests. Changed ranges abort, stale writes are ignored, and errors can retry."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Visible grid rows show then replace placeholders after a range request."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Complete and independently verify Viewport-range loading. Scoped evidence/limitations: API-325 | Outside owned virtual-scroller scope                 | virtual-list loading ownership remains separate."
+    "remaining": ""
   },
   {
     "id": "API-326",
     "family": "virtual-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9320,27 +9745,32 @@
         "detail": "Public rendered-range observation; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 49: API-326 | Outside owned virtual-scroller scope                 | No new rendered-range API on virtual-scroller."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Rendered item range changes on viewport scroll, resize and replacement, with duplicate unchanged intervals suppressed."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Rendered position and mounted row bound are measured in an RTL grid."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "renderedRangeChange exists; verify output payloads and update/deduplication across scroll, resize and data replacement."
+    "remaining": ""
   },
   {
     "id": "API-327",
     "family": "virtual-list",
-    "status": "open",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9348,27 +9778,32 @@
         "detail": "Virtual row loading placeholders; original classification: elsewhere"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 50: API-327 | Mapping pending                                      | Existing loading placeholder composition not newly certified here."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Virtual range transport and loading state are exercised by the list tests."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "The live row template mounts a skeleton and replaces it upon range completion."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Add a runtime loading-placeholder composition test and usage mapping for virtual-list; a generic row template alone does not prove this outcome."
+    "remaining": ""
   },
   {
     "id": "API-328",
     "family": "virtual-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9376,27 +9811,32 @@
         "detail": "Pixel/alignment scroll controller; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 51: API-328 | Outside owned virtual-scroller scope                 | No new pixel/alignment controller added."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Index alignment computes pixel offsets on both axes."
+      },
+      {
+        "kind": "test",
+        "path": "tools/api-audit-browser.spec.mjs",
+        "detail": "Start, center, end and nearest measure against the real viewport in RTL."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "Pixel/index alignment methods exist; test start/center/end/nearest and pixel scroll behavior on all supported axes with real geometry."
+    "remaining": ""
   },
   {
     "id": "API-329",
     "family": "virtual-list",
-    "status": "partial",
+    "status": "resolved",
     "evidence": [
       {
         "kind": "inventory",
@@ -9404,21 +9844,21 @@
         "detail": "Append-only/bypass rendering modes; original classification: missing"
       },
       {
-        "kind": "snapshot",
-        "path": "docs/api-audit-feedback-resolution.md",
-        "detail": "Line 52: API-329 | Outside owned virtual-scroller scope                 | No append-only/bypass mode added."
-      },
-      {
         "kind": "implementation",
         "path": "projects/hyalo/virtual-list/virtual-list.ts",
-        "detail": "Inspected family implementation; presence alone does not prove capability acceptance."
+        "detail": "Public contract and current behavior are documented with the runnable example."
       },
       {
         "kind": "test",
-        "path": "projects/hyalo/virtual-list/audit.spec.ts",
-        "detail": "Capability association is bounded by the cited snapshot or explicit remaining work; this consolidation does not rerun component tests."
+        "path": "projects/hyalo/virtual-list/virtual-list.spec.ts",
+        "detail": "Append-only retains visited rows on the scrolling axis and resets after bypass or item replacement. Bypass renders every item."
+      },
+      {
+        "kind": "context",
+        "path": "docs/api-audit-continuation.md",
+        "detail": "Peer comparison and verification instructions."
       }
     ],
-    "remaining": "appendOnly and virtual=false exist; test retained windows, bypass mode, mode changes, focus and explicit bounded-DOM tradeoffs."
+    "remaining": ""
   }
 ]

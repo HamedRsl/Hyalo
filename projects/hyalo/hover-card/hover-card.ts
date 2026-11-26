@@ -44,6 +44,8 @@ export class HyHoverCard {
   /** Null preserves pointer-corridor grace; a number uses a fixed delay. */
   readonly hoverCardHideDelay = input<number | null>(null);
   readonly hoverCardPanelClass = input<string | string[]>('');
+  /** Optional DOM parent for this card's overlay. */
+  readonly hoverCardContainer = input<HTMLElement>();
   readonly open = signal(false);
   protected readonly id = injectId('hover-card');
   private readonly injector = inject(Injector);
@@ -53,6 +55,7 @@ export class HyHoverCard {
   private readonly document = inject(DOCUMENT);
   private readonly intent = new HyHoverIntent(this.document);
   private ref: OverlayRef | undefined;
+  private mount: HTMLElement | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private disposed = false;
   private suppressFocus = false;
@@ -122,15 +125,23 @@ export class HyHoverCard {
   show(): void {
     clearTimeout(this.timer);
     if (this.disposed || this.open()) return;
+    const mount = this.hoverCardContainer();
+    if (this.ref && this.mount !== mount) {
+      this.ref.dispose();
+      this.ref = undefined;
+    }
     if (!this.ref) {
+      this.mount = mount;
       const position = createFlexibleConnectedPositionStrategy(this.injector, this.host)
         .withPositions(hyConnectedPositions(this.placement(), 8))
         .withViewportMargin(12)
         .withPush(true);
+      if (mount) position.withPopoverLocation({ type: 'parent', element: mount });
       this.ref = createOverlayRef(this.injector, {
         positionStrategy: position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: ['hy-hover-card-pane', ...[this.hoverCardPanelClass()].flat().filter(Boolean)],
+        ...(mount ? { usePopover: true } : {}),
       });
       const pane = this.ref.overlayElement;
       pane.classList.add('hy-glass');

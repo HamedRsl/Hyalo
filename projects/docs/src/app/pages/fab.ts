@@ -1,6 +1,7 @@
 import { EXAMPLE } from './examples/fab';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HyFab } from '@hyalo/angular/fab';
+import { HyIcon, provideHyaloRemoteIcons } from '@hyalo/angular/icon';
 
 import { DocsPage } from '../shared/page';
 import { DocsExample } from '../shared/example';
@@ -8,7 +9,8 @@ import { DocsImport } from '../shared/import';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 @Component({
   selector: 'docs-fab-page',
-  imports: [DocsPage, DocsExample, DocsImport, DocsApiTable, HyFab],
+  imports: [DocsPage, DocsExample, DocsImport, DocsApiTable, HyFab, HyIcon],
+  providers: [provideHyaloRemoteIcons({ 'example:mark': { url: 'icon-mark.svg' } })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './fab.html',
   styleUrl: './mobile-demos.css',

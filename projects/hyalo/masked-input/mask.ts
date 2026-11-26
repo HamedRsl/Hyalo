@@ -42,7 +42,7 @@ export function parseMask(
     masked += character;
     positions.push(masked.length);
   }
-  return { raw, masked, complete: capacity > 0 && raw.length === capacity, positions };
+  return { raw, masked, complete: capacity > 0 && positions.length === capacity, positions };
 }
 
 export function normalizeIranianPhone(value: string): string {

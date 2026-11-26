@@ -74,4 +74,28 @@ describe('HyScheduler real FullCalendar', () => {
     f.destroy();
     expect(f.nativeElement.querySelector('.fc-view-harness')).toBeNull();
   });
+  it('labels the native view selector and synchronizes it in both directions', async () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: HY_SCHEDULER_LOADER, useValue: async () => engine }],
+    });
+    const fixture = TestBed.createComponent(HyScheduler);
+    fixture.componentRef.setInput('label', 'Team');
+    fixture.componentRef.setInput('viewLabel', 'Calendar layout');
+    fixture.componentRef.setInput('views', [
+      { value: 'dayGridMonth', label: 'Monthly' },
+      { value: 'timeGridWeek', label: 'Weekly' },
+    ]);
+    await fixture.whenStable();
+    const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+    expect(select.labels?.[0]?.textContent).toContain('Calendar layout');
+    expect(select.value).toBe('dayGridMonth');
+    select.value = 'timeGridWeek';
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.getApi()?.view.type).toBe('timeGridWeek');
+    fixture.componentInstance.changeView('listWeek');
+    await fixture.whenStable();
+    expect(select.value).toBe('listWeek');
+    expect(select.closest('label')?.querySelector('hy-icon')?.getAttribute('aria-hidden')).toBe('true');
+  });
 });

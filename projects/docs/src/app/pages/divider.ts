@@ -22,5 +22,11 @@ export default class ShowcasePage {
       default: 'horizontal',
       description: 'Visual and accessible separator orientation.',
     },
+    {
+      name: 'inset',
+      type: 'string',
+      default: '0',
+      description: 'CSS length at the logical inline start.',
+    },
   ];
 }

@@ -56,6 +56,34 @@
     later, like a form field. If there is a Save button, use a checkbox.
   </p>
 
+  <h2>Label placement and controlled changes</h2>
+  <docs-example
+    [code]="examples[3].html"
+    [tsCode]="examples[3].ts"
+    [cssCode]="examples[3].css"
+    column
+  >
+    <div class="docs-stack" aria-label="Choice policies">
+      <hy-checkbox disabled disabledFocusable labelPosition="before" description="Locked by the workspace">
+        Quarterly reports
+      </hy-checkbox>
+      <hy-radio-group label="Review schedule" value="daily">
+        <hy-radio value="daily">Daily review</hy-radio>
+        <hy-radio value="weekly" disabled disabledFocusable labelPosition="before" description="A daily review is required">
+          Weekly review
+        </hy-radio>
+      </hy-radio-group>
+      <hy-switch disabled disabledFocusable labelPosition="before" description="Locked by the workspace">
+        Public profile
+      </hy-switch>
+      <hy-checkbox [(checked)]="pending">Pause sharing changes</hy-checkbox>
+      <hy-switch controlled [pending]="pending()" disabledFocusable [checked]="sharing()" (toggleRequested)="requestSharing($event)">
+        Share activity
+      </hy-switch>
+      <output>Sharing requests: {{ requests() }}</output>
+    </div>
+  </docs-example>
+
   <h2>Accessibility</h2>
   <ul>
     <li>Each control is a real input, so labels, form submit and browser autofill all work.</li>

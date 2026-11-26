@@ -18,6 +18,7 @@ import { DocsApiTable, type ApiRow } from '../shared/api-table';
 export default class ShowcasePage {
   protected readonly example = EXAMPLE;
   protected readonly sticky = signal(true);
+  protected readonly horizontal = signal(false);
   protected readonly behavior = signal<'smooth' | 'instant' | undefined>('smooth');
   protected readonly behaviors: readonly HySegmentedOption<'smooth' | 'instant'>[] = [
     { value: 'smooth', label: 'Smooth' },

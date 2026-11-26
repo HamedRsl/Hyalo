@@ -22,14 +22,17 @@ import {
 import { Combobox, ComboboxPopup, ComboboxWidget } from '@angular/aria/combobox';
 import { Listbox, Option } from '@angular/aria/listbox';
 import {
+  CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG,
+  OVERLAY_DEFAULT_CONFIG,
   CdkConnectedOverlay,
   CdkOverlayOrigin,
   Overlay,
   type ConnectedPosition,
+  type FlexibleOverlayPopoverLocation,
   type ScrollStrategy,
 } from '@angular/cdk/overlay';
 import type { FormValueControl } from '@angular/forms/signals';
-import { HY_CONFIG, HyFidelity, injectId } from '@hyalo/angular/core';
+import { HY_CONFIG, HyFidelity, injectId, normalizeSearch } from '@hyalo/angular/core';
 import { HyIcon } from '@hyalo/angular/icon';
 import { HY_FIELD, type HyFieldControl } from '@hyalo/angular/field';
 import { hyDropdownPositions, ɵHyPresence as HyPresence } from '@hyalo/angular/overlay';
@@ -105,7 +108,10 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   private pendingNativeKey: string | undefined;
   protected readonly field = inject(HY_FIELD, { optional: true });
   private readonly trigger = viewChild<ElementRef<HTMLElement>>('trigger');
+  private readonly nativeSelect = viewChild<ElementRef<HTMLSelectElement>>('nativeSelect');
   private readonly overlay = viewChild(CdkConnectedOverlay);
+  private readonly connectedDefaults = inject(CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG, { optional: true });
+  private readonly overlayDefaults = inject(OVERLAY_DEFAULT_CONFIG, { optional: true });
   private readonly presence = new HyPresence();
 
   /** The choices. */
@@ -124,6 +130,16 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly headerTemplate = input<TemplateRef<unknown>>();
   readonly footerTemplate = input<TemplateRef<unknown>>();
   readonly panelClass = input<string | string[]>('hy-select-overlay');
+  /** Optional DOM parent for the custom select's dropdown. */
+  readonly panelContainer = input<HTMLElement>();
+  protected readonly overlayMount = computed<FlexibleOverlayPopoverLocation | null>(() => {
+    const parent = this.panelContainer();
+    if (parent) return { type: 'parent', element: parent };
+    const configured = this.connectedDefaults?.usePopover;
+    return configured === undefined
+      ? this.overlayDefaults?.usePopover === false ? null : 'global'
+      : configured;
+  });
   readonly popupWidth = input<string | number>();
   readonly overlayPositions = input<ConnectedPosition[]>();
   readonly scrollStrategy = input<ScrollStrategy>(inject(Overlay).scrollStrategies.reposition());
@@ -132,8 +148,11 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly typeaheadDelay = input(this.policy?.typeaheadDelay ?? 500);
   readonly wrap = input(this.policy?.wrap ?? true);
   readonly canSelectNullable = input(this.policy?.canSelectNullable ?? true);
-  readonly createValue = input<(text: string) => T>();
+  /** Return undefined to reject a draft without changing the current selection. */
+  readonly createValue = input<(text: string) => T | undefined>();
+  readonly customValueRejected = output<{ readonly text: string; readonly error?: unknown }>();
   readonly customValueLabel = input('Add option');
+  readonly emptyLabel = input('No options available');
   readonly virtualized = input(false);
   readonly itemHeight = input(44);
   readonly viewportHeight = input(264);
@@ -146,12 +165,15 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly formDisabled = signal(false);
   protected readonly effectiveDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly customText = signal('');
+  private readonly createdSelection = signal<{ value: T; label: string } | undefined>(undefined);
   private readonly remoteOptions = signal<readonly HySelectOption<T>[]>([]);
   private readonly pageOffset = signal(0);
   private readonly hasMore = signal(false);
   private pageController: AbortController | undefined;
   protected readonly virtualOffset = signal(0);
   protected readonly virtualIndex = signal(-1);
+  private searchPrefix = '';
+  private lastType = -Infinity;
   protected readonly virtualActiveId = computed(() =>
     this.virtualIndex() < 0 ? undefined : this.triggerId + '-option-' + this.virtualIndex(),
   );
@@ -202,6 +224,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly labelable = true;
   protected readonly nativeId = injectId('select');
   protected readonly triggerId = this.nativeId + '-trigger';
+  protected readonly listboxId = this.nativeId + '-listbox';
   readonly id = computed(() => (this.useNative() ? this.nativeId : this.triggerId));
   readonly errorMessage = computed(() => {
     const first = this.errors()[0];
@@ -218,7 +241,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     const keys = new Set<string>();
     return [...this.options(), ...this.remoteOptions()].map((option, index) => {
       const value = option.value;
-      if (option.key === undefined && (typeof value === 'object' || typeof value === 'function'))
+      if (option.key === undefined && (typeof value === 'object' && value !== null || typeof value === 'function'))
         throw new Error('HySelect: object values require a stable option key');
       const key =
         option.key === undefined
@@ -291,11 +314,39 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     const v = this.value();
     return v === undefined ? [] : [this.selectedOption()?.value ?? v];
   });
+  protected readonly selectedLabel = computed(() => {
+    const option = this.selectedOption();
+    if (option) return this.optionLabel(option);
+    const value = this.value();
+    if (value === undefined) return undefined;
+    const display = this.displayWith();
+    if (display) return display(value);
+    const created = this.createdSelection();
+    return created && this.compareWith()(created.value, value) ? created.label : undefined;
+  });
   protected readonly showsError = computed(() =>
     this.field ? this.field.errorShown() : this.invalid() && this.touched(),
   );
 
   constructor() {
+    afterNextRender(() => {
+      const trigger = this.trigger()?.nativeElement;
+      if (!trigger) return;
+      const onKey = (event: KeyboardEvent): void => this.virtualKeys(event);
+      trigger.addEventListener('keydown', onKey, true);
+      this.destroy.onDestroy(() => trigger.removeEventListener('keydown', onKey, true));
+    });
+    effect((onCleanup) => {
+      const trigger = this.trigger()?.nativeElement;
+      if (!this.opened() || this.useNative() || !trigger) return;
+      const measure = (): void => this.panelWidth.set(trigger.offsetWidth);
+      measure();
+      if (typeof ResizeObserver !== 'undefined') {
+        const resize = new ResizeObserver(measure);
+        resize.observe(trigger);
+        onCleanup(() => resize.disconnect());
+      }
+    });
     this.destroy.onDestroy(() => this.pageController?.abort());
     effect(() => {
       if (!this.opened()) this.pageController?.abort();
@@ -370,6 +421,10 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   protected setExpanded(open: boolean): void {
     if (open && this.effectiveDisabled()) return;
     if (open) this.panelWidth.set(this.trigger()?.nativeElement.offsetWidth ?? 0);
+    if (!open) {
+      this.searchPrefix = '';
+      this.lastType = -Infinity;
+    }
     this.expanded.set(open);
   }
 
@@ -387,10 +442,14 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   }
 
   protected pick(values: readonly T[]): void {
+    if (!values.length) return;
     const next = values[values.length - 1];
+    if (next === undefined) {
+      if (this.canSelectNullable()) this.clear();
+      return;
+    }
     if (
       this.effectiveDisabled() ||
-      next === undefined ||
       (next === null && !this.canSelectNullable()) ||
       (this.value() !== undefined && this.compareWith()(next, this.value() as T))
     )
@@ -405,15 +464,36 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     if (option && option.getAttribute('aria-disabled') !== 'true') this.close();
   }
 
+  /** Clears the current value and restores the placeholder when selection is optional. */
+  clear(): void {
+    if (this.required() || this.effectiveDisabled()) return;
+    this.value.set(undefined);
+    this.createdSelection.set(undefined);
+    this.close();
+  }
+
   close(): void {
-    this.expanded.set(false);
-    this.trigger()?.nativeElement.focus();
+    this.setExpanded(false);
+    if (!this.useNative()) this.trigger()?.nativeElement.focus();
   }
   open(): void {
+    if (this.useNative()) {
+      const select = this.nativeSelect()?.nativeElement;
+      if (!select || this.effectiveDisabled()) return;
+      select.focus();
+      try {
+        select.showPicker?.();
+      } catch (error: unknown) {
+        if (!(error instanceof DOMException)) throw error;
+        // A browser can require user activation or decline the platform picker.
+      }
+      return;
+    }
     this.setExpanded(true);
   }
   toggle(): void {
-    this.setExpanded(!this.expanded());
+    if (this.useNative()) this.open();
+    else this.setExpanded(!this.expanded());
   }
   retry(): void {
     this.page.reload();
@@ -437,21 +517,67 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     return this.value() !== undefined && this.compareWith()(value, this.value() as T);
   }
   protected commitCustom(event: Event): void {
-    if (event instanceof KeyboardEvent && event.key !== 'Enter') return;
+    if (event instanceof KeyboardEvent) {
+      if (event.key === 'Tab' && event.shiftKey) {
+        event.preventDefault();
+        this.trigger()?.nativeElement.focus();
+        return;
+      }
+      if (event.key === 'Tab' || event.key === 'Escape') return;
+      event.stopPropagation();
+      if (event.key !== 'Enter' || event.isComposing) return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
     const create = this.createValue();
     const text = this.customText().trim();
     if (this.effectiveDisabled() || !create || !text) return;
-    this.value.set(create(text));
+    let value: T | undefined;
+    try {
+      value = create(text);
+    } catch (error) {
+      this.customValueRejected.emit({ text, error });
+      return;
+    }
+    if (value === undefined || (value === null && !this.canSelectNullable())) {
+      this.customValueRejected.emit({ text });
+      return;
+    }
+    this.createdSelection.set({ value, label: text });
+    this.value.set(value);
     this.customText.set('');
     this.close();
   }
+  protected relayOptionKey(event: KeyboardEvent, listbox: HTMLElement): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+    } else if (event.target === event.currentTarget) {
+      listbox.dispatchEvent(new KeyboardEvent(event.type, event));
+    }
+  }
+
   protected virtualKeys(event: KeyboardEvent): void {
+    if (event.key === 'Tab' && !event.shiftKey && this.expanded() && this.createValue()) {
+      const draft = this.panelElement()?.querySelector<HTMLInputElement>('.hy-select__draft');
+      if (draft) {
+        event.preventDefault();
+        draft.focus();
+      }
+      return;
+    }
     if (
       !this.virtualized() ||
       this.effectiveDisabled() ||
-      !['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', 'Escape'].includes(event.key)
-    )
+      event.isComposing ||
+      event.altKey || event.ctrlKey || event.metaKey
+    ) return;
+    if (event.key.length === 1 && event.key !== ' ') {
+      this.searchVirtual(event);
       return;
+    }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', 'Escape', ' '].includes(event.key)) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     if (event.key === 'Escape') {
@@ -459,7 +585,11 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
       return;
     }
     const items = this.keyedOptions();
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
+      if (!this.expanded()) {
+        this.open();
+        return;
+      }
       const item = items[this.virtualIndex()];
       if (item && !item.disabled) this.pick([item.option.value]);
       return;
@@ -471,9 +601,42 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
         ? 0
         : event.key === 'End'
           ? items.length - 1
-          : this.virtualIndex() + direction;
-    while (index >= 0 && index < items.length && items[index]?.disabled) index += direction;
-    if (index < 0 || index >= items.length) return;
+          : this.virtualIndex() < 0 && direction < 0 ? items.length - 1 : this.virtualIndex() + direction;
+    const wraps = this.wrap() && (event.key === 'ArrowDown' || event.key === 'ArrowUp');
+    for (let count = 0; count < items.length; count++, index += direction) {
+      if (wraps) index = (index + items.length) % items.length;
+      if (index < 0 || index >= items.length) return;
+      if (!items[index]?.disabled) {
+        this.focusVirtual(index);
+        return;
+      }
+    }
+  }
+
+  private searchVirtual(event: KeyboardEvent): void {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.open();
+    const key = normalizeSearch(event.key);
+    const interval = event.timeStamp - this.lastType;
+    const previous = interval <= this.typeaheadDelay() ? this.searchPrefix : '';
+    this.searchPrefix = previous + key;
+    this.lastType = event.timeStamp;
+    const repeat = previous.length > 0 && Array.from(previous).every((letter) => letter === key);
+    const query = repeat ? key : this.searchPrefix;
+    const items = this.keyedOptions();
+    const active = this.virtualIndex();
+    for (let step = previous && !repeat ? 0 : 1; step <= items.length; step++) {
+      const index = (active + step + items.length) % items.length;
+      const item = items[index];
+      if (item && !item.disabled && normalizeSearch(this.optionLabel(item.option)).startsWith(query)) {
+        this.focusVirtual(index);
+        return;
+      }
+    }
+  }
+
+  private focusVirtual(index: number): void {
     this.virtualIndex.set(index);
     this.virtualOffset.set(
       Math.max(0, index * Math.max(1, this.itemHeight()) - Math.max(1, this.viewportHeight()) / 2),
@@ -503,12 +666,14 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
 
   private commitNativeKey(key: string): void {
     if (this.effectiveDisabled()) return;
-    if (!key && !this.required()) {
-      this.value.set(undefined);
+    if (!key) {
+      this.clear();
       return;
     }
     const choice = this.keyedOptions().find((item) => item.key === key);
-    if (choice && !choice.disabled && (choice.option.value !== null || this.canSelectNullable()))
-      this.value.set(choice.option.value);
+    if (choice && !choice.disabled) {
+      if (choice.option.value === undefined) this.clear();
+      else this.value.set(choice.option.value);
+    }
   }
 }

@@ -18,6 +18,7 @@ export default class AccordionPage {
 
   protected readonly multiple = signal(false);
   protected readonly first = signal(true);
+  protected readonly settled = signal('');
 
   protected readonly code = `<hy-accordion [multiple]="multiple()">
   <hy-accordion-item heading="Delivery" [(expanded)]="first">...</hy-accordion-item>

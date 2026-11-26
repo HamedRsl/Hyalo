@@ -10,7 +10,10 @@
       <hy-accordion-item heading="Delivery" [headingLevel]="3" [(expanded)]="first">
         Three to five working days inside the EU. Tracking arrives by email.
       </hy-accordion-item>
-      <hy-accordion-item heading="Returns">
+      <hy-accordion-item
+        heading="Returns"
+        (animationComplete)="settled.set($event ? 'Returns opened' : 'Returns closed')"
+      >
         Send it back within 30 days in the original box for a full refund.
       </hy-accordion-item>
       <hy-accordion-item heading="Warranty"
@@ -18,6 +21,7 @@
       >
       <hy-accordion-item heading="Engraving" disabled>Coming soon.</hy-accordion-item>
     </hy-accordion>
+    <span role="status">{{ settled() }}</span>
   </docs-example>
 
   <h2>Accessibility</h2>
@@ -30,7 +34,8 @@
     <li>Closed panels are hidden from the accessibility tree, not just collapsed.</li>
     <li>
       The height animation uses grid rows, so content of any size opens smoothly and reduced motion
-      turns it off.
+      turns it off. Listen to <code>animationComplete</code> for the settled expanded state,
+      including when the browser skips the transition.
     </li>
   </ul>
 

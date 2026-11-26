@@ -149,4 +149,50 @@ describe('select existing contracts audit', () => {
     next.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     expect(create).toHaveBeenCalledTimes(1);
   });
+
+  it('delegates native opening to the platform while keeping custom overlay state closed', async () => {
+    const fixture = TestBed.createComponent(HySelect<string>);
+    fixture.componentRef.setInput('native', true);
+    fixture.componentRef.setInput('options', [{ value: 'a', label: 'A' }]);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    const element: HTMLSelectElement = fixture.nativeElement.querySelector('select');
+    element.showPicker = vi.fn(() => { throw new DOMException('Requires a gesture', 'NotAllowedError'); });
+    const select = fixture.componentInstance;
+    const opened = vi.fn();
+    select.openedPanel.subscribe(opened);
+    select.open();
+    expect(element.showPicker).toHaveBeenCalledOnce();
+    expect(document.activeElement).toBe(element);
+    expect(select.opened()).toBe(false);
+    expect(opened).not.toHaveBeenCalled();
+    fixture.componentRef.setInput('disabled', true);
+    await fixture.whenStable();
+    select.toggle();
+    expect(element.showPicker).toHaveBeenCalledOnce();
+  });
+});
+
+it('resets virtual typeahead after the configured delay and leaves arrows at a nonwrapping edge', async () => {
+  const fixture = TestBed.createComponent(HySelect<string>);
+  fixture.componentRef.setInput('virtualized', true);
+  fixture.componentRef.setInput('wrap', false);
+  fixture.componentRef.setInput('typeaheadDelay', 100);
+  fixture.componentRef.setInput('options', [{ value: 'a', label: 'Alfa' }, { value: 'b', label: 'Beta' }]);
+  await fixture.whenStable();
+  const trigger: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+  const press = async (key: string, timeStamp: number) => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'timeStamp', { value: timeStamp });
+    trigger.dispatchEvent(event);
+    await fixture.whenStable();
+  };
+  await press('a', 0);
+  expect(trigger.getAttribute('aria-activedescendant')).toMatch(/-option-0$/);
+  await press('b', 50);
+  expect(trigger.getAttribute('aria-activedescendant')).toMatch(/-option-0$/);
+  await press('b', 151);
+  expect(trigger.getAttribute('aria-activedescendant')).toMatch(/-option-1$/);
+  await press('ArrowDown', 152);
+  expect(trigger.getAttribute('aria-activedescendant')).toMatch(/-option-1$/);
 });

@@ -16,6 +16,52 @@ describe('select page loader contract', () => {
   afterEach(() =>
     document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove()),
   );
+  it('announces empty remote results and leaves a rejected custom draft available for correction', async () => {
+    TestBed.inject(HyFidelity).setTier('high');
+    const fixture = TestBed.createComponent(HySelect<string>);
+    const load = vi.fn().mockResolvedValue({ options: [], hasMore: false });
+    const error = new Error('Conversion failed');
+    fixture.componentRef.setInput('options', []);
+    fixture.componentRef.setInput('loadPage', load);
+    fixture.componentRef.setInput('emptyLabel', 'No matching records');
+    fixture.componentRef.setInput('createValue', (text: string) => {
+      if (text === 'throw') throw error;
+      return text.includes('_') ? undefined : text.toUpperCase();
+    });
+    const select = fixture.componentInstance;
+    const rejected = vi.fn();
+    select.customValueRejected.subscribe(rejected);
+    fixture.detectChanges();
+    await wait();
+    fixture.detectChanges();
+    select.open();
+    fixture.detectChanges();
+    await wait();
+    fixture.detectChanges();
+    await wait();
+    fixture.detectChanges();
+    expect(document.querySelector('[role="status"]')?.textContent).toBe('No matching records');
+    expect(load).toHaveBeenCalledOnce();
+    const input = document.querySelector<HTMLInputElement>('input[aria-label="Add option"]')!;
+    const enter = (text: string, isComposing = false) => {
+      input.value = text;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, isComposing }),
+      );
+    };
+    enter('bad_');
+    expect(rejected).toHaveBeenLastCalledWith({ text: 'bad_' });
+    expect(input.value).toBe('bad_');
+    enter('throw');
+    expect(rejected).toHaveBeenLastCalledWith({ text: 'throw', error });
+    enter('draft', true);
+    expect(select.value()).toBeUndefined();
+    expect(select.opened()).toBe(true);
+    enter('  corrected value  ');
+    expect(select.value()).toBe('CORRECTED VALUE');
+    expect(select.opened()).toBe(false);
+  });
   it('loads only on open, appends offsets, aborts dismissal and ignores stale pages before retrying errors', async () => {
     TestBed.inject(HyFidelity).setTier('high');
     const requests: HySelectPageRequest[] = [];

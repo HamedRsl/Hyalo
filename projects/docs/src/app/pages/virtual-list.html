@@ -3,19 +3,65 @@
   lead="Fixed-height rows with native scrolling and keyboard access."
   ><docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="demo-stack">
+      <div class="demo-row" role="group" aria-label="List layout">
+        <button
+          hyButton
+          type="button"
+          variant="soft"
+          [attr.aria-pressed]="orientation() === 'vertical'"
+          (click)="orientation.set('vertical')"
+        >
+          Vertical
+        </button>
+        <button
+          hyButton
+          type="button"
+          variant="soft"
+          [attr.aria-pressed]="orientation() === 'horizontal'"
+          (click)="orientation.set('horizontal')"
+        >
+          Horizontal
+        </button>
+        <button
+          hyButton
+          type="button"
+          variant="soft"
+          [attr.aria-pressed]="orientation() === 'grid'"
+          (click)="orientation.set('grid')"
+        >
+          Grid
+        </button>
+        <button
+          hyButton
+          type="button"
+          variant="ghost"
+          [attr.aria-pressed]="placeholders()"
+          (click)="placeholders.set(!placeholders())"
+        >
+          Preview loading
+        </button>
+      </div>
       <hy-virtual-list
         #list
         label="Activity events"
         [items]="events()"
         [itemKey]="key"
         [rowHeight]="48"
+        [orientation]="orientation()"
+        [columnCount]="30"
+        [columnWidth]="160"
+        [loadRange]="placeholders() ? loadVisible : undefined"
         height="18rem"
-        ><ng-template [hyVirtualItem]="list" let-event let-index="index"
-          ><div class="event-row">
-            <strong>{{ index + 1 }}</strong
-            ><span>{{ event.label }}</span>
-          </div></ng-template
-        ></hy-virtual-list
+        ><ng-template [hyVirtualItem]="list" let-event let-index="index">
+          @if (placeholders() && !loaded().has(event.id)) {
+            <div class="event-row"><hy-skeleton width="6rem" /></div>
+          } @else {
+            <div class="event-row">
+              <strong>{{ index + 1 }}</strong
+              ><span>{{ event.label }}</span>
+            </div>
+          }
+        </ng-template></hy-virtual-list
       >
       <div class="demo-row">
         <button
@@ -42,6 +88,21 @@ import &#123; HyButton &#125; from '@hyalo/angular/button';" />
     Rows have exact heights, including padding and borders. Taller content is clipped. Use ordinary
     lists or pagination for variable-height content, full-document search, printing, or workflows
     that need every row in the accessibility tree.
+  </p>
+  <p>
+    Use <code>orientation</code> with <code>columnWidth</code> and <code>columnCount</code> for a
+    horizontal strip or a two-axis fixed-cell grid. <code>scrollTo()</code> uses pixels from the
+    logical start. <code>scrollToIndex()</code> accepts <code>start</code>, <code>center</code>,
+    <code>end</code> or <code>nearest</code> alignment. <code>rangeChange</code> emits when the
+    rendered item interval changes.
+  </p>
+  <p>
+    Use <code>loadRange</code> to fetch missing entries into a caller-owned cache. A grid requests
+    complete row intervals. Superseded requests receive an abort signal. The row template can render
+    a <code>hy-skeleton</code> while its entry is loading, as in Preview loading. Use
+    <code>retry()</code> after a failure. <code>appendOnly</code> retains visited rows on the
+    scrolling axis and increases DOM usage. <code>virtual</code> set to false renders every item.
+    Replacing the items or switching modes resets retained rows.
   </p>
   <p>
     Tab reaches the viewport. Arrow keys move between rows, Home and End reach the ends, and Page Up

@@ -2,7 +2,8 @@ import { EXAMPLES } from './examples/select';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
 import { HY_TEXT_FIELD } from '@hyalo/angular/field';
-import { HySelect } from '@hyalo/angular/select';
+import { HySelect, type HySelectPage } from '@hyalo/angular/select';
+import { RouterLink } from '@angular/router';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
 import { DocsExample } from '../shared/example';
 import { DocsPage } from '../shared/page';
@@ -10,7 +11,16 @@ import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-select-page',
-  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_TEXT_FIELD, HySelect, FormField],
+  imports: [
+    DocsPage,
+    DocsTokens,
+    DocsExample,
+    DocsApiTable,
+    HY_TEXT_FIELD,
+    HySelect,
+    FormField,
+    RouterLink,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './select.html',
 })
@@ -21,6 +31,13 @@ export default class SelectPage {
   protected readonly f = form(this.model, (p) => required(p.strap, { message: 'Pick a strap' }));
   protected readonly size = signal<string | undefined>('40');
   protected readonly country = signal<string | undefined>('de');
+  protected readonly draftFeedback = signal('');
+  protected readonly createTag = (text: string): string | undefined =>
+    text.length >= 3 ? text : undefined;
+  protected readonly loadTags = async (): Promise<HySelectPage<string>> => ({
+    options: [],
+    hasMore: false,
+  });
   protected readonly straps = [
     { value: 'leather', label: 'Leather' },
     { value: 'steel', label: 'Steel bracelet' },
@@ -31,6 +48,11 @@ export default class SelectPage {
     { value: '38', label: '38 mm' },
     { value: '40', label: '40 mm' },
     { value: '42', label: '42 mm' },
+  ];
+  protected readonly resetChoices = [
+    { value: 'steel', label: 'Steel' },
+    { value: null, label: 'Unassigned' },
+    { value: undefined, label: 'Reset selection' },
   ];
   protected readonly countries = [
     { value: 'de', label: 'Germany' },
@@ -49,6 +71,11 @@ export default class SelectPage {
   <hy-select [options]="straps" [formField]="f.strap" placeholder="Choose a strap" />
 </hy-field>`;
   protected readonly rows: ApiRow[] = [
+    {
+      name: 'panelContainer',
+      type: 'HTMLElement',
+      description: 'Optional DOM parent for the custom dropdown on browsers with Popover support.',
+    },
     {
       name: 'options',
       type: 'HySelectOption<T>[]',

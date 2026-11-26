@@ -20,7 +20,7 @@
   <ng-content select="[hyAccordionActions]" />
 </div>
 <div ngAccordionPanel #panel="ngAccordionPanel" class="hy-accordion__panel">
-  <div class="hy-accordion__body" (transitionend)="completed($event)">
+  <div #body class="hy-accordion__body" (transitionend)="completed($event)">
     <div class="hy-accordion__content">
       <div class="hy-accordion__inner"><ng-content />
         @if (created()) { <ng-container [ngTemplateOutlet]="lazy()?.template ?? null" /> }

@@ -53,3 +53,29 @@ describe('select policy audit regressions', () => {
     expect(fixture.componentInstance.wrap()).toBe(true);
   });
 });
+
+it('allows null without a key and uses undefined to restore the placeholder in both surfaces', async () => {
+  const fixture = TestBed.createComponent(HySelect<string | null | undefined>);
+  fixture.componentRef.setInput('options', [
+    { value: 'steel', label: 'Steel' }, { value: null, label: 'Unassigned' }, { value: undefined, label: 'Reset' },
+  ]);
+  fixture.componentRef.setInput('value', 'steel');
+  await fixture.whenStable();
+  const control = fixture.componentInstance;
+  control.open();
+  await fixture.whenStable();
+  const reset = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+    .find((option) => option.textContent?.trim() === 'Reset');
+  reset?.click();
+  await fixture.whenStable();
+  expect(control.value()).toBeUndefined();
+  fixture.componentRef.setInput('native', true);
+  await fixture.whenStable();
+  const el: HTMLSelectElement = fixture.nativeElement.querySelector('select');
+  el.value = 'object:null';
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  expect(control.value()).toBeNull();
+  el.value = 'undefined:undefined';
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  expect(control.value()).toBeUndefined();
+});

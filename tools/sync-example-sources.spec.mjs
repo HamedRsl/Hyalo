@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 
 // Run the real generator in an isolated fixture, never alter the live pages.
 test('copyable examples preserve local data contracts and helpers', () => {
-  const root = mkdtempSync(join(process.env.TMPDIR, 'hyalo-example-source-'));
+  const root = mkdtempSync(join(tmpdir(), 'hyalo-example-source-'));
   try {
     const pages = join(root, 'projects/docs/src/app/pages');
     mkdirSync(pages, { recursive: true });

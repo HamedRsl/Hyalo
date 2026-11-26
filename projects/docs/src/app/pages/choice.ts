@@ -40,6 +40,14 @@ export default class ChoicePage {
   protected readonly allChecked = computed(() => this.picked().size === this.extras.length);
   protected readonly someChecked = computed(() => this.picked().size > 0 && !this.allChecked());
   protected readonly notify = signal(true);
+  protected readonly pending = signal(false);
+  protected readonly sharing = signal(false);
+  protected readonly requests = signal(0);
+
+  protected requestSharing(value: boolean): void {
+    this.requests.update((count) => count + 1);
+    this.sharing.set(value);
+  }
 
   protected readonly model = signal({ terms: false, delivery: '' });
   protected readonly f = form(this.model, (p) =>
@@ -59,7 +67,22 @@ export default class ChoicePage {
     this.picked.set(new Set(on ? this.extras.map((e) => e.id) : []));
   }
 
+  private readonly choicePolicyRows: ApiRow[] = [
+    {
+      name: 'labelPosition',
+      type: "'before' | 'after'",
+      default: "'after'",
+      description: 'Places the label relative to the control in the current reading direction.',
+    },
+    {
+      name: 'disabledFocusable',
+      type: 'boolean',
+      default: 'false',
+      description: 'Allows focus on a disabled control while blocking activation.',
+    },
+  ];
   protected readonly checkboxRows: ApiRow[] = [
+    ...this.choicePolicyRows,
     {
       name: 'checked',
       type: 'model<boolean>',
@@ -81,6 +104,7 @@ export default class ChoicePage {
     },
   ];
   protected readonly radioRows: ApiRow[] = [
+    ...this.choicePolicyRows,
     {
       name: 'value (group)',
       type: 'model<T | undefined>',
@@ -103,6 +127,10 @@ export default class ChoicePage {
     },
   ];
   protected readonly switchRows: ApiRow[] = [
+    ...this.choicePolicyRows,
+    { name: 'controlled', type: 'boolean', description: 'The caller applies requested values.' },
+    { name: 'pending', type: 'boolean', description: 'Blocks changes and marks the switch busy.' },
+    { name: 'toggleRequested', type: 'output<boolean>', description: 'Proposed state on activation.' },
     {
       name: 'checked',
       type: 'model<boolean>',

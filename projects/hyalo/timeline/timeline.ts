@@ -6,6 +6,7 @@ import {
   input,
   afterRenderEffect,
   contentChildren,
+  computed,
   ElementRef,
   inject,
 } from '@angular/core';
@@ -36,6 +37,15 @@ export class HyTimeline {
   readonly pending = input('');
   private readonly items = contentChildren(HyTimelineItem, { read: ElementRef });
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly displayItems = computed<readonly HTMLElement[]>(() => {
+    const items = this.items().map((item) => item.nativeElement as HTMLElement);
+    return this.reverse() ? items.reverse() : items;
+  });
+  /** @internal Returns the visual ordinal used for alternating sides. */
+  itemIndex(item: HTMLElement): number {
+    return this.displayItems().indexOf(item);
+  }
+
   constructor() {
     afterRenderEffect(() => {
       const nodes: HTMLElement[] = this.items().map((item) => item.nativeElement);
@@ -54,12 +64,23 @@ export class HyTimeline {
   host: {
     role: 'listitem',
     '[attr.data-side]': 'side()',
+    '[attr.data-rail-side]': 'railSide()',
     '[style.--hy-timeline-dot]': 'dotColor() ?? null',
   },
   templateUrl: './timeline.html',
   styleUrl: './timeline-item.css',
 })
 export class HyTimelineItem {
+  private readonly timeline = inject(HyTimeline, { optional: true });
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly railSide = computed(() => {
+    const alignment = this.timeline?.alignment() ?? 'start';
+    if (this.side()) return this.side();
+    if (alignment !== 'alternate') return alignment;
+    const index = this.timeline?.itemIndex(this.element) ?? 0;
+    return index % 2 === 1 ? 'end' : 'start';
+  });
+
   readonly heading = input.required<string>();
   readonly date = input('');
   readonly dateTime = input<string | null>(null);

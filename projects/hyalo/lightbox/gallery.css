@@ -1,10 +1,12 @@
 :host {
   display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
 }
-div {
+.thumbnails {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  gap: var(--hy-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--hy-gallery-thumbnail-min)), 1fr));
+  gap: var(--hy-gallery-thumbnail-gap);
 }
 button {
   padding: 0;
@@ -21,6 +23,6 @@ button:focus-visible {
 img {
   display: block;
   inline-size: 100%;
-  aspect-ratio: 4/3;
+  aspect-ratio: var(--hy-gallery-thumbnail-ratio);
   object-fit: cover;
 }

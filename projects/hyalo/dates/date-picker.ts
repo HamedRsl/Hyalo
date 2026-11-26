@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   computed,
   afterRenderEffect,
   effect,
@@ -80,6 +81,7 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
   readonly closedPanel = output<void>();
   readonly visibilityChange = output<boolean>();
   protected readonly positions = hyDropdownPositions();
+  protected readonly touchPositions = hyDropdownPositions(0);
   protected readonly open = this.opened;
   constructor() {
     super();
@@ -102,6 +104,9 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
     );
   }
   protected readonly calendar = viewChild(HyCalendar);
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('datePanel');
+  private opener: HTMLElement | null = null;
+  private restoreInput: boolean | undefined;
   protected readonly error = linkedSignal(() => {
     this.value();
     return '';
@@ -144,8 +149,26 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
     if (!this.blocked()) this.open.set(true);
   }
   protected attached(): void {
+    const active = this.element.ownerDocument.activeElement;
+    this.opener = active instanceof HTMLElement ? active : null;
     this.openedPanel.emit();
-    queueMicrotask(() => this.calendar()?.focusActive());
+    queueMicrotask(() => {
+      const panel = this.panel()?.nativeElement;
+      if (!this.open() || !panel) return;
+      this.calendar()?.focusActive();
+      if (!panel.contains(panel.ownerDocument.activeElement)) {
+        (panel.querySelector<HTMLElement>('button:not([disabled])') ?? panel).focus();
+      }
+    });
+  }
+  protected detached(): void {
+    const opener = this.opener;
+    const restoreInput = this.restoreInput;
+    this.opener = null;
+    this.restoreInput = undefined;
+    if (restoreInput) this.focus();
+    else if (restoreInput === undefined && opener?.isConnected) opener.focus();
+    this.closedPanel.emit();
   }
   protected pick(date: HyDate): void {
     if (this.blocked()) return;
@@ -159,9 +182,10 @@ export class HyDatePicker extends HyValueControl implements FormValueControl<HyD
   }
   close(restore = true): void {
     this.pendingDate.set(this.value());
+    if (this.opener) this.restoreInput = restore;
+    else if (restore) this.focus();
     this.open.set(false);
     this.touch.emit();
-    if (restore) this.focus();
   }
   hide(): void {
     this.close();

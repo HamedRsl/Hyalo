@@ -162,6 +162,33 @@ describe('table workflow contracts', () => {
     expect(fixture.nativeElement.querySelector('th').getAttribute('draggable')).toBe('true');
     expect(fixture.nativeElement.querySelector('tbody tr[aria-rowindex]').getAttribute('aria-rowindex')).toBe('3');
   });
+  it('retains frozen rows and a bounded moving window during virtual scrolling', async () => {
+    const fixture = TestBed.createComponent(HyTable<Row>);
+    const rows = Array.from({ length: 100 }, (_, index) => ({
+      id: index + 1, team: 'A', name: 'Project ' + (index + 1),
+    }));
+    fixture.componentRef.setInput('data', rows);
+    fixture.componentRef.setInput('columns', [{ id: 'name', header: 'Name', cell: (row: Row) => row.name }]);
+    fixture.componentRef.setInput('rowKey', (row: Row) => row.id);
+    fixture.componentRef.setInput('caption', 'Pinned');
+    fixture.componentRef.setInput('virtual', true);
+    fixture.componentRef.setInput('frozenRows', 2);
+    fixture.componentRef.setInput('initialCount', 3);
+    fixture.componentRef.setInput('overscan', 0);
+    await fixture.whenStable();
+
+    const viewport = fixture.nativeElement.querySelector('.viewport') as HTMLElement;
+    viewport.scrollTop = 960;
+    viewport.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+
+    const table = fixture.componentInstance;
+    expect(table.view().map((item) => item.key)).toEqual([1, 2, 21, 22, 23]);
+    expect(table.rowWindow().before).toBe(18 * 48);
+    const spacer = viewport.querySelector('tbody .spacer')?.parentElement;
+    expect(spacer?.previousElementSibling?.classList.contains('frozen-row')).toBe(true);
+  });
+
   it('renders expansion transactions and header/footer template contexts', async () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();

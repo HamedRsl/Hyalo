@@ -1,13 +1,22 @@
-<div #viewport class="viewport" tabindex="0" role="region" [attr.aria-label]="caption()" [attr.aria-busy]="loading()" [class.sticky]="stickyHeader()" [style.max-block-size]="maxHeight()" (scroll)="scroll($event)">
-  <table [style.min-inline-size]="minWidth()" [attr.aria-rowcount]="resultCount() + 1">
+<div #viewport class="viewport" tabindex="0" role="region" [attr.aria-label]="caption()" [attr.aria-busy]="loading()" [class.sticky]="stickyHeader()" [class.virtual-measured]="measureVirtualRows()" [style.max-block-size]="maxHeight()" (scroll)="scroll($event)">
+  <table [style.min-inline-size]="minWidth()" [attr.aria-rowcount]="resultCount() + 1 + headerRows().length">
     <caption>{{ caption() }}</caption>
     <thead>
-      @for (headers of headerRows(); track $index) { <tr>@for (header of headers; track $index) { <th scope="colgroup" [attr.colspan]="header.colspan ?? 1" [attr.rowspan]="header.rowspan ?? 1">{{ header.label }}</th> }</tr> }
+      @for (headers of headerLayout().rows; track $index) {
+        <tr>
+          @if ($first && !headerRowsIncludeControls() && auxiliaryColumns()) {
+            <td aria-hidden="true" [attr.colspan]="auxiliaryColumns()" [attr.rowspan]="headerRows().length"></td>
+          }
+          @for (header of headers; track header.id) {
+            <th scope="colgroup" [id]="header.id" [attr.colspan]="header.colspan" [attr.rowspan]="header.rowspan">{{ header.label }}</th>
+          }
+        </tr>
+      }
       <tr>
         @if (selectable()) { <th scope="col" class="selection"><label class="check"><input type="checkbox" [attr.aria-label]="selectionLabel()" [checked]="allSelected()" [indeterminate]="someSelected()" [disabled]="!view().length || selectionMode() === 'single'" (change)="toggleAll()" /></label></th> }
         @if (rowTemplate()) { <th scope="col"><span class="sr-only">{{ expandLabel() }}</span></th> }
         @for (column of orderedColumns(); track column.id) {
-          <th scope="col" [style.text-align]="column.align ?? 'start'" [style.inline-size.px]="width(column)" [class.frozen]="!!column.frozen" [style.inset-inline-start.px]="column.frozen === 'start' ? frozenOffset(column) : null" [style.inset-inline-end.px]="column.frozen === 'end' ? frozenOffset(column) : null" [attr.draggable]="reorderableColumns()" (dragstart)="dragColumn($event,column.id)" (dragover)="$event.preventDefault()" (drop)="dropColumn($event,column.id)" [attr.aria-sort]="column.sortable ? sortDirection(column.id) === 'asc' ? 'ascending' : sortDirection(column.id) === 'desc' ? 'descending' : 'none' : null">
+          <th scope="col" [attr.data-hy-column]="column.id" [attr.id]="headerRows().length ? leafHeaderId(column) : null" [style.text-align]="column.align ?? 'start'" [style.inline-size.px]="width(column)" [class.frozen]="!!column.frozen" [style.inset-inline-start.px]="column.frozen === 'start' ? frozenOffset(column) : null" [style.inset-inline-end.px]="column.frozen === 'end' ? frozenOffset(column) : null" [attr.draggable]="reorderableColumns()" (dragstart)="dragColumn($event,column.id)" (dragend)="cancelReorder()" (dragover)="$event.preventDefault()" (drop)="dropColumn($event,column.id)" [attr.aria-sort]="column.sortable ? sortDirection(column.id) === 'asc' ? 'ascending' : sortDirection(column.id) === 'desc' ? 'descending' : 'none' : null">
             @if (column.headerTemplate) { <ng-container [ngTemplateOutlet]="column.headerTemplate" /> }
             @else if (column.sortable) { <button type="button" (click)="toggleSort(column)">{{ column.header }}<span aria-hidden="true">{{ sortDirection(column.id) === 'asc' ? '↑' : sortDirection(column.id) === 'desc' ? '↓' : '↑↓' }}</span></button> }
             @else { {{ column.header }} }
@@ -17,26 +26,38 @@
       </tr>
     </thead>
     <tbody>
-      @if (rowWindow().before) { <tr aria-hidden="true"><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)" [style.block-size.px]="rowWindow().before" class="spacer"></td></tr> }
       @for (item of view(); track item.key) {
-        @if (item.groupStart) { <tr class="group"><th scope="rowgroup" [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)">@if (groupTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item.group!, rows: item.groupRows }" /> } @else { {{ item.group }} }</th></tr> }
-        <tr [class.selected]="item.selected" [class.frozen-row]="item.index < frozenRows()" [style.inset-block-start.px]="item.index < frozenRows() ? (item.index + 1) * rowHeight() : null" [style.block-size.px]="virtual() ? rowHeight() : null" [attr.aria-rowindex]="item.index + 2 + (query().page - 1) * query().pageSize" [attr.draggable]="reorderableRows()" (dragstart)="dragRow($event,item.key)" (dragover)="$event.preventDefault()" (drop)="dropRow($event,item.key)" (contextmenu)="context($event,item.row)">
+        @if (rowWindow().before && item.index === rowWindow().first) {
+          <tr aria-hidden="true"><td [attr.colspan]="orderedColumns().length + auxiliaryColumns()" [style.block-size.px]="rowWindow().before" class="spacer"></td></tr>
+        }
+        @if (item.groupStart) { <tr class="group" [attr.data-virtual-part]="measureVirtualRows() ? item.index + ':group' : null"><th scope="rowgroup" [attr.colspan]="orderedColumns().length + auxiliaryColumns()">@if (groupTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item.group!, rows: item.groupRows }" /> } @else { {{ item.group }} }</th></tr> }
+        <tr [class.selected]="item.selected" [class.frozen-row]="item.index < frozenCount()" [attr.data-virtual-part]="measureVirtualRows() ? item.index + ':data' : null" [style.inset-block-start.px]="item.index < frozenCount() ? frozenRowOffset(item.index) : null" [style.block-size.px]="virtual() ? rowHeight() : null" [attr.aria-rowindex]="item.index + 2 + headerRows().length + (query().page - 1) * query().pageSize" [attr.draggable]="reorderableRows()" (dragstart)="dragRow($event,item.key)" (dragend)="cancelReorder()" (dragover)="$event.preventDefault()" (drop)="dropRow($event,item.key)" (contextmenu)="context($event,item.row)">
           @if (selectable()) { <td class="selection"><label class="check"><input type="checkbox" [attr.aria-label]="item.label" [checked]="item.selected" [disabled]="!item.selectable" (click)="toggleRow(item.key,$event)" /></label></td> }
           @if (rowTemplate()) { <td><button type="button" [attr.aria-label]="expandLabel()" [attr.aria-expanded]="expanded().includes(item.key)" (click)="toggleExpanded(item.row)">{{ expanded().includes(item.key) ? '−' : '+' }}</button></td> }
           @for (cell of item.cells; track cell.column.id) {
-            <td [style.text-align]="cell.column.align ?? 'start'" [style.inline-size.px]="width(cell.column)" [class.frozen]="!!cell.column.frozen" [style.inset-inline-start.px]="cell.column.frozen === 'start' ? frozenOffset(cell.column) : null" [style.inset-inline-end.px]="cell.column.frozen === 'end' ? frozenOffset(cell.column) : null" (dblclick)="cell.column.editTemplate ? startEdit(item.row,cell.column.id) : null">
+            <td [attr.headers]="cellHeaders(cell.column)" [style.text-align]="cell.column.align ?? 'start'" [style.inline-size.px]="width(cell.column)" [class.frozen]="!!cell.column.frozen" [style.inset-inline-start.px]="cell.column.frozen === 'start' ? frozenOffset(cell.column) : null" [style.inset-inline-end.px]="cell.column.frozen === 'end' ? frozenOffset(cell.column) : null" (dblclick)="cell.column.editTemplate ? startEdit(item.row,cell.column.id) : null">
               @if (cell.column.editTemplate && editing()?.key === item.key && (!editing()?.column || editing()?.column === cell.column.id)) { <ng-container [ngTemplateOutlet]="cell.column.editTemplate" [ngTemplateOutletContext]="{ $implicit: item.row, value: cell.value, editing: true }" /> }
               @else if (cell.column.template) { <ng-container [ngTemplateOutlet]="cell.column.template" [ngTemplateOutletContext]="{ $implicit: item.row, value: cell.value }" /> }
               @else { {{ cell.value }} }
             </td>
           }
         </tr>
-        @if (rowTemplate(); as template) { @if (expanded().includes(item.key)) { <tr><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + 1"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item.row, key: item.key }" /></td></tr> } }
+        @if (rowTemplate(); as template) { @if (expanded().includes(item.key)) { <tr [attr.data-virtual-part]="measureVirtualRows() ? item.index + ':detail' : null"><td [attr.colspan]="orderedColumns().length + auxiliaryColumns()"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item.row, key: item.key }" /></td></tr> } }
       } @empty {
         <tr><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)">@if (loading() && loadingTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" /> } @else if (!loading() && emptyTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" /> } @else { {{ loading() ? loadingLabel() : emptyLabel() }} }</td></tr>
       }
       @if (rowWindow().after) { <tr aria-hidden="true"><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)" [style.block-size.px]="rowWindow().after" class="spacer"></td></tr> }
     </tbody>
-    @if (footerTemplate(); as template) { <tfoot><tr><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: pageRows() }" /></td></tr></tfoot> }
+    @if (footerTemplate(); as template) {
+      <tfoot><tr><td [attr.colspan]="orderedColumns().length + (selectable() ? 1 : 0) + (rowTemplate() ? 1 : 0)"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: pageRows() }" /></td></tr></tfoot>
+    } @else if (hasColumnFooters()) {
+      <tfoot><tr>
+        @if (selectable()) { <td></td> }
+        @if (rowTemplate()) { <td></td> }
+        @for (column of orderedColumns(); track column.id) {
+          <td [attr.headers]="cellHeaders(column)" [style.text-align]="column.align ?? 'start'">{{ column.footer }}</td>
+        }
+      </tr></tfoot>
+    }
   </table>
 </div>

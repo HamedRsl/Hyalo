@@ -14,6 +14,7 @@ export type HyIconNode = readonly (readonly [string, Readonly<Record<string, str
 /** An icon plus how it behaves in right-to-left layouts. */
 export interface HyIconDef {
   readonly node: HyIconNode;
+  readonly viewBox?: string;
   /** Mirror the icon in RTL. Set it for icons that point somewhere, like arrows. */
   readonly mirrorRtl?: boolean;
 }

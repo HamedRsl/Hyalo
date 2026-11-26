@@ -5,6 +5,7 @@
   <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
     ><div class="demo-toolbar">
       <hy-switch [(checked)]="sticky">Sticky links</hy-switch
+      ><hy-switch [(checked)]="horizontal">Horizontal links</hy-switch
       ><hy-segmented
         label="Chapter scrolling"
         [options]="behaviors"
@@ -18,6 +19,7 @@
         [scrollRoot]="readingPane"
         [offset]="16"
         [sticky]="sticky()"
+        [orientation]="horizontal() ? 'horizontal' : 'vertical'"
         stickyTop="5rem"
         [scrollBehavior]="behavior() ?? 'smooth'"
       />

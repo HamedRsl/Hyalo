@@ -4,6 +4,8 @@
 
 # @hyalo/angular
 
+Version 0.6 adds a data grid, tree and tree table, virtual scroller, Kanban board, scheduler, splitter, dashboard layout, context menu, and rich-text editor. Optional engines load through their component entry points. See the [changelog](./CHANGELOG.md) for the public API updates and fixes.
+
 Version 0.4 adds advanced forms, including Gregorian/Jalali dates, time slots,
 combobox and multi-select, localized numbers, password and OTP inputs, masks and
 Iranian phone entry, sliders, uploads, ratings, selectable cards, and inline edits.

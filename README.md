@@ -6,13 +6,13 @@
 
 Liquid glass components for Angular.
 
-Hyalo is a small, open source UI kit built on Angular Aria and the Angular CDK. It is signal based, zoneless, safe to render on the server, and works with a keyboard and a screen reader in both reading directions. The glass is a material you choose per surface, and it steps down by itself on devices or settings where blur would hurt.
+Hyalo is an open source UI kit built on Angular Aria and the Angular CDK. It uses signals, supports zoneless and server rendering, and includes keyboard navigation, accessible names, and right-to-left layouts. Glass is a material you choose per surface, and it adapts to device capabilities and display preferences.
 
-Status: phase 6 implemented on develop, unreleased. The package version is unchanged. The API can still change before 1.0.
+The repository is prepared for version 0.6.0. The API can still change before 1.0. See the [changelog](projects/hyalo/CHANGELOG.md), [verification guide](docs/verification.md), and [API audit](docs/api-audit-remaining.md).
 
 Phase 6 covers all 11 heavy-data families: data grid, tree, tree table, virtual scroller, Kanban, calendar/scheduler, splitter, dashboard layout, context menu, rich text editor, and the existing gauge. Every family has a live docs route and a generated public API inventory. FullCalendar and TipTap are optional lazy engines. See [phase 6](docs/phase-6.md), [API comparison](docs/phase-6-api-review.md), and [complete API reference](docs/phase-6-api.md).
 
-Phase 5 adds all 15 mobile/app families, snap-point sheets, action sheets, app navigation, FABs, keypad and confirmation controls, pull/swipe patterns, card stacks, notifications, chat, segmented meters/progress, glass dock and status island. Open `/mobile-patterns` for wallet, transfer and order-tracker compositions. See [phase 5](docs/phase-5.md) for the API comparison, integration boundaries and verification.
+Phase 5 added 12 reusable mobile and app families and three editable compositions. They cover sheets, app navigation, floating actions, keypad, gestures, card stacks, notifications, chat, meters, dock, and status island. Open `/mobile-patterns` for wallet, transfer, and order-tracker examples. See [phase 5](docs/phase-5.md) for API comparisons and integration details.
 
 Phase 4 adds all 14 advanced form families, Gregorian/Jalali dates and ranges, localized amounts, searchable selection, OTP, masks, sliders, uploads, rating, card choices, and inline editing. Open `/advanced-forms` for booking, sign-in, and settings compositions. The dashboard now supports autocomplete, multiple statuses, and arbitrary UTC date ranges. See [phase 4](docs/phase-4.md) for APIs and verification.
 

@@ -5,6 +5,7 @@ import {
   HostAttributeToken,
   DestroyRef,
   DoCheck,
+  ElementRef,
   computed,
   inject,
   signal,
@@ -29,6 +30,8 @@ import { HY_FIELD, type HyFieldControl } from './field-control';
     '[id]': 'id()',
     '[attr.aria-describedby]': 'field?.describedBy() ?? null',
     '[attr.aria-invalid]': 'showsError() || null',
+    '(input)': 'readFilled()',
+    '(blur)': 'readFilled()',
   },
 })
 export class HyInput implements HyFieldControl, DoCheck {
@@ -42,6 +45,9 @@ export class HyInput implements HyFieldControl, DoCheck {
     ? null
     : inject(NgControl, { self: true, optional: true });
   private readonly destroy = inject(DestroyRef);
+  private readonly element =
+    inject<ElementRef<HTMLInputElement | HTMLTextAreaElement>>(ElementRef).nativeElement;
+  private readonly nativeFilled = signal(false);
   private readonly revision = signal(0);
   private control: AbstractControl | null | undefined;
   private subscription?: Subscription;
@@ -50,6 +56,7 @@ export class HyInput implements HyFieldControl, DoCheck {
     this.destroy.onDestroy(() => this.subscription?.unsubscribe());
   }
   ngDoCheck(): void {
+    this.readFilled();
     const control = this.ngControl?.control;
     if (control === this.control) return;
     this.subscription?.unsubscribe();
@@ -57,6 +64,14 @@ export class HyInput implements HyFieldControl, DoCheck {
     this.subscription = control?.events.subscribe(() => this.revision.update((value) => value + 1));
     this.revision.update((value) => value + 1);
   }
+  protected readFilled(): void {
+    this.nativeFilled.set(this.element.value !== '');
+  }
+  readonly filled = computed(() => {
+    this.revision();
+    const value = this.formField?.state().value() ?? this.ngControl?.control?.value;
+    return value == null ? this.nativeFilled() : String(value) !== '';
+  });
   readonly labelable = true;
   /** The element's own static `id` attribute, or a generated one. */
   readonly id = signal(

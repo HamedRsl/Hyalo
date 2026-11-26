@@ -77,6 +77,30 @@ describe('breadcrumb routing and templates', () => {
     expect(TestBed.inject(Router).url).toBe('/projects/42?tab=files#summary');
     expect(TestBed.inject(Location).getState()).toMatchObject({ source: 'crumb' });
   });
+  it('resolves relative commands from an explicit route and leaves auxiliary activation native', async () => {
+    const f = TestBed.createComponent(HyBreadcrumb);
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/projects/42?tab=files');
+    f.componentRef.setInput('items', [
+      { label: 'Sibling', commands: ['../43'], relativeTo: router.routerState.root.firstChild?.firstChild, queryParamsHandling: 'preserve' },
+      { label: 'Current' },
+    ]);
+    await f.whenStable();
+    const anchor: HTMLAnchorElement = f.nativeElement.querySelector('a');
+    expect(anchor.getAttribute('href')).toBe('/projects/43?tab=files');
+    for (const modifier of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }]) {
+      anchor.addEventListener('click', (event) => {
+        expect(event.defaultPrevented).toBe(false);
+        event.preventDefault();
+      }, { once: true });
+      anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ...modifier }));
+      expect(router.url).toBe('/projects/42?tab=files');
+    }
+    anchor.click();
+    await f.whenStable();
+    expect(router.url).toBe('/projects/43?tab=files');
+  });
+
   it('renders typed item context and a custom separator only between items', async () => {
     const f = TestBed.createComponent(TemplateHost);
     await f.whenStable();

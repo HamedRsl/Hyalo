@@ -1,17 +1,52 @@
 @if (orientation() === 'grid') {
   <div class="canvas" [style.block-size.px]="canvasHeight()" [style.inline-size.px]="canvasWidth()">
     @for (row of rows(); track row.key) {
-      <div class="row grid-row" role="listitem" tabindex="-1" [attr.data-hy-virtual-index]="row.index" [attr.aria-posinset]="row.index + 1" [attr.aria-setsize]="items().length" [style.block-size.px]="safeRowHeight()" [style.inline-size.px]="columnWidth()" [style.inset-block-start.px]="row.top" [style.inset-inline-start.px]="row.left">
-        <ng-container [ngTemplateOutlet]="item().template" [ngTemplateOutletContext]="row.context" />
+      <div
+        class="row grid-row"
+        role="listitem"
+        tabindex="-1"
+        [attr.data-hy-virtual-index]="row.index"
+        [attr.aria-posinset]="row.index + 1"
+        [attr.aria-setsize]="items().length"
+        [style.block-size.px]="safeRowHeight()"
+        [style.inline-size.px]="safeColumnWidth()"
+        [style.inset-block-start.px]="row.top"
+        [style.inset-inline-start.px]="row.left"
+      >
+        <ng-container
+          [ngTemplateOutlet]="item().template"
+          [ngTemplateOutletContext]="row.context"
+        />
       </div>
     }
   </div>
 } @else {
-  <div class="spacer" role="presentation" aria-hidden="true" [style.block-size.px]="orientation() === 'vertical' ? window().before : null" [style.inline-size.px]="orientation() === 'horizontal' ? window().before : null"></div>
+  <div
+    class="spacer"
+    role="presentation"
+    aria-hidden="true"
+    [style.block-size.px]="orientation() === 'vertical' ? window().before : null"
+    [style.inline-size.px]="orientation() === 'horizontal' ? window().before : null"
+  ></div>
   @for (row of rows(); track row.key) {
-    <div class="row" role="listitem" tabindex="-1" [attr.data-hy-virtual-index]="row.index" [attr.aria-posinset]="row.index + 1" [attr.aria-setsize]="items().length" [style.block-size.px]="orientation() === 'vertical' ? safeRowHeight() : null" [style.inline-size.px]="orientation() === 'horizontal' ? itemSize() : null">
+    <div
+      class="row"
+      role="listitem"
+      tabindex="-1"
+      [attr.data-hy-virtual-index]="row.index"
+      [attr.aria-posinset]="row.index + 1"
+      [attr.aria-setsize]="items().length"
+      [style.block-size.px]="orientation() === 'vertical' ? safeRowHeight() : null"
+      [style.inline-size.px]="orientation() === 'horizontal' ? itemSize() : null"
+    >
       <ng-container [ngTemplateOutlet]="item().template" [ngTemplateOutletContext]="row.context" />
     </div>
   }
-  <div class="spacer" role="presentation" aria-hidden="true" [style.block-size.px]="orientation() === 'vertical' ? window().after : null" [style.inline-size.px]="orientation() === 'horizontal' ? window().after : null"></div>
+  <div
+    class="spacer"
+    role="presentation"
+    aria-hidden="true"
+    [style.block-size.px]="orientation() === 'vertical' ? window().after : null"
+    [style.inline-size.px]="orientation() === 'horizontal' ? window().after : null"
+  ></div>
 }

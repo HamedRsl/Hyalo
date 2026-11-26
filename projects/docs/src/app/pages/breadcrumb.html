@@ -15,6 +15,11 @@
     The last item exposes aria-current="page". Separators are decorative. The path wraps on narrow
     screens and follows the reading direction.
   </p>
+  <p>
+    Router items can supply <code>commands</code>, <code>queryParams</code>, <code>fragment</code>
+    and navigation <code>state</code>. Relative commands resolve from the breadcrumb's route by
+    default. Set the item's <code>relativeTo</code> to supply a different route.
+  </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />
   <h2>Themes and fidelity</h2>

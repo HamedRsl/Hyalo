@@ -24,6 +24,14 @@
     outside dismissal are optional. Keep radial groups inside a viewport area large enough for their
     configured radius.
   </p>
+  <h2>Registered icons</h2>
+  <p>
+    Register optional remote SVGs with <code>provideHyaloRemoteIcons()</code> and use a qualified
+    name, such as <code>example:mark</code>. Names resolve from registered HTTP(S) URLs. Files may
+    contain flat SVG shapes and a viewBox. The browser shares pending requests and caches successful
+    icons. Check <code>loadError()</code> for failures and call <code>reload()</code> to retry.
+  </p>
+  <hy-icon name="example:mark" label="Example brand mark" size="1.5rem" />
   <h2>Design tokens</h2>
   <p>
     Uses shared surface, ink, spacing, radius, focus, semantic tone and motion tokens. Override

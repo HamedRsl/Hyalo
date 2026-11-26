@@ -10,4 +10,6 @@ export default class HyMaskedInputPage {
  protected readonly examples = [EXAMPLE] as const;
  protected readonly phone = signal('09123456789');
 protected readonly identifier = signal('0012345678');
+ protected readonly deferred = signal('');
+ protected readonly referenceLetters = { A: /[a-z]/i };
 }

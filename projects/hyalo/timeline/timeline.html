@@ -8,8 +8,10 @@
     <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context" />
   </div>
 }
-@if (date()) {
-  <time [attr.datetime]="dateTime()">{{ date() }}</time>
-}
-<strong>{{ heading() }}</strong>
-<div><ng-content /></div>
+<div class="event">
+  @if (date()) {
+    <time [attr.datetime]="dateTime()">{{ date() }}</time>
+  }
+  <strong>{{ heading() }}</strong>
+  <div><ng-content /></div>
+</div>

@@ -816,6 +816,19 @@ export const PHASE6_API: Readonly<Record<string, readonly ApiRow[]>> = {
       description: 'Input.',
     },
     { name: 'HyScheduler.showToolbar', type: 'true', default: 'true', description: 'Input.' },
+    {
+      name: 'HyScheduler.viewLabel',
+      type: "'View'",
+      default: "'View'",
+      description: 'Input.',
+    },
+    {
+      name: 'HyScheduler.views',
+      type: 'readonly HySchedulerViewOption[]',
+      default:
+        "[\n    { value: 'dayGridMonth', label: 'Month' },\n    { value: 'timeGridWeek', label: 'Week' },\n    { value: 'timeGridDay', label: 'Day' },\n    { value: 'listWeek', label: 'Agenda' },\n  ]",
+      description: 'Input.',
+    },
     { name: 'HyScheduler.showAgenda', type: 'true', default: 'true', description: 'Input.' },
     {
       name: 'HyScheduler.agendaLabel',
@@ -1113,23 +1126,41 @@ export const PHASE6_API: Readonly<Record<string, readonly ApiRow[]>> = {
   ],
   'context-menu': [
     {
+      name: 'HyContextMenuTrigger.longPressDelay',
+      type: '0',
+      default: '0',
+      description:
+        'Touch hold duration in milliseconds. Zero leaves native touch handling in place.',
+    },
+    {
+      name: 'HyContextMenuTrigger.restoreFocus',
+      type: 'boolean | HTMLElement',
+      default: 'true',
+      description: 'Restore focus on keyboard dismissal. May target a separate action button.',
+    },
+    {
       name: 'HyContextMenuTrigger.openAt',
-      type: 'openAt(point:{readonly x:number;readonly y:number}):void{i',
+      type: 'openAt(point: { readonly x: number; readonly y: number }): void {',
       description: 'Public method.',
     },
     {
+      name: 'HyContextMenuTrigger.openFromEvent',
+      type: 'openFromEvent(event: MouseEvent): void {\n    const view = this.element.ownerDocument.defaultView;\n    if (!view || this.',
+      description: 'Opens this trigger at a context-menu event that originated elsewhere.',
+    },
+    {
       name: 'HyContextMenuTrigger.open',
-      type: 'open():void{c',
+      type: 'open(): void {',
       description: 'Public method.',
     },
     {
       name: 'HyContextMenuTrigger.close',
-      type: 'close():void{t',
+      type: 'close(): void {',
       description: 'Public method.',
     },
     {
       name: 'HyContextMenuTrigger.isOpen',
-      type: 'isOpen():boolean{r',
+      type: 'isOpen(): boolean {',
       description: 'Public method.',
     },
     {
@@ -1168,7 +1199,12 @@ export const PHASE6_API: Readonly<Record<string, readonly ApiRow[]>> = {
       default: '[]',
       description: 'Input.',
     },
-    { name: 'HyContextMenu.context', type: 'T|null', default: 'null', description: 'Input.' },
+    {
+      name: 'HyContextMenu.context',
+      type: 'T | null',
+      default: 'null',
+      description: 'Input.',
+    },
     {
       name: 'HyContextMenu.label',
       type: "'Context actions'",
@@ -1177,7 +1213,7 @@ export const PHASE6_API: Readonly<Record<string, readonly ApiRow[]>> = {
     },
     {
       name: 'HyContextMenu.itemTemplate',
-      type: 'TemplateRef<{$implicit:HyContextAction<T>;context:T|null}>',
+      type: 'TemplateRef<{ $implicit: HyContextAction<T>; context: T | null }>',
       description: 'Input.',
     },
     {
@@ -1187,7 +1223,7 @@ export const PHASE6_API: Readonly<Record<string, readonly ApiRow[]>> = {
     },
     {
       name: 'HyContextMenu.activate',
-      type: 'activate(action:HyContextAction<T>):void{i',
+      type: 'activate(action: HyContextAction<T>): void {',
       description: 'Public method.',
     },
     {

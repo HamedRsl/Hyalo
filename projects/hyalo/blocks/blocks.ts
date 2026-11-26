@@ -105,7 +105,10 @@ export class HyProductBlock {
   templateUrl: './dashboard-block.html',
   styleUrl: './dashboard-block.css',
 })
-export class HyDashboardBlock {}
+export class HyDashboardBlock {
+  readonly maxHeight = input<string>();
+  readonly contentLabel = input('Dashboard content');
+}
 export interface HyKpi {
   readonly id: string;
   readonly label: string;

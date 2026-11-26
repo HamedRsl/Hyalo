@@ -15,6 +15,7 @@ import { DocsApiTable, type ApiRow } from '../shared/api-table';
 })
 export default class ShowcasePage {
   protected readonly example = EXAMPLE;
+  protected readonly finished = signal<number | null>(null);
   protected readonly rows: ApiRow[] = [
     {
       name: 'selected',

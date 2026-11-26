@@ -153,6 +153,18 @@ describe('carousel autoplay policy', () => {
     await fixture.whenStable();
     expect(completed).toHaveBeenCalledExactlyOnceWith(1);
   });
+  it('settles a fade even when the browser omits the opacity transition event', async () => {
+    const { fixture, carousel, viewport } = await setup();
+    fixture.componentInstance.mode.set('fade');
+    await fixture.whenStable();
+    const completed = vi.fn();
+    carousel.transitionCompleted.subscribe(completed);
+    const slide = viewport.children[1] as HTMLElement;
+    slide.style.transitionDuration = '0.04s';
+    carousel.goTo(1);
+    await fixture.whenStable();
+    await vi.waitFor(() => expect(completed).toHaveBeenCalledExactlyOnceWith(1), { timeout: 1000 });
+  });
   it('plays, pauses for focus, resumes explicitly, stops at the edge and cleans up', async () => {
     const { fixture, carousel, viewport } = await setup();
     vi.useFakeTimers();

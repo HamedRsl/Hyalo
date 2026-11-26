@@ -6,10 +6,12 @@
     </div>
     <div class="scene">
       <img class="showcase" src="showcase-steel.svg" alt="Steel watch with a blue dial" />
+      <div #scenePanels class="scene-panels"></div>
       <hy-hotspot
         label="Sapphire crystal"
         [position]="{ x: 50, y: 42 }"
         [mode]="mode() ?? 'label'"
+        [panelContainer]="scenePanels"
         description="Scratch-resistant sapphire protects the hand-finished blue dial. Each crystal is shaped and polished to meet the steel case."
         [(open)]="hotspotOpen"
       />

@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Component, TemplateRef, computed, signal, viewChild } from '@angular/core';
 import { describe, expect, it } from 'vitest';
 import { HyTable, type HyTableColumn } from './table';
 import { expectNoAxeViolations } from '../src/testing/axe';
@@ -15,6 +16,26 @@ const columns: readonly HyTableColumn<Project>[] = [
   { id: 'name', header: 'Project', cell: (row) => row.name, sortable: true },
   { id: 'cost', header: 'Cost', cell: (row) => row.cost, sortable: true },
 ];
+@Component({
+  imports: [HyTable],
+  template: `
+    <ng-template #loading><b>Contacting accounts</b></ng-template>
+    <ng-template #empty><em>Nothing billed yet</em></ng-template>
+    <ng-template #costEditor let-row let-value="value" let-editing="editing">
+      <span class="editor">{{ row.name }} · {{ value }} · {{ editing }}</span>
+      <button type="button" (click)="table.commitEdit(24)">Save cost</button>
+    </ng-template>
+    <hy-table #table caption="Invoices" [data]="projects()" [rowKey]="key" [loading]="busy()"
+      [columns]="columns()" [loadingTemplate]="loading" [emptyTemplate]="empty" selectable />
+  `,
+})
+class TemplateTable {
+  readonly projects = signal<readonly Project[]>([]);
+  readonly busy = signal(true);
+  readonly key = (row: Project) => row.id;
+  readonly editor = viewChild<TemplateRef<import('./table').HyTableCellContext<Project>>>('costEditor');
+  readonly columns = computed(() => [columns[0]!, { ...columns[1]!, footer: 'Cost in USD', editTemplate: this.editor() }]);
+}
 async function setup() {
   const fixture = TestBed.createComponent(HyTable<Project>);
   fixture.componentRef.setInput('data', data);
@@ -27,6 +48,84 @@ async function setup() {
   return fixture;
 }
 describe('HyTable', () => {
+  it('renders distinct loading and empty templates and per-column footers with selection', async () => {
+    const fixture = TestBed.createComponent(TemplateTable);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('tbody b')?.textContent).toBe('Contacting accounts');
+    expect(element.querySelector<HTMLTableCellElement>('tbody td')?.colSpan).toBe(3);
+    fixture.componentInstance.busy.set(false);
+    await fixture.whenStable();
+    expect(element.querySelector('tbody em')?.textContent).toBe('Nothing billed yet');
+    fixture.componentInstance.projects.set(data);
+    await fixture.whenStable();
+    expect(element.querySelector('tbody em')).toBeNull();
+    expect([...element.querySelectorAll('tfoot td')].map((cell) => cell.textContent?.trim())).toEqual(['', '', 'Cost in USD']);
+    element.querySelector('tbody tr[aria-rowindex] td:last-child')?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    await fixture.whenStable();
+    expect(element.querySelector('.editor')?.textContent?.trim()).toBe('Zebra · 20 · true');
+    const save = [...element.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'Save cost');
+    expect(save).toBeDefined();
+    save?.click();
+    await fixture.whenStable();
+    expect(element.querySelector('.editor')).toBeNull();
+  });
+  it('emits identifying payloads for the native table action channels', async () => {
+    const fixture = await setup();
+    const table = fixture.componentInstance;
+    const events: import('./table').HyTableAction<Project>[] = [];
+    table.action.subscribe((event) => events.push(event));
+    const click = new MouseEvent('click');
+    const menu = new MouseEvent('contextmenu');
+    table.toggleSort(columns[0]!);
+    table.toggleRow('a', click);
+    table.toggleAll();
+    table.context(menu, data[1]!);
+    table.toggleExpanded(data[0]!);
+    table.resizeColumn('cost', 100);
+    table.moveColumn('cost', 0);
+    table.moveRow('a', 1);
+    expect(events).toEqual([
+      { type: 'sort', column: 'name' }, { type: 'selection', key: 'a', row: data[0], originalEvent: click },
+      { type: 'select-all' }, { type: 'context', key: 'b', row: data[1], originalEvent: menu },
+      { type: 'expand', key: 'a', row: data[0] }, { type: 'resize', column: 'cost' },
+      { type: 'column-reorder', column: 'cost' }, { type: 'row-reorder', key: 'a', row: data[0] },
+    ]);
+  });
+  it('keeps the editor open after validation, and emits a committed value without writing caller data', async () => {
+    const fixture = await setup();
+    fixture.componentRef.setInput('columns', [columns[0]!, {
+      ...columns[1]!, validateEdit: (value: unknown) => typeof value === 'number' && value >= 0 || 'Enter a positive cost',
+    }]);
+    await fixture.whenStable();
+    const table = fixture.componentInstance;
+    const invalid = vi.fn(), committed = vi.fn();
+    table.editInvalid.subscribe(invalid);
+    table.editCommit.subscribe(committed);
+    table.startEdit(data[0]!, 'cost');
+    expect(table.commitEdit(-2)).toBe(false);
+    expect(invalid).toHaveBeenCalledExactlyOnceWith({ row: data[0], column: 'cost', value: -2, message: 'Enter a positive cost' });
+    expect(table.editing()?.key).toBe('a');
+    expect(table.commitEdit(22)).toBe(true);
+    expect(committed).toHaveBeenCalledExactlyOnceWith({ row: data[0], column: 'cost', value: 22 });
+    expect(table.editing()).toBeNull();
+    expect(data[0]?.cost).toBe(20);
+  });
+  it('supports descending-first cycles and ignores duplicate directions', async () => {
+    const fixture = await setup();
+    fixture.componentRef.setInput('sortCycle', ['desc', 'desc', 'asc', null]);
+    await fixture.whenStable();
+    const table = fixture.componentInstance;
+    const seen: unknown[] = [];
+    table.action.subscribe((event) => seen.push(event));
+    table.toggleSort(columns[0]!);
+    expect(table.sortDirection('name')).toBe('desc');
+    table.toggleSort(columns[0]!);
+    expect(table.sortDirection('name')).toBe('asc');
+    table.toggleSort(columns[0]!);
+    expect(table.sortDirection('name')).toBeUndefined();
+    expect(seen).toEqual(Array.from({ length: 3 }, () => ({ type: 'sort', column: 'name' })));
+  });
   it('preserves multi-sort priority when changing an existing direction', async () => {
     const fixture = await setup();
     fixture.componentRef.setInput('sortMode', 'multiple');
@@ -162,4 +261,25 @@ describe('HyTable', () => {
     expect(fixture.nativeElement.textContent).toContain('Loading');
     expect((fixture.nativeElement.querySelector('input') as HTMLInputElement).disabled).toBe(true);
   });
+});
+
+it('associates data cells with row-spanning group headers and their leaf column', async () => {
+  const fixture = await setup();
+  const element: HTMLElement = fixture.nativeElement;
+  fixture.componentRef.setInput('selectable', true);
+  fixture.componentRef.setInput('headerRowsIncludeControls', false);
+  fixture.componentRef.setInput('headerRows', [
+    [{ label: 'Project group', rowspan: 2 }, { label: 'Spending' }],
+    [{ label: 'Cost center' }],
+  ]);
+  await fixture.whenStable();
+  const row = element.querySelector('tbody tr')!;
+  const cells = row.querySelectorAll('td');
+  const labels = (cell: HTMLTableCellElement) => cell.headers.split(' ').map((id) =>
+    Array.from(element.querySelectorAll('th')).find((header) => header.id === id)?.textContent?.trim(),
+  );
+  expect(labels(cells[1]!)).toEqual(['Project group', expect.stringContaining('Project')]);
+  expect(labels(cells[2]!)).toEqual(['Spending', 'Cost center', expect.stringContaining('Cost')]);
+  expect(row.getAttribute('aria-rowindex')).toBe('4');
+  expect(element.querySelector('table')?.getAttribute('aria-rowcount')).toBe('5');
 });

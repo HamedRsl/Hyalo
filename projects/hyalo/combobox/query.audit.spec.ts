@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HyCombobox } from './combobox';
 import type { HyOptionPageRequest } from './query';
 
@@ -43,6 +43,46 @@ describe('API-061/062/063/065/067 search policy', () => {
     fixture.destroy();
     expect(requests.at(-1)!.signal.aborted).toBe(true);
   });
+  it('debounces the latest eligible query and cancels a pending query when cleared', async () => {
+    const fixture = TestBed.createComponent(HyCombobox<string>);
+    const load = vi.fn(async () => []);
+    fixture.componentRef.setInput('loadOptions', load);
+    fixture.componentRef.setInput('minQueryLength', 2);
+    fixture.componentRef.setInput('debounce', 100);
+    fixture.componentInstance.show();
+    await fixture.whenStable();
+
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const type = (query: string) => {
+        fixture.componentInstance.query.set(query);
+        fixture.detectChanges();
+      };
+      type('a');
+      await vi.advanceTimersByTimeAsync(100);
+      fixture.detectChanges();
+      expect(load).not.toHaveBeenCalled();
+
+      type('ab');
+      await vi.advanceTimersByTimeAsync(60);
+      type('abc');
+      await vi.advanceTimersByTimeAsync(99);
+      fixture.detectChanges();
+      expect(load).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(1);
+      fixture.detectChanges();
+      expect(load).toHaveBeenCalledExactlyOnceWith('abc', expect.any(AbortSignal));
+
+      type('abcd');
+      type('');
+      await vi.advanceTimersByTimeAsync(100);
+      fixture.detectChanges();
+      expect(load).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('commits typed free text only when exact matching is not required and exposes visibility events', async () => {
     const fixture = TestBed.createComponent(HyCombobox<string>);
     fixture.componentRef.setInput('createValue', (text: string) => text.toUpperCase());

@@ -1,4 +1,5 @@
 <select
+  #nativeSelect
   class="hy-select__native"
   [hidden]="!useNative()"
   [id]="nativeId"
@@ -59,33 +60,28 @@
   [id]="triggerId"
   [disabled]="effectiveDisabled() || useNative()"
   [expanded]="expanded()"
-  (keydown)="virtualKeys($event)"
   (expandedChange)="setExpanded($event)"
+  [attr.aria-controls]="expanded() ? listboxId : null"
   [attr.aria-labelledby]="field ? field.labelId + ' ' + triggerId : null"
   [attr.aria-describedby]="field?.describedBy() ?? null"
   [attr.aria-invalid]="showsError() || null"
   [attr.aria-required]="required() || null"
   (blur)="touch.emit()"
 >
-  <span class="hy-select__value" [class.hy-select__placeholder]="!selectedOption()">
+  <span class="hy-select__value" [class.hy-select__placeholder]="selectedLabel() === undefined">
     @if (selectedTemplate(); as template) {
       <ng-container
         [ngTemplateOutlet]="template"
         [ngTemplateOutletContext]="{ $implicit: value(), option: selectedOption() }"
       />
     } @else {
-      {{
-        selectedOption()
-          ? optionLabel(selectedOption()!)
-          : value() !== undefined && displayWith()
-            ? displayWith()!(value()!)
-            : placeholder()
-      }}
+      {{ selectedLabel() ?? placeholder() }}
     }
   </span>
   <hy-icon class="hy-select__chevron" name="chevron-down" />
 </button>
 <ng-template ngComboboxPopup [combobox]="combobox">
+  @for (mount of [overlayMount()]; track mount) {
   <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="origin"
@@ -97,34 +93,26 @@
     [cdkConnectedOverlayOffsetY]="offsetY()"
     [cdkConnectedOverlayMinWidth]="panelWidth()"
     [cdkConnectedOverlayPanelClass]="panelClass()"
+    [cdkConnectedOverlayUsePopover]="mount"
     cdkConnectedOverlayTransformOriginOn=".hy-select__panel"
     (attach)="onAttach()"
-    (overlayOutsideClick)="expanded.set(false)"
+    (overlayOutsideClick)="setExpanded(false)"
   >
-    <!-- Focus remains on the combobox trigger while Aria manages the active option. -->
+    <!-- The widget relays combobox navigation and contains the actual focus targets. -->
     <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
     <div
       ngComboboxWidget
-      ngListbox
-      #listbox="ngListbox"
+      [activeDescendant]="virtualized() ? virtualActiveId() : listbox.activeDescendant()"
       class="hy-select__panel hy-glass"
       data-material="frosted"
-      focusMode="activedescendant"
-      selectionMode="explicit"
-      [activeDescendant]="virtualized() ? virtualActiveId() : listbox.activeDescendant()"
-      [typeaheadDelay]="typeaheadDelay()"
-      [wrap]="wrap()"
       [style.max-block-size.px]="viewportHeight()"
       (scroll)="scrollOptions($event)"
-      [value]="listValue()"
-      (valueChange)="pick($event)"
-      (click)="onPanelClick($event)"
-      (keydown.enter)="close()"
-      (keydown.space)="close()"
+      (keydown)="relayOptionKey($event, listboxElement)"
     >
       <ng-container [ngTemplateOutlet]="headerTemplate() ?? null" />
       @if (createValue()) {
         <input
+          class="hy-select__draft"
           type="text"
           [attr.aria-label]="customValueLabel()"
           [value]="customText()"
@@ -132,78 +120,103 @@
           (keydown)="commitCustom($event)"
         /><button type="button" (click)="commitCustom($event)">{{ customValueLabel() }}</button>
       }
-      @if (virtualized()) {
-        <div role="presentation" [style.block-size.px]="virtualRange().start * itemHeight()"></div>
-        @for (item of visibleOptions(); track item.key) {
+      <!-- Focus remains on the combobox trigger while Aria manages the active option. -->
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+      <div
+        #listboxElement
+        ngListbox
+        #listbox="ngListbox"
+        [id]="listboxId"
+        focusMode="activedescendant"
+        selectionMode="explicit"
+        [typeaheadDelay]="typeaheadDelay()"
+        [wrap]="wrap()"
+        [value]="listValue()"
+        (valueChange)="pick($event)"
+        (click)="onPanelClick($event)"
+        (keydown.enter)="close()"
+        (keydown.space)="close()"
+      >
+        @if (virtualized()) {
           <div
-            ngOption
-            class="hy-select__option"
-            [id]="triggerId + '-option-' + item.index"
-            [value]="item.option.value"
-            [label]="optionLabel(item.option)"
-            [disabled]="item.disabled || (item.option.value === null && !canSelectNullable())"
-            [attr.aria-setsize]="virtualRange().total"
-            [attr.aria-posinset]="item.index + 1"
-            [style.block-size.px]="itemHeight()"
-          >
-            @if (optionTemplate(); as template) {
-              <ng-container
-                [ngTemplateOutlet]="template"
-                [ngTemplateOutletContext]="item.context"
-              />
-            } @else {
-              {{ optionLabel(item.option) }}
-            }
-          </div>
+            role="presentation"
+            [style.block-size.px]="virtualRange().start * itemHeight()"
+          ></div>
+          @for (item of visibleOptions(); track item.key) {
+            <div
+              ngOption
+              class="hy-select__option"
+              [id]="triggerId + '-option-' + item.index"
+              [value]="item.option.value"
+              [label]="optionLabel(item.option)"
+              [disabled]="item.disabled || (item.option.value === null && !canSelectNullable())"
+              [attr.aria-setsize]="virtualRange().total"
+              [attr.aria-posinset]="item.index + 1"
+              [style.block-size.px]="itemHeight()"
+            >
+              @if (optionTemplate(); as template) {
+                <ng-container
+                  [ngTemplateOutlet]="template"
+                  [ngTemplateOutletContext]="item.context"
+                />
+              } @else {
+                {{ optionLabel(item.option) }}
+              }
+            </div>
+          }
+          <div
+            role="presentation"
+            [style.block-size.px]="(virtualRange().total - virtualRange().end) * itemHeight()"
+          ></div>
+        } @else {
+          @for (group of groups(); track group.key) {
+            <div role="group" [attr.aria-label]="group.label || null">
+              @if (group.label) {
+                <div class="hy-select__group-label">
+                  @if (groupTemplate(); as template) {
+                    <ng-container
+                      [ngTemplateOutlet]="template"
+                      [ngTemplateOutletContext]="{ $implicit: group.label }"
+                    />
+                  } @else {
+                    {{ group.label }}
+                  }
+                </div>
+              }
+              @for (item of group.options; track item.key) {
+                <div
+                  ngOption
+                  class="hy-select__option"
+                  [value]="item.option.value"
+                  [label]="optionLabel(item.option)"
+                  [disabled]="item.disabled"
+                >
+                  @if (optionTemplate(); as template) {
+                    <ng-container
+                      [ngTemplateOutlet]="template"
+                      [ngTemplateOutletContext]="item.context"
+                    />
+                  } @else {
+                    <span>{{ optionLabel(item.option) }}</span>
+                  }
+                  <hy-icon class="hy-select__check" name="check" />
+                </div>
+              }
+            </div>
+          }
         }
-        <div
-          role="presentation"
-          [style.block-size.px]="(virtualRange().total - virtualRange().end) * itemHeight()"
-        ></div>
-      } @else {
-        @for (group of groups(); track group.key) {
-          <div role="group" [attr.aria-label]="group.label || null">
-            @if (group.label) {
-              <div class="hy-select__group-label">
-                @if (groupTemplate(); as template) {
-                  <ng-container
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="{ $implicit: group.label }"
-                  />
-                } @else {
-                  {{ group.label }}
-                }
-              </div>
-            }
-            @for (item of group.options; track item.key) {
-              <div
-                ngOption
-                class="hy-select__option"
-                [value]="item.option.value"
-                [label]="optionLabel(item.option)"
-                [disabled]="item.disabled"
-              >
-                @if (optionTemplate(); as template) {
-                  <ng-container
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="item.context"
-                  />
-                } @else {
-                  <span>{{ optionLabel(item.option) }}</span>
-                }
-                <hy-icon class="hy-select__check" name="check" />
-              </div>
-            }
-          </div>
-        }
-      }
+      </div>
       @if (pageBusy()) {
         <span role="status">Loading</span>
       }
       @if (pageFailed()) {
         <button type="button" (click)="retry()">Retry</button>
       }
+      @if (!pageBusy() && !pageFailed() && !keyedOptions().length) {
+        <p role="status">{{ emptyLabel() }}</p>
+      }
       <ng-container [ngTemplateOutlet]="footerTemplate() ?? null" />
     </div>
   </ng-template>
+  }
 </ng-template>

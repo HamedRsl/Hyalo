@@ -1,0 +1,54 @@
+:host {
+  --_drawer-size: min(100%, var(--hy-docked-drawer-size));
+  display: block;
+  position: relative;
+  isolation: isolate;
+  min-inline-size: 0;
+  overflow: clip;
+}
+
+.content {
+  position: relative;
+  min-inline-size: 0;
+  block-size: 100%;
+  max-block-size: inherit;
+  overflow: auto;
+}
+
+.drawer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: 2;
+  inline-size: var(--_drawer-size);
+  overflow: auto;
+  background: var(--hy-surface-1);
+  box-shadow: var(--hy-glass-shadow);
+}
+
+:host([data-side='end']) .drawer {
+  inset-inline: auto 0;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--hy-backdrop-color, rgb(0 0 0 / 32%));
+}
+
+:host([data-open][data-mode='side'][data-side='start']) .content {
+  margin-inline-start: var(--_drawer-size);
+}
+
+:host([data-open][data-mode='side'][data-side='end']) .content {
+  margin-inline-end: var(--_drawer-size);
+}
+
+:host([data-open][data-mode='push'][data-side='start']) .content {
+  inset-inline-start: var(--_drawer-size);
+}
+
+:host([data-open][data-mode='push'][data-side='end']) .content {
+  inset-inline-end: var(--_drawer-size);
+}

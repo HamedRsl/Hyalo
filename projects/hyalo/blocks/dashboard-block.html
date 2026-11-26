@@ -1,6 +1,11 @@
-<div class="shell">
+<div class="shell" [style.--hy-dashboard-block-max-height]="maxHeight()">
   <aside><ng-content select="[hyBlockSidebar]" /></aside>
-  <div class="main">
+  <div
+    class="main"
+    [attr.tabindex]="maxHeight() ? 0 : null"
+    [attr.role]="maxHeight() ? 'region' : null"
+    [attr.aria-label]="maxHeight() ? contentLabel() : null"
+  >
     <header><ng-content select="[hyBlockToolbar]" /></header>
     <ng-content />
   </div>

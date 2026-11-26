@@ -1,6 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  Injector,
+  afterNextRender,
   booleanAttribute,
   input,
   model,
@@ -13,6 +16,7 @@ import {
   inject,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AccordionGroup, AccordionPanel, AccordionTrigger } from '@angular/aria/accordion';
@@ -64,20 +68,53 @@ export class HyAccordionItem {
   protected readonly lazy = contentChild(HyAccordionContent);
   protected readonly customIcon = contentChild(HyAccordionIcon);
   protected readonly created = signal(false);
-  private initial = true;
+  private readonly body = viewChild.required<ElementRef<HTMLElement>>('body');
+  private readonly injector = inject(Injector);
+  private previous: boolean | undefined;
+  private pending: { readonly expanded: boolean } | undefined;
   constructor() {
     effect(() => {
       const open = this.expanded();
       if (open) this.created.set(true);
       else if (this.destroyOnClose()) this.created.set(false);
-      if (this.initial) { this.initial = false; return; }
+      const previous = this.previous;
+      this.previous = open;
+      if (previous === undefined || previous === open) return;
+      const change = { expanded: open };
+      this.pending = change;
       if (open) this.opened.emit();
       else this.closed.emit();
+      afterNextRender(
+        {
+          read: () => {
+            const body = this.body().nativeElement;
+            const reduced = body.ownerDocument.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            const animated = body.getAnimations?.();
+            if (
+              reduced || (animated &&
+              !animated.some(
+                (animation) =>
+                  'transitionProperty' in animation &&
+                  animation.transitionProperty === 'grid-template-rows',
+              ))
+            ) {
+              this.finish(change);
+            }
+          },
+        },
+        { injector: this.injector },
+      );
     });
   }
   protected completed(event: TransitionEvent): void {
     if (event.target === event.currentTarget && event.propertyName === 'grid-template-rows')
-      this.animationComplete.emit(this.expanded());
+      this.finish(this.pending);
+  }
+
+  private finish(change: { readonly expanded: boolean } | undefined): void {
+    if (!change || this.pending !== change || change.expanded !== this.expanded()) return;
+    this.pending = undefined;
+    this.animationComplete.emit(change.expanded);
   }
 }
 
@@ -115,8 +152,12 @@ export class HyAccordionItem {
 export class HyAccordion {
   private readonly items = contentChildren(HyAccordionItem);
   /** Expands enabled sections. A single-open group retains only the final section. */
-  expandAll(): void { for (const item of this.items()) if (!item.disabled()) item.expanded.set(true); }
-  collapseAll(): void { for (const item of this.items()) if (!item.disabled()) item.expanded.set(false); }
+  expandAll(): void {
+    for (const item of this.items()) if (!item.disabled()) item.expanded.set(true);
+  }
+  collapseAll(): void {
+    for (const item of this.items()) if (!item.disabled()) item.expanded.set(false);
+  }
   toggleAll(): void {
     if (this.items().some((item) => !item.disabled() && !item.expanded())) this.expandAll();
     else this.collapseAll();
@@ -124,4 +165,9 @@ export class HyAccordion {
 }
 
 /** Everything needed to build an accordion. */
-export const HY_ACCORDION = [HyAccordion, HyAccordionItem, HyAccordionContent, HyAccordionIcon] as const;
+export const HY_ACCORDION = [
+  HyAccordion,
+  HyAccordionItem,
+  HyAccordionContent,
+  HyAccordionIcon,
+] as const;

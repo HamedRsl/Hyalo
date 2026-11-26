@@ -17,8 +17,9 @@ import {
   effect,
   output,
   signal,
-  afterNextRender,
-  Injector,
+  afterRenderEffect,
+  numberAttribute,
+  untracked,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
@@ -114,7 +115,13 @@ export class HyTabs {
   protected readonly tabs = contentChildren(HyTab);
   private readonly list = viewChild<ElementRef<HTMLElement>>('list');
   private readonly tabList = viewChild(TabList);
-  private readonly injector = inject(Injector);
+  private readonly panelViewport = viewChild<ElementRef<HTMLElement>>('panelViewport');
+  private readonly panelContent = viewChild<ElementRef<HTMLElement>>('panelContent');
+  private renderedSelection: string | undefined;
+  private renderedHeight: number | undefined;
+  private heightObserver: ResizeObserver | undefined;
+  private heightAnimation: Animation | undefined;
+  private acceptedTransition: { value: string; generation: number } | undefined;
   private readonly router = inject(Router, { optional: true });
   private generation = 0;
   private destroyed = false;
@@ -129,6 +136,10 @@ export class HyTabs {
   /** Stretch tabs to fill the row. */
   readonly stretch = input(false, { transform: booleanAttribute });
   readonly placement = input<'top' | 'bottom' | 'start' | 'end'>('top');
+  /** Animate changes in the active panel’s height. */
+  readonly dynamicHeight = input(false, { transform: booleanAttribute });
+  /** Height animation duration in milliseconds. Zero disables height motion. */
+  readonly animationDuration = input(220, { transform: numberAttribute });
   readonly beforeChange = input<(transition: HyTabTransition) => boolean | Promise<boolean>>();
   readonly pending = signal(false);
   readonly selectionChange = output<HyTabTransition>();
@@ -156,10 +167,98 @@ export class HyTabs {
         }
       }
     });
+    afterRenderEffect({
+      mixedReadWrite: () => {
+        const active = this.current();
+        const viewport = this.panelViewport()?.nativeElement;
+        const content = this.panelContent()?.nativeElement;
+        const dynamicHeight = this.dynamicHeight();
+        const duration = this.animationDuration();
+        if (!viewport || !content) return;
+        this.observeHeight(content, dynamicHeight);
+        const previous = this.renderedSelection;
+        this.renderedSelection = active;
+        if (previous === active) {
+          if (!dynamicHeight && this.heightAnimation) {
+            this.cancelHeightAnimation();
+            this.completeTransition(active);
+          }
+          return;
+        }
+        if (this.acceptedTransition?.value !== active) this.acceptedTransition = undefined;
+        const start = this.heightAnimation
+          ? viewport.getBoundingClientRect().height
+          : this.renderedHeight;
+        this.cancelHeightAnimation();
+        const end = dynamicHeight ? content.getBoundingClientRect().height : undefined;
+        this.renderedHeight = end;
+        const reducedMotion = viewport.ownerDocument.defaultView?.matchMedia?.(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+        if (
+          start === undefined ||
+          end === undefined ||
+          Math.abs(start - end) < 1 ||
+          reducedMotion ||
+          !Number.isFinite(duration) ||
+          duration <= 0 ||
+          !viewport.animate
+        ) {
+          this.completeTransition(active);
+          return;
+        }
+        const animation = viewport.animate(
+          [
+            { height: `${start}px`, overflow: 'clip' },
+            { height: `${end}px`, overflow: 'clip' },
+          ],
+          { duration, easing: 'cubic-bezier(0.2, 0.75, 0.25, 1)' },
+        );
+        this.heightAnimation = animation;
+        animation.addEventListener(
+          'finish',
+          () => {
+            if (this.heightAnimation !== animation) return;
+            this.heightAnimation = undefined;
+            this.completeTransition(active);
+          },
+          { once: true },
+        );
+      },
+    });
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
       this.generation++;
+      this.cancelHeightAnimation();
+      this.heightObserver?.disconnect();
     });
+  }
+  private observeHeight(content: HTMLElement, enabled: boolean): void {
+    if (!enabled) {
+      this.heightObserver?.disconnect();
+      this.heightObserver = undefined;
+      this.renderedHeight = undefined;
+      return;
+    }
+    this.renderedHeight ??= content.getBoundingClientRect().height;
+    if (!this.heightObserver && typeof ResizeObserver !== 'undefined') {
+      this.heightObserver = new ResizeObserver(([entry]) => {
+        this.renderedHeight = entry?.contentRect.height;
+      });
+      this.heightObserver.observe(content);
+    }
+  }
+  private cancelHeightAnimation(): void {
+    this.heightAnimation?.cancel();
+    this.heightAnimation = undefined;
+  }
+  private completeTransition(active: string | undefined): void {
+    const transition = this.acceptedTransition;
+    if (!transition || transition.value !== active || untracked(this.current) !== active) return;
+    this.acceptedTransition = undefined;
+    if (!this.destroyed && transition.generation === this.generation) {
+      this.transitionComplete.emit(transition.value);
+    }
   }
   private restoreSelectionFocus(): void {
     const index = this.tabs().findIndex((tab) => tab.panel.value() === this.current());
@@ -192,18 +291,13 @@ export class HyTabs {
         this.restoreSelectionFocus();
         return;
       }
+      this.acceptedTransition = { value: next, generation };
       this.selected.set(next);
       this.selectionChange.emit(transition);
       const route = this.tabs()
         .find((tab) => tab.panel.value() === next)
         ?.route();
       if (route) void this.router?.navigateByUrl(route);
-      afterNextRender(
-        () => {
-          if (!this.destroyed && generation === this.generation) this.transitionComplete.emit(next);
-        },
-        { injector: this.injector },
-      );
     };
     try {
       const result = this.beforeChange()?.(transition) ?? true;
@@ -226,7 +320,18 @@ export class HyTabs {
   }
   protected scroll(direction: number): void {
     const list = this.list()?.nativeElement;
-    list?.scrollBy({ left: direction * list.clientWidth, behavior: 'smooth' });
+    if (!list) return;
+    const view = list.ownerDocument.defaultView;
+    const behavior = view?.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      ? 'instant'
+      : 'smooth';
+    const vertical = this.placement() === 'start' || this.placement() === 'end';
+    if (vertical) {
+      list.scrollBy({ top: direction * list.clientHeight, behavior });
+    } else {
+      const rtl = view?.getComputedStyle(list).direction === 'rtl';
+      list.scrollBy({ left: direction * list.clientWidth * (rtl ? -1 : 1), behavior });
+    }
   }
 
   /** The selected value, falling back to the first enabled tab. */

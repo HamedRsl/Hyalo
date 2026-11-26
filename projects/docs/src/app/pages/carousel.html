@@ -36,6 +36,7 @@
     <hy-carousel
       label="Atelier collection"
       [(index)]="index"
+      (transitionCompleted)="settled.set($event)"
       [mode]="mode() ?? 'slide'"
       [loop]="loop()"
       [navigation]="navigation() ?? 'icons'"
@@ -63,7 +64,10 @@
           <button hyButton type="button">Explore the collection</button>
         </div></hy-slide
       >
-    </hy-carousel></docs-example
+    </hy-carousel>
+    @if (settled() !== null) { <output>Settled slide {{ (settled() ?? 0) + 1 }}</output> }
+    <button type="button" (click)="index.set(1)">Select second slide externally</button>
+    </docs-example
   >
   <h2>Custom buttons</h2>
   <docs-example
@@ -90,6 +94,13 @@
       </ng-template>
     </hy-carousel>
   </docs-example>
+  <h2>Vertical carousel</h2>
+  <hy-carousel label="Vertical collection" orientation="vertical" navigation="none" pagination="none"
+    style="--hy-carousel-height: 15rem">
+    <hy-slide label="Steel collection"><div class="demo-panel">Steel collection</div></hy-slide>
+    <hy-slide label="Gold collection"><div class="demo-panel">Gold collection</div></hy-slide>
+    <hy-slide label="Studio collection"><div class="demo-panel">Studio collection</div></hy-slide>
+  </hy-carousel>
   <h2>Import</h2>
   <docs-import code="import &#123; HY_CAROUSEL &#125; from '@hyalo/angular/carousel';" />
   <h2>Behavior and accessibility</h2>
@@ -99,7 +110,8 @@
     interactive slide children keep their own pointer behavior. Slides may contain links and form
     controls. There is no autoplay. The scrollbar is hidden by default; dot navigation provides a
     visible alternative. Fade uses only opacity and keeps inactive slides inert. Low fidelity and
-    reduced motion disable transitions.
+    reduced motion disable transitions. The transitionCompleted output reports the latest settled
+    slide after model changes, native scrolling or a fade.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

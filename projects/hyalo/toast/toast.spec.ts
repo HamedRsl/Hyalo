@@ -173,6 +173,37 @@ describe('HyToaster', () => {
     expect(await timed.closed).toBe('timeout');
     expect(run).toHaveBeenCalledOnce();
   });
+  it('updates the existing stack and chooses the narrowest matching breakpoint', () => {
+    const small = Object.assign(new EventTarget(), { matches: true });
+    const medium = Object.assign(new EventTarget(), { matches: true });
+    vi.stubGlobal('matchMedia', (query: string) => (query.includes('400') ? small : medium));
+    try {
+      const channel = TestBed.inject(HyToaster).channel('responsive-test', {
+        position: 'top-end',
+        breakpoints: [
+          { maxWidth: 800, position: 'bottom-start', width: '22rem' },
+          { maxWidth: 400, position: 'bottom-center', width: '18rem' },
+        ],
+      });
+      channel.show({ message: 'Keep this message', duration: 0 });
+      TestBed.tick();
+      const stack = document.querySelector<HTMLElement>('.hy-toast-stack')!;
+      expect(stack.style.inlineSize).toContain('18rem');
+      expect(stack.closest<HTMLElement>('.cdk-global-overlay-wrapper')!.style.justifyContent).toBe(
+        'center',
+      );
+      small.matches = false;
+      small.dispatchEvent(new Event('change'));
+      TestBed.tick();
+      expect(stack.style.inlineSize).toContain('22rem');
+      expect(stack.closest<HTMLElement>('.cdk-global-overlay-wrapper')!.style.justifyContent).toBe(
+        'flex-start',
+      );
+      expect(document.querySelector('.hy-toast-stack')).toBe(stack);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
   it('uses responsive stack width and opt-in noninteractive content dismissal', async () => {
     const toaster = TestBed.inject(HyToaster).channel('position', {
       position: 'top-start',
@@ -188,7 +219,9 @@ describe('HyToaster', () => {
     const expected = document.createElement('div');
     expected.style.inlineSize = 'min(30rem, calc(100vw - 2rem))';
     expect(stack.style.inlineSize).toBe(expected.style.inlineSize);
-    expect(stack.closest<HTMLElement>('.cdk-global-overlay-wrapper')!.style.alignItems).toBe('flex-start');
+    expect(stack.closest<HTMLElement>('.cdk-global-overlay-wrapper')!.style.alignItems).toBe(
+      'flex-start',
+    );
     document.querySelector<HTMLElement>('.hy-toast__message')!.click();
     vi.advanceTimersByTime(300);
     expect(await ref.closed).toBe('dismiss');

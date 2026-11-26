@@ -218,4 +218,10 @@
   }
 }
 
-:host([data-label-position='before']) .hy-choice__row { flex-direction: row-reverse; }
+:host([data-label-position='before']) .hy-choice__row {
+  flex-direction: row-reverse;
+}
+
+:host([data-label-position='before']) .hy-choice__description {
+  padding-inline-start: 0;
+}

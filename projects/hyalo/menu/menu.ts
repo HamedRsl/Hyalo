@@ -4,17 +4,23 @@ import {
   CdkMenuItemCheckbox,
   CdkMenuItemRadio,
   CdkMenuTrigger,
+  MENU_STACK,
 } from '@angular/cdk/menu';
 import {
   ChangeDetectionStrategy,
   Component,
   Directive,
   DestroyRef,
+  ElementRef,
+  Renderer2,
+  afterRenderEffect,
+  booleanAttribute,
   TemplateRef,
   inject,
   input,
   output,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HyMaterialDirective } from '@hyalo/angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HyIcon } from '@hyalo/angular/icon';
@@ -22,10 +28,43 @@ import { HyIcon } from '@hyalo/angular/icon';
   selector: 'hy-menu',
   hostDirectives: [CdkMenu, { directive: HyMaterialDirective, inputs: ['hyMaterial: material'] }],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class]': 'panelClass()' },
   templateUrl: './menu.html',
   styleUrl: './menu.css',
 })
-export class HyMenu {}
+export class HyMenu {
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly renderer = inject(Renderer2);
+
+  /** Extra CSS classes on the rendered menu panel. */
+  readonly panelClass = input<string | readonly string[]>('');
+  /** Prevent outside clicks from reaching the content underneath the menu. */
+  readonly hasBackdrop = input(false, { transform: booleanAttribute });
+  /** Extra CSS classes on the optional backdrop. */
+  readonly backdropClass = input<string | readonly string[]>('');
+
+  protected readonly classes = (value: string | readonly string[]): string[] =>
+    (typeof value === 'string' ? value : value.join(' ')).split(/\s+/).filter(Boolean);
+
+  constructor() {
+    afterRenderEffect((onCleanup) => {
+      const enabled = this.hasBackdrop();
+      const classes = this.classes(this.backdropClass());
+      const overlay = this.element.closest('.cdk-overlay-pane')?.parentElement;
+      if (!enabled || !overlay?.parentElement) return;
+
+      // The backdrop is outside the pane, so CDK keeps ownership of outside dismissal.
+      const parent = overlay.parentElement;
+      const backdrop = this.renderer.createElement('div') as HTMLElement;
+      this.renderer.setAttribute(backdrop, 'aria-hidden', 'true');
+      for (const name of new Set(['cdk-overlay-backdrop', 'cdk-overlay-backdrop-showing', 'cdk-overlay-transparent-backdrop', ...classes])) {
+        this.renderer.addClass(backdrop, name);
+      }
+      this.renderer.insertBefore(parent, backdrop, overlay);
+      onCleanup(() => this.renderer.removeChild(parent, backdrop));
+    });
+  }
+}
 @Directive({
   selector: '[hyMenuTriggerFor]',
   exportAs: 'hyMenuTrigger',
@@ -44,6 +83,28 @@ export class HyMenu {}
 export class HyMenuTrigger {
   private readonly trigger = inject(CdkMenuTrigger);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+
+  /** Keep CDK focus return, redirect it to an element, or leave focus to the application. */
+  readonly restoreFocus = input<boolean | HTMLElement>(true);
+
+  constructor() {
+    const stack = inject(MENU_STACK);
+    stack.closed.pipe(takeUntilDestroyed()).subscribe(({ focusParentTrigger }) => {
+      const target = this.restoreFocus();
+      if (target === true || !focusParentTrigger || !stack.isEmpty()) return;
+
+      // Let CDK finish closing the stack and leave application-managed focus alone.
+      queueMicrotask(() => {
+        if (this.destroyRef.destroyed || !stack.isEmpty()) return;
+        const root = this.element.getRootNode() as Document | ShadowRoot;
+        if (root.activeElement !== this.element) return;
+        if (target === false) this.element.blur();
+        else if (target.isConnected) target.focus();
+      });
+    });
+  }
+
   open(): void {
     if (!this.destroyRef.destroyed) this.trigger.open();
   }

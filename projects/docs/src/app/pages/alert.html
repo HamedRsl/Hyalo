@@ -7,7 +7,7 @@
       <div class="demo-stack">
         <hy-alert heading="Your changes are saved" tone="success" dismissible [(visible)]="visible"
           >The workspace is up to date.</hy-alert
-        ><hy-alert heading="Storage is almost full" tone="warning"
+        ><hy-alert heading="Storage is almost full" tone="warning" banner
           >Review large files before uploading more.</hy-alert
         ><button hyButton variant="ghost" type="button" (click)="visible.set(true)">
           Show saved message

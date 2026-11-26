@@ -2,7 +2,7 @@ import { DocsTokens } from '../shared/tokens-table';
 import { DocsImport } from '../shared/import';
 import { EXAMPLE } from './examples/badge';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HyBadge, HyChip, HyStatus } from '@hyalo/angular/badge';
+import { HyBadge, HyBadgeHost, HyChip, HyNotificationBadge, HyStatus } from '@hyalo/angular/badge';
 import { HyButton } from '@hyalo/angular/button';
 import { DocsPage } from '../shared/page';
 import { DocsExample } from '../shared/example';
@@ -16,7 +16,9 @@ import { DocsApiTable, type ApiRow } from '../shared/api-table';
     DocsExample,
     DocsApiTable,
     HyBadge,
+    HyBadgeHost,
     HyChip,
+    HyNotificationBadge,
     HyStatus,
     HyButton,
   ],

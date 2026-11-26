@@ -1,8 +1,15 @@
 <docs-page heading="Time picker and slots" lead="Choose a wall time with a native input or visible appointment slots.">
 <docs-example [code]="examples[0].html" [tsCode]="examples[0].ts" [cssCode]="examples[0].css" column>
 <hy-field label="Appointment time" hint="Times are local to Asia/Tehran."><hy-time-picker [(value)]="time" [slots]="slots" /></hy-field>
+  <hy-field label="Time to confirm">
+    <hy-time-picker [(value)]="confirmedTime" [slots]="slots" [confirmSelection]="true" [footerTemplate]="footer" />
+  </hy-field>
+  <ng-template #footer let-draft="draft">
+    <p>Pending time: {{ draft }}</p>
+  </ng-template>
+  <p role="status">Confirmed time: {{ confirmedTime() }}</p>
 </docs-example>
 <h2>Behavior and accessibility</h2><p>The control stores a local wall time. Booking applications must resolve the date, IANA timezone, and ambiguous or nonexistent DST times on their server. Disabled slots remain visible.</p>
-<h2>API</h2><p><code>value: string (HH:mm), slots, min, max, step (seconds)</code></p>
+<h2>API</h2><p>Use <code>confirmSelection</code> to hold changes until confirmation. <code>footerTemplate</code> receives the picker as its implicit context and the current draft as <code>draft</code>.</p><p><code>value: string (HH:mm), slots, min, max, step (seconds)</code></p>
 <p>All controls expose disabled, readonly, required, invalid, touched, errors, name, label, touch, and focus(). Use hy-field for a visible label and hint. Bind value or checked directly, or use Angular Signal Forms. For typed Reactive Forms, wrap your FormControl in Angular's compatForm and bind its resulting field with FormField.</p>
 </docs-page>

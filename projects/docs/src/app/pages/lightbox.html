@@ -2,16 +2,64 @@
   heading="Lightbox and gallery"
   lead="A thumbnail grid and a modal image viewer with captions and keyboard navigation."
 >
-  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column
-    ><hy-gallery [images]="images" label="Atelier collection"
-  /></docs-example>
+  <docs-example [code]="example.html" [tsCode]="example.ts" [cssCode]="example.css" column>
+    <hy-gallery
+      [images]="images()"
+      label="Atelier collection"
+      thumbnailMinWidth="12rem"
+      thumbnailGap="1rem"
+      [thumbnailTemplate]="thumbnail.template"
+      [options]="{ contentTemplate: preview.template, captionTemplate: caption.template }"
+    />
+    <button type="button" (click)="compact.update(toggleCollection)" [attr.aria-pressed]="compact()">
+      Show only steel watch
+    </button>
+    <ng-template hyGalleryThumbnail #thumbnail="hyGalleryThumbnail" let-image let-index="index">
+      <img
+        [src]="image.thumbnail ?? image.src"
+        alt=""
+        loading="lazy"
+        style="inline-size: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block"
+      />
+      <span>{{ index + 1 }}. {{ image.alt }}</span>
+    </ng-template>
+    <ng-template
+      hyLightboxContent
+      #preview="hyLightboxContent"
+      let-image
+      let-transform="transformStyle"
+    >
+      <img
+        [src]="image.src"
+        [alt]="image.alt"
+        [style.transform]="transform"
+        draggable="false"
+        style="display: block; max-inline-size: 100%; max-block-size: 50dvh; margin-inline: auto"
+      />
+    </ng-template>
+    <ng-template
+      hyLightboxContent
+      #caption="hyLightboxContent"
+      let-image
+      let-index="index"
+      let-count="count"
+    >
+      {{ image.caption }} Photo {{ index + 1 }} of {{ count }}.
+    </ng-template>
+  </docs-example>
   <h2>Import</h2>
   <docs-import code="import &#123; HyGallery &#125; from '@hyalo/angular/lightbox';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Escape and a backdrop click close the viewer. Arrow keys follow reading direction. The CDK traps
-    focus and restores it to the thumbnail. Include styles/overlays/dialog.css if using the core
-    stylesheet.
+    focus and restores it to the thumbnail. Zoom in to pan with a pointer or focus the image area
+    and use arrow keys. Flip either axis or reset the image from the toolbar. Provide alternative
+    text for custom preview images. The thumbnail button already has a label, so its decorative
+    image uses empty alternative text. The grid adds a column whenever the container can fit one
+    more minimum-width thumbnail and its gap. Updates to the image list and viewer options apply
+    while the gallery is open. Removing all images closes the viewer. A service-opened viewer
+    exposes <code>update()</code> and a <code>transform</code> signal with the current scale,
+    rotation, pan and flips. Include styles/overlays/dialog.css if using the core stylesheet.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

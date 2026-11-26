@@ -3,6 +3,7 @@ import {
   createGlobalPositionStrategy,
   createOverlayRef,
   type OverlayRef,
+  type GlobalPositionStrategy,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
@@ -58,9 +59,21 @@ export interface HyToastContext {
   readonly dismiss: () => void;
 }
 
-export interface HyToastChannelConfig {
+export type HyToastPosition =
+  'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
+
+export interface HyToastPlacement {
+  readonly position?: HyToastPosition;
   readonly width?: string;
-  readonly position?: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
+}
+
+export interface HyToastBreakpoint extends HyToastPlacement {
+  readonly maxWidth: number;
+}
+
+export interface HyToastChannelConfig extends HyToastPlacement {
+  /** CSS-pixel limits. The narrowest matching entry overrides the base placement. */
+  readonly breakpoints?: readonly HyToastBreakpoint[];
   readonly maxVisible?: number;
   readonly duplicates?: 'allow' | 'ignore';
 }
@@ -87,9 +100,11 @@ export type HyToastHold = 'hover' | 'focus';
 export class HyToaster {
   /** @internal Responsive width applied by the stack, independent of placement. */
   get stackWidth(): string {
-    return `min(${this.config.width ?? '24rem'}, calc(100vw - 2rem))`;
+    return `min(${this.placement().width ?? '24rem'}, calc(100vw - 2rem))`;
   }
   private readonly config = inject(CHANNEL_CONFIG, { optional: true }) ?? {};
+  private readonly placement = signal<HyToastPlacement>(this.config);
+  private stopResponsive?: () => void;
   private readonly channels = new Map<string, HyToaster>();
   private readonly refs = new Map<number, HyToastRef>();
   private readonly results = new Map<
@@ -102,6 +117,7 @@ export class HyToaster {
     inject(DestroyRef).onDestroy(() => {
       for (const id of this.timers.keys()) this.clearTimer(id);
       for (const timer of this.exits) clearTimeout(timer);
+      this.stopResponsive?.();
       this.overlayRef?.dispose();
       for (const result of this.results.values()) result.resolve('destroy');
       this.results.clear();
@@ -268,16 +284,53 @@ export class HyToaster {
 
   private ensureStack(): void {
     if (this.overlayRef) return;
-    const position = createGlobalPositionStrategy(this.injector);
-    const placement = this.config.position ?? 'bottom-end';
-    if (placement.startsWith('top')) position.top('0');
-    else position.bottom('0');
-    if (placement.endsWith('start')) position.start('0');
-    else position.end('0');
+    this.observePlacement();
+    const position = this.positionStrategy(this.placement().position ?? 'bottom-end');
     this.overlayRef = createOverlayRef(this.injector, {
       positionStrategy: position,
       panelClass: 'hy-toast-pane',
     });
     this.overlayRef.attach(new ComponentPortal(HyToastStack, null, this.injector));
+  }
+
+  private positionStrategy(placement: HyToastPosition): GlobalPositionStrategy {
+    const position = createGlobalPositionStrategy(this.injector);
+    if (placement.startsWith('top')) position.top('0');
+    else position.bottom('0');
+    if (placement.endsWith('start')) position.start('0');
+    else if (placement.endsWith('center')) position.centerHorizontally();
+    else position.end('0');
+    return position;
+  }
+
+  private observePlacement(): void {
+    const queries = (this.config.breakpoints ?? [])
+      .filter(({ maxWidth }) => Number.isFinite(maxWidth) && maxWidth > 0)
+      .sort((a, b) => a.maxWidth - b.maxWidth)
+      .map((point) => ({
+        point,
+        query: window.matchMedia?.('(max-width: ' + point.maxWidth + 'px)'),
+      }));
+    if (!queries.length) return;
+    const apply = (): void => {
+      const match = queries.find(({ query }) => query?.matches)?.point;
+      const next = {
+        position: match?.position ?? this.config.position,
+        width: match?.width ?? this.config.width,
+      };
+      const previous = this.placement();
+      if (previous.position === next.position && previous.width === next.width) return;
+      this.placement.set(next);
+      if (previous.position !== next.position) {
+        this.overlayRef?.updatePositionStrategy(
+          this.positionStrategy(next.position ?? 'bottom-end'),
+        );
+      }
+    };
+    apply();
+    for (const { query } of queries) query?.addEventListener('change', apply);
+    this.stopResponsive = () => {
+      for (const { query } of queries) query?.removeEventListener('change', apply);
+    };
   }
 }

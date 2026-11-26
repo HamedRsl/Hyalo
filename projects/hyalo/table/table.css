@@ -10,6 +10,7 @@
   background: var(--hy-surface-1);
   color: var(--hy-ink);
 }
+.virtual-measured { overflow-anchor: none; }
 table {
   inline-size: 100%;
   border-collapse: separate;
@@ -32,10 +33,11 @@ td {
   padding: 0.75rem 1rem;
   border-block-end: 1px solid var(--hy-line);
 }
-.sticky th {
+.sticky thead {
   position: sticky;
   inset-block-start: 0;
-  z-index: 1;
+  z-index: 4;
+  background: var(--hy-surface-2);
 }
 th button {
   display: inline-flex;
@@ -83,7 +85,8 @@ tbody tr:last-child td {
   outline-offset: 3px;
 }
 .frozen { position: sticky; z-index: 2; background: var(--hy-surface-1); }
-.frozen-row { position: sticky; z-index: 2; background: var(--hy-surface-1); }
+.frozen-row { position: sticky; z-index: 3; background: var(--hy-surface-1); }
+.frozen-row.selected, .frozen-row.selected .frozen { background: var(--hy-surface-2); background-image: linear-gradient(var(--hy-primary-wash), var(--hy-primary-wash)); }
 .spacer { padding: 0; border: 0; }
 .resizer { display: block; inline-size: 100%; }
 .sr-only { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }

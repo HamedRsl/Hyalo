@@ -16,6 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { HyLocale } from '@hyalo/angular/core';
+import { HyIcon } from '@hyalo/angular/icon';
 import type {
   Calendar,
   CalendarApi,
@@ -29,6 +30,10 @@ import type {
 } from '@fullcalendar/core';
 import type { DateClickArg, EventResizeDoneArg } from '@fullcalendar/interaction';
 export type HySchedulerView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';
+export interface HySchedulerViewOption {
+  readonly value: string;
+  readonly label: string;
+}
 export interface HySchedulerChange {
   readonly kind: 'drop' | 'resize';
   readonly event: EventApi;
@@ -48,6 +53,7 @@ export const HY_SCHEDULER_LOADER = new InjectionToken<() => Promise<typeof impor
 );
 @Component({
   selector: 'hy-scheduler',
+  imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './scheduler.html',
   styleUrl: './scheduler.css',
@@ -66,6 +72,13 @@ export class HyScheduler {
   readonly disabled = input(false);
   readonly height = input<number | string>('auto');
   readonly showToolbar = input(true);
+  readonly viewLabel = input('View');
+  readonly views = input<readonly HySchedulerViewOption[]>([
+    { value: 'dayGridMonth', label: 'Month' },
+    { value: 'timeGridWeek', label: 'Week' },
+    { value: 'timeGridDay', label: 'Day' },
+    { value: 'listWeek', label: 'Agenda' },
+  ]);
   readonly showAgenda = input(true);
   readonly agendaLabel = input('Event summary');
   readonly emptyLabel = input('No events');
@@ -92,6 +105,13 @@ export class HyScheduler {
   protected readonly ready = signal(false);
   protected readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   protected readonly title = signal('');
+  protected readonly viewOptions = computed(() => {
+    const options = this.views();
+    const current = this.view();
+    return options.some(({ value }) => value === current)
+      ? options
+      : [{ value: current, label: current }, ...options];
+  });
   readonly pending = signal(0);
   protected readonly effectiveLocale = computed(() => this.locale() ?? this.globalLocale.locale());
   protected readonly agenda = computed(() =>
@@ -208,9 +228,11 @@ export class HyScheduler {
       const options = this.calendarOptions(),
         calendar = engine.createCalendar(this.mount().nativeElement, options);
       this.calendar = calendar;
-      this.enginePlugins = engine.plugins ?? (calendar.getOption('plugins') ?? []).filter(
-        (plugin) => !options.plugins?.includes(plugin),
-      );
+      this.enginePlugins =
+        engine.plugins ??
+        (calendar.getOption('plugins') ?? []).filter(
+          (plugin) => !options.plugins?.includes(plugin),
+        );
       calendar.render();
       this.status.set('ready');
       this.title.set(calendar.view.title);

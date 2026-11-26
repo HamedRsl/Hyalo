@@ -14,6 +14,27 @@
           }
         </ol></hy-scroll-area
       >
+      <hy-scroll-area #delegated label="Delegated activity" [scrollHost]="viewport">
+        <div
+          #viewport
+          tabindex="0"
+          role="region"
+          aria-label="Activity viewport"
+          style="overflow: auto; max-block-size: 8rem"
+        >
+          <ol class="activity-list">
+            @for (event of events; track event) {
+              <li>
+                <strong>{{ event }}</strong
+                ><span>Workspace activity</span>
+              </li>
+            }
+          </ol>
+        </div>
+      </hy-scroll-area>
+      <button type="button" (click)="delegated.scrollTo({ top: 160, behavior: 'instant' })">
+        Scroll activity
+      </button>
     </div></docs-example
   >
   <h2>Import</h2>
@@ -21,7 +42,9 @@
   <h2>Behavior and accessibility</h2>
   <p>
     The region is keyboard focusable so arrow keys and Page Up/Down work natively. Touch keeps
-    native inertia. Overscroll is contained. Avoid nesting multiple scroll areas on a small screen.
+    native inertia. Supply scrollHost to use a different native viewport. Set its overflow, size and
+    focusability in the application. Overscroll is contained. Avoid nesting multiple scroll areas on
+    a small screen.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

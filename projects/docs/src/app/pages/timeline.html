@@ -13,15 +13,21 @@
       <hy-timeline-item heading="Deliver" date="January 2027" dateTime="2027-01"
         ><p>Refine the details and hand over the system.</p></hy-timeline-item
       >
-    </hy-timeline></docs-example
-  >
+    </hy-timeline>
+    <hy-timeline label="Release timeline" orientation="horizontal" alignment="alternate">
+      <hy-timeline-item heading="Plan" />
+      <hy-timeline-item heading="Build" />
+      <hy-timeline-item heading="Review" side="end" />
+    </hy-timeline>
+  </docs-example>
   <h2>Import</h2>
   <docs-import code="import &#123; HY_TIMELINE &#125; from '@hyalo/angular/timeline';" />
   <h2>Behavior and accessibility</h2>
   <p>
     Events are exposed as a list and use native time elements. Date formatting belongs to the
     application, so Persian and Jalali display dates are supported without conversion. Logical
-    borders mirror the thread in RTL.
+    borders mirror the thread in RTL. Horizontal timelines support start, end and alternate
+    alignment along the same rail. Use side on an event to override its placement.
   </p>
   <h2>API</h2>
   <docs-api-table [rows]="rows" />

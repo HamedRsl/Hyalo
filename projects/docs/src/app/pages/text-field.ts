@@ -1,6 +1,7 @@
 import { EXAMPLES } from './examples/text-field';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, email, form, required } from '@angular/forms/signals';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_TEXT_FIELD } from '@hyalo/angular/field';
 import { DocsApiTable, type ApiRow } from '../shared/api-table';
@@ -10,12 +11,22 @@ import { DocsTokens } from '../shared/tokens-table';
 
 @Component({
   selector: 'docs-text-field-page',
-  imports: [DocsPage, DocsTokens, DocsExample, DocsApiTable, HY_TEXT_FIELD, HyButton, FormField],
+  imports: [
+    DocsPage,
+    DocsTokens,
+    DocsExample,
+    DocsApiTable,
+    HY_TEXT_FIELD,
+    HyButton,
+    FormField,
+    CdkTextareaAutosize,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './text-field.html',
 })
 export default class TextFieldPage {
   protected readonly examples = EXAMPLES;
+  protected readonly showFeedback = signal(false);
 
   protected readonly model = signal({ email: '', budget: '', message: '' });
   protected readonly f = form(this.model, (p) => {

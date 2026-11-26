@@ -41,7 +41,15 @@
   border-start-end-radius: var(--hy-drawer-radius, var(--hy-radius-l));
   padding-block-end: max(var(--hy-drawer-padding, var(--hy-space-7)), env(safe-area-inset-bottom));
   touch-action: pan-x pan-y;
-  animation-name: hy-sheet-in;
+}
+
+.hy-drawer--top > .cdk-dialog-container {
+  position: relative;
+  max-block-size: 85dvh;
+  border-end-start-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  border-end-end-radius: var(--hy-drawer-radius, var(--hy-radius-l));
+  padding-block-start: max(var(--hy-drawer-padding, var(--hy-space-7)), env(safe-area-inset-top));
+  touch-action: pan-x pan-y;
 }
 
 /* The handle that says "this can be pulled down". */
@@ -64,6 +72,10 @@
   translate: -50% 0;
   border-radius: var(--hy-radius-pill);
   background: color-mix(in srgb, var(--hy-ink) 28%, transparent);
+}
+
+.hy-drawer--top .hy-drawer__grabber {
+  inset-block: auto 0;
 }
 
 .hy-drawer__grabber:dir(rtl)::before {
@@ -90,10 +102,6 @@
   animation: hy-drawer-out var(--hy-dur-exit) var(--hy-ease-inout) forwards;
 }
 
-.hy-drawer--bottom[data-state='closing'] > .cdk-dialog-container {
-  animation-name: hy-sheet-out;
-}
-
 /* Without movement (--hy-move: 0) these fade instead of slide. */
 @keyframes hy-drawer-in {
   from {
@@ -112,13 +120,25 @@
 @keyframes hy-sheet-in {
   from {
     opacity: var(--hy-move);
-    translate: 0 calc(100% * var(--hy-move));
+    translate: 0 calc(var(--_sheet-from, 100%) * var(--hy-move));
   }
 }
 
 @keyframes hy-sheet-out {
   to {
     opacity: var(--hy-move);
-    translate: 0 calc(100% * var(--hy-move));
+    translate: 0 calc(var(--_sheet-from, 100%) * var(--hy-move));
   }
+}
+
+.hy-drawer--top {
+  --_sheet-from: -100%;
+}
+
+:is(.hy-drawer--top, .hy-drawer--bottom) > .cdk-dialog-container {
+  animation-name: hy-sheet-in;
+}
+
+:is(.hy-drawer--top, .hy-drawer--bottom)[data-state='closing'] > .cdk-dialog-container {
+  animation-name: hy-sheet-out;
 }

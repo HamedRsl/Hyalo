@@ -8,6 +8,7 @@ import type { HyMotion } from '@hyalo/angular/motion';
 import { HY_DIALOG_DATA, HyDialogRef, type HyDialogCloseGuard } from './dialog-ref';
 import type { HyDrawerSide } from './drawer';
 import { driveSheet } from './sheet';
+import { HySurfaceFocusContainer } from './focus-container';
 
 /** Options shared by dialogs and drawers. */
 export interface HySurfaceConfig<D> {
@@ -21,6 +22,8 @@ export interface HySurfaceConfig<D> {
   readonly material?: HyMaterial;
   /** Where focus goes on open. Defaults to the first tabbable element. */
   readonly autoFocus?: DialogConfig['autoFocus'];
+  /** Move focus to the configured target on attachment or after the entry transition. */
+  readonly autoFocusTiming?: 'attach' | 'opened';
   /** `alertdialog` for messages that need an answer. */
   readonly role?: 'dialog' | 'alertdialog';
   readonly closeGuard?: HyDialogCloseGuard;
@@ -40,6 +43,8 @@ export interface HySurfaceConfig<D> {
   readonly injector?: DialogConfig['injector'];
   readonly viewContainerRef?: DialogConfig['viewContainerRef'];
   readonly templateContext?: DialogConfig['templateContext'];
+  readonly bindings?: DialogConfig['bindings'];
+  /** Restore to the opener, a selector, or a specific element. Set false to leave it to the caller. */
   readonly restoreFocus?: DialogConfig['restoreFocus'];
   readonly ariaLabelledBy?: string;
   readonly ariaDescribedBy?: string;
@@ -70,12 +75,15 @@ export function openSurface<R, D>(
 ): HyDialogRef<R> {
   let ref: HyDialogRef<R> | undefined;
   const dismissible = config.dismissible ?? true;
+  const autoFocus = config.autoFocus ?? 'first-tabbable';
+  const deferAutoFocus = config.autoFocusTiming === 'opened' && autoFocus !== false && autoFocus !== 'dialog';
 
   const cdkRef = cdk.open<R, D, unknown>(content, {
     data: config.data,
     role: config.role ?? 'dialog',
     ariaLabel: config.label ?? null,
-    autoFocus: config.autoFocus ?? 'first-tabbable',
+    autoFocus: deferAutoFocus ? 'dialog' : autoFocus,
+    container: deferAutoFocus ? HySurfaceFocusContainer : undefined,
     restoreFocus: config.restoreFocus ?? true,
     ariaModal: config.ariaModal ?? true,
     ariaLabelledBy: config.ariaLabelledBy,
@@ -84,6 +92,7 @@ export function openSurface<R, D>(
     injector: config.injector,
     viewContainerRef: config.viewContainerRef,
     templateContext: config.templateContext,
+    bindings: config.bindings,
     direction: config.direction,
     scrollStrategy: config.scrollStrategy,
     closeOnNavigation: false,
@@ -110,6 +119,12 @@ export function openSurface<R, D>(
 
   const hyRef = ref ?? new HyDialogRef<R>(cdkRef, config.closeGuard);
   const container = hyRef.containerElement;
+  const springDriven = !!container && !!extra.sheet && extra.draggable !== false && !motion.reduced();
+  const opened = (): void => hyRef.notifyOpened();
+  if (cdkRef.containerInstance instanceof HySurfaceFocusContainer) {
+    const focusContainer = cdkRef.containerInstance;
+    hyRef.opened.subscribe(() => focusContainer.focusAfterEnter(autoFocus));
+  }
   if (container) {
     container.classList.add('hy-glass');
     container.dataset['material'] =
@@ -117,9 +132,10 @@ export function openSurface<R, D>(
     // Dialogs and sheets are the largest glass on the page, so the thickest.
     container.dataset['thickness'] = 'thick';
     // With reduced motion the CSS cross-fade runs instead of the spring.
-    if (extra.sheet && extra.draggable !== false && !motion.reduced()) {
+    if (extra.sheet && springDriven) {
       const driver = driveSheet(container, cdkRef.overlayRef.backdropElement, extra.sheet, {
         dismissible,
+        opened,
         close: () => hyRef.close(undefined, 'gesture'),
         cancelClose: () => hyRef.cancelClose(),
       });
@@ -150,10 +166,21 @@ export function openSurface<R, D>(
   };
   if (config.closeOnNavigation) view?.addEventListener('popstate', navigation);
   if (config.closeOnScroll) view?.addEventListener('scroll', scroll, true);
-  const opened = (): void => { hyRef.opened.next(); container?.removeEventListener('animationend', onEnter); };
-  const onEnter = (event: Event): void => { if (event.target === container) { clearTimeout(timer); opened(); } };
-  container?.addEventListener('animationend', onEnter);
-  const timer = setTimeout(opened, motion.reduced() ? 0 : 400);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const onEnter = (event: Event): void => {
+    if (event.target === container) {
+      clearTimeout(timer);
+      container?.removeEventListener('animationend', onEnter);
+      opened();
+    }
+  };
+  if (!springDriven || container?.ownerDocument.hidden) {
+    container?.addEventListener('animationend', onEnter);
+    timer = setTimeout(() => {
+      container?.removeEventListener('animationend', onEnter);
+      opened();
+    }, motion.reduced() || container?.ownerDocument.hidden ? 0 : 400);
+  }
   cdkRef.closed.subscribe(() => {
     clearTimeout(timer);
     container?.removeEventListener('animationend', onEnter);

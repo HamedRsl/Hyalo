@@ -1,6 +1,6 @@
 # Phase 6: heavy data on demand
 
-Implemented on develop as unreleased work. The package version remains unchanged; this is not a 1.0 stability declaration. The supplied roadmap is scope and acceptance data; the user's Phase 6 request authorizes implementing all eleven families. Gauge already shipped during earlier work and retains its existing API and tests.
+Version 0.6.0 adds the heavy-data components below. Gauge retains its existing API and tests.
 
 | Family | Entry point | Docs route |
 | --- | --- | --- |

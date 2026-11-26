@@ -8,5 +8,6 @@ import { EXAMPLE } from './examples/time-picker';
 export default class HyTimePickerPage {
  protected readonly examples = [EXAMPLE] as const;
  protected readonly time = signal('10:30');
+ protected readonly confirmedTime = signal('09:00');
 protected readonly slots = [{value:'09:00'}, {value:'10:30'}, {value:'12:00',disabled:true}, {value:'14:00'}];
 }

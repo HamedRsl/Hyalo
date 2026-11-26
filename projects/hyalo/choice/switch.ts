@@ -1,7 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   booleanAttribute,
+  effect,
+  inject,
   input,
   model,
   output,
@@ -37,7 +40,7 @@ const PRESSED_THUMB = 1.5;
   host: {
     class: 'hy-choice hy-switch',
     '[attr.data-checked]': 'checked() || null',
-    '[attr.data-disabled]': 'disabled() || null',
+    '[attr.data-disabled]': 'effectiveDisabled() || null',
     '[attr.data-label-position]': 'labelPosition()',
     '[attr.aria-busy]': 'pending() || null',
   },
@@ -48,10 +51,29 @@ export class HySwitch implements FormCheckboxControl {
   protected readonly descriptionId = injectId('switch-desc');
   /** Physical thumb offset in px while it is dragged, otherwise null. */
   protected readonly drag = signal<number | null>(null);
-  private press: { x: number; from: number; travel: number; dir: number; pos: number } | null =
-    null;
+  private press: {
+    pointerId: number;
+    x: number;
+    from: number;
+    travel: number;
+    dir: number;
+    pos: number;
+  } | null = null;
   /** Where a finished drag landed, until the click it causes is handled. */
   private landed: boolean | null = null;
+  private releaseTimer: ReturnType<typeof setTimeout> | undefined;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.releaseTimer));
+    effect(() => {
+      if (this.effectiveDisabled()) {
+        this.press = null;
+        this.drag.set(null);
+        this.landed = null;
+        clearTimeout(this.releaseTimer);
+      }
+    });
+  }
 
   /** Whether the switch is on. Two-way bindable and works with `[formField]`. */
   readonly checked = model(false);
@@ -81,11 +103,13 @@ export class HySwitch implements FormCheckboxControl {
   }
 
   protected onDown(event: PointerEvent): void {
-    if (this.effectiveDisabled() || event.button !== 0) return;
+    if (this.effectiveDisabled() || event.button !== 0 || this.press) return;
     const track = event.currentTarget as HTMLElement;
     const rem = parseFloat(getComputedStyle(track.ownerDocument.documentElement).fontSize) || 16;
     const travel = track.clientWidth - 2 * TRACK_PADDING - PRESSED_THUMB * rem;
+    if (travel <= 0) return;
     this.press = {
+      pointerId: event.pointerId,
       x: event.clientX,
       from: this.checked() ? travel : 0,
       travel,
@@ -96,7 +120,7 @@ export class HySwitch implements FormCheckboxControl {
 
   protected onMove(event: PointerEvent): void {
     const press = this.press;
-    if (!press) return;
+    if (!press || press.pointerId !== event.pointerId) return;
     const moved = (event.clientX - press.x) * press.dir;
     if (this.drag() === null) {
       if (Math.abs(moved) < SLOP) return;
@@ -113,10 +137,15 @@ export class HySwitch implements FormCheckboxControl {
     this.drag.set(press.pos * press.dir);
   }
 
-  protected onUp(cancelled = false): void {
+  protected onLeave(event: PointerEvent): void {
+    if (this.drag() === null) this.onUp(event, true);
+  }
+
+  protected onUp(event: PointerEvent, cancelled = false): void {
     const press = this.press;
+    if (!press || press.pointerId !== event.pointerId) return;
     this.press = null;
-    if (!press || this.drag() === null) return;
+    if (this.drag() === null) return;
     this.drag.set(null);
     // Decided in logical position, so it is the same in both directions.
     const on = press.pos > press.travel / 2;
@@ -126,18 +155,19 @@ export class HySwitch implements FormCheckboxControl {
     // The release also clicks the label. That click applies the drag
     // instead of toggling; if no click comes, apply it anyway.
     this.landed = on;
-    setTimeout(() => {
-      if (this.landed === null) return;
-      this.request(this.landed);
-      this.landed = null;
-    });
+    this.releaseTimer = setTimeout(() => this.commitLanded());
   }
 
   protected onClick(event: MouseEvent): void {
-    if (this.effectiveDisabled()) { event.preventDefault(); return; }
-    if (this.landed === null) return;
-    event.preventDefault();
-    this.request(this.landed);
+    if (this.effectiveDisabled() || this.landed !== null) event.preventDefault();
+    this.commitLanded();
+  }
+
+  private commitLanded(): void {
+    const landed = this.landed;
+    if (landed === null) return;
     this.landed = null;
+    clearTimeout(this.releaseTimer);
+    this.request(landed);
   }
 }

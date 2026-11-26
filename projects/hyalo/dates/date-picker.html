@@ -37,17 +37,19 @@
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="origin"
   [cdkConnectedOverlayOpen]="open()"
-  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayPositions]="touchUi() ? touchPositions : positions"
   [cdkConnectedOverlayHasBackdrop]="touchUi()"
   cdkConnectedOverlayBackdropClass="cdk-overlay-dark-backdrop"
   (backdropClick)="close()"
-  (detach)="closedPanel.emit()"
+  (detach)="detached()"
   (attach)="attached()"
   (overlayOutsideClick)="close(false)"
   (overlayKeydown)="keys($event)"
 >
   <div
+    #datePanel
     class="date-panel"
+    tabindex="-1"
     [attr.data-touch]="touchUi() || null"
     [style.inline-size]="
       calendarOptions().months && calendarOptions().months! > 1 ? 'min(90vw, 72rem)' : null
@@ -56,7 +58,6 @@
     aria-modal="true"
     [attr.aria-label]="label() || dialogLabel()"
     cdkTrapFocus
-    [cdkTrapFocusAutoCapture]="true"
   >
     <hy-calendar
       [labels]="calendarOptions().labels ?? defaultCalendarLabels"

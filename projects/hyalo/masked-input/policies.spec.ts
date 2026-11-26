@@ -71,3 +71,59 @@ it('buffers incomplete edits until blur with an opt-in clear policy', async () =
   expect(input.value).toBe('');
   expect(fixture.componentInstance.value()).toBe('');
 });
+
+it('handles supplementary characters without taking over native or composing deletion', async () => {
+  const leaf = String.fromCodePoint(0x1f33f);
+  const flower = String.fromCodePoint(0x1f33b);
+  const fixture = TestBed.createComponent(HyMaskedInput);
+  fixture.componentRef.setInput('mask', 'X-X');
+  fixture.componentRef.setInput('tokens', { X: /\p{Extended_Pictographic}/u });
+  fixture.componentRef.setInput('value', leaf + flower);
+  await fixture.whenStable();
+  const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+  const completed = vi.fn();
+  fixture.componentInstance.completed.subscribe(completed);
+  input.setSelectionRange(3, 3);
+  for (const options of [{ cancelable: false }, { cancelable: true, isComposing: true }]) {
+    input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'deleteContentBackward', ...options }));
+    expect(input.value).toBe(leaf + '-' + flower);
+  }
+  const deletion = new InputEvent('beforeinput', { inputType: 'deleteContentBackward', cancelable: true });
+  input.dispatchEvent(deletion);
+  expect(deletion.defaultPrevented).toBe(true);
+  expect(input.value).toBe(flower);
+  expect(fixture.componentInstance.value()).toBe(flower);
+  input.value += leaf;
+  input.dispatchEvent(new InputEvent('input', { isComposing: true }));
+  expect(completed).not.toHaveBeenCalled();
+  input.dispatchEvent(new CompositionEvent('compositionend'));
+  expect(completed).toHaveBeenCalledWith(flower + leaf);
+  expect(input.selectionStart).toBe(5);
+});
+
+it.each(['blur', 'complete'] as const)('supports deferred %s commit and external replacements', async (mode) => {
+  const fixture = TestBed.createComponent(HyMaskedInput);
+  fixture.componentRef.setInput('mask', '##-##');
+  fixture.componentRef.setInput('commitOn', mode);
+  fixture.componentRef.setInput('valueFormat', 'masked');
+  await fixture.whenStable();
+  const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+  const type = (value: string) => {
+    input.value = value;
+    input.dispatchEvent(new Event('input'));
+  };
+  type('12');
+  expect(input.value).toBe('12');
+  expect(fixture.componentInstance.value()).toBe('');
+  input.dispatchEvent(new FocusEvent('blur'));
+  expect(fixture.componentInstance.value()).toBe(mode === 'blur' ? '12' : '');
+  type('1234');
+  if (mode === 'blur') input.dispatchEvent(new FocusEvent('blur'));
+  expect(fixture.componentInstance.value()).toBe('12-34');
+  type('9');
+  fixture.componentRef.setInput('value', '56-78');
+  await fixture.whenStable();
+  expect(input.value).toBe('56-78');
+  input.dispatchEvent(new FocusEvent('blur'));
+  expect(fixture.componentInstance.value()).toBe('56-78');
+});

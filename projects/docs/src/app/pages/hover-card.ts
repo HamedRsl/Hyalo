@@ -30,6 +30,11 @@ export default class HoverCardPage {
       description: 'Accessible dialog name.',
     },
     {
+      name: 'hoverCardPanelClass / hoverCardContainer',
+      type: 'string | string[] / HTMLElement',
+      description: 'Optional pane classes and a DOM parent on browsers with Popover support.',
+    },
+    {
       name: 'placement',
       type: 'HyPlacement',
       default: 'top',

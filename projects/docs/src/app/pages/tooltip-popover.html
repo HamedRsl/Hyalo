@@ -39,6 +39,25 @@
       </div>
     </ng-template>
     <span class="hy-muted">Open: {{ open() }}</span>
+    <div #detailsHost class="docs-stack">
+      <button
+        hyButton
+        type="button"
+        [hyPopover]="details"
+        popoverLabel="Collection details"
+        [popoverContainer]="detailsHost"
+        [popoverOrigin]="detailsAnchor"
+        [popoverOffset]="16"
+        [popoverAutoClose]="detailsPolicy"
+        popoverTrigger="hover"
+        (popoverOpened)="detailsState.set('Details ready')"
+        (popoverClosed)="detailsState.set('Details closed')"
+      >
+        Collection details
+      </button>
+      <span #detailsAnchor role="status">{{ detailsState() }}</span>
+      <ng-template #details><p>Available to members of this workspace.</p></ng-template>
+    </div>
   </docs-example>
 
   <h2>Which one</h2>
@@ -63,6 +82,14 @@
     </li>
     <li>Escape, a click outside, or tabbing out closes the popover.</li>
   </ul>
+  <p>
+    Use <code>popoverAutoClose</code> with independent <code>escape</code>,
+    <code>outsidePointer</code> and <code>focusOut</code> options. Hover opens without moving focus.
+    Activate the button with click, touch or keyboard for focus transfer. Supply
+    <code>popoverOrigin</code>, <code>popoverOffset</code> and <code>popoverContainer</code> for
+    alternate anchors and mounting. <code>popoverOpened</code> and <code>popoverClosed</code> run
+    after entry and after detachment. <code>tooltipOrigin</code> accepts an element or point.
+  </p>
 
   <h2>API</h2>
   <p><code>[hyTooltip]</code></p>

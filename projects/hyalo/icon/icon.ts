@@ -4,6 +4,8 @@ import {
   Directive,
   ElementRef,
   Renderer2,
+  PendingTasks,
+  signal,
   computed,
   effect,
   inject,
@@ -11,6 +13,7 @@ import {
   isDevMode,
 } from '@angular/core';
 import type { HyIconDef, HyIconNode } from './icons';
+import { HY_REMOTE_ICONS, HyRemoteIconLoader } from './remote-icon';
 import { HY_ICONS, HyIconRegistry } from './registry';
 
 const SAFE_ATTRS = new Set([
@@ -91,6 +94,56 @@ export class HyIcon {
   private readonly registry = inject(HyIconRegistry);
   private readonly sets = inject(HY_ICONS, { optional: true });
 
+  private readonly remoteSets = inject(HY_REMOTE_ICONS, { optional: true }) ?? [];
+  private readonly loader = inject(HyRemoteIconLoader);
+  private readonly pending = inject(PendingTasks);
+  private readonly remoteDef = signal<HyIconDef | undefined>(undefined);
+  private readonly remoteError = signal<unknown>(undefined);
+  private readonly attempt = signal(0);
+  private readonly remoteSource = computed(() => {
+    const name = this.name();
+    if (!name || this.icon() || this.registry.lookup(name, this.sets)) return undefined;
+    for (let index = this.remoteSets.length - 1; index >= 0; index--) {
+      const set = this.remoteSets[index];
+      if (set && Object.hasOwn(set, name)) return set[name];
+    }
+    return undefined;
+  });
+
+  /** Error from a failed remote request or unsupported SVG. */
+  readonly loadError = this.remoteError.asReadonly();
+
+  constructor() {
+    if (!this.remoteSets.length) return;
+    effect((onCleanup) => {
+      const source = this.remoteSource();
+      this.attempt();
+      this.remoteDef.set(undefined);
+      this.remoteError.set(undefined);
+      if (!source) return;
+      const finished = this.pending.add();
+      const subscription = this.loader.load(source).subscribe({
+        next: (value) => this.remoteDef.set(value),
+        error: (error: unknown) => {
+          this.remoteError.set(error);
+          finished();
+        },
+        complete: finished,
+      });
+      onCleanup(() => {
+        subscription.unsubscribe();
+        finished();
+      });
+    });
+  }
+
+  /** Retries the currently registered remote icon. */
+  reload(): boolean {
+    if (!this.remoteSource()) return false;
+    this.attempt.update((count) => count + 1);
+    return true;
+  }
+
   /** Registered icon name. */
   readonly name = input<string>();
   /** Icon data, used instead of `name`. */
@@ -107,9 +160,9 @@ export class HyIcon {
     if (icon) return Array.isArray(icon) ? { node: icon as HyIconNode } : (icon as HyIconDef);
     const name = this.name();
     const found = name ? this.registry.lookup(name, this.sets) : undefined;
-    if (name && !found && isDevMode()) {
+    if (name && !found && !this.remoteSets.some((set) => Object.hasOwn(set, name)) && isDevMode()) {
       console.warn(`[hyalo] Unknown icon "${name}". Register it with provideHyaloIcons().`); // eslint-disable-line no-console
     }
-    return found;
+    return found ?? this.remoteDef();
   });
 }

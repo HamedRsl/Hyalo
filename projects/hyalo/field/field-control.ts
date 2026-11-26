@@ -17,6 +17,8 @@ export interface HyFieldControl {
   readonly touched?: Signal<boolean>;
   readonly dirty?: Signal<boolean>;
   readonly pending?: Signal<boolean>;
+  /** Whether the control has a value that needs a floating label. */
+  readonly filled?: Signal<boolean>;
   /** First error message to show, if any. */
   readonly errorMessage: Signal<string | undefined>;
   readonly required: Signal<boolean>;

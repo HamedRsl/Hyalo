@@ -30,13 +30,20 @@ export class HyBento {
       const tiles = this.tiles(),
         order = this.order(),
         grid = this.element.querySelector('.grid');
-      if (!grid || !order.length) return;
+      if (!grid || !tiles.length) return;
       const sorted = [...tiles].sort((a, b) => {
         const ai = order.indexOf(a.tileId()),
           bi = order.indexOf(b.tileId());
         return (ai < 0 ? order.length : ai) - (bi < 0 ? order.length : bi);
       });
+      const focused = grid.contains(grid.ownerDocument.activeElement)
+        ? grid.ownerDocument.activeElement as HTMLElement
+        : null;
+      const elements = new Set(tiles.map((tile) => tile.element));
+      const current = Array.from(grid.children).filter((child) => elements.has(child as HTMLElement));
+      if (sorted.every((tile, index) => current[index] === tile.element)) return;
       for (const tile of sorted) grid.appendChild(tile.element);
+      if (focused?.isConnected) focused.focus({ preventScroll: true });
     });
   }
   private normalizedOrder(): string[] {
@@ -44,11 +51,14 @@ export class HyBento {
     return [...new Set([...this.order().filter((id) => ids.includes(id)), ...ids])];
   }
   move(id: string, index: number): void {
+    if (!Number.isInteger(index)) return;
     const current = this.normalizedOrder();
     const from = current.indexOf(id);
     if (from < 0) return;
+    const target = Math.max(0, Math.min(current.length - 1, index));
+    if (target === from) return;
     current.splice(from, 1);
-    current.splice(Math.max(0, Math.min(current.length, index)), 0, id);
+    current.splice(target, 0, id);
     this.order.set(current);
     this.reordered.emit(current);
   }
@@ -65,6 +75,7 @@ export class HyBento {
     }
     this.dragged = null;
   }
+  endDrag(): void { this.dragged = null; }
   key(event: KeyboardEvent, id: string): void {
     if (
       !this.reorderable() ||
@@ -84,6 +95,7 @@ export class HyBento {
     '[attr.draggable]': 'bento?.reorderable() || null',
     '[attr.tabindex]': 'bento?.reorderable() ? 0 : null',
     '(dragstart)': 'bento?.start($event,tileId())',
+    '(dragend)': 'bento?.endDrag()',
     '(dragover)': '$event.preventDefault()',
     '(drop)': 'bento?.drop($event,tileId())',
     '(keydown)': 'bento?.key($event,tileId())',

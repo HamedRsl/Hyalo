@@ -105,9 +105,10 @@ label:has(input:checked) {
 }
 .date-panel[data-touch] {
   position: fixed;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  transform: translate(-50%, -50%);
-  max-block-size: 90vh;
+  inset: 0;
+  margin: auto;
+  block-size: max-content;
+  max-block-size: 90dvh;
+  box-sizing: border-box;
   overflow: auto;
 }
