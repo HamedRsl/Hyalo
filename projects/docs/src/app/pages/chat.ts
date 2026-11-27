@@ -315,6 +315,7 @@ export default class Page {
 
   constructor() {
     this.scrollToLatest();
+    afterNextRender(() => this.keepComposerInView());
     afterRenderEffect({
       write: () => {
         const photo = this.photo();
@@ -326,6 +327,46 @@ export default class Page {
       this.cancelRecording();
       this.closePhoto();
       for (const url of this.objectUrls) URL.revokeObjectURL(url);
+    });
+  }
+
+  private keepComposerInView(): void {
+    const input = this.composer().nativeElement;
+    const bar = input.closest<HTMLElement>('.marketplace-actions');
+    const document = input.ownerDocument;
+    const view = document.defaultView;
+    const viewport = view?.visualViewport;
+    if (!bar || !view || !viewport) return;
+
+    const touch = view.matchMedia('(pointer: coarse)');
+    let frame = 0;
+    const schedule = (): void => {
+      if (frame || !touch.matches || document.activeElement !== input) return;
+      frame = view.requestAnimationFrame(() => {
+        frame = 0;
+        // The keyboard can shrink the visible viewport without resizing the page.
+        if (document.activeElement !== input || viewport.scale !== 1) return;
+        bar.style.setProperty('--marketplace-visible-height', `${viewport.height}px`);
+        const visibleBottom = viewport.offsetTop + viewport.height;
+        const overflow = bar.getBoundingClientRect().bottom + 8 - visibleBottom;
+        if (overflow > 1) view.scrollBy({ top: Math.ceil(overflow), behavior: 'instant' });
+      });
+    };
+    const clearHeight = (): void => {
+      bar.style.removeProperty('--marketplace-visible-height');
+    };
+
+    const observer = new ResizeObserver(schedule);
+    observer.observe(bar);
+    viewport.addEventListener('resize', schedule);
+    input.addEventListener('focus', schedule);
+    input.addEventListener('blur', clearHeight);
+    this.destroy.onDestroy(() => {
+      observer.disconnect();
+      viewport.removeEventListener('resize', schedule);
+      input.removeEventListener('focus', schedule);
+      input.removeEventListener('blur', clearHeight);
+      view.cancelAnimationFrame(frame);
     });
   }
 

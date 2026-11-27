@@ -6,24 +6,24 @@
     padding-block 160ms var(--hy-ease-out);
 }
 
-.marketplace-composer.history-scrolled {
-  margin-block-start: -.5rem;
+.marketplace-composer[data-history-scrolled] {
+  margin-block-start: -0.5rem;
   padding-block: 0 var(--hy-space-2);
 }
 
 .marketplace-actions {
   display: flex;
   align-items: flex-end;
-  gap: .125rem;
-  padding: .25rem;
+  gap: 0.125rem;
+  padding: 0.25rem;
   border: 1px solid var(--hy-line-strong);
   border-radius: 1.5rem;
   background: color-mix(in srgb, var(--hy-surface-2) 94%, transparent);
   box-shadow: var(--hy-glass-shadow-thin);
 }
 
-.history-scrolled .marketplace-actions {
-  backdrop-filter: blur(.75rem);
+[data-history-scrolled] .marketplace-actions {
+  backdrop-filter: blur(0.75rem);
   box-shadow: var(--hy-glass-shadow);
 }
 
@@ -33,6 +33,12 @@
 
 .marketplace-actions button {
   flex: none;
+}
+
+.marketplace-composer-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
 }
 
 .marketplace-draft {
@@ -48,13 +54,14 @@
   inline-size: 100%;
   min-inline-size: 0;
   min-block-size: 2.25rem;
-  max-block-size: 7rem;
-  padding: .5rem .25rem;
+  max-block-size: clamp(2.25rem, calc(var(--marketplace-visible-height, 100dvh) - 4.5rem), 7rem);
+  padding: 0.5rem 0.25rem;
   font: inherit;
   line-height: 1.25rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   scrollbar-width: none;
+  unicode-bidi: plaintext;
 }
 
 .marketplace-draft span {
@@ -62,15 +69,35 @@
   overflow: hidden;
 }
 
-.marketplace-draft textarea.hy-input {
+.marketplace-draft textarea[hyInput] {
   min-block-size: 2.25rem;
-  padding-block: .5rem;
+  padding-block: 0.5rem;
   line-height: 1.25rem;
   resize: none;
 }
 
 .marketplace-draft textarea::placeholder {
   color: var(--hy-ink-2);
+}
+
+@media (pointer: coarse) {
+  .marketplace-draft > * {
+    font-size: max(1rem, 16px);
+  }
+}
+
+@container (max-width: 22rem) {
+  .marketplace-actions {
+    flex-wrap: wrap;
+  }
+
+  .marketplace-composer-tools {
+    flex-basis: 100%;
+  }
+
+  .marketplace-actions [type='submit'] {
+    margin-inline-start: auto;
+  }
 }
 
 .marketplace-emoji,
@@ -120,7 +147,7 @@
 .marketplace-notice:not(:empty),
 .marketplace-composer-error {
   margin: var(--hy-space-1) 0 0;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .marketplace-notice:empty {
@@ -132,5 +159,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marketplace-composer { transition: none; }
+  .marketplace-composer {
+    transition: none;
+  }
 }

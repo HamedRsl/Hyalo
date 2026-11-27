@@ -31,7 +31,10 @@
               size="sm"
               variant="soft"
               [attr.aria-expanded]="directoryOpen()"
-              iconOnly aria-label="New chat" title="New chat" (click)="directoryOpen.set(!directoryOpen())"
+              iconOnly
+              aria-label="New chat"
+              title="New chat"
+              (click)="directoryOpen.set(!directoryOpen())"
             >
               <hy-icon name="plus" />
             </button>
@@ -366,7 +369,7 @@
         }
         <form
           class="marketplace-composer"
-          [class.history-scrolled]="historyScrolled()"
+          [attr.data-history-scrolled]="historyScrolled() || null"
           [attr.aria-busy]="pending()"
           (submit)="submit($event)"
         >
@@ -521,7 +524,10 @@
               size="sm"
               [disabled]="pending()"
               [attr.aria-expanded]="emojiOpen()"
-              iconOnly aria-label="Emoji" title="Emoji" (click)="emojiOpen.set(!emojiOpen())"
+              iconOnly
+              aria-label="Emoji"
+              title="Emoji"
+              (click)="emojiOpen.set(!emojiOpen())"
             >
               <hy-icon name="smile" />
             </button>
@@ -542,53 +548,79 @@
                 (input)="updateDraft(composer.value)"
               ></textarea>
             </div>
-            @if (!editingId()) {
-              <button
-                hyButton
-                type="button"
-                variant="ghost"
-                size="sm"
-                [disabled]="pending()"
-                [attr.aria-expanded]="attachmentsOpen()"
-                iconOnly aria-label="Attach files" title="Attach files" (click)="attachmentsOpen.set(!attachmentsOpen()); closePhoto()"
-              >
-                <hy-icon name="paperclip" />
-              </button>
-              @if (recording() === 'idle') {
+            <div class="marketplace-composer-tools">
+              @if (!editingId()) {
                 <button
                   hyButton
                   type="button"
                   variant="ghost"
                   size="sm"
-                  [disabled]="pending() || !!photo()"
-                  iconOnly aria-label="Record voice" title="Record voice" (click)="startRecording()"
+                  [disabled]="pending()"
+                  [attr.aria-expanded]="attachmentsOpen()"
+                  iconOnly
+                  aria-label="Attach files"
+                  title="Attach files"
+                  (click)="attachmentsOpen.set(!attachmentsOpen()); closePhoto()"
                 >
-                  <hy-icon name="mic" />
+                  <hy-icon name="paperclip" />
                 </button>
-              } @else {
-                @if (recording() === 'active') {
-                  <button hyButton type="button" variant="soft" iconOnly aria-label="Stop recording" title="Stop recording" (click)="finishRecording()">
-                    <hy-icon name="stop" />
+                @if (recording() === 'idle') {
+                  <button
+                    hyButton
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    [disabled]="pending() || !!photo()"
+                    iconOnly
+                    aria-label="Record voice"
+                    title="Record voice"
+                    (click)="startRecording()"
+                  >
+                    <hy-icon name="mic" />
+                  </button>
+                } @else {
+                  @if (recording() === 'active') {
+                    <button
+                      hyButton
+                      type="button"
+                      variant="soft"
+                      iconOnly
+                      aria-label="Stop recording"
+                      title="Stop recording"
+                      (click)="finishRecording()"
+                    >
+                      <hy-icon name="stop" />
+                    </button>
+                  }
+                  <button
+                    hyButton
+                    type="button"
+                    variant="ghost"
+                    iconOnly
+                    aria-label="Cancel recording"
+                    title="Cancel recording"
+                    (click)="cancelRecording()"
+                  >
+                    <hy-icon name="x" />
                   </button>
                 }
-                <button hyButton type="button" variant="ghost" iconOnly aria-label="Cancel recording" title="Cancel recording" (click)="cancelRecording()">
-                  <hy-icon name="x" />
-                </button>
               }
-            }
-            <button
-              hyButton
-              type="submit"
-              iconOnly [attr.aria-label]="editingId() ? 'Save edit' : 'Send message'" [title]="editingId() ? 'Save edit' : 'Send message'"
-              [disabled]="
-                pending() ||
-                !!photo() ||
-                recording() !== 'idle' ||
-                (!draft().trim() && (!!editingId() || !files().length))
-              "
-            >
-              <hy-icon [name]="editingId() ? 'check' : 'send'" />
-            </button>
+              <button
+                hyButton
+                type="submit"
+                iconOnly
+                [attr.aria-label]="editingId() ? 'Save edit' : 'Send message'"
+                [title]="editingId() ? 'Save edit' : 'Send message'"
+                [disabled]="
+                  pending() ||
+                  !!photo() ||
+                  recording() !== 'idle' ||
+                  (!draft().trim() && (!!editingId() || !files().length))
+                "
+              >
+                <hy-icon [name]="editingId() ? 'check' : 'send'" />
+              </button>
+            </div>
           </div>
           @if (editingId()) {
             <button hyButton type="button" variant="ghost" (click)="cancelEdit(); composer.focus()">
@@ -631,7 +663,7 @@ import &#123; HyIcon &#125; from '@hyalo/angular/icon';"
   <h2>Keyboard and reading order</h2>
   <p>
     The conversation list and history are keyboard-scrollable. Enter adds a line in the composer.
-    Use Send message to submit a local draft. Selecting a quoted reply jumps to its original message when it is
-    available.
+    Use Send message to submit a local draft. Selecting a quoted reply jumps to its original message
+    when it is available.
   </p>
 </docs-page>

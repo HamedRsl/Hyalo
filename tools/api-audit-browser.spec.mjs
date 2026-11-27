@@ -12,11 +12,77 @@ const { chromium, firefox, webkit } = require('playwright');
 const { expect } = require('playwright/test');
 const base = process.env.HYALO_BASE_URL ?? 'http://127.0.0.1:4200';
 
+for (const [engine, type, width] of [
+  ['chromium', chromium, 360],
+  ['webkit', webkit, 320],
+]) {
+  test(`${engine} touch composer keeps Persian drafts and Send above a simulated keyboard`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({
+        viewport: { width, height: 740 },
+        isMobile: true,
+        hasTouch: true,
+      });
+      await page.goto(base + '/blocks/marketplace-chat', { waitUntil: 'networkidle' });
+      const composer = page.locator('.marketplace-composer');
+      const bar = composer.locator('.marketplace-actions');
+      const input = composer.getByRole('textbox', { name: 'Message Maya Chen' });
+      const send = composer.getByRole('button', { name: 'Send message' });
+      await input.tap();
+      const single = (await input.boundingBox()).height;
+      await page.evaluate(() => {
+        // Android and iOS can resize only the visual viewport when the keyboard appears.
+        Object.defineProperty(visualViewport, 'height', { configurable: true, value: 285 });
+        visualViewport.dispatchEvent(new Event('resize'));
+      });
+      const bottom = () => bar.evaluate((element) =>
+        element.getBoundingClientRect().bottom - visualViewport.offsetTop);
+      await expect.poll(bottom).toBeLessThanOrEqual(285);
+
+      const persian = 'سلام، برای هماهنگی زمان تحویل صندلی پیام می‌دهم. لطفاً زمان مناسب را به من اطلاع بدهید.';
+      await input.fill(persian);
+      await expect(input).toBeFocused();
+      await expect(input).toHaveCSS('direction', 'rtl');
+      assert.ok((await input.boundingBox()).width >= 150);
+      assert.ok((await input.boundingBox()).height > single);
+      await expect.poll(bottom).toBeLessThanOrEqual(285);
+
+      const mixed = `قرار ملاقات شنبه\nPickup at 10:00\n${persian.repeat(6)}`;
+      await input.fill(mixed);
+      await expect(input).toHaveValue(mixed);
+      assert.ok(await input.evaluate((element) => element.scrollHeight > element.clientHeight));
+      await expect.poll(bottom).toBeLessThanOrEqual(285);
+      await page.evaluate(() => {
+        Object.defineProperty(visualViewport, 'height', { configurable: true, value: 155 });
+        visualViewport.dispatchEvent(new Event('resize'));
+      });
+      await expect.poll(bottom).toBeLessThanOrEqual(155);
+      const sendBox = await send.boundingBox();
+      assert.ok(sendBox.x >= 0 && sendBox.x + sendBox.width <= width);
+
+      await input.evaluate((element) => element.blur());
+      await page.evaluate(() => {
+        Reflect.deleteProperty(visualViewport, 'height');
+        visualViewport.dispatchEvent(new Event('resize'));
+      });
+      await expect(input).toHaveValue(mixed);
+      await input.fill(persian);
+      await send.tap();
+      await expect(page.locator('.marketplace-bubble').filter({ hasText: persian })).toBeVisible();
+      await expect(input).toHaveValue('');
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   test(`${engine} chat composer grows with drafts and compacts above the scrolled history`, async () => {
     const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
     try {
       const page = await browser.newPage({ viewport: { width: 420, height: 750 } });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto(base + '/blocks/marketplace-chat', { waitUntil: 'networkidle' });
       const composer = page.locator('.marketplace-composer');
       const input = composer.getByRole('textbox', { name: 'Message Maya Chen' });
@@ -35,10 +101,10 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
 
       const history = page.getByRole('region', { name: 'Conversation with Maya Chen' });
       await history.evaluate((element) => { element.scrollTop = 0; });
-      await expect(composer).not.toHaveClass(/history-scrolled/);
+      await expect(composer).not.toHaveAttribute('data-history-scrolled', 'true');
       const resting = (await composer.boundingBox()).height;
       await history.evaluate((element) => { element.scrollTop = element.scrollHeight; });
-      await expect(composer).toHaveClass(/history-scrolled/);
+      await expect(composer).toHaveAttribute('data-history-scrolled', 'true');
       await expect.poll(async () => (await composer.boundingBox()).height).toBeLessThan(resting);
       await expect(composer.getByRole('button', { name: 'Send message' })).toBeVisible();
 
