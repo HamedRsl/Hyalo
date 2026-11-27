@@ -64,6 +64,7 @@ export class HyDateRangePicker
     }
   }
   readonly sharedCalendar = input(false);
+  readonly touchUi = input(false);
   readonly calendarOptions = input<HyCalendarOptions>({});
   protected readonly defaultCellClass = (): string => '';
   protected readonly defaultCalendarLabels = {

@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
@@ -11,9 +12,10 @@ import {
 } from '@angular/core';
 @Component({
   selector: 'hy-copy',
+  imports: [HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<button type="button" (click)="copy()" [attr.aria-label]="label()">
-      {{ copied() ? copiedLabel() : label() }}</button
+  template: `<button type="button" (click)="copy()" [attr.aria-label]="label()" [title]="copied() ? copiedLabel() : label()">
+      <hy-icon [name]="copied() ? 'check' : 'copy'" size="1.15rem" /></button
     ><span class="sr" role="status">{{ status() }}</span
     ><ng-content />`,
   styleUrl: './copy.css',

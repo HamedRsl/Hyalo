@@ -26,6 +26,14 @@ const BASE_NAV: readonly NavGroup[] = [
     ],
   },
   {
+    title: 'Application blocks',
+    items: [
+      { path: '/blocks/notifications', label: 'Notification inbox' },
+      { path: '/blocks/marketplace-chat', label: 'Marketplace conversation' },
+      { path: '/blocks/transfer', label: 'Fintech transfer and keypad' },
+    ],
+  },
+  {
     title: 'Components',
     items: [
       { path: '/components', label: 'All components' },
@@ -94,7 +102,7 @@ const BASE_NAV: readonly NavGroup[] = [
       { path: '/components/keypad', label: 'Numeric keypad' },
       { path: '/components/otp', label: 'OTP and PIN' },
       { path: '/components/pagination', label: 'Pagination' },
-      { path: '/components/password', label: 'Password' },
+
       { path: '/components/progress', label: 'Progress and spinner' },
       { path: '/components/progressive-blur', label: 'Progressive blur' },
       { path: '/components/pull-refresh', label: 'Pull to refresh' },
@@ -133,28 +141,18 @@ const BASE_NAV: readonly NavGroup[] = [
 ];
 
 /** App-specific compositions are editable source, not reusable component contracts. */
-export const NAV: readonly NavGroup[] = [
-  ...BASE_NAV.map((group) =>
-    group.title === 'Components'
-      ? {
-          ...group,
-          items: group.items.filter(
-            (item) =>
-              ![
-                '/components/chat',
-                '/components/notification-center',
-                '/components/keypad',
-              ].includes(item.path),
-          ),
-        }
-      : group,
-  ),
-  {
-    title: 'Application blocks',
-    items: [
-      { path: '/blocks/notifications', label: 'Notification inbox' },
-      { path: '/blocks/marketplace-chat', label: 'Marketplace conversation' },
-      { path: '/blocks/transfer', label: 'Fintech transfer and keypad' },
-    ],
-  },
-];
+export const NAV: readonly NavGroup[] = BASE_NAV.map((group) =>
+  group.title === 'Components'
+    ? {
+        ...group,
+        items: group.items.filter(
+          (item) =>
+            ![
+              '/components/chat',
+              '/components/notification-center',
+              '/components/keypad',
+            ].includes(item.path),
+        ),
+      }
+    : group,
+);

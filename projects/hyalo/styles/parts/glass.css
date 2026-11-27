@@ -132,6 +132,10 @@
 /* Set by HyDialogRef while a dialog or drawer plays its exit animation. */
 .hy-backdrop[data-state='closing'] {
   opacity: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: none;
+  transition: none;
 }
 
 .hy-backdrop-transparent {

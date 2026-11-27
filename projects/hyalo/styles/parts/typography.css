@@ -79,3 +79,5 @@
 .hljs-comment {
   color: var(--hy-ink-3);
 }
+
+:lang(fa), :lang(ar) { font-family: var(--hy-font-fa); }

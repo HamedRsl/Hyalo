@@ -51,7 +51,7 @@ export const routes: Routes = [
       { path: 'multi-select', loadComponent: () => import('./pages/multi-select') },
       { path: 'search-field', loadComponent: () => import('./pages/search-field') },
       { path: 'number-input', loadComponent: () => import('./pages/number-input') },
-      { path: 'password', loadComponent: () => import('./pages/password') },
+      { path: 'password', redirectTo: 'text-field', pathMatch: 'full' },
       { path: 'otp', loadComponent: () => import('./pages/otp') },
       { path: 'masked-input', loadComponent: () => import('./pages/masked-input') },
       { path: 'slider', loadComponent: () => import('./pages/slider') },

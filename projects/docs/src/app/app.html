@@ -52,7 +52,7 @@
 </hy-navbar>
 
 <ng-template #settingsPanel>
-  <div class="settings">
+  <div class="settings" #settingsOverlayMount>
     <hy-segmented label="Theme" size="sm" [options]="themes" [(value)]="settings.theme" />
     <div
       class="palette-picker"
@@ -95,26 +95,18 @@
       [options]="directions"
       [(value)]="settings.direction"
     />
-    <label
-      >Locale
-      <select [value]="settings.locale()" (change)="settings.setLocale($any($event.target).value)">
-        <option value="en">English</option>
-        <option value="fa">فارسی</option>
-      </select></label
-    >
-    <label
-      >Material
-      <select
-        [value]="settings.material() ?? ''"
-        (change)="settings.setMaterial($any($event.target).value)"
-      >
-        <option value="">Component default</option>
-        <option value="clear">Clear</option>
-        <option value="frosted">Frosted</option>
-        <option value="tinted">Tinted</option>
-        <option value="solid">Solid</option>
-      </select></label
-    >
+    @defer (on immediate) {
+      <div class="settings-choice">
+        <span>Locale</span>
+        <hy-select compact label="Locale" [options]="locales" [value]="settings.locale()"
+          [panelContainer]="settingsOverlayMount" (valueChange)="settings.setLocale($event ?? '')" />
+      </div>
+      <div class="settings-choice">
+        <span>Material</span>
+        <hy-select compact label="Material" [options]="materials" [value]="settings.material() ?? ''"
+          [panelContainer]="settingsOverlayMount" (valueChange)="settings.setMaterial($event ?? '')" />
+      </div>
+    }
     <p>Detected: {{ settings.detectedTier() }} · Active: {{ settings.tier() }}</p>
     <hy-segmented label="Motion" size="sm" [options]="motions" [(value)]="settings.motionChoice" />
     <hy-segmented

@@ -99,6 +99,12 @@ export default class SelectPage {
       description: 'Always render a native select.',
     },
     {
+      name: 'nativeOnLowFidelity',
+      type: 'boolean',
+      default: 'false',
+      description: 'Switch to the platform picker on low fidelity.',
+    },
+    {
       name: 'disabled',
       type: 'boolean',
       default: 'false',

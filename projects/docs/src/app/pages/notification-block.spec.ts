@@ -41,11 +41,15 @@ describe('copyable notification composition', () => {
     document.body.appendChild(fixture.nativeElement);
     await fixture.whenStable();
     const state = fixture.nativeElement.querySelector(
-      '[aria-label="Preview notification state"]',
-    ) as HTMLSelectElement | null;
-    expect(state).not.toBeNull();
-    state!.value = 'loading';
-    state!.dispatchEvent(new Event('change'));
+      'button[aria-label="Preview notification state"]',
+    ) as HTMLButtonElement;
+    state.click();
+    await fixture.whenStable();
+    const loading = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+      .find((option) => option.textContent?.trim() === 'Loading');
+    expect(loading).toBeDefined();
+    loading?.click();
+    await fixture.whenStable();
     fixture.nativeElement.querySelector('[aria-label="Open notifications"]').click();
     const surface = await panel();
     await fixture.whenStable();
@@ -54,8 +58,7 @@ describe('copyable notification composition', () => {
     );
     expect(surface.querySelector('hy-empty-state')).toBeNull();
     expect(surface.querySelector('hy-list')).toBeNull();
-    state!.value = 'error';
-    state!.dispatchEvent(new Event('change'));
+    fixture.componentInstance['store'].preview('error');
     await fixture.whenStable();
     expect(surface.querySelector('[role="alert"]')?.textContent).toContain('Could not load');
     const retry = Array.from(surface.querySelectorAll('button')).find((button) =>
@@ -65,7 +68,7 @@ describe('copyable notification composition', () => {
     await fixture.whenStable();
     expect(surface.querySelector('[role="alert"]')).toBeNull();
     expect(surface.querySelectorAll('li[hyListItem]').length).toBe(3);
-    expect(state!.value).toBe('ready');
+    expect(state.textContent?.trim()).toBe('Ready');
   });
 
   it('shares read and dismiss state between the push card, badge and unread tab', async () => {

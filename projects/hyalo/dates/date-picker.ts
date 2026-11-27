@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +22,7 @@ import { HyCalendar, type HyCalendarOptions } from './calendar';
 import { HY_DATE_ADAPTER, type HyDate, type HyDateAdapter } from './date-adapter';
 @Component({
   selector: 'hy-date-picker',
-  imports: [HyCalendar, CdkConnectedOverlay, CdkOverlayOrigin, CdkTrapFocus],
+  imports: [HyIcon, HyCalendar, CdkConnectedOverlay, CdkOverlayOrigin, CdkTrapFocus],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(focusout)': 'leave($event)' },
   templateUrl: './date-picker.html',

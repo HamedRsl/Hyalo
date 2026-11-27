@@ -28,7 +28,7 @@
           [attr.aria-label]="'Copy ' + active.label + ' code'"
           (click)="copy()"
         >
-          {{ copyState() === 'copied' ? 'Copied' : 'Copy' }}
+          <hy-icon [name]="copyState() === 'copied' ? 'check' : 'copy'" size="1.15rem" />
         </button>
       </div>
       <pre

@@ -149,7 +149,7 @@ const DIRECTORY: readonly MarketplaceConversation[] = [
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chat.html',
-  styleUrl: './marketplace-chat.css',
+  styleUrls: ['./marketplace-chat.css', './marketplace-composer.css'],
 })
 export default class Page {
   protected readonly example = EXAMPLE;
@@ -303,6 +303,7 @@ export default class Page {
     failed: 'Not sent · demo',
   };
   readonly draft = signal('');
+  readonly historyScrolled = signal(false);
   readonly composerError = signal('');
   readonly editingId = signal<string | null>(null);
   readonly announcement = signal('');
@@ -365,6 +366,7 @@ export default class Page {
     this.savedMessages.delete(chat.id);
     this.savedComposers.delete(chat.id);
     this.updateConversation(chat.id, { unread: 0 });
+    this.historyScrolled.set(false);
     this.draft.set(draft?.text ?? '');
     this.files.set(draft?.files ?? []);
     this.replying.set(draft?.reply ?? null);
@@ -395,17 +397,17 @@ export default class Page {
   }
 
   private readonly standardActions: readonly HyContextAction[] = [
-    { id: 'reply', label: 'Reply' },
-    { id: 'forward', label: 'Forward' },
+    { id: 'reply', label: 'Reply', icon: 'reply' },
+    { id: 'forward', label: 'Forward', icon: 'arrow-end' },
     {
       id: 'react',
-      label: 'React',
+      label: 'React', icon: 'smile',
       children: EMOJI.slice(0, 6).map(({ value, label }) => ({
         id: value,
         label: `${value} ${label}`,
       })),
     },
-    { id: 'copy', label: 'Copy text' },
+    { id: 'copy', label: 'Copy text', icon: 'copy' },
   ];
   private readonly ownActions: readonly HyContextAction[] = [
     ...this.standardActions,

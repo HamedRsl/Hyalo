@@ -43,7 +43,7 @@ export class HySidebarGroup {
   imports: [RouterLink, NgTemplateOutlet, HySidebarGroup, HySidebarItem],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sidebar-groups.html',
-  styles: ':host { display: grid; gap: var(--hy-sidebar-group-gap, var(--hy-space-5)); }',
+  styleUrl: './sidebar-groups.css',
 })
 export class HySidebarGroups {
   readonly groups = input.required<readonly HySidebarNavGroup[]>();

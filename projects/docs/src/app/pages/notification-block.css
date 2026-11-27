@@ -44,21 +44,6 @@
   font-size: 0.875rem;
 }
 
-.notification-select {
-  min-block-size: 44px;
-  padding-inline: var(--hy-space-3);
-  border: 1px solid var(--hy-line-strong);
-  border-radius: var(--hy-radius-s);
-  background: var(--hy-surface-1);
-  color: var(--hy-ink);
-  font: inherit;
-}
-
-.notification-select:focus-visible {
-  outline: 2px solid var(--hy-primary);
-  outline-offset: 2px;
-}
-
 .notification-demo-note {
   color: var(--hy-ink-2);
   font-size: 0.75rem;
@@ -74,8 +59,9 @@
 .notification-panel {
   box-sizing: border-box;
   inline-size: min(20rem, calc(100vw - 4rem));
-  max-block-size: min(40rem, calc(100dvh - 4rem));
+  max-block-size: min(40rem, calc(100dvh - 6rem));
   overflow-y: auto;
+  scrollbar-gutter: stable;
   overscroll-behavior: contain;
   color: var(--hy-ink);
   padding: var(--hy-space-2);
@@ -175,4 +161,10 @@
   .notification-item[data-unread='true'] {
     border-color: CanvasText;
   }
+}
+
+.notification-preview .preview-state-picker {
+  flex: 0 1 9rem;
+  background: color-mix(in srgb, var(--hy-surface-2) 86%, transparent);
+  border-radius: var(--hy-radius-m);
 }

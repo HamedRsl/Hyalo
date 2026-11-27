@@ -78,7 +78,7 @@ describe('async selection', () => {
     fixture.componentRef.setInput('clearable', true);
     await fixture.whenStable();
     const clear = [...root.querySelectorAll('button')].find((button) =>
-      button.textContent?.includes('Remove city'),
+      button.getAttribute('aria-label') === 'Remove city',
     )!;
     clear.click();
     await fixture.whenStable();

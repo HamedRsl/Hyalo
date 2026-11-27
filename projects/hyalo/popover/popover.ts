@@ -80,6 +80,7 @@ export class HyPopover {
   private hoverDismissal: AbortController | undefined;
   private resizeObserver: ResizeObserver | null = null;
   private positionFrame = 0;
+  private revealFrame = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
 
   /** The content. */
@@ -246,24 +247,13 @@ export class HyPopover {
         // Content owns its scroll bounds. A flexible-fit box can be shorter
         // than the actual panel and put its heading above the viewport.
         .withFlexibleDimensions(false)
-        .withPush(true)
-        // The panel grows out of its trigger, not out of its own centre.
-        .withTransformOriginOn('.hy-popover');
+        .withPush(true);
       if (parent) this.position.withPopoverLocation({ type: 'parent', element: parent });
       this.overlayRef = createOverlayRef(this.injector, {
         positionStrategy: this.position,
         scrollStrategy: createRepositionScrollStrategy(this.injector),
         panelClass: 'hy-popover-pane',
         ...(parent ? { usePopover: true } : {}),
-      });
-      this.overlayRef.overlayElement.addEventListener('transitionend', (event) => {
-        if (
-          event.target === this.overlayRef?.overlayElement &&
-          (event.propertyName === 'scale' || event.propertyName === 'transform') &&
-          this.open()
-        ) {
-          this.overlayRef.updatePosition();
-        }
       });
       this.overlayRef.keydownEvents().subscribe((event) => {
         if (event.key === 'Escape' && this.autoClose('escape')) {
@@ -286,9 +276,10 @@ export class HyPopover {
       pane.addEventListener('focusout', this.onFocusOut);
       this.startPositionTracking(pane);
       // Reopened while fading out: turn the exit around.
-      if (this.presence.leaving && this.positioned)
+      if (!this.positioned) this.revealAfterPositioning(pane, focusTraps);
+      else if (this.presence.leaving)
         this.reveal(this.overlayRef.overlayElement, focusTraps);
-      else if (transferFocus && this.positioned) this.focusInside(pane, focusTraps);
+      else if (transferFocus) this.focusInside(pane, focusTraps);
       return;
     }
     // Read on every open, so a changed placement applies next time.
@@ -307,16 +298,30 @@ export class HyPopover {
     pane.style.visibility = 'hidden';
     this.positioned = false;
     pane.addEventListener('focusout', this.onFocusOut);
-    // CDK positions after rendering the portal. Do not expose its unpositioned first frame.
     this.position?.positionChanges.pipe(take(1)).subscribe(() => {
-      this.positioned = true;
-      if (this.destroyed || !this.open() || !this.overlayRef?.hasAttached()) return;
-      this.reveal(pane, focusTraps);
+      this.revealAfterPositioning(pane, focusTraps);
     });
     this.overlayRef.attach(
       new TemplatePortal(this.content(), this.viewContainer, this.popoverContext()),
     );
     this.startPositionTracking(pane);
+  }
+
+  private revealAfterPositioning(pane: HTMLElement, focusTraps: FocusTrapFactory): void {
+    if (this.revealFrame) return;
+    const show = (): void => {
+      this.revealFrame = 0;
+      const ref = this.overlayRef;
+      if (this.destroyed || !this.open() || !ref?.hasAttached()) return;
+      // Lazy content can render after CDK's first measurement. Measure the final
+      // layout while the panel is still hidden so viewport fitting does not jump.
+      ref.updatePosition();
+      this.positioned = true;
+      this.reveal(pane, focusTraps);
+    };
+    const view = pane.ownerDocument.defaultView;
+    if (view?.requestAnimationFrame) this.revealFrame = view.requestAnimationFrame(show);
+    else show();
   }
 
   private startPositionTracking(pane: HTMLElement): void {
@@ -342,8 +347,11 @@ export class HyPopover {
     this.host.nativeElement.ownerDocument.removeEventListener('fullscreenchange', this.followFullscreen);
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
-    this.host.nativeElement.ownerDocument.defaultView?.cancelAnimationFrame?.(this.positionFrame);
+    const view = this.host.nativeElement.ownerDocument.defaultView;
+    view?.cancelAnimationFrame?.(this.positionFrame);
+    view?.cancelAnimationFrame?.(this.revealFrame);
     this.positionFrame = 0;
+    this.revealFrame = 0;
   }
 
   private readonly followFullscreen = (): void => {

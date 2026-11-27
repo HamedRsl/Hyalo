@@ -112,3 +112,8 @@ label:has(input:checked) {
   box-sizing: border-box;
   overflow: auto;
 }
+
+.date-panel { box-sizing: border-box; max-inline-size: calc(100vw - 1.5rem); max-block-size: calc(100dvh - 1.5rem); overflow: auto; overscroll-behavior: contain; }
+.date-panel[data-touch] { max-block-size: min(90dvh, calc(100dvh - 1.5rem)); }
+.calendar-action { display: inline-grid; place-items: center; padding: 0; }
+.close-calendar { margin-block-start: .625rem; }

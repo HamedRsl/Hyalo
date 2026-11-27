@@ -95,3 +95,10 @@ button:focus-visible {
 :host-context([data-hy-motion='reduced']) button svg {
   transition: none;
 }
+
+:host { transition: inline-size var(--hy-dur-enter) var(--hy-ease-out), gap var(--hy-dur-quick) var(--hy-ease-out); }
+@media (prefers-reduced-motion: reduce) { :host { transition: none; } }
+:host-context([data-hy-motion='reduced']) { transition: none; }
+
+:host([data-collapsed='true']) { --hy-sidebar-branch-indent: 0px; --hy-sidebar-group-gap: .5rem; }
+:host([data-collapsed='true']) nav { min-inline-size: 0; }

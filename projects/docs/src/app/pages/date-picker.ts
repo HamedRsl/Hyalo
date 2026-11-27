@@ -1,3 +1,5 @@
+import { HyButton } from '@hyalo/angular/button';
+import { HyIcon } from '@hyalo/angular/icon';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { HyField } from '@hyalo/angular/field';
 import {
@@ -13,7 +15,7 @@ import { DocsExample } from '../shared/example';
 import { EXAMPLE } from './examples/date-picker';
 @Component({
   selector: 'docs-date-picker-page',
-  imports: [DocsPage, DocsExample, HyField, HyCalendar, HyDatePicker, HyDateRangePicker],
+  imports: [HyButton, HyIcon, DocsPage, DocsExample, HyField, HyCalendar, HyDatePicker, HyDateRangePicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './date-picker.html',
 })

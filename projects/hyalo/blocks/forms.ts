@@ -9,8 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormField, email, form, required, submit } from '@angular/forms/signals';
-import { HyField, HyInput } from '@hyalo/angular/field';
-import { HyPassword } from '@hyalo/angular/password';
+import { HyField, HyInput, HY_TEXT_FIELD } from '@hyalo/angular/field';
 import { HyOtp } from '@hyalo/angular/otp';
 import {
   HY_DATE_ADAPTER,
@@ -33,7 +32,7 @@ export interface HyAuthValue {
 }
 @Component({
   selector: 'hy-auth-block',
-  imports: [HyField, HyInput, HyPassword, HyOtp, HyButton, FormField],
+  imports: [HY_TEXT_FIELD, HyOtp, HyButton, FormField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './auth-block.html',
   styleUrl: './form-block.css',

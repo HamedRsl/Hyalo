@@ -1,3 +1,29 @@
+@if (inputMode() === 'per-character') {
+  <div class="otp-slots" dir="ltr" role="group" [attr.aria-labelledby]="field?.labelId ?? null"
+    [attr.aria-label]="field ? null : label() || 'Verification code'">
+    @for (cell of cells(); track cell.index; let first = $first) {
+      <input
+        [type]="masked() ? 'password' : 'text'"
+        [id]="first ? id() : id() + '-' + cell.index"
+        [attr.inputmode]="mode() === 'numeric' ? 'numeric' : 'text'"
+        [attr.autocomplete]="first ? 'one-time-code' : 'off'"
+        [attr.aria-label]="'Character ' + (cell.index + 1) + ' of ' + count()"
+        [attr.aria-describedby]="describedBy()"
+        [attr.aria-invalid]="showsError() || null"
+        [disabled]="effectiveDisabled()" [readOnly]="readonly()" [required]="required()"
+        [value]="value()[cell.index] ?? ''"
+        (focus)="$any($event.target).select()"
+        (input)="slotInput($event, cell.index)"
+        (compositionend)="slotInput($event, cell.index)"
+        (paste)="slotPaste($event, cell.index)"
+        (keydown)="slotKey($event, cell.index)"
+      />
+    }
+  </div>
+  @if (name()) {
+    <input type="hidden" [name]="name()" [value]="value()" [disabled]="effectiveDisabled()" />
+  }
+} @else {
 <input
   [type]="masked() ? 'password' : 'text'"
   [attr.inputmode]="mode() === 'numeric' ? 'numeric' : 'text'"
@@ -19,6 +45,7 @@
   (input)="update($event)"
   (compositionend)="update($event)"
 />
+}
 @if (cellTemplate(); as template) {
   <div class="chips" aria-hidden="true">@for (cell of cells(); track cell.index) {
     <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="cell" />

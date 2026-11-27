@@ -74,7 +74,7 @@ describe('HyScheduler real FullCalendar', () => {
     f.destroy();
     expect(f.nativeElement.querySelector('.fc-view-harness')).toBeNull();
   });
-  it('labels the native view selector and synchronizes it in both directions', async () => {
+  it('labels the themed view selector and synchronizes it in both directions', async () => {
     TestBed.configureTestingModule({
       providers: [{ provide: HY_SCHEDULER_LOADER, useValue: async () => engine }],
     });
@@ -86,16 +86,20 @@ describe('HyScheduler real FullCalendar', () => {
       { value: 'timeGridWeek', label: 'Weekly' },
     ]);
     await fixture.whenStable();
-    const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
-    expect(select.labels?.[0]?.textContent).toContain('Calendar layout');
-    expect(select.value).toBe('dayGridMonth');
-    select.value = 'timeGridWeek';
-    select.dispatchEvent(new Event('change'));
+    const select = fixture.nativeElement.querySelector('button[role="combobox"]') as HTMLButtonElement;
+    expect(select.getAttribute('aria-label')).toBe('Calendar layout');
+    expect(select.textContent).toContain('Monthly');
+    select.click();
+    await fixture.whenStable();
+    const weekly = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+      .find((option) => option.textContent?.includes('Weekly'));
+    expect(weekly).toBeDefined();
+    weekly?.click();
     await fixture.whenStable();
     expect(fixture.componentInstance.getApi()?.view.type).toBe('timeGridWeek');
     fixture.componentInstance.changeView('listWeek');
     await fixture.whenStable();
-    expect(select.value).toBe('listWeek');
-    expect(select.closest('label')?.querySelector('hy-icon')?.getAttribute('aria-hidden')).toBe('true');
+    expect(select.textContent).toContain('listWeek');
+    expect(select.querySelector('hy-icon')?.getAttribute('aria-hidden')).toBe('true');
   });
 });

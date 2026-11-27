@@ -43,10 +43,11 @@
   </docs-example>
 
   <h2>Native fallback</h2>
+  <p>Use <code>compact</code> for toolbars to keep the chevron next to the value.
+    A standalone select uses <code>label</code> for its accessible name.</p>
   <p>
-    On the low fidelity tier, or with the <code>native</code> input, the component renders a real
-    <code>&lt;select&gt;</code> with the same look. Phones then get their own picker, which is often
-    the better experience for long lists.
+    The themed dropdown adapts its materials to the active fidelity tier. Use <code>native</code>
+    for the platform picker or <code>nativeOnLowFidelity</code> to enable it on the low tier.
   </p>
   <p>Call <code>open()</code> from a user gesture to request the platform picker where the browser supports it.
     The native picker owns dismissal and visibility. The open state and panel events describe the custom dropdown.</p>

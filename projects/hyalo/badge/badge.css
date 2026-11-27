@@ -46,3 +46,19 @@ button:focus-visible {
   outline: 2px solid var(--hy-primary);
   outline-offset: 2px;
 }
+:host(:has(> button)) {
+  gap: 0.25rem;
+  padding-inline-end: 0.25em;
+}
+button {
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  color: var(--hy-ink-2);
+}
+button:hover, button:focus-visible {
+  color: var(--hy-ink);
+  background: var(--hy-primary-wash);
+}
+@media (pointer: coarse) {
+  button { min-inline-size: 2rem; min-block-size: 2rem; }
+}

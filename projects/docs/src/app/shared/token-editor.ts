@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { HyButton } from '@hyalo/angular/button';
 import { HY_CARD } from '@hyalo/angular/card';
@@ -84,7 +85,7 @@ function inkFor(fill: string): string {
  */
 @Component({
   selector: 'docs-token-editor',
-  imports: [HY_CARD, HY_TEXT_FIELD, HyButton, HyCheckbox, HySegmented, HySwitch],
+  imports: [HyIcon, HY_CARD, HY_TEXT_FIELD, HyButton, HyCheckbox, HySegmented, HySwitch],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './token-editor.html',
   styleUrl: './token-editor.css',

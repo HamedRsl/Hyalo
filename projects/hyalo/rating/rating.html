@@ -10,7 +10,7 @@
   [attr.aria-required]="required() || null"
 >
   @for (choice of choices(); track choice.value; let first = $first) {
-    <label class="score" [title]="tooltipFormatter()(choice.value)" (pointerenter)="preview(choice.value)" (pointerleave)="preview(null)"
+    <label class="score" [class.filled]="(previewValue() ?? value()) >= choice.value" [class.chosen]="value() === choice.value" [title]="tooltipFormatter()(choice.value)" (pointerenter)="preview(choice.value)" (pointerleave)="preview(null)"
       ><input
         type="radio"
         [id]="first ? id() : id() + '-' + choice.value"

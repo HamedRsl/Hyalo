@@ -11,9 +11,13 @@ describe('pagination audit characterization', () => {
     fixture.componentRef.setInput('showJump', true);
     await fixture.whenStable();
     const root: HTMLElement = fixture.nativeElement;
-    const select = root.querySelector('select')!;
-    select.value = '20';
-    select.dispatchEvent(new Event('change'));
+    const select = root.querySelector<HTMLButtonElement>('button[role="combobox"]')!;
+    select.click();
+    await fixture.whenStable();
+    const option = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+      .find((item) => item.textContent?.trim() === '20');
+    expect(option).toBeDefined();
+    option?.click();
     await fixture.whenStable();
     expect(fixture.componentInstance.pageSize()).toBe(20);
     expect(fixture.componentInstance.page()).toBe(2);

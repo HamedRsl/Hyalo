@@ -101,23 +101,17 @@ label:has(input:checked) {
   padding: 0.5rem;
   border: 1px solid var(--hy-line-strong);
   border-radius: var(--hy-radius-m);
-  background: var(--hy-surface-1);
   color: var(--hy-ink);
   box-shadow: var(--hy-shadow-m);
 }
 [ngOption] {
-  min-block-size: 2.75rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: var(--hy-radius-s);
-  cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  box-sizing: border-box; min-block-size: 2.75rem; padding: .5rem .75rem;
+  border-radius: var(--hy-radius-s); border-inline-start: 2px solid transparent; cursor: pointer;
 }
-[ngOption][data-active],
-[ngOption][aria-selected='true'] {
-  background: var(--hy-primary-wash);
-  outline: 1px solid var(--hy-primary);
-  outline-offset: -1px;
-}
-[ngOption][aria-disabled='true'] {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+[ngOption][data-active='true'] { background: var(--hy-primary-wash); border-inline-start-color: var(--hy-primary); }
+[ngOption][aria-selected='true'] { font-weight: 600; }
+.option-check { visibility: hidden; color: var(--hy-primary); }
+[ngOption][aria-selected='true'] .option-check { visibility: visible; }
+[ngOption][aria-disabled='true'] { opacity: .55; cursor: not-allowed; }
+.control > button { display: grid; place-items: center; padding: 0; }

@@ -1,6 +1,7 @@
 <div class="chips">
   @for (option of visibleChips(); track $index) {
     <button
+      class="remove-chip"
       type="button"
       [disabled]="blocked() || option.disabled || option.group?.disabled"
       [attr.aria-label]="'Remove ' + optionLabel(option)"
@@ -14,7 +15,7 @@
       } @else {
         {{ optionLabel(option) }}
       }
-      <span aria-hidden="true">×</span>
+      <span class="remove-mark" aria-hidden="true">×</span>
     </button>
   }
   @if (selected().length > visibleChips().length) {
@@ -51,7 +52,7 @@
     aria-label="Show options"
     (click)="expand(!expanded()); focus()"
   >
-    Options
+    <hy-icon name="chevron-down" />
   </button>
 </div>
 
@@ -71,7 +72,7 @@
     (detach)="dismiss(); panelDetached.emit()"
   >
     <div
-      class="options"
+      class="options hy-glass" data-material="frosted"
       [style.max-block-size.px]="viewportHeight()"
       (scroll)="scrollOptions($event)"
     >
@@ -134,6 +135,7 @@
             } @else {
               {{ item.label }}
             }
+            <hy-icon class="option-check" name="check" size="1rem" />
           </div>
         }
         <div role="presentation" [style.block-size.px]="afterSize()"></div>

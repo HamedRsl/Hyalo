@@ -14,6 +14,7 @@ import { type HySize, injectId } from '@hyalo/angular/core';
 
 import { HY_FIELD, type HyFieldContext, type HyFieldControl } from './field-control';
 import { HyInput } from './input';
+import { HyPasswordMode, HyPasswordToggle } from './password-mode';
 
 export interface HyErrorState {
   readonly invalid: boolean;
@@ -143,4 +144,4 @@ export class HyField implements HyFieldContext {
 }
 
 /** Everything needed to build a text field. */
-export const HY_TEXT_FIELD = [HyField, HyInput, HyPrefix, HySuffix] as const;
+export const HY_TEXT_FIELD = [HyField, HyInput, HyPrefix, HySuffix, HyPasswordMode, HyPasswordToggle] as const;

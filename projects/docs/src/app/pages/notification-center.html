@@ -26,23 +26,16 @@
         </button>
       </header>
 
-      <label class="notification-preview"
-        >Preview state
-        <select
-          class="notification-select"
-          aria-label="Preview notification state"
-          [value]="
-            store.status() === 'ready' && !store.notifications().length ? 'empty' : store.status()
-          "
-          #statePreview
-          (change)="store.preview(statePreview.value)"
-        >
-          <option value="ready">Ready</option>
-          <option value="loading">Loading</option>
-          <option value="error">Error</option>
-          <option value="empty">Empty</option>
-        </select>
-      </label>
+      <div class="notification-preview">
+        <span>Preview state</span>
+        <hy-select
+          class="preview-state-picker"
+          label="Preview notification state"
+          [options]="store.previewOptions"
+          [value]="store.previewState()"
+          (valueChange)="store.preview($event)"
+        />
+      </div>
       <p class="notification-demo-note">
         Local demo data. Retry and Ready restore the sample inbox; no push permission or network
         request is made.
@@ -237,6 +230,7 @@ import &#123; HyTabs, HyTab, HyTabHeader &#125; from '@hyalo/angular/tabs';
 import &#123; TabContent &#125; from '@angular/aria/tabs';
 import &#123; HyEmptyState &#125; from '@hyalo/angular/empty-state';
 import &#123; HyButton &#125; from '@hyalo/angular/button';
+import &#123; HySelect &#125; from '@hyalo/angular/select';
 import &#123; NgTemplateOutlet &#125; from '@angular/common';" />
   <h2>Behavior and accessibility</h2>
   <p>

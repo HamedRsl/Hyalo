@@ -18,13 +18,13 @@
   />
   <button
     type="button"
-    [attr.aria-label]="calendarLabel()"
+    class="calendar-action" [attr.aria-label]="calendarLabel()" [title]="calendarLabel()"
     aria-haspopup="dialog"
     [attr.aria-expanded]="open()"
     [disabled]="blocked()"
     (click)="show()"
   >
-    {{ calendarLabel() }}
+    <hy-icon name="calendar" size="1.15rem" />
   </button>
 </div>
 @if (display()) {
@@ -38,6 +38,8 @@
   [cdkConnectedOverlayOrigin]="origin"
   [cdkConnectedOverlayOpen]="open()"
   [cdkConnectedOverlayPositions]="touchUi() ? touchPositions : positions"
+  [cdkConnectedOverlayPush]="!touchUi()"
+  [cdkConnectedOverlayViewportMargin]="12"
   [cdkConnectedOverlayHasBackdrop]="touchUi()"
   cdkConnectedOverlayBackdropClass="cdk-overlay-dark-backdrop"
   (backdropClick)="close()"
@@ -85,7 +87,7 @@
       </button>
       <button type="button" data-date-cancel (click)="cancel()">{{ cancelLabel() }}</button>
     } @else {
-      <button type="button" (click)="close()">{{ closeLabel() }}</button>
+      <button class="calendar-action close-calendar" type="button" [attr.aria-label]="closeLabel()" [title]="closeLabel()" (click)="close()"><hy-icon name="x" size="1.15rem" /></button>
     }
   </div>
 </ng-template>

@@ -101,23 +101,31 @@ label:has(input:checked) {
   padding: 0.5rem;
   border: 1px solid var(--hy-line-strong);
   border-radius: var(--hy-radius-m);
-  background: var(--hy-surface-1);
   color: var(--hy-ink);
   box-shadow: var(--hy-shadow-m);
 }
 [ngOption] {
+  display: flex; align-items: center; justify-content: space-between;
+  box-sizing: border-box; border-inline-start: 2px solid transparent;
   min-block-size: 2.75rem;
   padding: 0.625rem 0.75rem;
   border-radius: var(--hy-radius-s);
   cursor: pointer;
 }
-[ngOption][data-active],
-[ngOption][aria-selected='true'] {
+[ngOption][data-active='true'] {
   background: var(--hy-primary-wash);
-  outline: 1px solid var(--hy-primary);
-  outline-offset: -1px;
+  border-inline-start-color: var(--hy-primary);
 }
 [ngOption][aria-disabled='true'] {
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+.remove-chip { display: inline-flex; align-items: center; gap: .3rem; padding-inline: .7rem .45rem; border-radius: var(--hy-radius-pill); }
+.remove-mark { display: grid; place-items: center; inline-size: 1.25rem; aspect-ratio: 1; border-radius: 50%; color: var(--hy-ink-2); }
+.remove-chip:hover .remove-mark, .remove-chip:focus-visible .remove-mark { background: var(--hy-primary-wash); color: var(--hy-primary); }
+
+.control > button:has(hy-icon) { display: inline-grid; place-items: center; padding: 0; }
+.option-check { visibility: hidden; color: var(--hy-primary); }
+[ngOption][aria-selected='true'] .option-check { visibility: visible; }
+[ngOption][aria-selected='true'] { font-weight: 600; }

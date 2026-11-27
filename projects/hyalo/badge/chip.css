@@ -19,13 +19,6 @@ button {
 :host([data-selected='true']) button {
   background: color-mix(in srgb, var(--_tone, var(--hy-primary)) 12%, transparent);
 }
-.check {
-  opacity: 0;
-  inline-size: 0.8em;
-}
-:host([data-selected='true']) .check {
-  opacity: 1;
-}
 button:disabled {
   opacity: 0.5;
   cursor: default;

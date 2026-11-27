@@ -13,3 +13,6 @@ button:active:not(:disabled),button[aria-pressed=true]{background:var(--hy-prima
 @media(forced-colors:active){[aria-selected=true],[aria-pressed=true]{outline:2px solid Highlight}}
 :host{display:grid;min-inline-size:12rem;max-inline-size:min(24rem,calc(100vw - 2rem));padding:.375rem;border:1px solid var(--hy-line-strong);border-radius:var(--hy-radius-m);background:var(--hy-surface-1);box-shadow:var(--hy-shadow-m)}button{display:flex;justify-content:space-between;gap:1rem;border-color:transparent;text-align:start}button:focus{background:var(--hy-primary-wash);outline:2px solid var(--hy-primary);outline-offset:-2px}.separator{border-block-start:1px solid var(--hy-line);margin-block:.25rem}kbd{font-size:.75em;color:var(--hy-ink-3)}
 .cdk-menu{display:grid;min-inline-size:0}
+button{align-items:center}
+button>span:first-child{display:flex;align-items:center;gap:.375rem;min-inline-size:0}
+button hy-icon{flex:none}

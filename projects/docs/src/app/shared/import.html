@@ -1,7 +1,7 @@
 <div class="import">
   <pre><code>{{ code() }}</code></pre>
   <button type="button" aria-label="Copy import code" (click)="copy()">
-    {{ result() === 'copied' ? 'Copied' : 'Copy' }}
+    <hy-icon [name]="result() === 'copied' ? 'check' : 'copy'" size="1.15rem" />
   </button>
   <span role="status">{{
     result() === 'copied'

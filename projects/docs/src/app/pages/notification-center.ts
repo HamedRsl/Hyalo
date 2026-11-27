@@ -8,6 +8,7 @@ import { HyBadge } from '@hyalo/angular/badge';
 import { HyTabs, HyTab, HyTabHeader } from '@hyalo/angular/tabs';
 import { TabContent } from '@angular/aria/tabs';
 import { HyEmptyState } from '@hyalo/angular/empty-state';
+import { HySelect } from '@hyalo/angular/select';
 import { HyButton } from '@hyalo/angular/button';
 
 import { DocsPage } from '../shared/page';
@@ -45,6 +46,15 @@ export class NotificationBlockStore {
   ];
   readonly notifications = signal(this.seed.map((item) => ({ ...item })));
   readonly status = signal<'ready' | 'loading' | 'error'>('ready');
+  readonly previewOptions = [
+    { value: 'ready', label: 'Ready' },
+    { value: 'loading', label: 'Loading' },
+    { value: 'error', label: 'Error' },
+    { value: 'empty', label: 'Empty' },
+  ];
+  readonly previewState = computed(() =>
+    this.status() === 'ready' && !this.notifications().length ? 'empty' : this.status(),
+  );
   readonly busy = computed(() => this.status() !== 'ready');
   readonly filter = signal<'all' | 'unread'>('all');
   readonly unreadCount = computed(() => this.notifications().filter((item) => !item.read).length);
@@ -80,7 +90,7 @@ export class NotificationBlockStore {
   }
 
   /** Demo-only state switch. In production, set status around the host's API request. */
-  preview(value: string): void {
+  preview(value: string | undefined): void {
     if (value === 'loading' || value === 'error') this.status.set(value);
     else if (value === 'empty') {
       this.status.set('ready');
@@ -115,6 +125,7 @@ export class NotificationBlockStore {
     HyTabHeader,
     HyEmptyState,
     HyButton,
+    HySelect,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './notification-center.html',

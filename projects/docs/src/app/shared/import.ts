@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
@@ -10,6 +11,7 @@ import {
 } from '@angular/core';
 import { copyText } from './copy-text';
 @Component({
+  imports: [HyIcon],
   selector: 'docs-import',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './import.html',

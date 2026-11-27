@@ -73,8 +73,8 @@ export interface HySelectPage<T> {
  * announced through `aria-activedescendant`. Arrow keys move, Enter or
  * Space picks, Escape closes, and typing jumps to a matching option.
  *
- * On the low fidelity tier, or with `native`, it renders a real `<select>`
- * instead. That gives the platform picker on phones and costs nothing.
+ * Use `native` for the platform picker, or `nativeOnLowFidelity` for an
+ * adaptive platform fallback.
  */
 @Component({
   selector: 'hy-select',
@@ -93,6 +93,8 @@ export interface HySelectPage<T> {
   host: {
     class: 'hy-select',
     '[attr.data-native]': 'useNative() || null',
+    '[attr.data-compact]': 'compact() || null',
+    '[class.hy-select--standalone]': '!field',
     '(focusout)': 'scheduleMode()',
   },
   templateUrl: './select.html',
@@ -101,7 +103,7 @@ export interface HySelectPage<T> {
 export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldControl {
   private readonly policy = inject(HY_CONFIG).components?.select;
   private readonly fidelity = inject(HyFidelity);
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly destroy = inject(DestroyRef);
   private readonly ready = signal(false);
@@ -120,6 +122,10 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly value = model<T | undefined>(undefined);
   /** Text shown while nothing is selected. */
   readonly placeholder = input('Select');
+  /** Accessible name when the select is used without a field label. */
+  readonly label = input('');
+  /** Keep the chevron beside the value in compact toolbars. */
+  readonly compact = input(false, { transform: booleanAttribute });
   readonly name = input('');
   readonly optionTemplate = input<TemplateRef<HySelectOptionContext<T>>>();
   readonly compareWith = input<(a: T, b: T) => boolean>((a, b) => a === b);
@@ -218,6 +224,8 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
   readonly touched = input(false, { transform: booleanAttribute });
   /** Always render a native `<select>`. */
   readonly native = input(false, { transform: booleanAttribute });
+  /** Use the platform picker on low fidelity instead of the themed dropdown. */
+  readonly nativeOnLowFidelity = input(false, { transform: booleanAttribute });
   /** Emits when the control loses focus, so forms can mark it touched. */
   readonly touch = output<void>();
 
@@ -339,11 +347,12 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     effect((onCleanup) => {
       const trigger = this.trigger()?.nativeElement;
       if (!this.opened() || this.useNative() || !trigger) return;
-      const measure = (): void => this.panelWidth.set(trigger.offsetWidth);
+      const anchor = this.field ? trigger : this.host;
+      const measure = (): void => this.panelWidth.set(anchor.offsetWidth);
       measure();
       if (typeof ResizeObserver !== 'undefined') {
         const resize = new ResizeObserver(measure);
-        resize.observe(trigger);
+        resize.observe(anchor);
         onCleanup(() => resize.disconnect());
       }
     });
@@ -390,6 +399,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     effect(() => {
       this.ready();
       this.native();
+      this.nativeOnLowFidelity();
       this.fidelity.tier();
       this.scheduleMode();
     });
@@ -420,7 +430,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
 
   protected setExpanded(open: boolean): void {
     if (open && this.effectiveDisabled()) return;
-    if (open) this.panelWidth.set(this.trigger()?.nativeElement.offsetWidth ?? 0);
+    if (open) this.panelWidth.set((this.field ? this.trigger()?.nativeElement : this.host)?.offsetWidth ?? 0);
     if (!open) {
       this.searchPrefix = '';
       this.lastType = -Infinity;
@@ -651,7 +661,7 @@ export class HySelect<T> implements FormValueControl<T | undefined>, HyFieldCont
     queueMicrotask(() => {
       if (this.destroy.destroyed || !this.ready()) return;
       if (this.expanded() || this.host.contains(this.document.activeElement)) return;
-      this.useNative.set(this.native() || this.fidelity.tier() === 'low');
+      this.useNative.set(this.native() || (this.nativeOnLowFidelity() && this.fidelity.tier() === 'low'));
     });
   }
 

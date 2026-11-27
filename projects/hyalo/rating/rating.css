@@ -94,18 +94,28 @@ label:has(input:checked) {
   }
 }
 .score {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  position: relative;
+  display: grid;
+  place-items: center;
   min-inline-size: 2.75rem;
   min-block-size: 2.75rem;
-  padding: 0.5rem;
-  border: 1px solid var(--hy-line-strong);
+  padding: .25rem;
+  color: var(--hy-ink-2);
+  border: 1px solid var(--hy-line);
   border-radius: var(--hy-radius-m);
   cursor: pointer;
 }
-.score input {
-  inline-size: 1rem;
-  min-block-size: 1rem;
-  accent-color: var(--hy-primary);
+.score input { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.score:has(:disabled) { cursor: not-allowed; opacity: .55; }
+.score span { font-size: 1.25rem; transition: transform 170ms var(--hy-ease-out), color 170ms ease; pointer-events: none; }
+.score.filled { color: var(--hy-primary); background: var(--hy-primary-wash); }
+.score.chosen { border-color: var(--hy-primary); }
+.score.chosen span { animation: hy-rating-pop 330ms var(--hy-ease-out); }
+.score:active span { transform: scale(.85); }
+@keyframes hy-rating-pop { 0% { transform: scale(.8); } 48% { transform: scale(1.24) rotate(-8deg); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .score.chosen span { animation: none; }
+  .score span { transition: none; }
 }
+:host-context([data-hy-motion='reduced']) .score.chosen span { animation: none; }
+:host-context([data-hy-motion='reduced']) .score span { transition: none; }

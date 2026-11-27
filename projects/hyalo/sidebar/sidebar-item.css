@@ -67,3 +67,6 @@ hy-icon {
   color: var(--hy-ink);
   font-variant-numeric: tabular-nums;
 }
+
+:host { inline-size: 100%; }
+:host-context([data-collapsed='true']) { gap: 0; padding-inline: 0; }

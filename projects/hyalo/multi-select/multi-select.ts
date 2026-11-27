@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -17,6 +18,7 @@ import { HyOptionQuery } from '@hyalo/angular/combobox';
 @Component({
   selector: 'hy-multi-select',
   imports: [
+    HyIcon,
     NgTemplateOutlet,
     Combobox,
     ComboboxPopup,

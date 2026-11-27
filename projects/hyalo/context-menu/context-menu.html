@@ -10,10 +10,13 @@
           [cdkMenuTriggerFor]="submenu"
           [cdkMenuItemDisabled]="!!item.disabled"
         >
-          @if (item.icon) {
-            <hy-icon [name]="item.icon" />
-          }
-          {{ item.label }} <span aria-hidden="true">›</span></button
+          <span>
+            @if (item.icon) {
+              <hy-icon [name]="item.icon" />
+            }
+            {{ item.label }}
+          </span>
+          <span aria-hidden="true">›</span></button
         ><ng-template #submenu
           ><hy-context-menu
             [items]="item.children"
@@ -30,10 +33,13 @@
           [cdkMenuItemDisabled]="!!item.disabled"
           (cdkMenuItemTriggered)="activate(item)"
         >
-          @if (item.icon) {
-            <hy-icon [name]="item.icon" />
-          }
-          {{ item.label }} <span>{{ item.checked ? 'Selected' : '' }}</span>
+          <span>
+            @if (item.icon) {
+              <hy-icon [name]="item.icon" />
+            }
+            {{ item.label }}
+          </span>
+          <span aria-hidden="true">{{ item.checked ? 'Selected' : '' }}</span>
         </button>
       } @else if (item.role === 'radio') {
         <button
@@ -43,10 +49,12 @@
           [cdkMenuItemDisabled]="!!item.disabled"
           (cdkMenuItemTriggered)="activate(item)"
         >
-          @if (item.icon) {
-            <hy-icon [name]="item.icon" />
-          }
-          {{ item.label }}
+          <span>
+            @if (item.icon) {
+              <hy-icon [name]="item.icon" />
+            }
+            {{ item.label }}
+          </span>
         </button>
       } @else {
         <button

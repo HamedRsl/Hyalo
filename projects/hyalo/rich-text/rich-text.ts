@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -83,6 +84,7 @@ export const HY_RICH_TEXT_LOADER = new InjectionToken<() => Promise<typeof impor
   { providedIn: 'root', factory: () => loadEngine },
 );
 @Component({
+  imports: [HyIcon],
   selector: 'hy-rich-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(focusout)': 'leave($event)' },
@@ -91,6 +93,12 @@ export const HY_RICH_TEXT_LOADER = new InjectionToken<() => Promise<typeof impor
 })
 export class HyRichText extends HyValueControl implements FormValueControl<JSONContent | null> {
   override readonly labelable = false;
+  protected readonly commandIcons: Record<HyRichTextCommand, string> = {
+    bold: 'bold', italic: 'italic', underline: 'underline', strike: 'strike', code: 'code',
+    heading1: 'heading', heading2: 'heading', heading3: 'heading', paragraph: 'paragraph',
+    bulletList: 'list-bullets', orderedList: 'list-numbers', blockquote: 'quote', horizontalRule: 'minus',
+    clear: 'text-clear', undo: 'undo', redo: 'redo',
+  };
   readonly value = model<JSONContent | null>(null);
   readonly placeholder = input('Write something');
   readonly minHeight = input('12rem');

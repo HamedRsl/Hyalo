@@ -22,12 +22,12 @@
 }
 
 .hy-select__option[data-active='true'] {
-  background: color-mix(in srgb, var(--hy-ink) 8%, transparent);
-  outline: 2px solid var(--hy-primary);
-  outline-offset: -2px;
+  background: var(--hy-primary-wash);
+  color: var(--hy-ink);
 }
 
 .hy-select__option[aria-selected='true'] {
+  color: var(--hy-primary);
   font-weight: 600;
 }
 
@@ -43,4 +43,13 @@
 .hy-select__option[aria-disabled='true'] {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.hy-select__panel.hy-glass {
+  border: 1px solid var(--hy-line-strong);
+  box-shadow: var(--hy-shadow-m);
+}
+
+@media (forced-colors: active) {
+  .hy-select__option[data-active='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
 }

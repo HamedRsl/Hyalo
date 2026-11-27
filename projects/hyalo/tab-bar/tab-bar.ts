@@ -69,9 +69,12 @@ export class HyTabBar {
       return;
     }
     indicator.style.transition = animate && this.motion.enabled() ? '' : 'none';
-    indicator.style.inlineSize = active.offsetWidth + 'px';
-    indicator.style.blockSize = active.offsetHeight + 'px';
-    indicator.style.translate = active.offsetLeft + 'px ' + active.offsetTop + 'px';
+    const icon = active.querySelector<HTMLElement>('.icon') ?? active;
+    const anchor = icon.getBoundingClientRect();
+    const bounds = nav.getBoundingClientRect();
+    indicator.style.inlineSize = anchor.width + 'px';
+    indicator.style.blockSize = anchor.height + 'px';
+    indicator.style.translate = (anchor.left - bounds.left) + 'px ' + (anchor.top - bounds.top) + 'px';
     indicator.hidden = false;
     nav.classList.add('has-indicator');
   }

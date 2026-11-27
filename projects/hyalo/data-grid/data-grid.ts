@@ -1,3 +1,5 @@
+import { HySelect } from '@hyalo/angular/select';
+import { HyIcon } from '@hyalo/angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
 import { Grid,GridRow,GridCell,GridCellWidget } from '@angular/aria/grid';
 import { CdkVirtualScrollViewport,CdkVirtualForOf,CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
@@ -11,7 +13,7 @@ interface Cell<T>{readonly column:HyGridColumn<T>;readonly value:HyGridValue;rea
 interface Row<T>{readonly kind:'row'|'group';readonly key:string;readonly domKey:string;readonly row:T|null;readonly rowKey:HyGridKey;readonly label:string;readonly cells:readonly Cell<T>[];readonly level:number;readonly expanded:boolean|undefined;readonly position?:number;readonly siblingCount?:number;readonly count:number;readonly selected:boolean;readonly disabled:boolean;readonly groupId?:string;}
 interface EditSession<T>{readonly key:HyGridKey;readonly row:T;readonly column:string|null;readonly values:Readonly<Record<string,HyGridValue>>;readonly token:number;}
 interface ColumnGesture{readonly pointer:number;readonly id:string;readonly x:number;readonly width:number;readonly direction:number;readonly target:HTMLElement;readonly widths:Readonly<Record<string,number>>;}
-@Component({selector:'hy-data-grid',imports:[NgTemplateOutlet,Grid,GridRow,GridCell,GridCellWidget,CdkVirtualScrollViewport,CdkVirtualForOf,CdkFixedSizeVirtualScroll,CdkDropList,CdkDrag,CdkDragHandle],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelInteractions()'},templateUrl:'./data-grid.html',styleUrl:'./data-grid.css'})
+@Component({selector:'hy-data-grid',imports:[HySelect,HyIcon,NgTemplateOutlet,Grid,GridRow,GridCell,GridCellWidget,CdkVirtualScrollViewport,CdkVirtualForOf,CdkFixedSizeVirtualScroll,CdkDropList,CdkDrag,CdkDragHandle],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelInteractions()'},templateUrl:'./data-grid.html',styleUrl:'./data-grid.css'})
 export class HyDataGrid<T>{
  readonly data=model<readonly T[]>([]);readonly columns=input.required<readonly HyGridColumn<T>[]>();readonly rowKey=input.required<(row:T)=>HyGridKey>();readonly caption=input.required<string>();
  readonly config=input<HyGridConfig>({});readonly locale=input<string>();readonly lazy=input(false);readonly totalRecords=input<number|null>(null);readonly loading=input(false);readonly error=input('');readonly disabled=input(false);
@@ -36,8 +38,9 @@ export class HyDataGrid<T>{
  });
  protected readonly selectionEnabled=computed(()=>this.options().selectionMode!=='none');
  protected readonly selectionWidth=computed(()=>this.selectionEnabled()?48:0);
+ protected readonly virtualHeight=computed(()=>Math.min(this.options().height, this.viewRows().length*this.options().rowHeight));
  protected readonly columnsWidth=computed(()=>this.visibleColumns().reduce((sum,column)=>sum+column.width,this.selectionWidth()));
- protected readonly columnsStyle=computed(()=>(this.selectionEnabled()?'48px ':'')+this.visibleColumns().map(column=>column.width+'px').join(' '));
+ protected readonly columnsStyle=computed(()=>(this.selectionEnabled()?'48px ':'')+this.visibleColumns().map((column,index,columns)=>index===columns.length-1&&!column.pinned?'minmax('+column.width+'px,1fr)':column.width+'px').join(' '));
  readonly filteredData=computed(()=>{
   const data=this.data(),seen=new Set<HyGridKey>();for(const row of data){const key=this.rowKey()(row);if(seen.has(key))throw new Error('Duplicate row key: '+key);seen.add(key);}
   if(this.lazy())return data;
@@ -136,7 +139,13 @@ export class HyDataGrid<T>{
  protected context(row:T,event:MouseEvent):void{if(!this.disabled()&&!this.rowDisabled()(row))this.rowContext.emit({row,originalEvent:event});}
  protected filterInput(event:Event,id:string):void{const text=(event.target as HTMLInputElement).value;this.setFilter(text?{column:id,operator:'contains',value:text}:null,id);}
  protected searchInput(event:Event):void{if(!('isComposing'in event&&event.isComposing))this.setSearch((event.target as HTMLInputElement).value);}
- protected pageSizeInput(event:Event):void{this.setPageSize(Number((event.target as HTMLSelectElement).value));}
+ protected readonly pageSizeOptions = computed(() => {
+  const format = new Intl.NumberFormat(this.effectiveLocale());
+  return this.options().pageSizes.map((value) => ({value, label: format.format(value)}));
+ });
+ protected pageSizeInput(value: number | undefined): void {
+  if (value !== undefined) this.setPageSize(value);
+ }
  protected widthStart(event:PointerEvent,id:string,width:number):void{
   if(this.disabled()||event.button!==0||this.columnGesture)return;event.preventDefault();event.stopPropagation();const target=event.currentTarget as HTMLElement;target.focus();target.setPointerCapture(event.pointerId);this.columnGesture={pointer:event.pointerId,id,x:event.clientX,width,direction:getComputedStyle(this.element).direction==='rtl'?-1:1,target,widths:this.columnWidths()};
  }

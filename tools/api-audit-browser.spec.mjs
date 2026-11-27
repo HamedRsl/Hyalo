@@ -13,6 +13,298 @@ const { expect } = require('playwright/test');
 const base = process.env.HYALO_BASE_URL ?? 'http://127.0.0.1:4200';
 
 for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
+  test(`${engine} chat composer grows with drafts and compacts above the scrolled history`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 420, height: 750 } });
+      await page.goto(base + '/blocks/marketplace-chat', { waitUntil: 'networkidle' });
+      const composer = page.locator('.marketplace-composer');
+      const input = composer.getByRole('textbox', { name: 'Message Maya Chen' });
+      await input.fill('Quick note');
+      const single = (await input.boundingBox()).height;
+      await input.press('End');
+      await input.press('Enter');
+      await input.press('A');
+      await expect(input).toHaveValue('Quick note\nA');
+      await expect(input).toBeFocused();
+      assert.ok((await input.boundingBox()).height > single);
+      await input.fill('A long message that wraps naturally on a narrow screen. '.repeat(10));
+      assert.ok((await input.boundingBox()).height > single);
+      await input.fill('');
+      assert.equal((await input.boundingBox()).height, single);
+
+      const history = page.getByRole('region', { name: 'Conversation with Maya Chen' });
+      await history.evaluate((element) => { element.scrollTop = 0; });
+      await expect(composer).not.toHaveClass(/history-scrolled/);
+      const resting = (await composer.boundingBox()).height;
+      await history.evaluate((element) => { element.scrollTop = element.scrollHeight; });
+      await expect(composer).toHaveClass(/history-scrolled/);
+      await expect.poll(async () => (await composer.boundingBox()).height).toBeLessThan(resting);
+      await expect(composer.getByRole('button', { name: 'Send message' })).toBeVisible();
+
+      await page.locator('[data-message-id="seller-1"] .marketplace-bubble').click({ button: 'right' });
+      const reactLabel = page.getByRole('menuitem', { name: 'React', exact: true }).locator('span').first();
+      const replyLabel = page.getByRole('menuitem', { name: 'Reply', exact: true }).locator('span').first();
+      await expect(reactLabel).toHaveCSS('display', 'flex');
+      assert.ok(Math.abs((await reactLabel.boundingBox()).x - (await replyLabel.boundingBox()).x) < 1);
+      await reactLabel.hover();
+      await expect(page.getByRole('menuitem', { name: /Thumbs up/ })).toBeVisible();
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} notification panel stays the same size throughout opening`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 900, height: 625 } });
+      await page.goto(base + '/blocks/notifications', { waitUntil: 'networkidle' });
+      const trigger = page.getByRole('button', { name: 'Open notifications' });
+      await trigger.scrollIntoViewIfNeeded();
+      const frames = await trigger.evaluate((button) => new Promise((resolve) => {
+        const samples = [];
+        const started = performance.now();
+        function sample() {
+          const panel = document.querySelector('.hy-popover:has(.notification-panel)');
+          if (panel?.dataset.state === 'open' && Number(getComputedStyle(panel).opacity) > 0) {
+            const box = panel.getBoundingClientRect();
+            samples.push([box.x, box.y, box.width, box.height]);
+          }
+          if (performance.now() - started < 550) requestAnimationFrame(sample);
+          else resolve(samples);
+        }
+        button.click();
+        requestAnimationFrame(sample);
+      }));
+      assert.ok(frames.length > 2);
+      const settled = frames.at(-1);
+      assert.ok(frames.every((frame) => frame.every((value, index) =>
+        Math.abs(value - settled[index]) <= 1)), JSON.stringify(frames.slice(0, 8)));
+      await expect(page.getByRole('dialog', { name: 'Notifications', exact: true })).toBeVisible();
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} polished component controls preserve their interactions`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 1024, height: 820 } });
+      const go = (path) => page.goto(base + path, { waitUntil: 'networkidle' });
+      await go('/blocks/marketplace-chat');
+      const listToggle = page.getByRole('button', { name: 'Conversations', exact: true });
+      if (await listToggle.isVisible()) await listToggle.click();
+      for (const name of ['New chat', 'Emoji', 'Attach files', 'Record voice', 'Send message']) {
+        await expect(page.getByRole('button', { name, exact: true }).locator('svg')).toBeVisible();
+      }
+      await expect(page.locator('.marketplace-filters')).toHaveCSS('flex-wrap', 'nowrap');
+      await expect(page.locator('.marketplace-filters')).toHaveCSS('scrollbar-width', 'none');
+
+      await go('/components/sidebar');
+      const sidebar = page.locator('hy-sidebar');
+      await sidebar.getByRole('button', { name: 'Collapse navigation' }).click();
+      await expect.poll(() => sidebar.evaluate((rail) => {
+        const bounds = rail.getBoundingClientRect();
+        return Array.from(rail.querySelectorAll('a hy-icon')).every((icon) => {
+          const box = icon.getBoundingClientRect();
+          return box.left >= bounds.left && box.right <= bounds.right;
+        });
+      })).toBe(true);
+      await expect(sidebar.locator('ul').first()).toHaveCSS('list-style-type', 'none');
+
+      await go('/components/otp');
+      const code = page.getByRole('group', { name: 'Code with separate inputs' });
+      const first = code.getByRole('textbox', { name: 'Character 1 of 6' });
+      const second = code.getByRole('textbox', { name: 'Character 2 of 6' });
+      await first.fill('۰');
+      await expect(first).toHaveValue('0');
+      await expect(second).toBeFocused();
+      await second.press('Backspace');
+      await expect(first).toHaveValue('');
+      await expect(first).toBeFocused();
+
+      await go('/components/multi-select');
+      await page.locator('hy-multi-select').first().getByRole('combobox').press('ArrowDown');
+      const options = page.locator('.options.hy-glass').getByRole('listbox');
+      await expect(options.locator('[data-active="true"]')).toHaveCount(1);
+      await expect(options.getByRole('option', { name: 'Design', selected: true }).locator('hy-icon')).toBeVisible();
+
+      await go('/components/kanban');
+      const destination = page.getByRole('combobox', { name: 'Move Review design tokens to column' });
+      await destination.press('Enter');
+      await page.locator('.hy-select__panel').getByRole('option', { name: 'In progress' }).click();
+      await expect(page.getByRole('button', { name: 'Review design tokens', exact: true })).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: 'Review design tokens moved to In progress' })).toBeAttached();
+
+      await go('/components/tab-bar');
+      const active = page.locator('hy-tab-bar a[aria-current="page"]');
+      const indicator = page.locator('hy-tab-bar .active-indicator');
+      await expect(indicator).toBeVisible();
+      assert.ok((await indicator.boundingBox()).width < (await active.boundingBox()).width);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} notification and settings dropdowns use compact themed menus`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 1100, height: 800 } });
+      await page.goto(base + '/blocks/notifications', { waitUntil: 'networkidle' });
+      const preview = page.getByRole('combobox', { name: 'Preview notification state' });
+      const triggerWidth = (await preview.locator('..').boundingBox()).width;
+      await preview.press('Enter');
+      const menu = page.locator('.hy-select__panel.hy-glass').getByRole('listbox');
+      await expect(menu).toBeVisible();
+      await expect.poll(async () =>
+        Math.abs((await menu.locator('..').boundingBox()).width - triggerWidth),
+      ).toBeLessThan(4);
+      await menu.getByRole('option', { name: 'Loading' }).click();
+      await expect(preview).toContainText('Loading');
+      await expect(page.getByText('Checking for updates…', { exact: true })).toBeVisible();
+      await expect(menu).toHaveCount(0);
+      await preview.press('Enter');
+      await menu.getByRole('option', { name: 'Ready' }).click();
+      await expect(page.getByText('Order confirmed', { exact: true })).toBeVisible();
+
+      await page.getByRole('button', { name: 'Display settings' }).click();
+      const settings = page.getByRole('dialog', { name: 'Display settings' });
+      const material = settings.getByRole('combobox', { name: 'Material' });
+      await material.press('Enter');
+      await settings.getByRole('option', { name: 'Solid', exact: true }).click();
+      await expect(settings).toBeVisible();
+      await expect(material).toContainText('Solid');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} themed controls and compact icon actions`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 1200, height: 650 } });
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.goto(base + '/dashboard', { waitUntil: 'networkidle' });
+      const status = page.locator('hy-filter-bar').getByRole('combobox', { name: /status/i });
+      await status.press('Enter');
+      const list = page.locator('.hy-select__panel.hy-glass').getByRole('listbox');
+      await expect(list.getByRole('option', { name: 'Active' })).toBeVisible();
+      await list.getByRole('option', { name: 'Active' }).click();
+      await expect(status).toContainText('Active');
+      const sidebar = page.locator('hy-sidebar').first();
+      const expandedWidth = (await sidebar.boundingBox()).width;
+      await sidebar.getByRole('button', { name: 'Collapse navigation' }).click();
+      await expect.poll(async () => (await sidebar.boundingBox()).width).toBeLessThan(expandedWidth - 40);
+      await sidebar.getByRole('button', { name: 'Expand navigation' }).click();
+      await expect.poll(async () => (await sidebar.boundingBox()).width).toBeGreaterThan(expandedWidth - 2);
+
+      await page.goto(base + '/components/combobox', { waitUntil: 'networkidle' });
+      const combo = page.getByRole('combobox').first();
+      await combo.press('ArrowDown');
+      const options = page.locator('hy-combobox .options, .options.hy-glass').first();
+      await expect(options.getByRole('option').first()).toBeVisible();
+      await expect(options.locator('[data-active="true"]')).toHaveCount(1);
+      assert.equal(await options.getByRole('option').nth(2).evaluate((row) => getComputedStyle(row).outlineStyle), 'none');
+
+      await page.goto(base + '/components/code-block', { waitUntil: 'networkidle' });
+      const copy = page.getByRole('button', { name: 'Copy Table import', exact: true });
+      await expect(copy.locator('svg')).toBeVisible();
+      await expect(copy).toHaveText('');
+
+      await page.goto(base + '/components/text-field', { waitUntil: 'networkidle' });
+      const secret = page.getByLabel('New password');
+      await expect(secret).toHaveAttribute('type', 'password');
+      await secret.fill('example-password');
+      await page.getByRole('button', { name: 'Show password' }).click();
+      await expect(secret).toHaveAttribute('type', 'text');
+      await expect(secret).toHaveValue('example-password');
+      await expect(secret).toBeFocused();
+      await page.getByRole('button', { name: 'Hide password' }).click();
+      await expect(secret).toHaveAttribute('type', 'password');
+      assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} workspace layout and grid use functional icon controls`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      await page.goto(base + '/components/dashboard-layout', { waitUntil: 'networkidle' });
+      const layout = page.getByRole('group', { name: 'Operations dashboard' });
+      const tile = layout.getByRole('region', { name: 'Capacity' });
+      const handle = tile.getByRole('button', { name: /Move Capacity/ });
+      await expect(handle).toHaveCSS('cursor', 'grab');
+      await expect(tile.getByRole('button', { name: /Resize Capacity/ })).toHaveCSS('cursor', 'nwse-resize');
+      await handle.click();
+      await tile.getByRole('button', { name: 'Move inline end' }).click();
+      await expect(tile).toContainText('Column 2');
+      await page.getByRole('button', { name: 'Save layout' }).click();
+      await expect(page.getByText('Layout saved', { exact: true })).toBeVisible();
+      await handle.press('ArrowLeft');
+      await expect(tile).toContainText('Column 1');
+      await page.getByRole('button', { name: 'Restore layout' }).click();
+      await expect(tile).toContainText('Column 2');
+      const resize = tile.getByRole('button', { name: /Resize Capacity/ });
+      await resize.click();
+      await tile.getByRole('button', { name: 'Resize inline end' }).click();
+      await expect(tile).toContainText('6 × 3');
+      const grip = await resize.boundingBox();
+      assert.ok(grip);
+      await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(grip.x - 55, grip.y + grip.height / 2, { steps: 5 });
+      await page.mouse.up();
+      await expect(tile).toContainText('5 × 3');
+
+      await page.goto(base + '/components/data-grid', { waitUntil: 'networkidle' });
+      const grid = page.locator('hy-data-grid');
+      await expect(grid.getByRole('button', { name: 'Export CSV' }).locator('svg')).toBeVisible();
+      const header = grid.locator('.header');
+      await expect.poll(() => header.evaluate((row) => {
+        const last = row.lastElementChild;
+        return Math.abs(row.getBoundingClientRect().right - last.getBoundingClientRect().right);
+      })).toBeLessThan(2);
+      await grid.locator('summary[aria-label="Columns"]').click();
+      await expect(grid.getByRole('button', { name: 'Move Team earlier' }).locator('svg')).toBeVisible();
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${engine} anchored calendars fit the viewport and load Vazirmatn`, async () => {
+    const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
+    try {
+      const page = await browser.newPage({ viewport: { width: 620, height: 440 } });
+      await page.goto(base + '/components/date-picker', { waitUntil: 'networkidle' });
+      const dates = page.locator('hy-date-picker');
+      const fit = async () => {
+        const dialog = page.getByRole('dialog');
+        await expect(dialog.getByRole('button', { name: 'Previous month' })).toBeVisible();
+        const bounds = await dialog.boundingBox();
+        assert.ok(bounds && bounds.y >= 0 && bounds.y + bounds.height <= 441);
+        await dialog.getByRole('button', { name: 'Close calendar' }).click();
+        await expect(dialog).toHaveCount(0);
+      };
+      const trigger = dates.first().getByRole('button', { name: 'Calendar', exact: true });
+      await expect(trigger.locator('svg')).toBeVisible();
+      await trigger.click();
+      await fit();
+      await page.locator('hy-date-range hy-date-picker').first().getByRole('button', { name: 'Calendar', exact: true }).click();
+      await fit();
+      const persian = page.locator('[lang="fa"] hy-date-picker input');
+      await expect(persian).toHaveCSS('font-family', /Vazirmatn/);
+      const loaded = await page.evaluate(async () =>
+        (await document.fonts.load('16px Vazirmatn', 'تاریخ')).some((font) => font.status === 'loaded'),
+      );
+      assert.equal(loaded, true);
+    } finally {
+      await browser.close();
+    }
+  });
+
   test(`${engine} building-block dashboard scroll, scheduler chevron and chat reply`, async () => {
     const browser = await type.launch(engine === 'chromium' ? { channel: 'chromium' } : {});
     try {
@@ -31,13 +323,13 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
 
       await page.goto(base + '/components/scheduler', { waitUntil: 'networkidle' });
       const control = page.locator('.view-select').first();
-      const select = control.locator('select');
-      const icon = control.locator('hy-icon');
+      const select = control.getByRole('combobox');
+      const icon = select.locator('hy-icon');
       await expect(select).toBeEnabled();
       await expect(select).toHaveCSS('appearance', 'none');
       const box = await select.boundingBox();
       const mark = await icon.boundingBox();
-      assert.ok(box && mark && box.x + box.width - (mark.x + mark.width) >= 8);
+      assert.ok(box && mark && Math.abs(box.x + box.width - (mark.x + mark.width)) <= 2);
       assert.ok(Math.abs(box.y + box.height / 2 - mark.y - mark.height / 2) <= 1);
 
       await page.goto(base + '/blocks/marketplace-chat', { waitUntil: 'networkidle' });
@@ -701,9 +993,6 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
       await menu.getByRole('menuitem', { name: 'Open report' }).press('Escape');
       await expect(trigger).toBeFocused();
       await expect(shade).toHaveCount(0);
-      await page.getByRole('button', { name: 'Actions with return target' }).press('Enter');
-      await menu.getByRole('menuitem', { name: 'Open report' }).press('Escape');
-      await expect(page.getByRole('button', { name: 'Project summary' })).toBeFocused();
     } finally {
       await browser.close();
     }

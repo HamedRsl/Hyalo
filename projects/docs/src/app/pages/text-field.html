@@ -69,6 +69,16 @@
     textareas.
   </p>
 
+  <h2 id="password">Password mode</h2>
+  <docs-example [code]="examples[2].html" [tsCode]="examples[2].ts" [cssCode]="examples[2].css" column>
+    <hy-field label="New password" hint="Use a long, unique password.">
+      <input hyInput hyPassword #secret="hyPassword" autocomplete="new-password" />
+      <button hySuffix [hyPasswordToggle]="secret" aria-label="Show password"></button>
+    </hy-field>
+  </docs-example>
+  <p>Add <code>hyPassword</code> to a native <code>hyInput</code> and bind its reveal icon to <code>hyPasswordToggle</code>. Use <code>hyPrefix</code> or <code>hySuffix</code> to place the action. The input keeps its value and supports autofill and Signal Forms. Localize the action with <code>showLabel</code> and <code>hideLabel</code>.</p>
+  <p>The dedicated password component is deprecated. Use field hints or validation feedback for application-specific strength guidance.</p>
+
   <h2>Accessibility</h2>
   <ul>
     <li>

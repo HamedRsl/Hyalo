@@ -110,11 +110,12 @@ function stylesOf(metadata) {
   const styles = property(metadata, 'styles');
   const inline = styles && 'text' in styles ? styles.text : '';
   const url = property(metadata, 'styleUrl');
-  return (
-    inline +
-    '\n' +
-    (url && existsSync(join(root, url.text)) ? readFileSync(join(root, url.text), 'utf8') : '')
-  );
+  const urls = property(metadata, 'styleUrls');
+  const files = url ? [url] : urls && ts.isArrayLiteralExpression(urls) ? urls.elements : [];
+  const external = files
+    .filter((file) => ts.isStringLiteralLike(file) && existsSync(join(root, file.text)))
+    .map((file) => readFileSync(join(root, file.text), 'utf8'));
+  return [inline, ...external].join('\n');
 }
 
 // Preserve conditional wrappers when selecting CSS needed by the demo.

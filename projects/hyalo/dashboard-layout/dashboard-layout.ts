@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 
 import { NgTemplateOutlet } from '@angular/common';
 import { CdkDrag,CdkDragHandle,type CdkDragEnd } from '@angular/cdk/drag-drop';
@@ -7,12 +8,29 @@ export interface HyDashboardTile<T=unknown> extends HyTileRect{readonly label:st
 export interface HyDashboardTileContext<T>{readonly $implicit:HyDashboardTile<T>;readonly resize:(width:number,height:number)=>boolean;readonly move:(x:number,y:number)=>boolean;}
 export interface HyDashboardChange{readonly id:string;readonly previous:HyTileRect;readonly next:HyTileRect;readonly source:'pointer'|'keyboard'|'api';}
 interface ResizeGesture{readonly pointer:number;readonly x:number;readonly y:number;readonly direction:number;readonly width:number;readonly tile:HyTileRect;readonly target:HTMLElement;}
-@Component({selector:'hy-dashboard-layout',imports:[NgTemplateOutlet,CdkDrag,CdkDragHandle],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelInteractions()','[class.narrow]':'narrow()'},templateUrl:'./dashboard-layout.html',styleUrl:'./dashboard-layout.css'})
+@Component({selector:'hy-dashboard-layout',imports:[HyIcon,NgTemplateOutlet,CdkDrag,CdkDragHandle],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelInteractions()','[class.narrow]':'narrow()'},templateUrl:'./dashboard-layout.html',styleUrl:'./dashboard-layout.css'})
 export class HyDashboardLayout<T>{
  readonly tiles=model.required<readonly HyDashboardTile<T>[]>();readonly columns=input(12);readonly rowHeight=input(80);readonly gap=input(16);readonly maxRows=input(100);readonly label=input('Dashboard layout');readonly disabled=input(false);readonly readonly=input(false);readonly draggable=input(true);readonly resizable=input(true);readonly mobileBreakpoint=input(640);
  readonly tileTemplate=input<TemplateRef<HyDashboardTileContext<T>>>();readonly headerTemplate=input<TemplateRef<HyDashboardTileContext<T>>>();
  readonly canChange=input<(change:HyDashboardChange)=>boolean>(()=>true);
  readonly changeStarted=output<HyDashboardChange>();readonly changed=output<HyDashboardChange>();readonly changeRejected=output<HyDashboardChange>();readonly changeCancelled=output<HyTileRect>();readonly tileActivated=output<HyDashboardTile<T>>();
+ protected readonly activeControls = signal<{ id: string; mode: 'move' | 'resize' } | null>(null);
+ protected readonly directions = [
+  {x:-1,y:0,icon:'chevron-start',label:'inline start'}, {x:0,y:-1,icon:'chevron-up',label:'up'},
+  {x:0,y:1,icon:'chevron-down',label:'down'}, {x:1,y:0,icon:'chevron-end',label:'inline end'},
+ ];
+ private movedPointer = false;
+ private resizedPointer = false;
+ protected armMove(): void { this.movedPointer = false; }
+ protected toggleControls(event: MouseEvent, id: string, mode: 'move' | 'resize'): void {
+  if (event.detail && (mode === 'move' ? this.movedPointer : this.resizedPointer)) return;
+  const current = this.activeControls();
+  this.activeControls.set(current?.id === id && current.mode === mode ? null : { id, mode });
+ }
+ protected changeStep(tile: HyDashboardTile<T>, x: number, y: number): void {
+  if (this.activeControls()?.mode === 'resize') this.resizeTile(tile.id,tile.width+x,tile.height+y,'pointer');
+  else this.moveTile(tile.id,tile.x+x,tile.y+y,'pointer');
+ }
  private readonly element=inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;private readonly destroy=inject(DestroyRef);private gesture:ResizeGesture|null=null;private dragCancelled=false;
  protected readonly preview=signal<HyTileRect|null>(null);protected readonly narrow=signal(false);protected readonly announcement=signal('');
  protected readonly blocked=computed(()=>this.disabled()||this.readonly()||this.narrow());
@@ -26,13 +44,13 @@ export class HyDashboardLayout<T>{
  }
  private valid(change:HyDashboardChange):boolean{return validateHyDashboardLayout(this.tiles().map(tile=>tile.id===change.id?change.next:tile),{columns:this.columns(),maxRows:this.maxRows()})&&this.canChange()(change);}
  private commit(change:HyDashboardChange):boolean{
-  if(!this.valid(change)){this.changeRejected.emit(change);return false;}this.tiles.update(tiles=>tiles.map(tile=>tile.id===change.id?{...tile,...change.next}:tile));this.changed.emit(change);this.announcement.set('Updated '+(this.tiles().find(tile=>tile.id===change.id)?.label??change.id)+': column '+(change.next.x+1)+', row '+(change.next.y+1)+', '+change.next.width+' by '+change.next.height);return true;
+  if(!this.valid(change)){this.changeRejected.emit(change);this.announcement.set('That position is unavailable');return false;}this.tiles.update(tiles=>tiles.map(tile=>tile.id===change.id?{...tile,...change.next}:tile));this.changed.emit(change);this.announcement.set('Updated '+(this.tiles().find(tile=>tile.id===change.id)?.label??change.id)+': column '+(change.next.x+1)+', row '+(change.next.y+1)+', '+change.next.width+' by '+change.next.height);return true;
  }
  moveTile(id:string,x:number,y:number,source:'pointer'|'keyboard'|'api'='api'):boolean{if(!this.draggable())return false;const change=this.proposal(id,{x,y},source);return !!change&&this.commit(change);}
  resizeTile(id:string,width:number,height:number,source:'pointer'|'keyboard'|'api'='api'):boolean{if(!this.resizable())return false;const change=this.proposal(id,{width,height},source);return !!change&&this.commit(change);}
  protected context(tile:HyDashboardTile<T>):HyDashboardTileContext<T>{return {$implicit:tile,resize:(width,height)=>this.resizeTile(tile.id,width,height),move:(x,y)=>this.moveTile(tile.id,x,y)};}
- cancelInteractions():void{this.dragCancelled=true;this.cancelResize();}
- protected dragStarted(tile:HyDashboardTile<T>):void{this.dragCancelled=false;const change=this.proposal(tile.id,{},'pointer');if(change)this.changeStarted.emit(change);}
+ cancelInteractions():void{this.dragCancelled=true;this.activeControls.set(null);this.cancelResize();}
+ protected dragStarted(tile:HyDashboardTile<T>):void{this.dragCancelled=false;this.movedPointer=true;const change=this.proposal(tile.id,{},'pointer');if(change)this.changeStarted.emit(change);}
  protected dragEnd(event:CdkDragEnd,tile:HyDashboardTile<T>):void{
   if(this.dragCancelled||event.event.type==='touchcancel'){event.source.reset();return;}const rect=this.element.getBoundingClientRect(),cell=(rect.width+this.gap())/this.columns(),direction=getComputedStyle(this.element).direction==='rtl'?-1:1;
   event.source.reset();this.moveTile(tile.id,tile.x+Math.round(event.distance.x/cell)*direction,tile.y+Math.round(event.distance.y/(this.rowHeight()+this.gap())),'pointer');
@@ -42,14 +60,15 @@ export class HyDashboardLayout<T>{
   if(resize)this.resizeTile(tile.id,tile.width+dx,tile.height+dy,'keyboard');else this.moveTile(tile.id,tile.x+dx,tile.y+dy,'keyboard');
  }
  protected startResize(event:PointerEvent,tile:HyDashboardTile<T>):void{
-  if(this.blocked()||tile.locked||!this.resizable()||event.button!==0||this.gesture)return;event.preventDefault();event.stopPropagation();const target=event.currentTarget as HTMLElement;target.focus();target.setPointerCapture(event.pointerId);this.gesture={pointer:event.pointerId,x:event.clientX,y:event.clientY,direction:getComputedStyle(this.element).direction==='rtl'?-1:1,width:this.element.getBoundingClientRect().width,tile,target};this.preview.set(tile);this.changeStarted.emit({id:tile.id,previous:tile,next:tile,source:'pointer'});
+  if(this.blocked()||tile.locked||!this.resizable()||event.button!==0||this.gesture)return;this.resizedPointer=false;event.stopPropagation();const target=event.currentTarget as HTMLElement;target.focus();target.setPointerCapture(event.pointerId);this.gesture={pointer:event.pointerId,x:event.clientX,y:event.clientY,direction:getComputedStyle(this.element).direction==='rtl'?-1:1,width:this.element.getBoundingClientRect().width,tile,target};this.preview.set(tile);this.changeStarted.emit({id:tile.id,previous:tile,next:tile,source:'pointer'});
  }
  protected resizeMove(event:PointerEvent):void{
   const gesture=this.gesture;if(!gesture||gesture.pointer!==event.pointerId)return;if(this.blocked()){this.cancelResize();return;}
   const width=gesture.tile.width+Math.round((event.clientX-gesture.x)/((gesture.width+this.gap())/this.columns()))*gesture.direction,height=gesture.tile.height+Math.round((event.clientY-gesture.y)/(this.rowHeight()+this.gap())),change=this.proposal(gesture.tile.id,{width,height},'pointer');
+  if(width!==gesture.tile.width||height!==gesture.tile.height)this.resizedPointer=true;
   if(change&&this.valid(change))this.preview.set(change.next);
  }
- protected finishResize(event:PointerEvent):void{if(this.gesture?.pointer!==event.pointerId)return;const preview=this.preview(),id=this.gesture.tile.id;this.release();if(preview)this.resizeTile(id,preview.width,preview.height,'pointer');}
+ protected finishResize(event:PointerEvent):void{if(this.gesture?.pointer!==event.pointerId)return;const preview=this.preview(),id=this.gesture.tile.id;this.release();if(preview){const tile=this.tiles().find(item=>item.id===id);if(tile&&(tile.width!==preview.width||tile.height!==preview.height))this.resizeTile(id,preview.width,preview.height,'pointer');}}
  cancelResize():void{const tile=this.gesture?.tile;this.release();if(tile)this.changeCancelled.emit(tile);}
  private release():void{const target=this.gesture?.target,pointer=this.gesture?.pointer;this.gesture=null;this.preview.set(null);if(target&&pointer!==undefined&&target.hasPointerCapture(pointer))target.releasePointerCapture(pointer);}
  compact():void{if(!this.blocked())this.setLayout(compactHyDashboardLayout(this.tiles()));}

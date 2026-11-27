@@ -13,3 +13,5 @@ button:active:not(:disabled),button[aria-pressed=true]{background:var(--hy-prima
 @media(forced-colors:active){[aria-selected=true],[aria-pressed=true]{outline:2px solid Highlight}}
 
 .editor{padding:1rem}.toolbar{gap:.25rem;padding-block-end:.75rem;border-block-end:1px solid var(--hy-line)}.toolbar button{font-size:var(--hy-step--1)}.mount{overflow:auto;min-inline-size:0}.fallback{white-space:pre-wrap;padding:1rem;color:var(--hy-ink-2)}.count{margin-block-end:0}.invalid{outline:2px solid var(--hy-danger)}
+
+.icon-action { display: inline-grid; place-items: center; inline-size: 2.75rem; padding: 0; }

@@ -47,6 +47,7 @@
   >
     <hy-field [label]="startLabel()"
       ><hy-date-picker
+        [touchUi]="touchUi()"
         [value]="start()"
         (valueChange)="changeStart($event)"
         [disabled]="effectiveDisabled()"
@@ -61,6 +62,7 @@
     /></hy-field>
     <hy-field [label]="endLabel()"
       ><hy-date-picker
+        [touchUi]="touchUi()"
         [value]="value()?.end ?? null"
         (valueChange)="changeEnd($event)"
         [disabled]="effectiveDisabled() || !start()"

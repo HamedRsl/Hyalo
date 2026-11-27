@@ -21,6 +21,7 @@ import { HY_DIALOG_PARTS, type HyDialogRef } from '@hyalo/angular/dialog';
 import { HyIcon } from '@hyalo/angular/icon';
 import { HY_NAVBAR } from '@hyalo/angular/navbar';
 import { HyPopover } from '@hyalo/angular/popover';
+import { HySelect } from '@hyalo/angular/select';
 import { HySegmented } from '@hyalo/angular/segmented';
 import type { HyFidelityTier } from '@hyalo/angular/core';
 import type { HyPaletteName } from '@hyalo/angular/theme';
@@ -41,6 +42,7 @@ import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } fro
     HyIcon,
     HyPopover,
     HySegmented,
+    HySelect,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -48,6 +50,14 @@ import { DocsSettings, type DirChoice, type MotionChoice, type ThemeChoice } fro
 })
 export class App {
   protected readonly settings = inject(DocsSettings);
+  protected readonly locales = [{ value: 'en', label: 'English' }, { value: 'fa', label: 'فارسی' }];
+  protected readonly materials = [
+    { value: '', label: 'Component default' },
+    { value: 'clear', label: 'Clear' },
+    { value: 'frosted', label: 'Frosted' },
+    { value: 'tinted', label: 'Tinted' },
+    { value: 'solid', label: 'Solid' },
+  ];
   private readonly injector = inject(Injector);
   private readonly pagesTemplate = viewChild.required<TemplateRef<unknown>>('pages');
   private pagesRef: HyDialogRef | null = null;

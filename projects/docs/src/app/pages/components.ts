@@ -21,7 +21,6 @@ import { HyCombobox } from '@hyalo/angular/combobox';
 import { HyMultiSelect } from '@hyalo/angular/multi-select';
 import { HySearchField } from '@hyalo/angular/search-field';
 import { HyNumberInput } from '@hyalo/angular/number-input';
-import { HyPassword } from '@hyalo/angular/password';
 import { HyOtp } from '@hyalo/angular/otp';
 import { HyMaskedInput } from '@hyalo/angular/masked-input';
 import { HyPhoneInput } from '@hyalo/angular/phone-input';
@@ -130,8 +129,6 @@ const SUMMARIES: Record<string, string> = {
     'A native search input with an accessible clear action and loading feedback.',
   '/components/number-input':
     'Localized amounts with strict parsing and native spinbutton keyboard access.',
-  '/components/password':
-    'Password entry with explicit reveal controls and an optional strength estimate.',
   '/components/otp': 'One accessible input for autofill, paste, Persian digits, and leading zeros.',
   '/components/masked-input':
     'Readable numeric identifiers with canonical string values and preserved leading zeros.',
@@ -249,7 +246,6 @@ export const COMPONENT_CATALOG = (NAV.find((g) => g.title === 'Components')?.ite
     HyMultiSelect,
     HySearchField,
     HyNumberInput,
-    HyPassword,
     HyOtp,
     HyMaskedInput,
     HyPhoneInput,

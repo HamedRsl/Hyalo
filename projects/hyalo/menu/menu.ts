@@ -173,7 +173,7 @@ export class HyMenuRadio {}
   imports: [HyButton, HyMenuTrigger, HyIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template:
-    '<button hyButton type="button" [disabled]="disabled()" (click)="activated.emit()">{{label()}}</button><button hyButton type="button" [disabled]="disabled()" [hyMenuTriggerFor]="menu()" [attr.aria-label]="menuLabel()"><hy-icon class="chevron" name="chevron-down" size="1rem" /></button>',
+    '<button hyButton type="button" [disabled]="disabled()" (click)="activated.emit()">{{label()}}</button><button hyButton iconOnly type="button" [disabled]="disabled()" [hyMenuTriggerFor]="menu()" [attr.aria-label]="menuLabel()"><hy-icon class="chevron" name="chevron-down" size="1rem" /></button>',
   styles:
     ':host{display:inline-flex;gap:1px}button:first-child{border-start-end-radius:0;border-end-end-radius:0}button:last-child{border-start-start-radius:0;border-end-start-radius:0;min-inline-size:44px}.chevron{transition:rotate var(--hy-dur-quick) var(--hy-ease-out)}button[aria-expanded=true] .chevron{rotate:180deg}@media(prefers-reduced-motion:reduce){.chevron{transition:none}}',
 })

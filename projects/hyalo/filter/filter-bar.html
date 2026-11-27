@@ -4,7 +4,6 @@
       @if (field.options; as options) {
         <hy-select
           [options]="options"
-          [native]="true"
           [value]="raw(field.field)"
           (valueChange)="change(field, $event ?? '')"
           [placeholder]="anyLabel()"

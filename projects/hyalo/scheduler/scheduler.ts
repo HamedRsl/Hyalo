@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { HyLocale } from '@hyalo/angular/core';
-import { HyIcon } from '@hyalo/angular/icon';
+import { HySelect } from '@hyalo/angular/select';
 import type {
   Calendar,
   CalendarApi,
@@ -53,7 +53,7 @@ export const HY_SCHEDULER_LOADER = new InjectionToken<() => Promise<typeof impor
 );
 @Component({
   selector: 'hy-scheduler',
-  imports: [HyIcon],
+  imports: [HySelect],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './scheduler.html',
   styleUrl: './scheduler.css',
@@ -324,7 +324,7 @@ export class HyScheduler {
   updateSize(): void {
     this.calendar?.updateSize();
   }
-  protected chooseView(event: Event): void {
-    this.changeView((event.target as HTMLSelectElement).value);
+  protected chooseView(view: string | undefined): void {
+    if (view !== undefined) this.changeView(view);
   }
 }

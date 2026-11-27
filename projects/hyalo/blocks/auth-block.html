@@ -8,12 +8,10 @@
     @if (verify()) {
       <hy-field label="Verification code"><hy-otp [formField]="f.code" /></hy-field>
     } @else {
-      <hy-field label="Password"
-        ><hy-password
-          [formField]="f.password"
-          autocomplete="current-password"
-          [showStrength]="false"
-      /></hy-field>
+      <hy-field label="Password">
+        <input hyInput hyPassword #secret="hyPassword" [formField]="f.password" autocomplete="current-password" />
+        <button hySuffix [hyPasswordToggle]="secret" aria-label="Show password"></button>
+      </hy-field>
     }
     @if (error()) {
       <p role="alert">{{ error() }}</p>

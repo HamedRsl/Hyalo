@@ -107,3 +107,15 @@ li {
   overflow-wrap: anywhere;
   margin-block: 0.5rem;
 }
+
+input[type='file']::file-selector-button {
+  margin-inline-end: .65rem; padding: .4rem .75rem;
+  min-block-size: 2.25rem; font: inherit; font-weight: 600;
+  color: var(--hy-ink);
+  border: 1px solid var(--hy-line-strong); border-radius: var(--hy-radius-s);
+  background: linear-gradient(155deg, var(--hy-primary-wash), transparent), var(--hy-surface-2);
+  box-shadow: inset 0 1px var(--hy-line-strong);
+  cursor: pointer;
+}
+input[type='file']:hover::file-selector-button { background-color: var(--hy-surface-3); }
+input[type='file']:disabled::file-selector-button { cursor: not-allowed; }

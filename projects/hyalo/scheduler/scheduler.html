@@ -22,19 +22,11 @@
         Next
       </button>
       <h3 aria-live="polite">{{ title() || label() }}</h3>
-      <label class="view-control">
-        {{ viewLabel() }}
-        <span class="view-select">
-          <select [disabled]="disabled() || status() !== 'ready'" (change)="chooseView($event)">
-            @for (option of viewOptions(); track option.value) {
-              <option [value]="option.value" [selected]="view() === option.value">
-                {{ option.label }}
-              </option>
-            }
-          </select>
-          <hy-icon name="chevron-down" aria-hidden="true" />
-        </span>
-      </label>
+      <div class="view-control">
+        <span>{{ viewLabel() }}</span>
+        <hy-select class="view-select" compact [label]="viewLabel()" [disabled]="disabled() || status() !== 'ready'"
+          [options]="viewOptions()" [value]="view()" popupWidth="8rem" (valueChange)="chooseView($event)" />
+      </div>
     </div>
   }
   @if (status() === 'loading') {

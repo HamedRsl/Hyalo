@@ -1,6 +1,6 @@
 <docs-page
   heading="OTP and PIN"
-  lead="One accessible input for autofill, paste, Persian digits, and leading zeros."
+  lead="Choose one verification input or a separate field for each character."
 >
   <docs-example
     [code]="examples[0].html"
@@ -11,6 +11,9 @@
     <hy-field label="Verification code"
       ><hy-otp [(value)]="pin" (complete)="result.set('Code ready to verify')"
     /></hy-field>
+    <hy-field label="Code with separate inputs">
+      <hy-otp inputMode="per-character" [length]="6" />
+    </hy-field>
     <hy-field label="Example PIN">
       <hy-otp value="12" [length]="4" [masked]="true" [cellTemplate]="decoratedCell" />
     </hy-field>
@@ -25,6 +28,7 @@
     identity. Use your backend to verify the code and enforce expiry and rate limits.
   </p>
   <h2>API</h2>
+  <p><code>inputMode</code> accepts <code>single</code> or <code>per-character</code>. Both support full-code paste.</p>
   <p>Use cellTemplate to style each decorative slot. The template receives the masked character and index.</p>
   <p><code>value: string, length (1..12), complete: output&lt;string&gt;</code></p>
   <p>

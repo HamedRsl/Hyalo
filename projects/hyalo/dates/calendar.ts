@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -71,7 +72,7 @@ interface CalendarWeek {
 }
 @Component({
   selector: 'hy-calendar',
-  imports: [NgTemplateOutlet],
+  imports: [HyIcon, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.html',
   styleUrl: './calendar.css',

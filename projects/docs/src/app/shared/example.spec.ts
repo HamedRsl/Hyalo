@@ -57,7 +57,7 @@ describe('DocsExample source panel', () => {
     );
     fixture.nativeElement.querySelectorAll('[role=tab]')[2].click();
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('.copy').textContent.trim()).toBe('Copy');
+    expect(fixture.nativeElement.querySelector('.copy hy-icon svg')).not.toBeNull();
   });
 
   it('falls back when the native clipboard rejects and reports a failed copy honestly', async () => {

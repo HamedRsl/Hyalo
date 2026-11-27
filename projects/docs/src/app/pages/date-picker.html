@@ -14,9 +14,11 @@
         (openedPanel)="appointmentStatus.set('Calendar attached')"
         (closedPanel)="appointmentStatus.set('Calendar detached')"
     /></hy-field>
-    <button type="button" (click)="appointment.toggle()">Toggle appointment calendar</button>
-    <label><input #touchToggle type="checkbox" [checked]="appointmentTouch()"
+    <div class="demo-row">
+      <button hyButton iconOnly variant="glass" type="button" aria-label="Toggle appointment calendar" title="Toggle appointment calendar" (click)="appointment.toggle()"><hy-icon name="calendar" /></button>
+      <label><input #touchToggle type="checkbox" [checked]="appointmentTouch()"
       (change)="appointmentTouch.set(touchToggle.checked)" /> Use touch calendar layout</label>
+    </div>
     <p role="status">{{ appointmentStatus() }}</p>
     <div dir="rtl" lang="fa">
       <hy-field label="تاریخ ملاقات"

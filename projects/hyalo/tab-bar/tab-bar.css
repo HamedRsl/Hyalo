@@ -28,7 +28,6 @@ a {
 }
 a[aria-current] {
   color: var(--hy-primary);
-  background: var(--hy-primary-wash);
 }
 a[aria-disabled] {
   opacity: 0.5;
@@ -39,14 +38,22 @@ a:focus-visible {
   outline-offset: -2px;
 }
 .icon {
+  position: relative;
   display: inline-grid;
   place-items: center;
+  min-inline-size: 3.25rem;
+  min-block-size: 1.85rem;
+  border-radius: var(--hy-radius-pill);
 }
+a[aria-current] .icon { background: var(--hy-primary-wash); }
+.has-indicator a[aria-current] .icon { background: transparent; }
+.nav-label { max-inline-size: 100%; overflow-wrap: anywhere; line-height: 1.2; }
 hy-icon {
   inline-size: 1.25rem;
   block-size: 1.25rem;
 }
 .badge {
+  position: absolute; inset-inline-end: 0; inset-block-start: -.15rem;
   font-size: 0.75rem;
   padding-inline: var(--hy-space-1);
   border-radius: var(--hy-radius-pill);

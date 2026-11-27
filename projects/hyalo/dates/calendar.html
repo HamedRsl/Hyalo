@@ -12,24 +12,24 @@
         [disabled]="disabled() || previousDisabled()"
         (click)="moveMonth(-1)"
       >
-        ‹
+        <hy-icon name="chevron-start" size="1.15rem" />
       </button>
       <strong aria-live="polite">{{ heading() }}</strong>
       <button
         type="button"
-        [attr.aria-label]="labels().chooseMonth"
+        [attr.aria-label]="labels().chooseMonth" [title]="labels().chooseMonth"
         [disabled]="disabled()"
         (click)="showView('year')"
       >
-        {{ labels().chooseMonth }}
+        <hy-icon name="calendar" size="1.15rem" />
       </button>
       <button
         type="button"
-        [attr.aria-label]="labels().chooseYear"
+        [attr.aria-label]="labels().chooseYear" [title]="labels().chooseYear"
         [disabled]="disabled()"
         (click)="showView('multi-year')"
       >
-        {{ labels().chooseYear }}
+        <hy-icon name="grid" size="1.15rem" />
       </button>
       <button
         type="button"
@@ -37,7 +37,7 @@
         [disabled]="disabled() || nextDisabled()"
         (click)="moveMonth(1)"
       >
-        ›
+        <hy-icon name="chevron-end" size="1.15rem" />
       </button>
     </div>
   }

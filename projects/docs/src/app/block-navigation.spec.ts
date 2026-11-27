@@ -15,6 +15,7 @@ describe('copyable application block navigation', () => {
     const blocks = NAV.find((group) => group.title === 'Application blocks');
     expect(blocks?.items.map((item) => item.path)).toEqual(blockDestinations);
     const components = NAV.find((group) => group.title === 'Components');
+    expect(NAV.map((group) => group.title)).toEqual(['Start', 'Application blocks', 'Components']);
     for (const path of [
       '/components/chat',
       '/components/notification-center',

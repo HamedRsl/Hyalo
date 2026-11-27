@@ -42,7 +42,7 @@ describe('HyCopy', () => {
       expect(document.activeElement).toBe(button);
       expect(button.type).toBe('button');
       expect(button.getAttribute('aria-label')).toBe('رونوشت');
-      expect(button.textContent.trim()).toBe(success ? 'رونوشت شد' : 'رونوشت');
+      expect(button.getAttribute('title')).toBe(success ? 'رونوشت شد' : 'رونوشت');
       expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toBe(
         success ? 'رونوشت شد' : 'رونوشت نشد',
       );
@@ -82,7 +82,7 @@ describe('HyCopy', () => {
     vi.advanceTimersByTime(1);
     fixture.detectChanges();
     expect(status.textContent).toBe('');
-    expect(button.textContent.trim()).toBe('Copy');
+    expect(button.getAttribute('title')).toBe('Copy');
   });
 
   it('clears its feedback timer when destroyed', async () => {
@@ -114,7 +114,7 @@ describe('HyCopy', () => {
     await fixture.whenStable();
     fixture.componentRef.setInput('copiedLabel', 'رونوشت شد');
     await fixture.whenStable();
-    expect(fixture.nativeElement.querySelector('button').textContent.trim()).toBe('رونوشت شد');
+    expect(fixture.nativeElement.querySelector('button').getAttribute('title')).toBe('رونوشت شد');
     expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toBe('رونوشت شد');
   });
 
@@ -157,6 +157,6 @@ describe('HyCopy', () => {
     fixture.detectChanges();
     expect(completed).toHaveBeenCalledExactlyOnceWith(false);
     expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toBe('Result');
-    expect(fixture.nativeElement.querySelector('button').textContent.trim()).toBe('Copy');
+    expect(fixture.nativeElement.querySelector('button').getAttribute('title')).toBe('Copy');
   });
 });

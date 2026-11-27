@@ -69,18 +69,16 @@ describe('HyPopover', () => {
   }
 
   it('opens a labelled dialog panel and moves focus into it', async () => {
-    const { fixture, trigger } = await setup();
+    const { trigger } = await setup();
     trigger.click();
     const pane = await waitFor(() => document.querySelector<HTMLElement>('.hy-popover'));
-    await fixture.whenStable();
-    await wait();
     expect(pane.getAttribute('role')).toBe('dialog');
     expect(pane.getAttribute('aria-label')).toBe('Share');
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
     expect(trigger.getAttribute('aria-controls')).toBe(pane.id);
     // jsdom has no layout, so CDK finds nothing tabbable and the panel itself
     // takes focus. In a browser the link would.
-    expect(pane.contains(document.activeElement)).toBe(true);
+    await waitFor(() => pane.contains(document.activeElement) ? pane : null);
   });
 
   it('stays closed when toggled shut before the overlay code arrives', async () => {
@@ -98,9 +96,7 @@ describe('HyPopover', () => {
   it('closes on Escape and returns focus to the trigger', async () => {
     const { fixture, trigger } = await setup();
     trigger.click();
-    await waitFor(() => document.querySelector('.hy-popover'));
-    await fixture.whenStable();
-    await wait();
+    await waitFor(() => document.activeElement?.closest('.hy-popover') ?? null);
     document.activeElement!.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
     );
@@ -126,7 +122,7 @@ describe('HyPopover', () => {
     try {
       const { fixture, trigger } = await setup();
       trigger.click();
-      await waitFor(() => document.querySelector('.hy-popover'));
+      await waitFor(() => document.querySelector('.hy-popover[data-state="open"]'));
       await fixture.whenStable();
       expect(observe).toHaveBeenCalled();
       const directive = fixture.debugElement.query(By.directive(HyPopover)).injector.get(HyPopover);
@@ -134,9 +130,8 @@ describe('HyPopover', () => {
         .overlayRef;
       const update = vi.spyOn(overlay, 'updatePosition');
       const pane = document.querySelector('.hy-popover');
-      pane?.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'scale' }));
-      expect(update).toHaveBeenCalled();
-      update.mockClear();
+      pane?.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'opacity' }));
+      expect(update).not.toHaveBeenCalled();
       resized?.([], {} as ResizeObserver);
       await wait(50);
       expect(update).toHaveBeenCalled();

@@ -25,6 +25,8 @@
   gap: var(--hy-space-3);
 }
 
+.settings-choice { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+
 .palette-picker[aria-busy] {
   cursor: progress;
 }

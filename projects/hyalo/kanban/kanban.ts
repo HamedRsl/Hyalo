@@ -1,3 +1,7 @@
+import { HySelect } from '@hyalo/angular/select';
+import { HyButtonGroup } from '@hyalo/angular/button-group';
+import { HyButton } from '@hyalo/angular/button';
+import { HyIcon } from '@hyalo/angular/icon';
 
 import { NgTemplateOutlet } from '@angular/common';
 import { CdkDrag,CdkDragHandle,CdkDropList,CdkDropListGroup,type CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -15,7 +19,7 @@ export function moveHyKanbanCard<T>(columns:readonly HyKanbanColumn<T>[],id:stri
  const destination=target.cards.filter(item=>item.id!==id);if(index>destination.length)return null;
  destination.splice(index,0,{...card,lane:lane??card.lane});return columns.map(column=>column===target?{...column,cards:destination}:column===from?{...column,cards:column.cards.filter(item=>item.id!==id)}:column);
 }
-@Component({selector:'hy-kanban',imports:[NgTemplateOutlet,CdkDrag,CdkDragHandle,CdkDropList,CdkDropListGroup],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelDrag()'},templateUrl:'./kanban.html',styleUrl:'./kanban.css'})
+@Component({selector:'hy-kanban',imports:[HySelect,HyButtonGroup,HyButton,HyIcon,NgTemplateOutlet,CdkDrag,CdkDragHandle,CdkDropList,CdkDropListGroup],changeDetection:ChangeDetectionStrategy.OnPush,host:{'(keydown.escape)':'cancelDrag()'},templateUrl:'./kanban.html',styleUrl:'./kanban.css'})
 export class HyKanban<T>{
  readonly columns=model.required<readonly HyKanbanColumn<T>[]>();readonly lanes=input<readonly HyKanbanLane[]>([]);
  readonly label=input('Kanban board');readonly disabled=input(false);readonly readonly=input(false);readonly loading=input(false);readonly error=input('');readonly emptyLabel=input('No cards');readonly filter=model('');readonly locale=input<string>();readonly dragDelay=input(150);
@@ -49,7 +53,16 @@ export class HyKanban<T>{
   if(this.dragCancelled||event.event.type==='touchcancel'||!event.isPointerOverContainer)return;const card=event.item.data as HyKanbanCard<T>,before=cards.filter(item=>item.id!==card.id)[event.currentIndex],remaining=column.cards.filter(item=>item.id!==card.id),index=before?remaining.findIndex(item=>item.id===before.id):remaining.length;void this.moveCard(card.id,column.id,index,lane,'pointer');
  }
  protected shift(card:HyKanbanCard<T>,column:HyKanbanColumn<T>,delta:number):void{const siblings=column.cards.filter(item=>(item.lane??'')===(card.lane??'')),position=siblings.findIndex(item=>item.id===card.id),neighbor=siblings[position+delta];if(!neighbor)return;const index=column.cards.findIndex(item=>item.id===neighbor.id);void this.moveCard(card.id,column.id,index,card.lane,'keyboard');}
- protected destination(event:Event,card:HyKanbanCard<T>):void{const select=event.target as HTMLSelectElement;void this.moveCard(card.id,select.value,undefined,card.lane,'keyboard');select.value='';}
- protected laneDestination(event:Event,card:HyKanbanCard<T>,column:HyKanbanColumn<T>):void{const select=event.target as HTMLSelectElement;void this.moveCard(card.id,column.id,undefined,select.value,'keyboard');select.value='';}
+ protected readonly destinations = computed(() => this.columns().map((column) => ({
+  value: column.id, label: column.label,
+  disabled: column.disabled || (column.limit !== undefined && column.cards.length >= column.limit),
+ })));
+ protected readonly laneOptions = computed(() => this.lanes().map((lane) => ({ value: lane.id, label: lane.label })));
+ protected destination(value: string | undefined, card: HyKanbanCard<T>, column: HyKanbanColumn<T>, picker: HySelect<string>, lane = false): void {
+  if (value === undefined) return;
+  picker.clear();
+  if (lane ? value === card.lane : value === column.id) return;
+  void this.moveCard(card.id, lane ? column.id : value, undefined, lane ? value : card.lane, 'keyboard');
+ }
  protected activate(card:HyKanbanCard<T>):void{if(!this.disabled()&&!card.disabled)this.cardActivated.emit(card);}
 }

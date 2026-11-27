@@ -22,12 +22,12 @@
           @if (item.icon) {
             <hy-icon [name]="item.icon" />
           }
+          @if (item.badge !== undefined) {
+            <span class="badge" [attr.aria-label]="item.badgeLabel ?? null">{{ item.badge }}</span>
+          }
         </span>
         @if (showLabels()) {
-          <span>{{ item.label }}</span>
-        }
-        @if (item.badge !== undefined) {
-          <span class="badge" [attr.aria-label]="item.badgeLabel ?? null">{{ item.badge }}</span>
+          <span class="nav-label">{{ item.label }}</span>
         }
       }
     </a>

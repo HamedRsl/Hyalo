@@ -31,9 +31,9 @@
               size="sm"
               variant="soft"
               [attr.aria-expanded]="directoryOpen()"
-              (click)="directoryOpen.set(!directoryOpen())"
+              iconOnly aria-label="New chat" title="New chat" (click)="directoryOpen.set(!directoryOpen())"
             >
-              New chat
+              <hy-icon name="plus" />
             </button>
           </div>
           @if (directoryOpen()) {
@@ -139,6 +139,7 @@
           class="marketplace-history"
           [label]="'Conversation with ' + conversation().name"
           maxHeight="clamp(14rem, 46dvh, 24rem)"
+          (scrolled)="historyScrolled.set($event.top > 0)"
         >
           <p class="marketplace-date">17 November 2026 · UTC</p>
           <ol class="marketplace-messages">
@@ -363,7 +364,12 @@
             </button>
           </section>
         }
-        <form class="marketplace-composer" [attr.aria-busy]="pending()" (submit)="submit($event)">
+        <form
+          class="marketplace-composer"
+          [class.history-scrolled]="historyScrolled()"
+          [attr.aria-busy]="pending()"
+          (submit)="submit($event)"
+        >
           @if (!editingId() && replying(); as reply) {
             <div class="marketplace-composer-quote">
               <p>
@@ -380,21 +386,6 @@
               </button>
             </div>
           }
-          <hy-field
-            [label]="'Message ' + conversation().name"
-            [error]="composerError()"
-            [forceError]="!!composerError()"
-          >
-            <textarea
-              #composer
-              hyInput
-              [disabled]="pending()"
-              rows="2"
-              placeholder="Ask about collection…"
-              [value]="draft()"
-              (input)="updateDraft(composer.value)"
-            ></textarea>
-          </hy-field>
           @if (emojiOpen()) {
             <div class="marketplace-emoji" role="group" aria-label="Insert emoji">
               <hy-field label="Search emoji">
@@ -530,10 +521,27 @@
               size="sm"
               [disabled]="pending()"
               [attr.aria-expanded]="emojiOpen()"
-              (click)="emojiOpen.set(!emojiOpen())"
+              iconOnly aria-label="Emoji" title="Emoji" (click)="emojiOpen.set(!emojiOpen())"
             >
-              Emoji
+              <hy-icon name="smile" />
             </button>
+            <div class="marketplace-draft">
+              <!-- The hidden mirror provides wrapping and auto-growth across browser engines. -->
+              <span dir="auto" aria-hidden="true">{{ draft() + ' ' }}</span>
+              <textarea
+                #composer
+                hyInput
+                rows="1"
+                dir="auto"
+                placeholder="Message…"
+                [attr.aria-label]="'Message ' + conversation().name"
+                [attr.aria-invalid]="composerError() ? 'true' : null"
+                [attr.aria-describedby]="composerError() ? 'marketplace-composer-error' : null"
+                [disabled]="pending()"
+                [value]="draft()"
+                (input)="updateDraft(composer.value)"
+              ></textarea>
+            </div>
             @if (!editingId()) {
               <button
                 hyButton
@@ -542,9 +550,9 @@
                 size="sm"
                 [disabled]="pending()"
                 [attr.aria-expanded]="attachmentsOpen()"
-                (click)="attachmentsOpen.set(!attachmentsOpen()); closePhoto()"
+                iconOnly aria-label="Attach files" title="Attach files" (click)="attachmentsOpen.set(!attachmentsOpen()); closePhoto()"
               >
-                Attach{{ files().length ? ' (' + files().length + ')' : '' }}
+                <hy-icon name="paperclip" />
               </button>
               @if (recording() === 'idle') {
                 <button
@@ -553,24 +561,25 @@
                   variant="ghost"
                   size="sm"
                   [disabled]="pending() || !!photo()"
-                  (click)="startRecording()"
+                  iconOnly aria-label="Record voice" title="Record voice" (click)="startRecording()"
                 >
-                  Record voice
+                  <hy-icon name="mic" />
                 </button>
               } @else {
                 @if (recording() === 'active') {
-                  <button hyButton type="button" variant="soft" (click)="finishRecording()">
-                    Stop recording
+                  <button hyButton type="button" variant="soft" iconOnly aria-label="Stop recording" title="Stop recording" (click)="finishRecording()">
+                    <hy-icon name="stop" />
                   </button>
                 }
-                <button hyButton type="button" variant="ghost" (click)="cancelRecording()">
-                  Cancel recording
+                <button hyButton type="button" variant="ghost" iconOnly aria-label="Cancel recording" title="Cancel recording" (click)="cancelRecording()">
+                  <hy-icon name="x" />
                 </button>
               }
             }
             <button
               hyButton
               type="submit"
+              iconOnly [attr.aria-label]="editingId() ? 'Save edit' : 'Send message'" [title]="editingId() ? 'Save edit' : 'Send message'"
               [disabled]="
                 pending() ||
                 !!photo() ||
@@ -578,13 +587,18 @@
                 (!draft().trim() && (!!editingId() || !files().length))
               "
             >
-              {{ editingId() ? 'Save edit' : 'Add local draft' }}
+              <hy-icon [name]="editingId() ? 'check' : 'send'" />
             </button>
           </div>
           @if (editingId()) {
             <button hyButton type="button" variant="ghost" (click)="cancelEdit(); composer.focus()">
               Cancel edit
             </button>
+          }
+          @if (composerError()) {
+            <p id="marketplace-composer-error" class="marketplace-composer-error" role="alert">
+              {{ composerError() }}
+            </p>
           }
           <p class="marketplace-notice" role="status">{{ announcement() }}</p>
         </form>
@@ -617,7 +631,7 @@ import &#123; HyIcon &#125; from '@hyalo/angular/icon';"
   <h2>Keyboard and reading order</h2>
   <p>
     The conversation list and history are keyboard-scrollable. Enter adds a line in the composer.
-    Use Add local draft to submit. Selecting a quoted reply jumps to its original message when it is
+    Use Send message to submit a local draft. Selecting a quoted reply jumps to its original message when it is
     available.
   </p>
 </docs-page>

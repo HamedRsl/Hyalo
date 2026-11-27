@@ -12,11 +12,12 @@ import { HySelect } from './select';
   imports: [HY_TEXT_FIELD, HySelect, FormField],
   template: `
     <hy-field label="Strap">
-      <hy-select [options]="straps" [formField]="f.strap" placeholder="Choose a strap" />
+      <hy-select [options]="straps" [formField]="f.strap" [nativeOnLowFidelity]="nativeOnLowFidelity()" placeholder="Choose a strap" />
     </hy-field>
   `,
 })
 class Host {
+  readonly nativeOnLowFidelity = signal(false);
   readonly model = signal({ strap: '' });
   readonly f = form(this.model, (p) => required(p.strap, { message: 'Pick a strap' }));
   readonly straps = [
@@ -75,11 +76,14 @@ describe('HySelect', () => {
     expect(trigger.getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('falls back to a native select on the low tier', async () => {
+  it('keeps the themed control on the low tier unless the native fallback is enabled', async () => {
     const { fixture, el } = await setup();
     TestBed.inject(HyFidelity).setTier('low');
     await fixture.whenStable();
     const select = el.querySelector('select')!;
+    expect(select.hidden).toBe(true);
+    fixture.componentInstance.nativeOnLowFidelity.set(true);
+    await fixture.whenStable();
     expect(select).not.toBeNull();
     expect(el.querySelector('label')!.htmlFor).toBe(select.id);
     select.value = [...select.options].find(

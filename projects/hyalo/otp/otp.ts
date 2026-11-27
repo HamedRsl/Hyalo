@@ -24,6 +24,7 @@ export class HyOtp extends HyValueControl implements FormValueControl<string> {
   readonly length = input(6);
   readonly masked = input(false);
   readonly mode = input<'numeric' | 'alphanumeric'>('numeric');
+  readonly inputMode = input<'single' | 'per-character'>('single');
   readonly formatter = input<(text: string) => string>();
   readonly cellTemplate = input<TemplateRef<{ $implicit: string; index: number }>>();
   protected readonly cells = computed(() =>
@@ -68,9 +69,54 @@ export class HyOtp extends HyValueControl implements FormValueControl<string> {
       ? this.normalize(formatted).length
       : this.normalize(input.value.slice(0, caret)).length;
     const next = this.normalize(formatted).slice(0, this.count());
-    const changed = next !== this.value();
     input.value = next;
     input.setSelectionRange(Math.min(position, next.length), Math.min(position, next.length));
+    this.publish(next);
+  }
+
+  protected slotInput(event: Event, index: number): void {
+    if (this.blocked() || ('isComposing' in event && event.isComposing)) return;
+    const input = event.target as HTMLInputElement;
+    this.writeSlot(input, index, input.value);
+  }
+
+  protected slotPaste(event: ClipboardEvent, index: number): void {
+    if (this.blocked()) return;
+    event.preventDefault();
+    const text = event.clipboardData?.getData('text') ?? '';
+    if (text) this.writeSlot(event.target as HTMLInputElement, index, text);
+  }
+
+  protected slotKey(event: KeyboardEvent, index: number): void {
+    if (this.blocked() || event.isComposing) return;
+    const input = event.target as HTMLInputElement;
+    if (event.key === 'Backspace' && !input.value && index > 0) {
+      event.preventDefault();
+      this.writeSlot(input, index - 1, '');
+      this.focusSlot(input, index - 1);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.focusSlot(input, index + (event.key === 'ArrowRight' ? 1 : -1));
+    }
+  }
+
+  private writeSlot(input: HTMLInputElement, index: number, raw: string): void {
+    const code = this.value();
+    const position = Math.min(index, code.length);
+    const text = this.normalize(this.formatter()?.(raw) ?? raw);
+    const next = (text.length >= this.count() ? text : code.slice(0, position) + text +
+      code.slice(position + Math.max(1, text.length))).slice(0, this.count());
+    input.value = next[index] ?? '';
+    this.publish(next);
+    if (text) this.focusSlot(input, Math.min(this.count() - 1, position + text.length));
+  }
+
+  private focusSlot(input: HTMLInputElement, index: number): void {
+    input.parentElement?.querySelectorAll<HTMLInputElement>('input')[index]?.focus();
+  }
+
+  private publish(next: string): void {
+    const changed = next !== this.value();
     this.value.set(next);
     if (changed && next.length === this.count()) this.complete.emit(next);
   }

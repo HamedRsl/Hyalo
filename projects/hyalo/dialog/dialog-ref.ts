@@ -215,6 +215,7 @@ export class HyDialogRef<R = unknown> {
       if (done) return;
       done = true;
       pane.removeEventListener('animationend', onEnd);
+      pane.removeEventListener('animationcancel', onEnd);
       this.cdkRef.close(result);
     };
     // Ignore animations that bubble up from the content, like a button ripple.
@@ -222,6 +223,13 @@ export class HyDialogRef<R = unknown> {
       if (event.target === pane || event.target === panel) finish();
     };
     pane.addEventListener('animationend', onEnd);
+    pane.addEventListener('animationcancel', onEnd);
+    // Empty animations in reduced motion or without the optional stylesheet close immediately.
+    const animations = panel?.getAnimations?.();
+    if (animations && !animations.some((animation) => 'animationName' in animation)) {
+      finish();
+      return;
+    }
     const timer = setTimeout(finish, MOTION.settle.duration * 1000 + 80);
     this.cdkRef.closed.subscribe(() => {
       clearTimeout(timer);

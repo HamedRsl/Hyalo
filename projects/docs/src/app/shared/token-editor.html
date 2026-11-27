@@ -108,8 +108,8 @@
 </div>
 <div class="css">
   <pre><code>{{ css() }}</code></pre>
-  <button hyButton variant="glass" size="sm" class="css__copy" (click)="copy()">
-    {{ copied() ? 'Copied' : 'Copy CSS' }}
+  <button hyButton variant="glass" size="sm" class="css__copy" aria-label="Copy CSS" title="Copy CSS" (click)="copy()">
+    <hy-icon [name]="copied() ? 'check' : 'copy'" size="1.15rem" />
   </button>
   <span class="hy-visually-hidden" aria-live="polite">{{ copied() ? 'CSS copied' : '' }}</span>
 </div>

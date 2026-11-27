@@ -36,9 +36,16 @@
 .marketplace-filters,
 .marketplace-reactions {
   display: flex;
-  flex-wrap: wrap;
   gap: var(--hy-space-1);
 }
+.marketplace-reactions { flex-wrap: wrap; }
+.marketplace-filters {
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block: .25rem;
+}
+.marketplace-filters button { flex: none; white-space: nowrap; }
 .marketplace-threads {
   padding: 0.25rem;
   margin: 0;
@@ -88,8 +95,7 @@
   color: var(--hy-ink);
 }
 .marketplace-header,
-.marketplace-listing,
-.marketplace-actions {
+.marketplace-listing {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -166,18 +172,6 @@
 .marketplace-meta {
   margin-block: 0.4rem 0;
 }
-.marketplace-composer {
-  border-block-start: 1px solid var(--hy-line);
-  padding: 1.25rem;
-}
-.marketplace-actions {
-  padding: 1rem 0 0;
-  flex-wrap: wrap;
-  gap: var(--hy-space-2);
-}
-.marketplace-actions [type='submit'] {
-  margin-inline-start: auto;
-}
 .marketplace-preview {
   display: flex;
   flex-wrap: wrap;
@@ -195,13 +189,14 @@
   text-underline-offset: 0.2em;
 }
 .marketplace-link-note,
-.marketplace-unavailable,
-.marketplace-notice {
+.marketplace-unavailable {
   font-size: 0.8rem;
 }
 .marketplace-message-footer,
-.marketplace-action-panel,
-.marketplace-composer-quote {
+.marketplace-action-panel {
+  padding: var(--hy-space-2) var(--hy-space-3);
+  background: var(--hy-surface-2);
+  border-block-start: 1px solid var(--hy-line);
   display: flex;
   align-items: center;
   gap: var(--hy-space-2);
@@ -213,23 +208,6 @@
 .marketplace-message-footer p {
   margin: 0;
 }
-.marketplace-action-panel,
-.marketplace-composer-quote {
-  padding: var(--hy-space-2) var(--hy-space-3);
-  background: var(--hy-surface-2);
-}
-.marketplace-action-panel {
-  border-block-start: 1px solid var(--hy-line);
-}
-.marketplace-composer-quote {
-  justify-content: space-between;
-  margin-block-end: var(--hy-space-2);
-}
-.marketplace-composer-quote p {
-  margin: 0;
-  min-inline-size: 0;
-}
-.marketplace-composer-quote span,
 .marketplace-quote span {
   display: block;
   text-overflow: ellipsis;
@@ -248,27 +226,6 @@
   max-inline-size: 100%;
   max-block-size: 14rem;
   border-radius: var(--hy-radius-s);
-}
-.marketplace-uploads,
-.marketplace-emoji {
-  margin-block-start: var(--hy-space-2);
-}
-.marketplace-photo {
-  margin-block-start: var(--hy-space-2);
-  background: var(--hy-surface-2);
-  border: 1px solid var(--hy-line);
-  border-radius: var(--hy-radius-m);
-}
-.marketplace-photo canvas {
-  display: block;
-  max-inline-size: 100%;
-  max-block-size: 15rem;
-  margin: var(--hy-space-2) auto;
-  object-fit: contain;
-}
-.marketplace-notice {
-  min-block-size: 1.5em;
-  margin-block-end: 0;
 }
 .marketplace-attachment:focus-visible {
   outline: 2px solid var(--hy-primary);
@@ -299,14 +256,12 @@
   }
 }
 @media (max-width: 30rem) {
-  .marketplace-actions button,
   .marketplace-message-footer button {
     min-block-size: 2.75rem;
   }
   .marketplace-header,
   .marketplace-listing,
-  .marketplace-history,
-  .marketplace-composer {
+  .marketplace-history {
     padding: 0.8rem;
   }
   .marketplace-message-content {

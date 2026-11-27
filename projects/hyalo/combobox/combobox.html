@@ -28,11 +28,11 @@
     aria-label="Show options"
     (click)="expand(!expanded()); focus()"
   >
-    Options
+    <hy-icon name="chevron-down" size="1.15rem" />
   </button>
   @if (clearable() && value() !== null) {
-    <button type="button" [disabled]="blocked()" (click)="clear()">
-      {{ clearLabel() }}
+    <button type="button" [disabled]="blocked()" [attr.aria-label]="clearLabel()" [title]="clearLabel()" (click)="clear()">
+      <hy-icon name="x" size="1.15rem" />
     </button>
   }
 </div>
@@ -67,7 +67,7 @@
     (detach)="dismiss(); panelDetached.emit()"
   >
     <div
-      class="options"
+      class="options hy-glass" data-material="frosted"
       [style.max-block-size.px]="viewportHeight()"
       (scroll)="scrollOptions($event)"
     >
@@ -123,6 +123,7 @@
             } @else {
               {{ item.label }}
             }
+            <hy-icon class="option-check" name="check" size="1rem" />
           </div>
         }
         <div role="presentation" [style.block-size.px]="afterSize()"></div>

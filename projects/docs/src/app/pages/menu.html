@@ -8,13 +8,11 @@
         <button hyButton type="button" [hyMenuTriggerFor]="actions">Project actions</button
         ><hy-split-button
           label="Export"
-          [menu]="actions"
+          [menu]="formats"
           menuLabel="Export options"
           (activated)="message.set('Export started')"
-        /><button hyButton type="button" [hyMenuTriggerFor]="actions" [restoreFocus]="summary">
-          Actions with return target
-        </button><button type="button" #summary>Project summary</button
-        ><span role="status">{{ message() }}</span>
+        />
+        <span role="status">{{ message() }}</span>
       </div>
       <ng-template #actions
         ><hy-menu aria-label="Project actions" panelClass="project-menu" hasBackdrop backdropClass="project-menu-backdrop"

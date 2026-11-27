@@ -5,6 +5,7 @@
   [id]="nativeId"
   [disabled]="effectiveDisabled() || !useNative()"
   [required]="required()"
+  [attr.aria-label]="label() || null"
   [name]="useNative() ? name() : undefined"
   [attr.aria-describedby]="field?.describedBy() ?? null"
   [attr.aria-invalid]="showsError() || null"
@@ -59,9 +60,11 @@
   [hidden]="useNative()"
   [id]="triggerId"
   [disabled]="effectiveDisabled() || useNative()"
+  [attr.disabled]="effectiveDisabled() || useNative() ? '' : null"
   [expanded]="expanded()"
   (expandedChange)="setExpanded($event)"
   [attr.aria-controls]="expanded() ? listboxId : null"
+  [attr.aria-label]="label() || null"
   [attr.aria-labelledby]="field ? field.labelId + ' ' + triggerId : null"
   [attr.aria-describedby]="field?.describedBy() ?? null"
   [attr.aria-invalid]="showsError() || null"
@@ -84,7 +87,7 @@
   @for (mount of [overlayMount()]; track mount) {
   <ng-template
     cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOrigin]="field ? origin : host"
     [cdkConnectedOverlayOpen]="rendered() && !useNative()"
     [cdkConnectedOverlayPositions]="overlayPositions() ?? positions"
     [cdkConnectedOverlayWidth]="popupWidth() ?? ''"

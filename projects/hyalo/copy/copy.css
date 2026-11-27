@@ -24,3 +24,6 @@ button:focus-visible {
   clip-path: inset(50%);
   overflow: hidden;
 }
+
+button { display: grid; place-items: center; inline-size: 44px; padding: 0; }
+button:hover { background: var(--hy-surface-3); }

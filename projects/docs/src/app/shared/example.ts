@@ -1,3 +1,4 @@
+import { HyIcon } from '@hyalo/angular/icon';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
@@ -18,6 +19,7 @@ export type DocsCodeLanguage = 'html' | 'ts' | 'css';
 
 /** A live demo with its source underneath. */
 @Component({
+  imports: [HyIcon],
   selector: 'docs-example',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './example.html',

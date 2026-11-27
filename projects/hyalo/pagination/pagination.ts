@@ -1,3 +1,4 @@
+import { HySelect } from '@hyalo/angular/select';
 import { HyLocale } from '@hyalo/angular/core';
 import { ChangeDetectionStrategy, Component, TemplateRef, computed, input, model } from '@angular/core';
 import { inject } from '@angular/core';
@@ -6,7 +7,7 @@ const positive = (value: number): number =>
   Number.isFinite(value) ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(1, Math.floor(value))) : 1;
 @Component({
   selector: 'hy-pagination',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, HySelect],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './pagination.html',
   styleUrl: './pagination.css',
@@ -16,6 +17,13 @@ export class HyPagination {
   readonly total = input.required<number>();
   readonly pageSize = model(10);
   readonly pageSizes = input<readonly number[]>([]); readonly disabled = input(false);
+  protected readonly pageSizeOptions = computed(() => {
+    const format = new Intl.NumberFormat(this.effectiveLocale());
+    return this.pageSizes().map((value) => ({ value, label: format.format(value) }));
+  });
+  protected selectPageSize(value: number | undefined): void {
+    if (value !== undefined) this.changePageSize(value);
+  }
   readonly showJump = input(false); readonly showFirstLast = input(true); readonly showLinks = input(true); readonly siblingCount = input(1);
   readonly pageSizeLabel = input('Items per page'); readonly jumpLabel = input('Go to page');
   readonly pageLabel = input<(page: string) => string>(page => 'Page ' + page);

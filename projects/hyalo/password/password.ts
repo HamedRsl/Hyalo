@@ -21,6 +21,7 @@ export interface HyPasswordVisibilityContext {
 import type { FormValueControl } from '@angular/forms/signals';
 import { HyValueControl } from '@hyalo/angular/field';
 
+/** @deprecated Use hyInput with hyPassword and a field action instead. */
 @Component({
   selector: 'hy-password',
   imports: [NgTemplateOutlet],

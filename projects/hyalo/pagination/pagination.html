@@ -32,7 +32,7 @@
   >
     <span aria-hidden="true" class="arrow">›</span>
   </button>
-  @if (pageSizes().length) { <label>{{ pageSizeLabel() }}<select [disabled]="disabled()" [value]="pageSize()" (change)="changePageSize(+$any($event.target).value)">@for (size of pageSizes(); track size) { <option [value]="size">{{ size }}</option> }</select></label> }
+  @if (pageSizes().length) { <span>{{ pageSizeLabel() }}</span><hy-select compact [label]="pageSizeLabel()" [disabled]="disabled()" [options]="pageSizeOptions()" [value]="pageSize()" popupWidth="6rem" (valueChange)="selectPageSize($event)" /> }
   @if (showJump()) { <label>{{ jumpLabel() }}<input type="number" min="1" [max]="pageCount()" [value]="current()" [disabled]="disabled()" (change)="go(+$any($event.target).value)" /></label> }
   @if (reportTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="report()" /> }
   <ng-content select="[hyPaginationEnd]" />

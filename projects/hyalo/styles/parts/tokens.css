@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/vazirmatn.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-089F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
 /*
  * Design tokens. Every Hyalo component reads these, and a theme is only a
  * different set of values for the same names. All names start with --hy-.
@@ -55,8 +64,8 @@
   --hy-glass-glow: 255 255 255;
 
   /* Type */
-  --hy-font-display: 'Inter Display', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --hy-font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hy-font-display: 'Inter Display', 'Inter', 'Vazirmatn', ui-sans-serif, system-ui, sans-serif;
+  --hy-font-body: 'Inter', 'Vazirmatn', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --hy-font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --hy-font-fa: 'Vazirmatn', 'Estedad', Tahoma, sans-serif;
   --hy-step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
