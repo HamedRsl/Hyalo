@@ -32,7 +32,7 @@
     "rxjs": "^7.4.0",
     "chart.js": "^4.6.1",
     "highlight.js": "^11.11.1",
-    "jalaali-js": "^1.2.8",
+    "jalaali-js": "^1.2.8 || ^2.0.1",
     "@fullcalendar/core": "^6.1.22",
     "@fullcalendar/daygrid": "^6.1.22",
     "@fullcalendar/timegrid": "^6.1.22",
